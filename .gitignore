@@ -153,3 +153,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+#Some development notes that shouldn't land in the repo
+notes.txt
