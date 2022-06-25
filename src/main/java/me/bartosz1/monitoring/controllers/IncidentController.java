@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/v1/incident")
 public class IncidentController {
 
-    //todo find a workaround to add entire object to Response object so i can return a json status message too
     @Autowired
     private IncidentService incidentService;
 

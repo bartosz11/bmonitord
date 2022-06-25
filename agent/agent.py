@@ -1,7 +1,6 @@
 import base64
 import platform
 import time
-
 import cpuinfo
 import distro
 import psutil
@@ -10,10 +9,9 @@ import requests
 # Don't change the version
 VERSION = "1.0"
 # Agent ID
-#ZCnL3C8x8hqi1rTG
-SERVER = "ZCnL3C8x8hqi1rT"
-# API URL
-URL = "http://localhost:8080/"
+SERVER = ""
+# API URL, needs to end with /
+URL = ""
 
 
 def get_data():
@@ -51,12 +49,9 @@ def get_data():
     disks_encoded = base64.b64encode(';'.join(disks).encode("utf-8")).decode("utf-8")
     return f"{VERSION}|{SERVER}|{os}|{uptime}|{cpu_cores}|{cpu_freq}|{cpu_model}|{cpu_usage}|{ram_total}|{ram_usage}|{swap_total}|{swap_usage}|{iowait}|{rx}|{tx}|{disks_encoded}"
 
-
-while True:
-    try:
-        response = requests.post(URL, data=get_data(), timeout=15, verify=False)
-        if response.status_code == 404:
-            break
-    except:
-        pass
-    time.sleep(30)
+try:
+    response = requests.post(URL, data=get_data(), timeout=15, verify=False)
+    if response.status_code == 404:
+        break
+except:
+    pass

@@ -1,6 +1,6 @@
 package me.bartosz1.monitoring.security;
 
-import io.jsonwebtoken.ExpiredJwtException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import me.bartosz1.monitoring.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +35,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             token = tokenHeader.substring(7);
             try {
                 username = tokenUtils.getUsernameFromToken(token);
-            } catch (IllegalArgumentException | ExpiredJwtException e) {}
+            } catch (IllegalArgumentException | JWTVerificationException e) {}
         }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails details =  userService.loadUserByUsername(username);

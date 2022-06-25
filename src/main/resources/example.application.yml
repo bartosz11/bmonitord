@@ -30,6 +30,8 @@ spring:
 jwt:
   #Change this to any randomly generated string, length doesn't matter
   secret: "CHANGE_THIS"
+  #Can be anything, doesn't need to be changed
+  issuer: "Monitoring"
 
 monitoring:
   influxdb:
