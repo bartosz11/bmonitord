@@ -1,0 +1,64 @@
+spring:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  #Your MySQL / MariaDB details go here
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://<host>:<port>/<DB name>
+    username: <username>
+    password: <password>
+  #Mail needs to be configured
+  #Remember: it's SMTP, not some provider's Web API
+  mail:
+    host: <host>
+    port: <port>
+    username: <username>
+    password: <password>
+    properties:
+        #Auth settings
+        mail.smtp.starttls.enable: true
+        mail.smtp.auth: true
+        mail.smtp.starttls.required: true
+        #In some cases same as username
+        mail.smtp.from: <from>
+    default-encoding: UTF-8
+    test-connection: false
+
+jwt:
+  #Change this to any randomly generated string, length doesn't matter
+  secret: "CHANGE_THIS"
+
+monitoring:
+  influxdb:
+    #InfluxDB credentials
+    #Yes, InfluxDB is required
+    url: "http://localhost:8086"
+    username: bartosz
+    password: h9rK7HGyuvfUm5
+    bucket: monitoring
+    organization: a
+
+#You don't need to modify lines below
+
+#Logging
+logging:
+  level:
+    org.hibernate: warn
+    org.springframework: info
+    root: warn
+    me.bartosz1: info
+#Spring Boot Actuator setup
+management:
+  endpoints:
+    web.base-path: /app
+  endpoint:
+    health:
+      show-details: always
+  health:
+    diskSpace:
+      enabled: false
+    ping:
+      enabled: false

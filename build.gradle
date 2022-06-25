@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.0'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+group 'me.bartosz1'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //Spring
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    //JWT
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    //Databases
+    implementation 'com.influxdb:influxdb-client-java:6.1.0'
+    implementation 'mysql:mysql-connector-java'
+    //Logging
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.11'
+    //Commons
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    //Tests
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+sourceCompatibility = 17
+
+test {
+    useJUnitPlatform()
+}
+
+springBoot {
+    mainClass = "me.bartosz1.monitoring.Monitoring"
+}
