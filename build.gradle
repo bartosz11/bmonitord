@@ -21,7 +21,7 @@ dependencies {
     //JWT
     implementation 'com.auth0:java-jwt:4.0.0'
     //Databases
-    implementation 'com.influxdb:influxdb-client-java:6.1.0'
+    implementation 'com.influxdb:influxdb-client-java:6.2.0'
     implementation 'mysql:mysql-connector-java'
     //Logging
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
