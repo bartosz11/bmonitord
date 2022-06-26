@@ -27,12 +27,6 @@ spring:
     default-encoding: UTF-8
     test-connection: false
 
-jwt:
-  #Change this to any randomly generated string, length doesn't matter
-  secret: "CHANGE_THIS"
-  #Can be anything, doesn't need to be changed
-  issuer: "Monitoring"
-
 monitoring:
   influxdb:
     #InfluxDB credentials
@@ -42,8 +36,13 @@ monitoring:
     password: <InfluxDB password>
     bucket: <InfluxDB bucket name>
     organization: <InfluxDB organization name>
+  jwt:
+    #Change this to any randomly generated string, length doesn't matter
+    secret: "CHANGE_THIS"
+    #Can be anything, doesn't need to be changed
+    issuer: "Monitoring"
   #Timezone used for formatting dates in some notifications
-  #List of compatible timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  #List of compatible TZ timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   timezone: "Europe/London"
   #Change this to false to disable /api/v1/auth/register endpoint, new users won't be able to register
   registration-enabled: true

@@ -16,9 +16,9 @@ import java.util.Date;
 public class JwtTokenUtils implements InitializingBean {
     //validity = 6 hours in milliseconds
     private static final long VALIDITY = 6*60*60*1000;
-    @Value("${jwt.secret}")
+    @Value("${monitoring.jwt.secret}")
     private String secret;
-    @Value("${jwt.issuer}")
+    @Value("${monitoring.jwt.issuer}")
     private String issuer;
     private Algorithm algo;
     private JWTVerifier verifier;
