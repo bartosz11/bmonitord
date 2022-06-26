@@ -45,6 +45,8 @@ monitoring:
   #Timezone used for formatting dates in some notifications
   #List of compatible timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   timezone: "Europe/London"
+  #Change this to false to disable /api/v1/auth/register endpoint, new users won't be able to register
+  registration-enabled: true
 
 #You don't need to modify lines below
 

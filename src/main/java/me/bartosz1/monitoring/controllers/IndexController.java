@@ -27,8 +27,6 @@ public class IndexController {
 
     @Autowired
     private AgentRepository agentRepository;
-    @Autowired
-    private IncidentRepository incidentRepository;
     private final WriteApi influxWriteApi = Monitoring.getInfluxClient().makeWriteApi(WriteOptions.builder().flushInterval(5000).batchSize(100).build());
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 
