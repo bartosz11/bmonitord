@@ -42,3 +42,7 @@ test {
 springBoot {
     mainClass = "me.bartosz1.monitoring.Monitoring"
 }
+
+bootJar {
+    archiveFileName = "monitoring.jar"
+}
