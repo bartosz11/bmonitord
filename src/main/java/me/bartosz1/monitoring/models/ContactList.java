@@ -12,7 +12,7 @@ public class ContactList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @ManyToMany
+    @OneToMany
     @JsonIgnore
     private List<Monitor> monitors;
     private String name;

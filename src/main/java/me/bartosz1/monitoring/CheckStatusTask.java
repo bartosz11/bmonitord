@@ -51,9 +51,7 @@ public class CheckStatusTask implements InitializingBean {
     @Scheduled(cron = "0 * * * * *")
     public void checkMonitors() {
         LOGGER.info("Checking monitors...");
-        List<Monitor> firstQuery = monitorRepository.findAllMonitors();
-        List<Monitor> secondQuery = monitorRepository.findAllMonitors(firstQuery);
-        List<Monitor> monitors = Utils.mergeMonitorLists(firstQuery, secondQuery);
+        List<Monitor> monitors = monitorRepository.findAllMonitors();
         monitors.forEach(monitor -> {
             if (!(monitor.getLastStatus() == MonitorStatus.PAUSED)) {
                 switch (monitor.getType().toLowerCase(Locale.ROOT)) {

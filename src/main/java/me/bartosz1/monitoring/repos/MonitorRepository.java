@@ -12,9 +12,7 @@ public interface MonitorRepository extends JpaRepository<Monitor, Long> {
     Iterable<Monitor> findAllByUserId(long userId);
     Monitor findByIdAndUser(long monitorId, User user);
     //SHOULD BE ONLY USED WITH STATUS CHECKS
-    @Query("select distinct m from Monitor m left join fetch m.incidents left join fetch m.agent")
+    @Query("select distinct m from Monitor m left join fetch m.incidents left join fetch m.agent left join fetch m.contactList")
     List<Monitor> findAllMonitors();
-    @Query("select m from Monitor m left join fetch m.contactLists contactLists where m in :monitors")
-    List<Monitor> findAllMonitors(List<Monitor> monitors);
 
 }

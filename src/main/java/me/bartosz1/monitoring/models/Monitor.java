@@ -23,9 +23,9 @@ public class Monitor {
     private int retries;
     private boolean verifySSLCerts;
     private MonitorStatus lastStatus;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<ContactList> contactLists;
+    private ContactList contactList;
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
@@ -133,12 +133,13 @@ public class Monitor {
         return this;
     }
 
-    public List<ContactList> getContactLists() {
-        return contactLists;
+    public ContactList getContactList() {
+        return contactList;
+
     }
 
-    public Monitor setContactLists(List<ContactList> contactLists) {
-        this.contactLists = contactLists;
+    public Monitor setContactList(ContactList contactList) {
+        this.contactList = contactList;
         return this;
     }
 
@@ -175,15 +176,18 @@ public class Monitor {
         return incidents;
     }
 
-    public void setIncidents(List<Incident> incidents) {
+    public Monitor setIncidents(List<Incident> incidents) {
         this.incidents = incidents;
+        return this;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public Monitor setUser(User user) {
         this.user = user;
+        return this;
     }
+
 }
