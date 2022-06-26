@@ -190,4 +190,9 @@ public class Monitor {
         return this;
     }
 
+    public Monitor addIncident(Incident incident) {
+        incidents.add(incident);
+        return this;
+    }
+
 }

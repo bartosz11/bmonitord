@@ -37,11 +37,14 @@ monitoring:
   influxdb:
     #InfluxDB credentials
     #Yes, InfluxDB is required
-    url: "http://localhost:8086"
-    username: bartosz
-    password: h9rK7HGyuvfUm5
-    bucket: monitoring
-    organization: a
+    url: <InfluxDB URL>
+    username: <InfluxDB username>
+    password: <InfluxDB password>
+    bucket: <InfluxDB bucket name>
+    organization: <InfluxDB organization name>
+  #Timezone used for formatting dates in some notifications
+  #List of compatible timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  timezone: "Europe/London"
 
 #You don't need to modify lines below
 

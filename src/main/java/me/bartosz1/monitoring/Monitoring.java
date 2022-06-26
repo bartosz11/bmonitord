@@ -14,6 +14,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 @SpringBootApplication
 @EntityScan("me.bartosz1.monitoring.models")
 @ComponentScan("me.bartosz1.monitoring")
@@ -32,10 +35,16 @@ public class Monitoring implements InitializingBean {
 
     @Value("${monitoring.influxdb.organization}")
     private String influxOrganization;
+    @Value("${monitoring.timezone}")
+    private String timezone;
     //Fixes circular dependency issue
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public DateTimeFormatter dateTimeFormatter() {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of(timezone));
     }
 
     public static void main(String[] args) {

@@ -144,7 +144,6 @@ public class CheckStatusTask implements InitializingBean {
     };
 
     private final HostnameVerifier HOSTNAME_VERIFIER = (hostname, session) -> true;
-
     private void processStatus(Monitor monitor, MonitorStatus currentStatus) {
         //Get incident sorted by start timestamp descending
         List<Incident> incidents = monitor.getIncidents().stream().sorted(Comparator.comparing(Incident::getStartTimestamp).reversed()).toList();
@@ -167,6 +166,7 @@ public class CheckStatusTask implements InitializingBean {
             }
             Incident incident = new Incident().setStartTimestamp(Instant.now().getEpochSecond()).setOngoing(true).setMonitor(monitor);
             incident = incidentRepository.save(incident);
+            monitor.addIncident(incident);
             notificationService.sendNotifications(monitor, incident);
         }
     }

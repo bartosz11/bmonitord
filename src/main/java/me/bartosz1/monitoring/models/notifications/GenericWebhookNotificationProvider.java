@@ -1,23 +1,19 @@
 package me.bartosz1.monitoring.models.notifications;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import me.bartosz1.monitoring.models.ContactList;
 import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.Monitor;
-import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
+@Component
+public class GenericWebhookNotificationProvider extends NotificationProvider{
 
-public class GenericWebhookNotificationProvider implements NotificationProvider{
-
-    private static final OkHttpClient okHttpClient = new OkHttpClient.Builder().callTimeout(5, TimeUnit.SECONDS).build();
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    public static void sendNotification(Monitor monitor, ContactList contactList, Incident incident) {
+    public void sendNotification(Monitor monitor, ContactList contactList, Incident incident) {
         String url = contactList.getGenericWebhookURL();
         if (url.startsWith("http://") || url.startsWith("https://")) {
             HashMap<String, Object> body = new HashMap<>();
@@ -26,23 +22,12 @@ public class GenericWebhookNotificationProvider implements NotificationProvider{
             body.put("monitor", monitor);
             body.put("incident", incident);
             try {
-                String finalBody = objectMapper.writeValueAsString(body);
+                String finalBody = NotificationProvider.objectMapper.writeValueAsString(body);
                 Request req = new Request.Builder().url(url).post(RequestBody.create(finalBody, MediaType.parse("application/json"))).build();
-                okHttpClient.newCall(req).enqueue(BLANK_HTTP_CALLBACK);
+                NotificationProvider.okHttpClient.newCall(req).enqueue(NotificationProvider.BLANK_HTTP_CALLBACK);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
         }
     }
-    private static final Callback BLANK_HTTP_CALLBACK = new Callback() {
-        @Override
-        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-        }
-
-        @Override
-        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-            response.body().close();
-            response.close();
-        }
-    };
 }
