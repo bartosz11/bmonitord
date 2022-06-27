@@ -4,9 +4,15 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
-  #Your MySQL / MariaDB details go here
+  #Uncomment if you're using PostgreSQL
+  #database-platform: org.hibernate.dialect.PostgreSQLDialect
+  #Your DB credentials go here
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    #Uncomment to use MySQL/MariaDB
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #Uncomment to use PostgreSQL
+    #driver-class-name: org.postgresql.Driver
+    #Change mysql to postgresql if you're using postgres
     url: jdbc:mysql://<host>:<port>/<DB name>
     username: <username>
     password: <password>

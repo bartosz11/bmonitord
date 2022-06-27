@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 //All methods in this class are checking access too
@@ -27,10 +28,11 @@ public class IncidentService {
     }
 
     public Incident getLastIncidentByMonitorId(User user, long id) {
-        Optional<Incident> result = incidentRepository.getByMonitorIdOrderByStartTimestampDesc(id);
-        if (result.isEmpty()) return null;
-        if (result.get().getMonitor().getUser().getId() != user.getId()) return null;
-        return result.get();
+        Page<Incident> result = incidentRepository.findByMonitorIdOrderByStartTimestampDesc(id, PageRequest.of(0, 1));
+        List<Incident> content = result.getContent();
+        if (content.isEmpty()) return null;
+        if (content.get(0).getMonitor().getUser().getId() != user.getId()) return null;
+        return content.get(0);
     }
 
     public Page<Incident> getFiveIncidentsByMonitorId(User user, long id, int page) {

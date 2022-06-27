@@ -26,6 +26,7 @@ public class NotificationService {
     //I know this might not be the best approach, I'm just "prototyping" it or something - this entire software is a huge work in progress and far from perfection
     public void sendNotifications(Monitor monitor, Incident incident) {
         ContactList contactList = monitor.getContactList();
+        if (contactList == null) return;
         if (contactList.getGotifyAppKey() != null && contactList.getGotifyInstanceURL() != null) {
             gotifyNotificationProvider.sendNotification(monitor, contactList, incident);
         }

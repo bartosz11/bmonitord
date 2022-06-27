@@ -3,6 +3,7 @@ package me.bartosz1.monitoring.controllers;
 import me.bartosz1.monitoring.Utils;
 import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.repos.AgentRepository;
+import me.bartosz1.monitoring.repos.IncidentRepository;
 import me.bartosz1.monitoring.repos.MonitorRepository;
 import me.bartosz1.monitoring.services.UserService;
 import org.slf4j.Logger;
@@ -14,7 +15,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
+@Transactional
 @RestController
 @RequestMapping("/api/v1/monitor")
 public class MonitorController {
@@ -25,6 +28,8 @@ public class MonitorController {
     private UserService userService;
     @Autowired
     private AgentRepository agentRepository;
+    @Autowired
+    private IncidentRepository incidentRepository;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -49,6 +54,7 @@ public class MonitorController {
     public ResponseEntity<?> deleteMonitor(HttpServletRequest req, @RequestParam long id, @AuthenticationPrincipal User user) {
         //findByIdAndUser is used to check access
         if (monitorRepo.findByIdAndUser(id, user) != null) {
+            incidentRepository.deleteAllByMonitorId(id);
             monitorRepo.deleteById(id);
             LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/delete ID: " + id);
             return new ResponseEntity<>(new Response("ok"), HttpStatus.OK);
