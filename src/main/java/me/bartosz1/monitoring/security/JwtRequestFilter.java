@@ -35,10 +35,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             token = tokenHeader.substring(7);
             try {
                 username = tokenUtils.getUsernameFromToken(token);
-            } catch (IllegalArgumentException | JWTVerificationException e) {}
+            } catch (IllegalArgumentException | JWTVerificationException e) {
+            }
         }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails details =  userService.loadUserByUsername(username);
+            UserDetails details = userService.loadUserByUsername(username);
             if (tokenUtils.validateToken(token, details)) {
                 UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(details, null, details.getAuthorities());
                 upat.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IncidentRepository extends JpaRepository<Incident, Long> {
 
-   Page<Incident> findByMonitorIdOrderByStartTimestampDesc(long monitorId, Pageable pageable);
-   void deleteAllByMonitorId(long monitorId);
+    Page<Incident> findByMonitorIdOrderByStartTimestampDesc(long monitorId, Pageable pageable);
+
+    void deleteAllByMonitorId(long monitorId);
 }

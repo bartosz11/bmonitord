@@ -33,17 +33,19 @@ public class EmailService extends NotificationProvider {
         message.setFrom(from);
         message.setTo(contactList.getEmailAddress());
         String messageText;
-        if (monitor.getLastStatus()== MonitorStatus.UP) {
-            message.setSubject("UP - "+monitor.getName());
+        if (monitor.getLastStatus() == MonitorStatus.UP) {
+            message.setSubject("UP - " + monitor.getName());
             messageText = UP_EMAIL_TEMPLATE.replaceFirst("%name%", monitor.getName());
-            if (monitor.getType().equalsIgnoreCase("agent")) messageText = messageText.replaceFirst("%host%", "Server Agent");
+            if (monitor.getType().equalsIgnoreCase("agent"))
+                messageText = messageText.replaceFirst("%host%", "Server Agent");
             else messageText = messageText.replaceFirst("%host%", monitor.getHost());
             messageText = messageText.replaceFirst("%timestamp%", dateTimeFormatter.format(Instant.ofEpochSecond(incident.getEndTimestamp())));
-            messageText = messageText.replaceFirst("%duration%", DurationFormatUtils.formatDurationWords(incident.getDuration()*1000, true, true));
+            messageText = messageText.replaceFirst("%duration%", DurationFormatUtils.formatDurationWords(incident.getDuration() * 1000, true, true));
         } else {
-            message.setSubject("DOWN - "+monitor.getName());
+            message.setSubject("DOWN - " + monitor.getName());
             messageText = DOWN_EMAIL_TEMPLATE.replaceFirst("%name%", monitor.getName());
-            if (monitor.getType().equalsIgnoreCase("agent")) messageText = messageText.replaceFirst("%host%", "Server Agent");
+            if (monitor.getType().equalsIgnoreCase("agent"))
+                messageText = messageText.replaceFirst("%host%", "Server Agent");
             else messageText = messageText.replaceFirst("%host%", monitor.getHost());
             messageText = messageText.replaceFirst("%timestamp%", dateTimeFormatter.format(Instant.ofEpochSecond(incident.getStartTimestamp())));
         }

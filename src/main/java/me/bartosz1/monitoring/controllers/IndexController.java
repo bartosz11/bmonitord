@@ -7,10 +7,10 @@ import me.bartosz1.monitoring.models.Agent;
 import me.bartosz1.monitoring.models.Measurement;
 import me.bartosz1.monitoring.models.Response;
 import me.bartosz1.monitoring.repos.AgentRepository;
-import me.bartosz1.monitoring.repos.IncidentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,9 +30,12 @@ public class IndexController {
     private final WriteApi influxWriteApi = Monitoring.getInfluxClient().makeWriteApi(WriteOptions.builder().flushInterval(5000).batchSize(100).build());
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 
+    @Value("${monitoring.influxdb.enabled}")
+    private boolean influxEnabled;
     @RequestMapping(method = RequestMethod.POST, path = "/")
     @ResponseBody
     private ResponseEntity<?> postData(HttpServletRequest req, @RequestBody String body) {
+        if (!influxEnabled) return new ResponseEntity<>(new Response("feature disabled"), HttpStatus.SERVICE_UNAVAILABLE);
         String[] toParse = body.split("\\|");
         String serverId = toParse[1];
         Optional<Agent> result = agentRepository.findById(serverId);

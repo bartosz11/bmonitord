@@ -1,5 +1,7 @@
 # Important
 src/main/resources/application.yml
+# I'm not leaking stuff this time
+agent/agent-custom.py
 
 ### Java template
 # Compiled class file

@@ -24,13 +24,13 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (userRepository.existsByUsername(username)) {
             return userRepository.findByUsername(username);
-        } else throw new UsernameNotFoundException("User "+username+" not found");
+        } else throw new UsernameNotFoundException("User " + username + " not found");
     }
 
     public User save(AuthRequest authRequest) {
         //First registered user receives admin authority allowing him to do more stuff than usual user
         String authorities;
-        if (userRepository.count()==0) {
+        if (userRepository.count() == 0) {
             authorities = "user,admin";
         } else authorities = "user";
         User user = new User().setEnabled(true).setAuthoritiesAsString(authorities).setUsername(authRequest.getUsername()).setPassword(passwordEncoder.encode(authRequest.getPassword()));

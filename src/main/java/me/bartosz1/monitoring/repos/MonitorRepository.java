@@ -11,10 +11,13 @@ import java.util.List;
 @org.springframework.stereotype.Repository
 public interface MonitorRepository extends JpaRepository<Monitor, Long> {
     Iterable<Monitor> findAllByUserId(long userId);
+
     Monitor findByIdAndUser(long monitorId, User user);
+
     //SHOULD BE ONLY USED WITH STATUS CHECKS
     @Query("select distinct m from Monitor m left join fetch m.incidents left join fetch m.agent left join fetch m.contactList")
     List<Monitor> findAllMonitors();
+
     Iterable<Monitor> findAllByContactList(ContactList contactList);
 
 }

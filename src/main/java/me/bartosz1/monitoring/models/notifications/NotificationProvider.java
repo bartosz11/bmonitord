@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
 @Component
 public class NotificationProvider {
 
@@ -29,7 +30,9 @@ public class NotificationProvider {
             response.close();
         }
     };
-    public void sendNotification(Monitor monitor, ContactList contactList, Incident incident) {}
+
+    public void sendNotification(Monitor monitor, ContactList contactList, Incident incident) {
+    }
 
 
 }

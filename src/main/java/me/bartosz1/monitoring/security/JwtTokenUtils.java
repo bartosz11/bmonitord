@@ -15,7 +15,7 @@ import java.util.Date;
 @Component
 public class JwtTokenUtils implements InitializingBean {
     //validity = 6 hours in milliseconds
-    private static final long VALIDITY = 6*60*60*1000;
+    private static final long VALIDITY = 6 * 60 * 60 * 1000;
     @Value("${monitoring.jwt.secret}")
     private String secret;
     @Value("${monitoring.jwt.issuer}")
@@ -25,7 +25,7 @@ public class JwtTokenUtils implements InitializingBean {
 
     public String generateToken(UserDetails user) {
         return JWT.create()
-                .withExpiresAt(Instant.ofEpochMilli(System.currentTimeMillis()+VALIDITY)).withIssuedAt(Instant.now()).withSubject(user.getUsername()).withIssuer(issuer)
+                .withExpiresAt(Instant.ofEpochMilli(System.currentTimeMillis() + VALIDITY)).withIssuedAt(Instant.now()).withSubject(user.getUsername()).withIssuer(issuer)
                 .sign(algo);
     }
 

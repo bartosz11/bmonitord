@@ -36,7 +36,8 @@ spring:
 monitoring:
   influxdb:
     #InfluxDB credentials
-    #Yes, InfluxDB is required
+    #Allows to enable / disable features requiring InfluxDB
+    enabled: true
     url: <InfluxDB URL>
     username: <InfluxDB username>
     password: <InfluxDB password>

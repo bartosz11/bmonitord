@@ -32,6 +32,7 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY)
     @JsonIgnore
     private List<ContactList> contactLists;
+
     public long getId() {
         return id;
     }
@@ -53,6 +54,7 @@ public class User implements UserDetails {
         this.password = password;
         return this;
     }
+
     //Too complicated, I know
     //just wanted to avoid making another 10 tables in the DB and complete mess
     @Override
@@ -72,20 +74,24 @@ public class User implements UserDetails {
         this.authorities = sb.toString();
         return this;
     }
+
     public User setAuthoritiesAsString(String authorities) {
         this.authorities = authorities;
         return this;
     }
+
     //We don't use account expiry, so this will always return true
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
+
     //We don't use this too
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
+
     //And this
     @Override
     public boolean isCredentialsNonExpired() {

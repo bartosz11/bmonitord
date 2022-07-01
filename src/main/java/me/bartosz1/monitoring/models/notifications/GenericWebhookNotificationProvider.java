@@ -10,8 +10,9 @@ import okhttp3.RequestBody;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+
 @Component
-public class GenericWebhookNotificationProvider extends NotificationProvider{
+public class GenericWebhookNotificationProvider extends NotificationProvider {
 
     public void sendNotification(Monitor monitor, ContactList contactList, Incident incident) {
         String url = contactList.getGenericWebhookURL();

@@ -51,11 +51,11 @@ public class AuthController {
     @ResponseBody
     public ResponseEntity<?> register(@RequestBody AuthRequest request, HttpServletRequest req) {
         if (!registrationEnabled) {
-            LOGGER.info(req.getRemoteAddr()+" -> USER "+request.getUsername()+" REGISTER FAIL: registration disabled");
+            LOGGER.info(req.getRemoteAddr() + " -> USER " + request.getUsername() + " REGISTER FAIL: registration disabled");
             return new ResponseEntity<>(new Response("register disabled"), HttpStatus.FORBIDDEN);
         }
         User user = userService.save(request);
-        LOGGER.info(req.getRemoteAddr()+" -> USER "+user.getUsername()+" REGISTER SUCCESS");
+        LOGGER.info(req.getRemoteAddr() + " -> USER " + user.getUsername() + " REGISTER SUCCESS");
         return new ResponseEntity<>(
                 new Response("ok")
                         .addAdditionalInfo("username", user.getUsername())
@@ -68,7 +68,7 @@ public class AuthController {
     @RequestMapping(path = "/current", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<?> currentUser(@AuthenticationPrincipal User user, HttpServletRequest req) {
-        LOGGER.info(req.getRemoteAddr()+" USER "+user.getId()+" -> /v1/auth/currentuser");
+        LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/auth/currentuser");
         return new ResponseEntity<>(
                 new Response("ok")
                         .addAdditionalInfo("username", user.getUsername())
@@ -81,12 +81,12 @@ public class AuthController {
     private void authenticate(String username, String password, String addr) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            LOGGER.info(addr+" -> USER "+username+" AUTH SUCCESS");
+            LOGGER.info(addr + " -> USER " + username + " AUTH SUCCESS");
         } catch (DisabledException e) {
-            LOGGER.info(addr+" -> USER "+username+" AUTH FAIL: ACCOUNT DISABLED");
+            LOGGER.info(addr + " -> USER " + username + " AUTH FAIL: ACCOUNT DISABLED");
             throw new DisabledException("User " + username + " disabled", e);
         } catch (BadCredentialsException e) {
-            LOGGER.info(addr+" -> USER "+username+" AUTH FAIL: INVALID CREDENTIALS");
+            LOGGER.info(addr + " -> USER " + username + " AUTH FAIL: INVALID CREDENTIALS");
             throw new BadCredentialsException("Invalid credentials", e);
         }
     }

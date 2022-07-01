@@ -22,6 +22,7 @@ public class DiscordNotificationProvider extends NotificationProvider {
 
     private static final String UP_EMBED_TEMPLATE = "{ \"content\": null, \"embeds\": [ { \"title\": \"%name% is now UP.\", \"description\": \"Time: %timestamp%\\nDuration: %duration%\\nHost: %host%\", \"color\": 2215705 }], \"attachments\": [] }";
     private static final String DOWN_EMBED_TEMPLATE = "{ \"content\": null, \"embeds\": [ { \"title\": \"%name% is now DOWN.\", \"description\": \"Time: %timestamp%\\nHost: %host%\", \"color\": 13572377 } ], \"attachments\": [] }";
+
     public void sendNotification(Monitor monitor, ContactList contactList, Incident incident) {
         String discordWebhookURL = contactList.getDiscordWebhookURL();
         if (discordWebhookURL.startsWith("http://") || discordWebhookURL.startsWith("https://")) {

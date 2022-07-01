@@ -36,12 +36,12 @@ public class TokenController {
     public ResponseEntity<?> deleteToken(@AuthenticationPrincipal User user, @RequestParam long id, HttpServletRequest req) {
         Optional<AccessToken> result = accessTokenRepository.findById(id);
         if (result.isEmpty()) {
-            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/token/delete ID: " + id+" FAIL: not found");
+            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/token/delete ID: " + id + " FAIL: not found");
             return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
         }
         AccessToken accessToken = result.get();
         if (accessToken.getUser().getId() != user.getId()) {
-            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/token/delete ID: " + id+" FAIL: no access");
+            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/token/delete ID: " + id + " FAIL: no access");
             return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
         }
         accessTokenRepository.delete(accessToken);
@@ -54,12 +54,12 @@ public class TokenController {
     public ResponseEntity<?> getToken(@AuthenticationPrincipal User user, @RequestParam long id, HttpServletRequest req) {
         Optional<AccessToken> result = accessTokenRepository.findById(id);
         if (result.isEmpty()) {
-            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/token/get ID: " + id+" FAIL: not found");
+            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/token/get ID: " + id + " FAIL: not found");
             return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
         }
         AccessToken accessToken = result.get();
         if (accessToken.getUser().getId() != user.getId()) {
-            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/token/get ID: " + id+" FAIL: no access");
+            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/token/get ID: " + id + " FAIL: no access");
             return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
         }
         LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/token/get ID: " + id);

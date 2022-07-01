@@ -18,9 +18,9 @@ public class Measurement {
         String[] disks = new String(Base64.getDecoder().decode(toParse[15])).split(";");
         for (int i = 0; i < disks.length; i++) {
             String[] diskData = disks[i].split(",");
-            measurement.addField("disk"+i+"Mountpoint", diskData[0]);
-            measurement.addField("disk"+i+"UsagePercent", Float.parseFloat(diskData[1]));
-            measurement.addField("disk"+i+"TotalBytes", Long.parseLong(diskData[2]));
+            measurement.addField("disk" + i + "Mountpoint", diskData[0]);
+            measurement.addField("disk" + i + "UsagePercent", Float.parseFloat(diskData[1]));
+            measurement.addField("disk" + i + "TotalBytes", Long.parseLong(diskData[2]));
         }
         return measurement;
     }

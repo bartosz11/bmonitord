@@ -32,6 +32,7 @@ public class Agent {
     public String getId() {
         return id;
     }
+
     public Agent setId(String id) {
         this.id = id;
         return this;

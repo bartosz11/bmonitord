@@ -5,6 +5,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,10 +41,12 @@ public class Monitor {
     private Agent agent;
     //easier to store as string
     private String allowedHttpCodes;
+    private long createdAt;
 
-    public Monitor() {}
+    public Monitor() {
+    }
 
-    public Monitor(MonitorCDO cdo, User user) {
+    public Monitor(MonitorCDO cdo, User user, Instant createdAt) {
         this.name = cdo.getName();
         this.host = cdo.getHost();
         this.timeout = cdo.getTimeout();
@@ -52,9 +55,10 @@ public class Monitor {
         this.retries = cdo.getRetries();
         this.allowedHttpCodes = cdo.getAllowedHttpCodes();
         this.user = user;
+        this.createdAt = createdAt.getEpochSecond();
     }
 
-    public Monitor(MonitorCDO cdo, User user, Agent agent) {
+    public Monitor(MonitorCDO cdo, User user, Agent agent, Instant createdAt) {
         this.name = cdo.getName();
         this.host = cdo.getHost();
         this.timeout = cdo.getTimeout();
@@ -64,6 +68,7 @@ public class Monitor {
         this.allowedHttpCodes = cdo.getAllowedHttpCodes();
         this.user = user;
         this.agent = agent;
+        this.createdAt = createdAt.getEpochSecond();
     }
 
     public long getId() {
@@ -146,6 +151,7 @@ public class Monitor {
     public String getAllowedHttpCodes() {
         return allowedHttpCodes;
     }
+
     @JsonIgnore
     public List<Integer> getAllowedHttpCodesAsList() {
         return Arrays.stream(allowedHttpCodes.split(",")).map(Integer::parseInt).collect(Collectors.toList());
@@ -195,4 +201,11 @@ public class Monitor {
         return this;
     }
 
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
 }

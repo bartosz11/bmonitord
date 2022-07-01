@@ -37,14 +37,22 @@ public class Monitoring implements InitializingBean {
     private String influxOrganization;
     @Value("${monitoring.timezone}")
     private String timezone;
+    @Value("${monitoring.influxdb.enabled}")
+    private boolean influxEnabled;
+
     //Fixes circular dependency issue
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public DateTimeFormatter dateTimeFormatter() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of(timezone));
+    }
+    @Bean
+    public ZoneId zoneId() {
+        return ZoneId.of(timezone);
     }
 
     public static void main(String[] args) {
@@ -57,6 +65,6 @@ public class Monitoring implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        influxClient = InfluxDBClientFactory.create(InfluxDBClientOptions.builder().url(influxURL).authenticate(influxUser, influxPassword.toCharArray()).bucket(influxBucket).org(influxOrganization).build());
+        if (influxEnabled) influxClient = InfluxDBClientFactory.create(InfluxDBClientOptions.builder().url(influxURL).authenticate(influxUser, influxPassword.toCharArray()).bucket(influxBucket).org(influxOrganization).build());
     }
 }

@@ -25,7 +25,10 @@ public class ContactList {
     private String gotifyInstanceURL;
     private String gotifyAppKey;
     private String genericWebhookURL;
-    public ContactList() {}
+
+    public ContactList() {
+    }
+
     public ContactList(ContactListCDO cdo, User user) {
         this.user = user;
         this.discordWebhookURL = cdo.getDiscordWebhookURL();

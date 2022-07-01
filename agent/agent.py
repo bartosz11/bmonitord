@@ -51,7 +51,5 @@ def get_data():
 
 try:
     response = requests.post(URL, data=get_data(), timeout=15, verify=False)
-    if response.status_code == 404:
-        break
 except:
     pass

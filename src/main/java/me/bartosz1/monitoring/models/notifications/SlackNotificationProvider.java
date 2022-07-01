@@ -21,6 +21,7 @@ public class SlackNotificationProvider extends NotificationProvider {
     private static final String DOWN_EMBED_TEMPLATE = "{ \"content\": null, \"attachments\": [ { \"title\": \"%name% is now DOWN.\", \"text\": \"Time: %timestamp%\\nHost: %host%\", \"color\": \"#cf1919\" } ] }";
     @Autowired
     private DateTimeFormatter dateTimeFormatter;
+
     public void sendNotification(Monitor monitor, ContactList contactList, Incident incident) {
         String slackWebhookURL = contactList.getSlackWebhookURL();
         if (slackWebhookURL.startsWith("http://") || slackWebhookURL.startsWith("https://")) {
@@ -31,7 +32,7 @@ public class SlackNotificationProvider extends NotificationProvider {
                     thisEmbed = thisEmbed.replaceFirst("%host%", "Server Agent");
                 else
                     thisEmbed = thisEmbed.replaceFirst("%host%", monitor.getHost());
-                thisEmbed = thisEmbed.replaceFirst("%timestamp%" , dateTimeFormatter.format(Instant.ofEpochSecond(incident.getEndTimestamp())));
+                thisEmbed = thisEmbed.replaceFirst("%timestamp%", dateTimeFormatter.format(Instant.ofEpochSecond(incident.getEndTimestamp())));
             } else {
                 thisEmbed = DOWN_EMBED_TEMPLATE.replaceFirst("%name%", monitor.getName());
                 if (monitor.getType().equalsIgnoreCase("agent"))

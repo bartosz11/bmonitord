@@ -1,4 +1,5 @@
 package me.bartosz1.monitoring.models;
+
 //Monitor Creation Data Object
 public class MonitorCDO {
 

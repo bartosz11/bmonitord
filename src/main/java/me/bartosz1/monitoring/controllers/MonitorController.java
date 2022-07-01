@@ -1,5 +1,7 @@
 package me.bartosz1.monitoring.controllers;
 
+import com.influxdb.client.domain.DeletePredicateRequest;
+import me.bartosz1.monitoring.Monitoring;
 import me.bartosz1.monitoring.Utils;
 import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.repos.AgentRepository;
@@ -9,6 +11,7 @@ import me.bartosz1.monitoring.repos.MonitorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Transactional
@@ -31,6 +37,15 @@ public class MonitorController {
     private IncidentRepository incidentRepository;
     @Autowired
     private ContactListRepository contactListRepository;
+    @Value("${monitoring.influxdb.enabled}")
+    private boolean influxEnabled;
+    //Man this InfluxDB lib is sometimes SO ANNOYING
+    @Value("${monitoring.influxdb.organization}")
+    private String influxOrg;
+    @Value("${monitoring.influxdb.bucket}")
+    private String influxBucket;
+    @Autowired
+    private ZoneId zoneId;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -42,10 +57,10 @@ public class MonitorController {
                 id = Utils.generateRandomString(16);
             } while (agentRepository.existsById(id));
             Agent agent = new Agent().setId(id);
-            monitor = monitorRepo.save(new Monitor(monitorCDO, user, agent));
+            monitor = monitorRepo.save(new Monitor(monitorCDO, user, agent, Instant.now()));
             LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/add ID: " + monitor.getId() + " AGENT ID: " + id);
             return new ResponseEntity<>(new Response("ok").addAdditionalInfo("id", monitor.getId()).addAdditionalInfo("agentid", id), HttpStatus.CREATED);
-        } else monitor = monitorRepo.save(new Monitor(monitorCDO, user));
+        } else monitor = monitorRepo.save(new Monitor(monitorCDO, user, Instant.now()));
         LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/add ID: " + monitor.getId());
         return new ResponseEntity<>(new Response("ok").addAdditionalInfo("id", monitor.getId()), HttpStatus.CREATED);
     }
@@ -53,10 +68,18 @@ public class MonitorController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete", produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> deleteMonitor(HttpServletRequest req, @RequestParam long id, @AuthenticationPrincipal User user) {
-        //findByIdAndUser is used to check access
-        if (monitorRepo.findByIdAndUser(id, user) != null) {
+        //findByIdAndUser is used to check access - going to change soon
+        Monitor monitor = monitorRepo.findByIdAndUser(id, user);
+        if (monitor != null) {
+            if (influxEnabled && monitor.getType().equalsIgnoreCase("agent")) {
+                String agentId = monitor.getAgent().getId();
+                OffsetDateTime createdAt = OffsetDateTime.ofInstant(Instant.ofEpochSecond(monitor.getCreatedAt()), zoneId);
+                OffsetDateTime now = OffsetDateTime.now(zoneId);
+                DeletePredicateRequest deletePredicateRequest = new DeletePredicateRequest().predicate("_measurement=\""+agentId+"\"").start(createdAt).stop(now);
+                Monitoring.getInfluxClient().getDeleteApi().delete(deletePredicateRequest, influxBucket, influxOrg);
+            }
             incidentRepository.deleteAllByMonitorId(id);
-            monitorRepo.deleteById(id);
+            monitorRepo.delete(monitor);
             LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/delete ID: " + id);
             return new ResponseEntity<>(new Response("ok"), HttpStatus.OK);
         }

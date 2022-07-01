@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 
 public class Utils {
     private static final SecureRandom random = new SecureRandom();
+
     public static String generateRandomString(int length) {
         int leftLimit = 48; // letter 'a'
         int rightLimit = 122; // letter 'z'
