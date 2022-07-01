@@ -29,6 +29,9 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<AccessToken> accessTokens;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<ContactList> contactLists;
     public long getId() {
         return id;
     }
@@ -65,9 +68,7 @@ public class User implements UserDetails {
 
     public User setAuthorities(Collection<GrantedAuthority> grantedAuthorities) {
         StringBuilder sb = new StringBuilder();
-        grantedAuthorities.forEach(grantedAuthority -> {
-            sb.append(grantedAuthority.getAuthority()).append(" ");
-        });
+        grantedAuthorities.forEach(grantedAuthority -> sb.append(grantedAuthority.getAuthority()).append(" "));
         this.authorities = sb.toString();
         return this;
     }

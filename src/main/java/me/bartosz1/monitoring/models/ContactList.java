@@ -12,6 +12,9 @@ public class ContactList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @JsonIgnore
+    @ManyToOne
+    private User user;
     @OneToMany
     @JsonIgnore
     private List<Monitor> monitors;
@@ -22,14 +25,25 @@ public class ContactList {
     private String gotifyInstanceURL;
     private String gotifyAppKey;
     private String genericWebhookURL;
-
+    public ContactList() {}
+    public ContactList(ContactListCDO cdo, User user) {
+        this.user = user;
+        this.discordWebhookURL = cdo.getDiscordWebhookURL();
+        this.slackWebhookURL = cdo.getSlackWebhookURL();
+        this.emailAddress = cdo.getEmailAddress();
+        this.name = cdo.getName();
+        this.gotifyAppKey = cdo.getGotifyAppKey();
+        this.gotifyInstanceURL = cdo.getGotifyInstanceURL();
+        this.genericWebhookURL = cdo.getGenericWebhookURL();
+    }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public ContactList setId(long id) {
         this.id = id;
+        return this;
     }
 
     public List<Monitor> getMonitors() {
@@ -95,5 +109,13 @@ public class ContactList {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

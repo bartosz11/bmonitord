@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.repos;
 
+import me.bartosz1.monitoring.models.ContactList;
 import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +15,6 @@ public interface MonitorRepository extends JpaRepository<Monitor, Long> {
     //SHOULD BE ONLY USED WITH STATUS CHECKS
     @Query("select distinct m from Monitor m left join fetch m.incidents left join fetch m.agent left join fetch m.contactList")
     List<Monitor> findAllMonitors();
+    Iterable<Monitor> findAllByContactList(ContactList contactList);
 
 }

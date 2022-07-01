@@ -3,9 +3,9 @@ package me.bartosz1.monitoring.controllers;
 import me.bartosz1.monitoring.Utils;
 import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.repos.AgentRepository;
+import me.bartosz1.monitoring.repos.ContactListRepository;
 import me.bartosz1.monitoring.repos.IncidentRepository;
 import me.bartosz1.monitoring.repos.MonitorRepository;
-import me.bartosz1.monitoring.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Transactional
 @RestController
@@ -25,11 +26,11 @@ public class MonitorController {
     @Autowired
     private MonitorRepository monitorRepo;
     @Autowired
-    private UserService userService;
-    @Autowired
     private AgentRepository agentRepository;
     @Autowired
     private IncidentRepository incidentRepository;
+    @Autowired
+    private ContactListRepository contactListRepository;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -105,6 +106,50 @@ public class MonitorController {
             return new ResponseEntity<>(new Response("ok"), HttpStatus.CREATED);
         }
         LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/pause ID: " + id + " FAIL: not found");
+        return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/assignlist", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> assignContactListToMonitor(HttpServletRequest req, @AuthenticationPrincipal User user, @RequestParam(name = "monitorid") long monitorId, @RequestParam(name = "listid") long listId) {
+        Optional<ContactList> optionalContactList = contactListRepository.findById(listId);
+        Optional<Monitor> optionalMonitor = monitorRepo.findById(monitorId);
+        if (optionalContactList.isPresent() && optionalMonitor.isPresent()) {
+            ContactList contactList = optionalContactList.get();
+            Monitor monitor = optionalMonitor.get();
+            if (contactList.getUser().getId() == user.getId() && monitor.getUser().getId() == user.getId()) {
+                contactList.getMonitors().add(monitor);
+                monitor.setContactList(contactList);
+                monitorRepo.save(monitor);
+                contactListRepository.save(contactList);
+                LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/assignlist Monitor ID: " + monitorId + " List ID: " + listId);
+                return new ResponseEntity<>(new Response("ok"), HttpStatus.OK);
+            }
+        }
+        LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/assignlist Monitor ID: " + monitorId + " List ID: " + listId + " FAIL: not found");
+        return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/unassignlist", produces = "application/json")
+    @ResponseBody
+    //There's no need for listId param as monitor can have only one contact list assigned
+    public ResponseEntity<?> unassignContactListFromMonitor(HttpServletRequest req, @AuthenticationPrincipal User user, @RequestParam(name = "monitorid") long monitorId) {
+        Optional<Monitor> optionalMonitor = monitorRepo.findById(monitorId);
+        if (optionalMonitor.isPresent()) {
+            Monitor monitor = optionalMonitor.get();
+            if (monitor.getUser().getId() == user.getId()) {
+                ContactList contactList = monitor.getContactList();
+                if (contactList != null) {
+                    monitor.getContactList().getMonitors().remove(monitor);
+                    contactListRepository.save(monitor.getContactList());
+                }
+                monitor.setContactList(null);
+                monitorRepo.save(monitor);
+                LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/unassignlist Monitor ID: " + monitorId);
+                return new ResponseEntity<>(new Response("ok"), HttpStatus.OK);
+            }
+        }
+        LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/unassignlist Monitor ID: " + monitorId + " FAIL: not found");
         return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
     }
 }
