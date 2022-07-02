@@ -3,6 +3,8 @@ package me.bartosz1.monitoring;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.InfluxDBClientOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -24,6 +26,7 @@ import java.time.format.DateTimeFormatter;
 public class Monitoring implements InitializingBean {
 
     private static InfluxDBClient influxClient;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Monitoring.class);
     @Value("${monitoring.influxdb.url}")
     private String influxURL;
     @Value("${monitoring.influxdb.username}")
@@ -66,5 +69,6 @@ public class Monitoring implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (influxEnabled) influxClient = InfluxDBClientFactory.create(InfluxDBClientOptions.builder().url(influxURL).authenticate(influxUser, influxPassword.toCharArray()).bucket(influxBucket).org(influxOrganization).build());
+        else LOGGER.warn("InfluxDB integration is DISABLED. Monitors with type \"agent\" won't be able to send data and won't be checked.");
     }
 }

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +21,6 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.security.KeyManagementException;
@@ -39,8 +38,8 @@ public class CheckStatusTask implements InitializingBean {
     private IncidentRepository incidentRepository;
     @Autowired
     private NotificationService notificationService;
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Value("${monitoring.influxdb.enabled}")
+    private boolean influxEnabled;
     //Default client settings
     private OkHttpClient httpClient = new OkHttpClient.Builder().build();
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckStatusTask.class);
@@ -112,12 +111,15 @@ public class CheckStatusTask implements InitializingBean {
                         }
                         break;
                     case "agent":
-                        //Check if 5 minutes since the start of application have passed, otherwise ignore agents while checking
-                        if (initFinished + 300 < Instant.now().getEpochSecond()) {
-                            if (monitor.getAgent().getLastDataReceived() + (long) monitor.getTimeout() < Instant.now().getEpochSecond()) {
-                                processStatus(monitor, MonitorStatus.DOWN);
-                            } else {
-                                processStatus(monitor, MonitorStatus.UP);
+                        //Agents shouldn't be checked if they have no way to send data
+                        if (influxEnabled) {
+                            //Check if 5 minutes since the start of application have passed, otherwise ignore agents while checking
+                            if (initFinished + 300 < Instant.now().getEpochSecond()) {
+                                if (monitor.getAgent().getLastDataReceived() + (long) monitor.getTimeout() < Instant.now().getEpochSecond()) {
+                                    processStatus(monitor, MonitorStatus.DOWN);
+                                } else {
+                                    processStatus(monitor, MonitorStatus.UP);
+                                }
                             }
                         }
                         break;
