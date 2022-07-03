@@ -71,11 +71,16 @@ public class MonitorController {
         //findByIdAndUser is used to check access - going to change soon
         Monitor monitor = monitorRepo.findByIdAndUser(id, user);
         if (monitor != null) {
-            if (influxEnabled && monitor.getType().equalsIgnoreCase("agent")) {
-                String agentId = monitor.getAgent().getId();
+            //Isn't exclusive to agent monitors now
+            if (influxEnabled) {
                 OffsetDateTime createdAt = OffsetDateTime.ofInstant(Instant.ofEpochSecond(monitor.getCreatedAt()), zoneId);
-                OffsetDateTime now = OffsetDateTime.now(zoneId);
-                DeletePredicateRequest deletePredicateRequest = new DeletePredicateRequest().predicate("_measurement=\""+agentId+"\"").start(createdAt).stop(now);
+                DeletePredicateRequest deletePredicateRequest = new DeletePredicateRequest().start(createdAt);
+                if (monitor.getType().equalsIgnoreCase("agent")) {
+                    String agentId = monitor.getAgent().getId();
+                    deletePredicateRequest.predicate("_measurement=\""+agentId+"\"");
+                }
+                else deletePredicateRequest.predicate("_measurement=\""+monitor.getId()+"\"");
+                deletePredicateRequest.stop(OffsetDateTime.now(zoneId));
                 Monitoring.getInfluxClient().getDeleteApi().delete(deletePredicateRequest, influxBucket, influxOrg);
             }
             incidentRepository.deleteAllByMonitorId(id);

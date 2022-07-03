@@ -1,5 +1,8 @@
 package me.bartosz1.monitoring;
 
+import com.influxdb.client.WriteApi;
+import com.influxdb.client.WriteOptions;
+import com.influxdb.client.write.Point;
 import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.MonitorStatus;
@@ -46,6 +49,7 @@ public class CheckStatusTask implements InitializingBean {
     private long initFinished;
     //I don't think there's a point in storing this in DB
     private final Map<Long, Integer> retryCount = new HashMap<>();
+    private WriteApi influxWriteApi;
 
     @Scheduled(cron = "0 * * * * *")
     public void checkMonitors() {
@@ -56,9 +60,12 @@ public class CheckStatusTask implements InitializingBean {
                 switch (monitor.getType().toLowerCase(Locale.ROOT)) {
                     case "ping":
                         try {
-                            if (InetAddress.getByName(monitor.getHost()).isReachable(monitor.getTimeout() * 1000)) {
+                            long time = System.currentTimeMillis();
+                            boolean reachable = InetAddress.getByName(monitor.getHost()).isReachable(monitor.getTimeout() * 1000);
+                            if (reachable) {
                                 retryCount.remove(monitor.getId());
                                 processStatus(monitor, MonitorStatus.UP);
+                                if (influxEnabled) influxWriteApi.writePoint(Point.measurement(String.valueOf(monitor.getId())).addField("responseTime", System.currentTimeMillis()-time));
                             } else {
                                 retryCount.merge(monitor.getId(), 1, Integer::sum);
                                 //Works properly even when monitor.getRetries() == 0 because 1 > 0
@@ -91,6 +98,7 @@ public class CheckStatusTask implements InitializingBean {
                             if (monitor.getAllowedHttpCodesAsList().contains(resp.code())) {
                                 retryCount.remove(monitor.getId());
                                 processStatus(monitor, MonitorStatus.UP);
+                                if (influxEnabled) influxWriteApi.writePoint(Point.measurement(String.valueOf(monitor.getId())).addField("responseTime", resp.receivedResponseAtMillis()-resp.sentRequestAtMillis()));
                             }
                             //This is for invalid HTTP codes, even if the connection was successful
                             else {
@@ -179,5 +187,6 @@ public class CheckStatusTask implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         initFinished = Instant.now().getEpochSecond();
         LOGGER.info("Ignoring agent monitors in automated status checks for next 5 minutes.");
+        if (influxEnabled) influxWriteApi = Monitoring.getInfluxClient().makeWriteApi(WriteOptions.builder().flushInterval(5000).batchSize(100).build());
     }
 }
