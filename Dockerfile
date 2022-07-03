@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre
 RUN adduser --home /home/container -D container
 USER container
 WORKDIR /home/container
