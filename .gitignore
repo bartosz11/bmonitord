@@ -2,6 +2,7 @@
 src/main/resources/application.yml
 # I'm not leaking stuff this time
 agent/agent-custom.py
+!build/libs/monitoring.jar
 
 ### Java template
 # Compiled class file
