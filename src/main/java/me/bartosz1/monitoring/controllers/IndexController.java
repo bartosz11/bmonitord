@@ -9,6 +9,7 @@ import me.bartosz1.monitoring.models.Response;
 import me.bartosz1.monitoring.repos.AgentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,11 @@ import java.time.Instant;
 import java.util.Optional;
 
 @org.springframework.web.bind.annotation.RestController
-public class IndexController {
+public class IndexController implements InitializingBean {
 
     @Autowired
     private AgentRepository agentRepository;
-    private final WriteApi influxWriteApi = Monitoring.getInfluxClient().makeWriteApi(WriteOptions.builder().flushInterval(5000).batchSize(100).build());
+    private WriteApi influxWriteApi;
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 
     @Value("${monitoring.influxdb.enabled}")
@@ -53,4 +54,8 @@ public class IndexController {
         return new ResponseEntity<>(new Response("ok"), HttpStatus.OK);
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (influxEnabled) influxWriteApi = Monitoring.getInfluxClient().makeWriteApi(WriteOptions.builder().flushInterval(5000).batchSize(100).build());
+    }
 }
