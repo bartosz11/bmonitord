@@ -39,13 +39,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/monitoring:latest
-      - name: Commit JAR
-        id: commit_jar
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: 'build/libs/monitoring.jar'
-          default_author: github_actions
-          #[ci skip] stops loop from happening
-          message: '[ci skip] Upload JAR from workflow run ${{ github.run_number }}'
 
 
