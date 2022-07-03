@@ -27,21 +27,23 @@ public class NotificationService {
     public void sendNotifications(Monitor monitor, Incident incident) {
         ContactList contactList = monitor.getContactList();
         if (contactList == null) return;
-        if (contactList.getGotifyAppKey() != null && contactList.getGotifyInstanceURL() != null) {
-            gotifyNotificationProvider.sendNotification(monitor, contactList, incident);
-        }
-        if (contactList.getDiscordWebhookURL() != null) {
-            discordNotificationProvider.sendNotification(monitor, contactList, incident);
-        }
-        if (contactList.getSlackWebhookURL() != null) {
-            slackNotificationProvider.sendNotification(monitor, contactList, incident);
-        }
-        if (contactList.getGenericWebhookURL() != null) {
-            genericWebhookNotificationProvider.sendNotification(monitor, contactList, incident);
-        }
-        if (contactList.getEmailAddress() != null) {
-            emailService.sendNotification(monitor, contactList, incident);
-        }
+        new Thread(() -> {
+            if (contactList.getGotifyAppKey() != null && contactList.getGotifyInstanceURL() != null) {
+                gotifyNotificationProvider.sendNotification(monitor, contactList, incident);
+            }
+            if (contactList.getDiscordWebhookURL() != null) {
+                discordNotificationProvider.sendNotification(monitor, contactList, incident);
+            }
+            if (contactList.getSlackWebhookURL() != null) {
+                slackNotificationProvider.sendNotification(monitor, contactList, incident);
+            }
+            if (contactList.getGenericWebhookURL() != null) {
+                genericWebhookNotificationProvider.sendNotification(monitor, contactList, incident);
+            }
+            if (contactList.getEmailAddress() != null) {
+                emailService.sendNotification(monitor, contactList, incident);
+            }
+        }).start();
     }
 
 }
