@@ -39,8 +39,8 @@ monitoring:
     #Allows to enable / disable features requiring InfluxDB
     enabled: true
     url: <InfluxDB URL>
-    username: <InfluxDB username>
-    password: <InfluxDB password>
+    #Requires Read and Write permissions
+    token: <InfluxDB token>
     bucket: <InfluxDB bucket name>
     organization: <InfluxDB organization name>
   jwt:

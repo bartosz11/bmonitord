@@ -29,10 +29,8 @@ public class Monitoring implements InitializingBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(Monitoring.class);
     @Value("${monitoring.influxdb.url}")
     private String influxURL;
-    @Value("${monitoring.influxdb.username}")
-    private String influxUser;
-    @Value("${monitoring.influxdb.password}")
-    private String influxPassword;
+    @Value("${monitoring.influxdb.token}")
+    private String influxToken;
     @Value("${monitoring.influxdb.bucket}")
     private String influxBucket;
 
@@ -68,7 +66,7 @@ public class Monitoring implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (influxEnabled) influxClient = InfluxDBClientFactory.create(InfluxDBClientOptions.builder().url(influxURL).authenticate(influxUser, influxPassword.toCharArray()).bucket(influxBucket).org(influxOrganization).build());
+        if (influxEnabled) influxClient = InfluxDBClientFactory.create(influxURL, influxToken.toCharArray(), influxOrganization, influxBucket);
         else LOGGER.warn("InfluxDB integration is DISABLED. Monitors with type \"agent\" won't be able to send data and won't be checked.");
     }
 }
