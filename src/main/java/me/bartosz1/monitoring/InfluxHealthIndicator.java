@@ -13,7 +13,7 @@ public class InfluxHealthIndicator implements HealthIndicator {
     private boolean influxEnabled;
     @Override
     public Health health() {
-        if (influxEnabled) return Health.outOfService().build();
+        if (!influxEnabled) return Health.outOfService().build();
         if (!Monitoring.getInfluxClient().ping()) return Health.down().build();
         return Health.up().build();
     }
