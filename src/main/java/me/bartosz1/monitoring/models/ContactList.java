@@ -1,6 +1,7 @@
 package me.bartosz1.monitoring.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import me.bartosz1.monitoring.models.monitor.Monitor;
 
 import javax.persistence.*;
 import java.util.List;

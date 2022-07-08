@@ -4,8 +4,8 @@ import com.influxdb.client.WriteApi;
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.write.Point;
 import me.bartosz1.monitoring.models.Incident;
-import me.bartosz1.monitoring.models.Monitor;
-import me.bartosz1.monitoring.models.MonitorStatus;
+import me.bartosz1.monitoring.models.monitor.Monitor;
+import me.bartosz1.monitoring.models.monitor.MonitorStatus;
 import me.bartosz1.monitoring.repos.IncidentRepository;
 import me.bartosz1.monitoring.repos.MonitorRepository;
 import me.bartosz1.monitoring.services.NotificationService;
@@ -25,7 +25,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
@@ -56,28 +55,28 @@ public class CheckStatusTask implements InitializingBean {
         LOGGER.info("Checking monitors...");
         List<Monitor> monitors = monitorRepository.findAllMonitors();
         monitors.forEach(monitor -> {
-            if (!(monitor.getLastStatus() == MonitorStatus.PAUSED)) {
-                switch (monitor.getType().toLowerCase(Locale.ROOT)) {
-                    case "ping":
+            if (!monitor.isPaused()) {
+                switch (monitor.getType()) {
+                    case PING:
                         try {
                             long time = System.currentTimeMillis();
-                            boolean reachable = InetAddress.getByName(monitor.getHost()).isReachable(monitor.getTimeout() * 1000);
+                            boolean reachable = ping(monitor.getHost(), monitor.getTimeout()*1000);
                             if (reachable) {
+                                if (influxEnabled) influxWriteApi.writePoint(Point.measurement(String.valueOf(monitor.getId())).addField("responseTime", System.currentTimeMillis()-time));
                                 retryCount.remove(monitor.getId());
                                 processStatus(monitor, MonitorStatus.UP);
-                                if (influxEnabled) influxWriteApi.writePoint(Point.measurement(String.valueOf(monitor.getId())).addField("responseTime", System.currentTimeMillis()-time));
                             } else {
                                 retryCount.merge(monitor.getId(), 1, Integer::sum);
                                 //Works properly even when monitor.getRetries() == 0 because 1 > 0
                                 if (retryCount.get(monitor.getId()) > monitor.getRetries())
                                     processStatus(monitor, MonitorStatus.DOWN);
                             }
-                        } catch (IOException e) {
+                        } catch (IOException | InterruptedException e) {
                             //Maybe I should place the logic for "down" status here too /shrug
                             throw new RuntimeException(e);
                         }
                         break;
-                    case "http":
+                    case HTTP:
                         OkHttpClient.Builder builder = httpClient.newBuilder();
                         //When user doesn't want his monitor's SSL to be verified, set all the "trust all certs" things
                         if (!monitor.getVerifySSL()) {
@@ -118,7 +117,7 @@ public class CheckStatusTask implements InitializingBean {
                             processStatus(monitor, MonitorStatus.DOWN);
                         }
                         break;
-                    case "agent":
+                    case AGENT:
                         //Agents shouldn't be checked if they have no way to send data
                         if (influxEnabled) {
                             //Check if 5 minutes since the start of application have passed, otherwise ignore agents while checking
@@ -188,5 +187,13 @@ public class CheckStatusTask implements InitializingBean {
         initFinished = Instant.now().getEpochSecond();
         LOGGER.info("Ignoring agent monitors in automated status checks for next 5 minutes.");
         if (influxEnabled) influxWriteApi = Monitoring.getInfluxClient().makeWriteApi(WriteOptions.builder().flushInterval(5000).batchSize(100).build());
+    }
+
+    private boolean ping(String host, int timeout) throws IOException, InterruptedException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        if (System.getProperty("os.name").contains("Windows")) processBuilder.command("ping", "-n", "1", "-w", String.valueOf(timeout), host);
+        else processBuilder.command("ping", "-c", "1", "-W", String.valueOf(timeout), host);
+        int code = processBuilder.start().waitFor();
+        return code==0;
     }
 }

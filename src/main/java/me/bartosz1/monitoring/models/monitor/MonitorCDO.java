@@ -1,4 +1,4 @@
-package me.bartosz1.monitoring.models;
+package me.bartosz1.monitoring.models.monitor;
 
 //Monitor Creation Data Object
 public class MonitorCDO {
@@ -6,7 +6,7 @@ public class MonitorCDO {
     private int timeout;
     private String name;
     private String host;
-    private String type;
+    private MonitorType type;
     private int retries;
     private boolean verifySSL;
     private String allowedHttpCodes;
@@ -35,11 +35,11 @@ public class MonitorCDO {
         this.host = host;
     }
 
-    public String getType() {
+    public MonitorType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(MonitorType type) {
         this.type = type;
     }
 

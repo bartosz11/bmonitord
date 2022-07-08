@@ -2,7 +2,7 @@ package me.bartosz1.monitoring.services;
 
 import me.bartosz1.monitoring.models.ContactList;
 import me.bartosz1.monitoring.models.Incident;
-import me.bartosz1.monitoring.models.Monitor;
+import me.bartosz1.monitoring.models.monitor.Monitor;
 import me.bartosz1.monitoring.models.notifications.DiscordNotificationProvider;
 import me.bartosz1.monitoring.models.notifications.GenericWebhookNotificationProvider;
 import me.bartosz1.monitoring.models.notifications.GotifyNotificationProvider;

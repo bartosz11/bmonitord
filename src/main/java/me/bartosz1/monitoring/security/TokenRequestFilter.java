@@ -30,7 +30,6 @@ public class TokenRequestFilter extends OncePerRequestFilter {
             Optional<AccessToken> result = accessTokenRepository.findByToken(token);
             if (result.isPresent()) {
                 AccessToken accessToken = result.get();
-                //todo maybe it shouldn't use UPAT but idk /shrug
                 UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(accessToken.getUser(), null, accessToken.getUser().getAuthorities());
                 upat.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(upat);

@@ -3,7 +3,7 @@ package me.bartosz1.monitoring.models.notifications;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.bartosz1.monitoring.models.ContactList;
 import me.bartosz1.monitoring.models.Incident;
-import me.bartosz1.monitoring.models.Monitor;
+import me.bartosz1.monitoring.models.monitor.Monitor;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;

@@ -2,8 +2,9 @@ package me.bartosz1.monitoring.models.notifications;
 
 import me.bartosz1.monitoring.models.ContactList;
 import me.bartosz1.monitoring.models.Incident;
-import me.bartosz1.monitoring.models.Monitor;
-import me.bartosz1.monitoring.models.MonitorStatus;
+import me.bartosz1.monitoring.models.monitor.Monitor;
+import me.bartosz1.monitoring.models.monitor.MonitorStatus;
+import me.bartosz1.monitoring.models.monitor.MonitorType;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -28,14 +29,14 @@ public class SlackNotificationProvider extends NotificationProvider {
             String thisEmbed;
             if (monitor.getLastStatus() == MonitorStatus.UP) {
                 thisEmbed = UP_EMBED_TEMPLATE.replaceFirst("%name%", monitor.getName()).replaceFirst("%duration%", DurationFormatUtils.formatDurationWords(incident.getDuration() * 1000, true, true));
-                if (monitor.getType().equalsIgnoreCase("agent"))
+                if (monitor.getType()== MonitorType.AGENT)
                     thisEmbed = thisEmbed.replaceFirst("%host%", "Server Agent");
                 else
                     thisEmbed = thisEmbed.replaceFirst("%host%", monitor.getHost());
                 thisEmbed = thisEmbed.replaceFirst("%timestamp%", dateTimeFormatter.format(Instant.ofEpochSecond(incident.getEndTimestamp())));
             } else {
                 thisEmbed = DOWN_EMBED_TEMPLATE.replaceFirst("%name%", monitor.getName());
-                if (monitor.getType().equalsIgnoreCase("agent"))
+                if (monitor.getType()==MonitorType.AGENT)
                     thisEmbed = thisEmbed.replaceFirst("%host%", "Server Agent");
                 else
                     thisEmbed = thisEmbed.replaceFirst("%host%", monitor.getHost());

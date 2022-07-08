@@ -1,6 +1,12 @@
-package me.bartosz1.monitoring.models;
+package me.bartosz1.monitoring.models.monitor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import me.bartosz1.monitoring.models.Agent;
+import me.bartosz1.monitoring.models.ContactList;
+import me.bartosz1.monitoring.models.Incident;
+import me.bartosz1.monitoring.models.User;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -18,14 +24,15 @@ public class Monitor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    private String type;
+    private MonitorType type;
     private String host;
     private int timeout;
     private int retries;
     private boolean verifySSLCerts;
     private MonitorStatus lastStatus;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonIncludeProperties({"id"})
+    @JsonUnwrapped(prefix = "contactlist")
     private ContactList contactList;
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -42,7 +49,7 @@ public class Monitor {
     //easier to store as string
     private String allowedHttpCodes;
     private long createdAt;
-
+    private boolean paused;
     public Monitor() {
     }
 
@@ -56,6 +63,7 @@ public class Monitor {
         this.allowedHttpCodes = cdo.getAllowedHttpCodes();
         this.user = user;
         this.createdAt = createdAt.getEpochSecond();
+        this.paused = false;
     }
 
     public Monitor(MonitorCDO cdo, User user, Agent agent, Instant createdAt) {
@@ -69,6 +77,7 @@ public class Monitor {
         this.user = user;
         this.agent = agent;
         this.createdAt = createdAt.getEpochSecond();
+        this.paused = false;
     }
 
     public long getId() {
@@ -84,14 +93,6 @@ public class Monitor {
         return this;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public Monitor setType(String type) {
-        this.type = type;
-        return this;
-    }
 
     public String getHost() {
         return host;
@@ -207,5 +208,22 @@ public class Monitor {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
+    public MonitorType getType() {
+        return type;
+    }
+
+    public Monitor getType(MonitorType monitorType) {
+        this.type = monitorType;
+        return this;
     }
 }

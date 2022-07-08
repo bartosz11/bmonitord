@@ -35,7 +35,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             token = tokenHeader.substring(7);
             try {
                 username = tokenUtils.getUsernameFromToken(token);
-            } catch (IllegalArgumentException | JWTVerificationException e) {
+            } catch (IllegalArgumentException | JWTVerificationException ignored) {
             }
         }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -3,7 +3,7 @@ package me.bartosz1.monitoring.models.notifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import me.bartosz1.monitoring.models.ContactList;
 import me.bartosz1.monitoring.models.Incident;
-import me.bartosz1.monitoring.models.Monitor;
+import me.bartosz1.monitoring.models.monitor.Monitor;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;

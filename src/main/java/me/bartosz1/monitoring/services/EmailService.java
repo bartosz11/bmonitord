@@ -2,8 +2,9 @@ package me.bartosz1.monitoring.services;
 
 import me.bartosz1.monitoring.models.ContactList;
 import me.bartosz1.monitoring.models.Incident;
-import me.bartosz1.monitoring.models.Monitor;
-import me.bartosz1.monitoring.models.MonitorStatus;
+import me.bartosz1.monitoring.models.monitor.Monitor;
+import me.bartosz1.monitoring.models.monitor.MonitorStatus;
+import me.bartosz1.monitoring.models.monitor.MonitorType;
 import me.bartosz1.monitoring.models.notifications.NotificationProvider;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class EmailService extends NotificationProvider {
         if (monitor.getLastStatus() == MonitorStatus.UP) {
             message.setSubject("UP - " + monitor.getName());
             messageText = UP_EMAIL_TEMPLATE.replaceFirst("%name%", monitor.getName());
-            if (monitor.getType().equalsIgnoreCase("agent"))
+            if (monitor.getType() == MonitorType.AGENT)
                 messageText = messageText.replaceFirst("%host%", "Server Agent");
             else messageText = messageText.replaceFirst("%host%", monitor.getHost());
             messageText = messageText.replaceFirst("%timestamp%", dateTimeFormatter.format(Instant.ofEpochSecond(incident.getEndTimestamp())));
@@ -44,7 +45,7 @@ public class EmailService extends NotificationProvider {
         } else {
             message.setSubject("DOWN - " + monitor.getName());
             messageText = DOWN_EMAIL_TEMPLATE.replaceFirst("%name%", monitor.getName());
-            if (monitor.getType().equalsIgnoreCase("agent"))
+            if (monitor.getType()==MonitorType.AGENT)
                 messageText = messageText.replaceFirst("%host%", "Server Agent");
             else messageText = messageText.replaceFirst("%host%", monitor.getHost());
             messageText = messageText.replaceFirst("%timestamp%", dateTimeFormatter.format(Instant.ofEpochSecond(incident.getStartTimestamp())));

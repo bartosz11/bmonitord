@@ -1,6 +1,7 @@
 package me.bartosz1.monitoring.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import me.bartosz1.monitoring.models.monitor.Monitor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

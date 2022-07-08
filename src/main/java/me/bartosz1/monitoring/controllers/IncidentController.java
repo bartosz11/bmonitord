@@ -52,6 +52,7 @@ public class IncidentController {
     @RequestMapping(value = "/five", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> getLastFiveByMonitorId(@AuthenticationPrincipal User user, @RequestParam long id, @RequestParam int page, HttpServletRequest req) {
+        //todo fix returning 404 if there are no incidents
         Page<Incident> result = incidentService.getFiveIncidentsByMonitorId(user, id, page);
         if (result != null) {
             LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/five ID: " + id);

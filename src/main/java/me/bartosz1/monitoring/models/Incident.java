@@ -1,7 +1,8 @@
 package me.bartosz1.monitoring.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import me.bartosz1.monitoring.models.monitor.Monitor;
 
 import javax.persistence.*;
 
@@ -13,9 +14,8 @@ public class Incident {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    //todo add upcoming props here if any added
     @ManyToOne
-    @JsonIgnoreProperties({"name", "type", "host", "timeout", "retries", "lastStatus", "allowedHttpCodes", "verifySSL"})
+    @JsonIncludeProperties({"id"})
     @JsonUnwrapped(prefix = "monitor")
     private Monitor monitor;
     private long startTimestamp;
