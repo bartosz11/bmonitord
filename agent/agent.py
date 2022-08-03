@@ -1,10 +1,10 @@
 import base64
-import platform
-import time
 import cpuinfo
 import distro
+import platform
 import psutil
 import requests
+import time
 
 # Don't change the version
 VERSION = "1.0"
@@ -38,16 +38,23 @@ def get_data():
     rx = int((netstats2.bytes_recv - netstats.bytes_recv) / sleep)
     tx = int((netstats2.bytes_sent - netstats.bytes_sent) / sleep)
     disks = []
+    disks_total_bytes = 0
+    disks_used_bytes = 0
     for disk in psutil.disk_partitions():
         # Prevents checking for CD-ROMs and other similar devices
         if disk.fstype:
             disk_usage = psutil.disk_usage(disk.mountpoint).percent
             disk_total = psutil.disk_usage(disk.mountpoint).total
-            disk_data = f"{disk.mountpoint},{disk_usage},{disk_total}"
+            disk_used = psutil.disk_usage(disk.mountpoint).used
+            disk_data = f"{disk.mountpoint},{disk_usage},{disk_total},{disk_used}"
             disks.append(disk_data)
+            disks_total_bytes += psutil.disk_usage(disk.mountpoint).total
+            disks_used_bytes += psutil.disk_usage(disk.mountpoint).used
     # Decode at the end prevents the b prefix
     disks_encoded = base64.b64encode(';'.join(disks).encode("utf-8")).decode("utf-8")
-    return f"{VERSION}|{SERVER}|{os}|{uptime}|{cpu_cores}|{cpu_freq}|{cpu_model}|{cpu_usage}|{ram_total}|{ram_usage}|{swap_total}|{swap_usage}|{iowait}|{rx}|{tx}|{disks_encoded}"
+    disks_total_percent = (disks_used_bytes / disks_total_bytes) * 100
+    return f"{VERSION}|{SERVER}|{os}|{uptime}|{cpu_cores}|{cpu_freq}|{cpu_model}|{cpu_usage}|{ram_total}|{ram_usage}|{swap_total}|{swap_usage}|{iowait}|{rx}|{tx}|{disks_encoded}|{disks_total_percent}"
+
 
 try:
     response = requests.post(URL, data=get_data(), timeout=15, verify=False)

@@ -2,6 +2,7 @@ package me.bartosz1.monitoring.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import me.bartosz1.monitoring.models.monitor.Monitor;
+import me.bartosz1.monitoring.models.statuspage.Statuspage;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +34,9 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY)
     @JsonIgnore
     private List<ContactList> contactLists;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Statuspage> statuspages;
 
     public long getId() {
         return id;

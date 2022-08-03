@@ -10,6 +10,7 @@ public class MonitorCDO {
     private int retries;
     private boolean verifySSL;
     private String allowedHttpCodes;
+    private boolean isPublic;
 
     public int getTimeout() {
         return timeout;
@@ -65,5 +66,13 @@ public class MonitorCDO {
 
     public void setAllowedHttpCodes(String allowedHttpCodes) {
         this.allowedHttpCodes = allowedHttpCodes;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 }

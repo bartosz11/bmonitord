@@ -5,13 +5,11 @@ import me.bartosz1.monitoring.Monitoring;
 import me.bartosz1.monitoring.models.Agent;
 import me.bartosz1.monitoring.models.ContactList;
 import me.bartosz1.monitoring.models.User;
-import me.bartosz1.monitoring.models.monitor.Monitor;   
+import me.bartosz1.monitoring.models.monitor.Monitor;
 import me.bartosz1.monitoring.models.monitor.MonitorCDO;
 import me.bartosz1.monitoring.models.monitor.MonitorType;
-import me.bartosz1.monitoring.repos.AgentRepository;
-import me.bartosz1.monitoring.repos.ContactListRepository;
-import me.bartosz1.monitoring.repos.IncidentRepository;
-import me.bartosz1.monitoring.repos.MonitorRepository;
+import me.bartosz1.monitoring.models.statuspage.Statuspage;
+import me.bartosz1.monitoring.repos.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +18,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,6 +33,8 @@ public class MonitorService {
     private ContactListRepository contactListRepository;
     @Autowired
     private AgentRepository agentRepository;
+    @Autowired
+    private StatuspageRepository statuspageRepository;
 
     @Value("${monitoring.influxdb.enabled}")
     private boolean influxEnabled;
@@ -59,6 +61,12 @@ public class MonitorService {
         if (optionalMonitor.isPresent()) {
             Monitor monitor = optionalMonitor.get();
             if (monitor.getUser().getId() == user.getId()) {
+                List<Statuspage> bulkSaveStatuspages = new ArrayList<>();
+                monitor.getStatuspages().forEach(statuspage -> {
+                    statuspage.getMonitors().remove(monitor);
+                    bulkSaveStatuspages.add(statuspage);
+                });
+                statuspageRepository.saveAll(bulkSaveStatuspages);
                 incidentRepository.deleteAllByMonitorId(monitor.getId());
                 monitorRepository.delete(monitor);
                 if (influxEnabled) {
@@ -142,6 +150,55 @@ public class MonitorService {
                     contactListRepository.save(monitor.getContactList());
                 }
                 monitor.setContactList(null);
+                return monitorRepository.save(monitor);
+            }
+        }
+        return null;
+    }
+    
+    public Monitor assignStatuspage(User user, long monitorId, long statuspageId) {
+        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(statuspageId);
+        Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
+        if (optionalStatuspage.isPresent() && optionalMonitor.isPresent()) {
+            Statuspage statuspage = optionalStatuspage.get();
+            Monitor monitor = optionalMonitor.get();
+            if (statuspage.getUser().getId() == user.getId() && monitor.getUser().getId() == user.getId()) {
+                monitor.setPublic(true);
+                statuspage.getMonitors().add(monitor);
+                monitor.getStatuspages().add(statuspage);
+                monitor = monitorRepository.save(monitor);
+                statuspageRepository.save(statuspage);
+                return monitor;
+            }
+        }
+        return null;
+    }
+
+    public Monitor unassignStatuspage(User user, long monitorId, long statuspageId) {
+        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(statuspageId);
+        Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
+        if (optionalStatuspage.isPresent() && optionalMonitor.isPresent()) {
+            Statuspage statuspage = optionalStatuspage.get();
+            Monitor monitor = optionalMonitor.get();
+            if (statuspage.getUser().getId() == user.getId() && monitor.getUser().getId() == user.getId()) {
+                statuspage.getMonitors().remove(monitor);
+                monitor.getStatuspages().remove(statuspage);
+                monitor = monitorRepository.save(monitor);
+                statuspageRepository.save(statuspage);
+                return monitor;
+            }
+        }
+        return null;
+    }
+
+    public Monitor publishMonitor(User user, long monitorId, boolean publish) {
+        Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
+        if (optionalMonitor.isPresent()) {
+            Monitor monitor = optionalMonitor.get();
+            if (monitor.getUser().getId()==user.getId()) {
+                //todo block unpublishing when there's any statuspage assigned
+                //if (monitor.getStatuspages().isEmpty() && !publish) monitor
+                monitor.setPublic(publish);
                 return monitorRepository.save(monitor);
             }
         }

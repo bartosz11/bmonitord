@@ -7,6 +7,8 @@ import me.bartosz1.monitoring.models.Agent;
 import me.bartosz1.monitoring.models.ContactList;
 import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.User;
+import me.bartosz1.monitoring.models.statuspage.Statuspage;
+import me.bartosz1.monitoring.models.statuspage.StatuspageMonitorObject;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -50,6 +52,15 @@ public class Monitor {
     private String allowedHttpCodes;
     private long createdAt;
     private boolean paused;
+    private boolean isPublic;
+    @JsonIgnore
+    private int checksUp;
+    @JsonIgnore
+    private int checksDown;
+    @ManyToMany
+    @JsonIgnore
+    private List<Statuspage> statuspages;
+
     public Monitor() {
     }
 
@@ -64,6 +75,7 @@ public class Monitor {
         this.user = user;
         this.createdAt = createdAt.getEpochSecond();
         this.paused = false;
+        this.isPublic = cdo.isPublic();
     }
 
     public Monitor(MonitorCDO cdo, User user, Agent agent, Instant createdAt) {
@@ -78,6 +90,7 @@ public class Monitor {
         this.agent = agent;
         this.createdAt = createdAt.getEpochSecond();
         this.paused = false;
+        this.isPublic = cdo.isPublic();
     }
 
     public long getId() {
@@ -225,5 +238,66 @@ public class Monitor {
     public Monitor getType(MonitorType monitorType) {
         this.type = monitorType;
         return this;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public List<Statuspage> getStatuspages() {
+        return statuspages;
+    }
+
+    public void setStatuspages(List<Statuspage> statuspages) {
+        this.statuspages = statuspages;
+    }
+
+    public int getChecksUp() {
+        return checksUp;
+    }
+
+    public Monitor setChecksUp(int checksUp) {
+        this.checksUp = checksUp;
+        return this;
+    }
+
+    public int getChecksDown() {
+        return checksDown;
+    }
+
+    public Monitor setChecksDown(int checksDown) {
+        this.checksDown = checksDown;
+        return this;
+    }
+
+    public Monitor incrementChecksUp() {
+        this.checksUp += 1;
+        return this;
+    }
+
+    public Monitor incrementChecksDown() {
+        this.checksDown += 1;
+        return this;
+    }
+
+    public StatuspageMonitorObject toStatuspageObject() {
+        StatuspageMonitorObject statuspageMonitorObject = new StatuspageMonitorObject();
+        statuspageMonitorObject.setName(this.name);
+        statuspageMonitorObject.setLastStatus(this.lastStatus);
+        statuspageMonitorObject.setCreatedAt(this.createdAt);
+        statuspageMonitorObject.setUptime(getUptime());
+        statuspageMonitorObject.setType(this.type);
+        statuspageMonitorObject.setTimeout(this.timeout);
+        return statuspageMonitorObject;
+    }
+
+    public float getUptime() {
+        if (!(checksUp + checksDown == 0)) {
+            return (float) (checksUp / (checksUp + checksDown)) * 100;
+        } else return 0;
     }
 }

@@ -30,10 +30,12 @@ public class IncidentController {
     public ResponseEntity<?> getById(@AuthenticationPrincipal User user, @RequestParam long id, HttpServletRequest req) {
         Incident incident = incidentService.getIncidentById(user, id);
         if (incident != null) {
-            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/get ID: " + id);
+            if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/get ID: " + id);
+            else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/get ID: " + id);
             return new ResponseEntity<>(new Response("ok").addAdditionalData(incident), HttpStatus.OK);
         }
-        LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/get ID: " + id + " FAIL: not found");
+        if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/get ID: " + id + " FAIL: not found");
+        else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/get ID: " + id + " FAIL: not found");
         return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
     }
 
@@ -42,23 +44,26 @@ public class IncidentController {
     public ResponseEntity<?> getLastByMonitorId(@AuthenticationPrincipal User user, @RequestParam long id, HttpServletRequest req) {
         Incident incident = incidentService.getLastIncidentByMonitorId(user, id);
         if (incident != null) {
-            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/last ID: " + id);
+            if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/last ID: " + id);
+            else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/last ID: " + id);
             return new ResponseEntity<>(new Response("ok").addAdditionalData(incident), HttpStatus.OK);
         }
-        LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/last ID: " + id + " FAIL: not found");
+        if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/last ID: " + id + " FAIL: not found");
+        else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/last ID: " + id + " FAIL: not found");
         return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "/five", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> getLastFiveByMonitorId(@AuthenticationPrincipal User user, @RequestParam long id, @RequestParam int page, HttpServletRequest req) {
-        //todo fix returning 404 if there are no incidents
         Page<Incident> result = incidentService.getFiveIncidentsByMonitorId(user, id, page);
         if (result != null) {
-            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/five ID: " + id);
+            if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/five ID: " + id);
+            else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/five ID: " + id);
             return new ResponseEntity<>(new Response("ok").addAdditionalData(result.toList()), HttpStatus.OK);
         }
-        LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/five ID: " + id + " FAIL: not found");
+        if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/five ID: " + id + " FAIL: not found");
+        else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/five ID: " + id + " FAIL: not found");
         return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
     }
 }

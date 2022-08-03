@@ -17,4 +17,7 @@ public interface MonitorRepository extends JpaRepository<Monitor, Long> {
 
     Iterable<Monitor> findAllByContactList(ContactList contactList);
 
+    @Query("select m from Monitor m where m.id in :ids")
+    List<Monitor> findByIds(List<Long> ids);
+
 }

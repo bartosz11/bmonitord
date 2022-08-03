@@ -4,6 +4,7 @@ import me.bartosz1.monitoring.models.Response;
 import me.bartosz1.monitoring.models.User;
 import me.bartosz1.monitoring.models.monitor.Monitor;
 import me.bartosz1.monitoring.models.monitor.MonitorCDO;
+import me.bartosz1.monitoring.models.monitor.MonitorType;
 import me.bartosz1.monitoring.repos.ContactListRepository;
 import me.bartosz1.monitoring.repos.IncidentRepository;
 import me.bartosz1.monitoring.services.MonitorService;
@@ -35,6 +36,8 @@ public class MonitorController {
     public ResponseEntity<?> addMonitor(HttpServletRequest req, @RequestBody MonitorCDO monitorCDO, @AuthenticationPrincipal User user) {
         Monitor monitor = monitorService.addMonitor(user, monitorCDO);
         LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/add ID: " + monitor.getId());
+        if (monitor.getType() == MonitorType.AGENT)
+            return new ResponseEntity<>(new Response("ok").addAdditionalInfo("id", monitor.getId()).addAdditionalInfo("agentid", monitor.getAgent().getId()), HttpStatus.CREATED);
         return new ResponseEntity<>(new Response("ok").addAdditionalInfo("id", monitor.getId()), HttpStatus.CREATED);
     }
 
@@ -116,6 +119,42 @@ public class MonitorController {
             return new ResponseEntity<>(new Response("ok").addAdditionalInfo("monitorId", monitor.getId()), HttpStatus.OK);
         }
         LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/unassignlist Monitor ID: " + monitorId + " FAIL: not found");
+        return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/assignpage", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> assignStatuspageToMonitor(@AuthenticationPrincipal User user, HttpServletRequest req, @RequestParam(name = "monitorid") long monitorId, @RequestParam(name = "pageid") long pageId) {
+        Monitor monitor = monitorService.assignStatuspage(user, monitorId, pageId);
+        if (monitor != null) {
+            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/assignpage Monitor ID: " + monitorId + " Statuspage ID: " + pageId);
+            return new ResponseEntity<>(new Response("ok").addAdditionalInfo("monitorId", monitor.getId()).addAdditionalInfo("pageId", pageId), HttpStatus.OK);
+        }
+        LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/assignpage Monitor ID: " + monitorId + " Statuspage ID: " + pageId + " FAIL: not found");
+        return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/unassignpage", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> unassignStatuspageFromMonitor(HttpServletRequest req, @AuthenticationPrincipal User user, @RequestParam(name = "monitorid") long monitorId, @RequestParam(name = "pageid") long pageId) {
+        Monitor monitor = monitorService.unassignStatuspage(user, monitorId, pageId);
+        if (monitor != null) {
+            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/unassignpage Monitor ID: " + monitorId + " Statuspage ID: " + pageId);
+            return new ResponseEntity<>(new Response("ok").addAdditionalInfo("monitorId", monitor.getId()).addAdditionalInfo("pageId", pageId), HttpStatus.OK);
+        }
+        LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/unassignpage Monitor ID: " + monitorId + " Statuspage ID: " + pageId + " FAIL: not found");
+        return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/publish", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> publishMonitor(@AuthenticationPrincipal User user, HttpServletRequest req, @RequestParam(name = "monitorid") long monitorId, @RequestParam(name = "public") boolean aPublic) {
+        Monitor monitor = monitorService.publishMonitor(user, monitorId, aPublic);
+        if (monitor != null) {
+            LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/publish Monitor ID: " + monitorId + " Public: " + aPublic);
+            return new ResponseEntity<>(new Response("ok").addAdditionalInfo("monitorId", monitor.getId()).addAdditionalInfo("public", aPublic), HttpStatus.OK);
+        }
+        LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/monitor/publish Monitor ID: " + monitorId + "Public: " + aPublic + " FAIL: not found");
         return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
     }
 }

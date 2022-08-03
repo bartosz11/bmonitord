@@ -155,6 +155,7 @@ public class CheckStatusTask implements InitializingBean {
     private final HostnameVerifier HOSTNAME_VERIFIER = (hostname, session) -> true;
 
     private void processStatus(Monitor monitor, MonitorStatus currentStatus) {
+        incrementChecks(monitor, currentStatus);
         //Get incident sorted by start timestamp descending
         List<Incident> incidents = monitor.getIncidents().stream().sorted(Comparator.comparing(Incident::getStartTimestamp).reversed()).toList();
         if (monitor.getLastStatus() != MonitorStatus.UP && currentStatus == MonitorStatus.UP) {
@@ -182,6 +183,10 @@ public class CheckStatusTask implements InitializingBean {
     }
 
     //For the "5 minutes of tolerance" mechanism
+    private void incrementChecks(Monitor monitor, MonitorStatus currentStatus) {
+        if (currentStatus == MonitorStatus.UP) monitor.incrementChecksUp();
+        else monitor.incrementChecksDown();
+    }
     @Override
     public void afterPropertiesSet() throws Exception {
         initFinished = Instant.now().getEpochSecond();

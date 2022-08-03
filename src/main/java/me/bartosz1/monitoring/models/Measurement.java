@@ -21,7 +21,9 @@ public class Measurement {
             measurement.addField("disk" + i + "Mountpoint", diskData[0]);
             measurement.addField("disk" + i + "UsagePercent", Float.parseFloat(diskData[1]));
             measurement.addField("disk" + i + "TotalBytes", Long.parseLong(diskData[2]));
+            measurement.addField("disk" + i + "UsedBytes", Long.parseLong(diskData[3]));
         }
+        measurement.addField("disksUsagePercent", Float.parseFloat(toParse[16]));
         return measurement;
     }
 

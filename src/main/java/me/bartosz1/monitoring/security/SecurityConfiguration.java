@@ -30,6 +30,8 @@ public class SecurityConfiguration {
                 .antMatchers("/api/v1/auth/login", "/api/v1/auth/register").permitAll()
                 //Allow all requests to Actuator endpoints - the only one exposed is /health
                 .antMatchers("/app/**").permitAll()
+                //Allow all requests to public statuspage endpoint(s)
+                .antMatchers("/api/v1/statuspage/stats").permitAll()
                 //Require authentication for all other requests
                 .anyRequest().authenticated().and()
                 //Use stateless sessions
