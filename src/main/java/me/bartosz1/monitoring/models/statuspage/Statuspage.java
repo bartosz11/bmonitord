@@ -20,14 +20,11 @@ public class Statuspage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    //dunno if this annotation is a good solution
-    @Fetch(FetchMode.JOIN)
     @ManyToMany
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Monitor> monitors;
     @Transient
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @JsonValue
     private List<StatuspageMonitorObject> statuspageMonitorObjects = new ArrayList<>();
     @OneToOne
     private StatuspageAnnouncement announcement;

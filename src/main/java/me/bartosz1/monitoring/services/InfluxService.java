@@ -17,6 +17,9 @@ public class InfluxService implements InitializingBean {
     private QueryApi queryApi;
     @Value("${monitoring.influxdb.bucket}")
     private String influxBucket;
+    @Value("${monitoring.influxdb.enabled}")
+    private boolean influxEnabled;
+
 
     public void getAgentData(String influxMeasurement, String influxQueryDuration, StatuspageMonitorObject statuspageMonitorObject) {
         //todo this might be temporary in both methods
@@ -74,6 +77,6 @@ public class InfluxService implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        queryApi = Monitoring.getInfluxClient().getQueryApi();
+        if (influxEnabled) queryApi = Monitoring.getInfluxClient().getQueryApi();
     }
 }
