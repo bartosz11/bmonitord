@@ -158,13 +158,14 @@ public class CheckStatusTask implements InitializingBean {
         incrementChecks(monitor, currentStatus);
         //Get incident sorted by start timestamp descending
         List<Incident> incidents = monitor.getIncidents().stream().sorted(Comparator.comparing(Incident::getStartTimestamp).reversed()).toList();
+        long epochSecond = Instant.now().getEpochSecond();
         if (monitor.getLastStatus() != MonitorStatus.UP && currentStatus == MonitorStatus.UP) {
             monitor.setLastStatus(currentStatus);
             if (incidents.isEmpty()) return;
             Incident lastIncident = incidents.get(0);
             if (lastIncident.isOngoing()) {
                 lastIncident.setOngoing(false);
-                lastIncident.setEndTimestamp(Instant.now().getEpochSecond());
+                lastIncident.setEndTimestamp(epochSecond);
                 lastIncident.setDuration(lastIncident.getEndTimestamp() - lastIncident.getStartTimestamp());
                 lastIncident = incidentRepository.save(lastIncident);
                 notificationService.sendNotifications(monitor, lastIncident);
@@ -175,10 +176,13 @@ public class CheckStatusTask implements InitializingBean {
                 Incident lastIncident = incidents.get(0);
                 if (lastIncident.isOngoing()) return;
             }
-            Incident incident = new Incident().setStartTimestamp(Instant.now().getEpochSecond()).setOngoing(true).setMonitor(monitor);
+            Incident incident = new Incident().setStartTimestamp(epochSecond).setOngoing(true).setMonitor(monitor);
             incident = incidentRepository.save(incident);
             monitor.addIncident(incident);
             notificationService.sendNotifications(monitor, incident);
+        }
+        if (currentStatus == MonitorStatus.UP) {
+          monitor.setLastSuccessfulCheck(epochSecond);
         }
     }
 

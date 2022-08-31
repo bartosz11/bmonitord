@@ -60,6 +60,7 @@ public class Monitor {
     @ManyToMany
     @JsonIgnore
     private List<Statuspage> statuspages;
+    private long lastSuccessfulCheck;
 
     public Monitor() {
     }
@@ -299,5 +300,14 @@ public class Monitor {
         if (!(checksUp + checksDown == 0)) {
             return (float) (checksUp / (checksUp + checksDown)) * 100;
         } else return 0;
+    }
+
+    public long getLastSuccessfulCheck() {
+        return lastSuccessfulCheck;
+    }
+
+    public Monitor setLastSuccessfulCheck(long lastSuccessfulCheck) {
+        this.lastSuccessfulCheck = lastSuccessfulCheck;
+        return this;
     }
 }

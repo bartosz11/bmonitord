@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -133,9 +134,9 @@ public class StatuspageService {
                 statuspageMonitorObject.setLastIncidents(incidentService.getFiveIncidentsByMonitorId(null, monitor.getId(), 0).getContent());
                 if (influxEnabled) {
                     if (monitor.getAgent() != null)
-                        influxService.getAgentData(monitor.getAgent().getId(), "-1m", statuspageMonitorObject);
+                        influxService.getLastAgentData(monitor.getAgent().getId(), monitor.getAgent().getLastDataReceived(), statuspageMonitorObject);
                     else
-                        influxService.getMonitorResponseTime(monitor.getId(), "-1m", statuspageMonitorObject);
+                        influxService.getLastMonitorResponseTime(monitor.getId(), monitor.getLastSuccessfulCheck(), statuspageMonitorObject);
                 }
                 statuspage.getStatuspageMonitorObjects().add(statuspageMonitorObject);
             });

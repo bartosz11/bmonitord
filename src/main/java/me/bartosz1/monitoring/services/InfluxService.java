@@ -21,10 +21,9 @@ public class InfluxService implements InitializingBean {
     private boolean influxEnabled;
 
 
-    public void getAgentData(String influxMeasurement, String influxQueryDuration, StatuspageMonitorObject statuspageMonitorObject) {
-        //todo this might be temporary in both methods
+    public void getLastAgentData(String influxMeasurement, long influxQueryDuration, StatuspageMonitorObject statuspageMonitorObject) {
         String influxWindowPeriod = "1m";
-        String query = "from(bucket: \"" + influxBucket + "\")  |> range(start: duration(v: " + influxQueryDuration + "))  |> filter(fn: (r) => r[\"_measurement\"] == \"" + influxMeasurement + "\")  |> filter(fn: (r) => r[\"_field\"] == \"ramUsage\" or r[\"_field\"] == \"swapUsage\" or r[\"_field\"] == \"rx\" or r[\"_field\"] == \"tx\" or r[\"_field\"] == \"cpuUsage\" or r[\"_field\"] == \"iowait\" or r[\"_field\"] == \"disksUsagePercent\")  |> aggregateWindow(every: " + influxWindowPeriod + ", fn: mean, createEmpty: false)  |> yield(name: \"mean\")";
+        String query = "from(bucket: \"" + influxBucket + "\")  |> range(start: duration(v: " + influxQueryDuration + "))  |> filter(fn: (r) => r[\"_measurement\"] == \"" + influxMeasurement + "\")  |> filter(fn: (r) => r[\"_field\"] == \"ramUsage\" or r[\"_field\"] == \"swapUsage\" or r[\"_field\"] == \"rx\" or r[\"_field\"] == \"tx\" or r[\"_field\"] == \"cpuUsage\" or r[\"_field\"] == \"iowait\" or r[\"_field\"] == \"disksUsagePercent\")  |> aggregateWindow(every: " + influxWindowPeriod + ", fn: mean, createEmpty: false)  |> last()";
         List<Long> timestamps = new ArrayList<>();
         List<Double> cpuUsage = new ArrayList<>();
         List<Double> ramUsage = new ArrayList<>();
@@ -60,9 +59,9 @@ public class InfluxService implements InitializingBean {
         statuspageMonitorObject.setIowait(iowait);
     }
 
-    public void getMonitorResponseTime(long influxMeasurement, String influxQueryDuration, StatuspageMonitorObject statuspageMonitorObject) {
+    public void getLastMonitorResponseTime(long influxMeasurement, long influxQueryDuration, StatuspageMonitorObject statuspageMonitorObject) {
         String influxWindowPeriod = "1m";
-        String query = "from(bucket: \"" + influxBucket + "\")  |> range(start: duration(v: " + influxQueryDuration + "))  |> filter(fn: (r) => r[\"_measurement\"] == \"" + influxMeasurement + "\")  |> filter(fn: (r) => r[\"_field\"] == \"responseTime\")  |> aggregateWindow(every: " + influxWindowPeriod + ", fn: mean, createEmpty: false)  |> yield(name: \"mean\")";
+        String query = "from(bucket: \"" + influxBucket + "\")  |> range(start: " + influxQueryDuration + ")  |> filter(fn: (r) => r[\"_measurement\"] == \"" + influxMeasurement + "\")  |> filter(fn: (r) => r[\"_field\"] == \"responseTime\")  |> aggregateWindow(every: " + influxWindowPeriod + ", fn: mean, createEmpty: false)  |> last()";
         List<Long> timestamps = new ArrayList<>();
         List<Long> responseTimes = new ArrayList<>();
         queryApi.query(query).forEach(fluxTable -> {
