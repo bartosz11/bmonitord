@@ -21,7 +21,7 @@ dependencies {
     //JWT
     implementation 'com.auth0:java-jwt:4.0.0'
     //Databases
-    implementation 'com.influxdb:influxdb-client-java:6.5.0'
+    implementation 'com.influxdb:influxdb-client-java:6.7.0'
     implementation 'mysql:mysql-connector-java'
     implementation 'org.postgresql:postgresql'
     //Logging
