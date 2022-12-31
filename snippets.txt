@@ -1,6 +1,0 @@
-Here are some snippets I use very often while working on this project. I just have this file open in IntellIJ or whatever editor I use.
-
-@AuthenticationPrincipal User user
-public ResponseEntity<Response>
-
-return new Response()
