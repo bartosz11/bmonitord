@@ -22,13 +22,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(path = "/current", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Response> currentUser(@AuthenticationPrincipal User user) {
         return new Response(HttpStatus.OK).addAdditionalData(user).toResponseEntity();
     }
 
-    @RequestMapping(path = "/delete", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(path = "", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Response> deleteUserAccount(@AuthenticationPrincipal User user) {
         userService.deleteUserAccount(user);
@@ -39,7 +39,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<Response> changeUsername(@AuthenticationPrincipal User user, @RequestParam(name = "username") String newUsername) throws UsernameAlreadyTakenException {
         User user1 = userService.changeUsername(user, newUsername);
-        return new Response(HttpStatus.OK).addAdditionalData(user1).toResponseEntity();
+        return new Response(HttpStatus.NO_CONTENT).addAdditionalData(user1).toResponseEntity();
     }
 
     @RequestMapping(path = "/password", method = RequestMethod.PATCH, produces = "application/json")

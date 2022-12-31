@@ -1,6 +1,7 @@
 package me.bartosz1.monitoring.controllers;
 
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
+import me.bartosz1.monitoring.exceptions.IllegalParameterException;
 import me.bartosz1.monitoring.models.Response;
 import me.bartosz1.monitoring.models.Statuspage;
 import me.bartosz1.monitoring.models.StatuspageAnnouncementCDO;
@@ -12,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -24,7 +26,7 @@ public class StatuspageController {
         this.statuspageService = statuspageService;
     }
 
-    @RequestMapping(path = "/add", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(path = "", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Response> createStatuspage(@AuthenticationPrincipal User user, @RequestParam String name, @RequestParam(required = false) String monitors) {
         List<Long> ids = new ArrayList<>();
@@ -38,44 +40,48 @@ public class StatuspageController {
         return new Response(HttpStatus.CREATED).addAdditionalData(statuspage).toResponseEntity();
     }
 
-    @RequestMapping(path = "/delete", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> deleteStatuspage(@AuthenticationPrincipal User user, @RequestParam long id) throws EntityNotFoundException {
+    public ResponseEntity<Response> deleteStatuspage(@AuthenticationPrincipal User user, @PathVariable long id) throws EntityNotFoundException {
         statuspageService.deleteStatuspage(id, user);
         return new Response(HttpStatus.NO_CONTENT).toResponseEntity();
     }
 
-    @RequestMapping(path = "/get", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> getStatuspage(@AuthenticationPrincipal User user, @RequestParam long id) throws EntityNotFoundException {
+    public ResponseEntity<Response> getStatuspage(@AuthenticationPrincipal User user, @PathVariable long id) throws EntityNotFoundException {
         Statuspage statuspage = statuspageService.getStatuspageByIdAndUser(id, user);
         return new Response(HttpStatus.OK).addAdditionalData(statuspage).toResponseEntity();
     }
 
-    @RequestMapping(path = "/list", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Response> listStatuspages(@AuthenticationPrincipal User user) {
         return new Response(HttpStatus.OK).addAdditionalData(statuspageService.getAllStatuspagesByUser(user)).toResponseEntity();
     }
 
-    @RequestMapping(path = "/rename", method = RequestMethod.PATCH, produces = "application/json")
+    @RequestMapping(path = "/{id}/rename", method = RequestMethod.PATCH, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> renameStatuspage(@AuthenticationPrincipal User user, long id, String newName) throws EntityNotFoundException {
-        Statuspage statuspage = statuspageService.renameStatuspage(user, id, newName);
+    public ResponseEntity<Response> renameStatuspage(@AuthenticationPrincipal User user, @PathVariable long id, @RequestBody HashMap<String, String> body) throws EntityNotFoundException, IllegalParameterException {
+        //subject-to-change maybe
+        if (!body.containsKey("name") || body.get("name") == null)
+            throw new IllegalParameterException("Name cannot be null.");
+        Statuspage statuspage = statuspageService.renameStatuspage(user, id, body.get("name"));
         return new Response(HttpStatus.OK).addAdditionalField("id", statuspage.getId()).addAdditionalField("name", statuspage.getName()).toResponseEntity();
     }
+
     //used for editing too
-    @RequestMapping(path = "/addannouncement", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(path = "/{id}/announcement", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    private ResponseEntity<Response> addAnnouncement(@AuthenticationPrincipal User user, @RequestBody StatuspageAnnouncementCDO cdo) throws EntityNotFoundException {
-        Statuspage statuspage = statuspageService.addAnnouncement(user, cdo);
+    private ResponseEntity<Response> addAnnouncement(@AuthenticationPrincipal User user, @RequestBody StatuspageAnnouncementCDO cdo, @PathVariable long id) throws EntityNotFoundException {
+        Statuspage statuspage = statuspageService.addAnnouncement(user, cdo, id);
         return new Response(HttpStatus.OK).addAdditionalField("statuspageId", statuspage.getId()).addAdditionalField("announcementId", statuspage.getAnnouncement().getId()).toResponseEntity();
     }
 
-    @RequestMapping(path = "/deleteannouncement", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(path = "/{id}/announcement", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
-    private ResponseEntity<Response> deleteAnnouncement(@AuthenticationPrincipal User user, @RequestParam(name = "pageid") long statuspageId) throws EntityNotFoundException {
-        Statuspage statuspage = statuspageService.removeAnnouncement(user, statuspageId);
+    private ResponseEntity<Response> deleteAnnouncement(@AuthenticationPrincipal User user, @PathVariable long id) throws EntityNotFoundException {
+        Statuspage statuspage = statuspageService.removeAnnouncement(user, id);
         return new Response(HttpStatus.NO_CONTENT).toResponseEntity();
     }
 }

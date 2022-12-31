@@ -16,7 +16,8 @@ public class StatuspageAnnouncement {
     private String content;
     private StatuspageAnnouncementType type;
 
-    public StatuspageAnnouncement() {}
+    public StatuspageAnnouncement() {
+    }
 
     public StatuspageAnnouncement(StatuspageAnnouncementCDO cdo, Statuspage statuspage) {
         this.content = cdo.getContent();
@@ -24,6 +25,7 @@ public class StatuspageAnnouncement {
         this.type = cdo.getType();
         this.statuspage = statuspage;
     }
+
     public long getId() {
         return id;
     }

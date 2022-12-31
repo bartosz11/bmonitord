@@ -1,6 +1,7 @@
 package me.bartosz1.monitoring.models;
 
 import me.bartosz1.monitoring.models.enums.MonitorType;
+
 public class MonitorCDO {
 
     private String name;

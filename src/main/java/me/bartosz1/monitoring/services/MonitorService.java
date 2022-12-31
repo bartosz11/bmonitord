@@ -136,7 +136,7 @@ public class MonitorService {
                 return monitor;
             }
         }
-        throw new EntityNotFoundException("Monitor with ID "+monitorId+" not found.");
+        throw new EntityNotFoundException("Monitor with ID " + monitorId + " not found.");
     }
 
     public Monitor assignMonitorToStatuspage(User user, long monitorId, long pageId) throws EntityNotFoundException {

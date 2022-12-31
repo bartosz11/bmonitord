@@ -23,9 +23,9 @@ public class IncidentController {
         this.incidentService = incidentService;
     }
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> getIncidentById(@RequestParam long id, @AuthenticationPrincipal User user) throws EntityNotFoundException {
+    public ResponseEntity<Response> getIncidentById(@PathVariable long id, @AuthenticationPrincipal User user) throws EntityNotFoundException {
         Incident incident = incidentService.findByIdAndUser(id, user);
         return new Response(HttpStatus.OK).addAdditionalData(incident).toResponseEntity();
     }

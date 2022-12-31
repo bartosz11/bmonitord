@@ -21,36 +21,36 @@ public class NotificationListController {
         this.notificationListService = notificationListService;
     }
 
-    @RequestMapping(path = "/add", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(path = "", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Response> createNotificationList(@AuthenticationPrincipal User user, @RequestBody NotificationListCDO cdo) {
         NotificationList notificationList = notificationListService.createNotificationList(cdo, user);
         return new Response(HttpStatus.CREATED).addAdditionalData(notificationList).toResponseEntity();
     }
 
-    @RequestMapping(path = "/delete", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> deleteNotificationList(@AuthenticationPrincipal User user, @RequestParam long id) throws EntityNotFoundException {
+    public ResponseEntity<Response> deleteNotificationList(@AuthenticationPrincipal User user, @PathVariable long id) throws EntityNotFoundException {
         notificationListService.deleteNotificationList(id, user);
         return new Response(HttpStatus.NO_CONTENT).toResponseEntity();
     }
 
-    @RequestMapping(path = "/get", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> getNotificationList(@AuthenticationPrincipal User user, @RequestParam long id) throws EntityNotFoundException {
+    public ResponseEntity<Response> getNotificationList(@AuthenticationPrincipal User user, @PathVariable long id) throws EntityNotFoundException {
         NotificationList notificationList = notificationListService.getNotificationListByIdAndUser(id, user);
         return new Response(HttpStatus.OK).addAdditionalData(notificationList).toResponseEntity();
     }
 
-    @RequestMapping(path = "/list", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Response> listNotificationLists(@AuthenticationPrincipal User user) {
         return new Response(HttpStatus.OK).addAdditionalData(notificationListService.getAllNotificationListsByUser(user)).toResponseEntity();
     }
 
-    @RequestMapping(path = "/modify", method = RequestMethod.PATCH, produces = "application/json")
+    @RequestMapping(path = "/{id}", method = RequestMethod.PATCH, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> modifyNotificationList(@AuthenticationPrincipal User user, @RequestBody NotificationListCDO cdo, @RequestParam long id) throws EntityNotFoundException {
+    public ResponseEntity<Response> modifyNotificationList(@AuthenticationPrincipal User user, @RequestBody NotificationListCDO cdo, @PathVariable long id) throws EntityNotFoundException {
         NotificationList notificationList = notificationListService.modifyNotificationList(user, cdo, id);
         return new Response(HttpStatus.OK).addAdditionalData(notificationList).toResponseEntity();
     }

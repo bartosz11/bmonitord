@@ -128,6 +128,16 @@ public class Heartbeat {
         return this;
     }
 
+    public Heartbeat setDiskData(DiskData data) {
+        this.diskData = data.toString();
+        return this;
+    }
+
+    public Heartbeat setDiskData(List<DiskData> data) {
+        this.diskData = DiskData.listToString(data);
+        return this;
+    }
+
     public long getResponseTime() {
         return responseTime;
     }
@@ -152,16 +162,6 @@ public class Heartbeat {
 
     public Heartbeat setTimestamp(long timestamp) {
         this.timestamp = timestamp;
-        return this;
-    }
-
-    public Heartbeat setDiskData(DiskData data) {
-        this.diskData = data.toString();
-        return this;
-    }
-
-    public Heartbeat setDiskData(List<DiskData> data) {
-        this.diskData = DiskData.listToString(data);
         return this;
     }
 

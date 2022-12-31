@@ -7,7 +7,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import me.bartosz1.monitoring.models.User;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -25,7 +24,7 @@ public class JwtTokenUtils implements InitializingBean {
     private JWTVerifier verifier;
 
     public String generateToken(User user) {
-        String subject = user.getUsername()+"+"+user.getAuthSalt();
+        String subject = user.getUsername() + "+" + user.getAuthSalt();
         return JWT.create()
                 .withExpiresAt(Instant.ofEpochMilli(System.currentTimeMillis() + VALIDITY)).withIssuedAt(Instant.now()).withSubject(subject).withIssuer(issuer)
                 .sign(algo);
@@ -36,7 +35,6 @@ public class JwtTokenUtils implements InitializingBean {
         String tokenSubject = jwt.getSubject();
         Date tokenExpiry = jwt.getExpiresAt();
         String s = user.getUsername() + "+" + user.getAuthSalt();
-        System.out.println(tokenSubject+" : "+s);
         return (tokenSubject.equals(s) && !tokenExpiry.before(new Date()));
     }
 

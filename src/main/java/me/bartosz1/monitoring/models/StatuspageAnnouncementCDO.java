@@ -6,7 +6,6 @@ public class StatuspageAnnouncementCDO {
 
     private String title;
     private String content;
-    private long statuspageId;
     private StatuspageAnnouncementType type;
 
     public String getTitle() {
@@ -24,15 +23,6 @@ public class StatuspageAnnouncementCDO {
 
     public StatuspageAnnouncementCDO setContent(String content) {
         this.content = content;
-        return this;
-    }
-
-    public long getStatuspageId() {
-        return statuspageId;
-    }
-
-    public StatuspageAnnouncementCDO setStatuspageId(long statuspageId) {
-        this.statuspageId = statuspageId;
         return this;
     }
 

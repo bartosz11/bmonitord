@@ -1,6 +1,7 @@
 package me.bartosz1.monitoring.controllers;
 
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
+import me.bartosz1.monitoring.exceptions.IllegalParameterException;
 import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.MonitorCDO;
 import me.bartosz1.monitoring.models.Response;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @RestController
 @RequestMapping("/api/monitor")
 public class MonitorController {
@@ -22,7 +25,7 @@ public class MonitorController {
         this.monitorService = monitorService;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/add", produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, value = "", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Response> createMonitor(@RequestBody MonitorCDO cdo, @AuthenticationPrincipal User user) {
         Monitor monitor = monitorService.createMonitor(cdo, user);
@@ -31,65 +34,70 @@ public class MonitorController {
         return new Response(HttpStatus.CREATED).addAdditionalField("id", monitor.getId()).toResponseEntity();
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/delete", produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> deleteMonitor(@RequestParam long id, @AuthenticationPrincipal User user) throws EntityNotFoundException {
+    public ResponseEntity<Response> deleteMonitor(@PathVariable long id, @AuthenticationPrincipal User user) throws EntityNotFoundException {
         monitorService.deleteMonitor(id, user);
         return new Response(HttpStatus.NO_CONTENT).toResponseEntity();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/list", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Response> listMonitors(@AuthenticationPrincipal User user) {
         Iterable<Monitor> data = monitorService.getAllMonitorsByUser(user);
         return new Response(HttpStatus.OK).addAdditionalData(data).toResponseEntity();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/get", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> getMonitor(@RequestParam long id, @AuthenticationPrincipal User user) throws EntityNotFoundException {
+    public ResponseEntity<Response> getMonitor(@PathVariable long id, @AuthenticationPrincipal User user) throws EntityNotFoundException {
         Monitor monitor = monitorService.getMonitorByIdAndUser(id, user);
         return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
     }
 
-    @RequestMapping(method = RequestMethod.PATCH, value = "/pause", produces = "application/json")
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{id}/pause", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> pauseMonitor(@RequestParam long id, @RequestParam boolean pause, @AuthenticationPrincipal User user) throws EntityNotFoundException {
+    public ResponseEntity<Response> pauseMonitor(@PathVariable long id, @RequestParam boolean pause, @AuthenticationPrincipal User user) throws EntityNotFoundException {
         Monitor monitor = monitorService.pauseMonitor(id, pause, user);
         return new Response(HttpStatus.OK).addAdditionalField("pause", monitor.isPaused()).addAdditionalField("id", monitor.getId()).toResponseEntity();
     }
 
-    @RequestMapping(method = RequestMethod.PATCH, value = "/rename", produces = "application/json")
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{id}/rename", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> renameMonitor(@RequestParam long id, @RequestParam String name, @AuthenticationPrincipal User user) throws EntityNotFoundException {
-        Monitor monitor = monitorService.renameMonitor(id, name, user);
+    public ResponseEntity<Response> renameMonitor(@PathVariable long id, @RequestBody HashMap<String, String> body, @AuthenticationPrincipal User user) throws EntityNotFoundException, IllegalParameterException {
+        //subject-to-change I guess
+        if (!body.containsKey("name") || body.get("name") == null)
+            throw new IllegalParameterException("Name cannot be null.");
+        Monitor monitor = monitorService.renameMonitor(id, body.get("name"), user);
         return new Response(HttpStatus.OK).addAdditionalField("name", monitor.getName()).addAdditionalField("id", monitor.getId()).toResponseEntity();
     }
 
-    @RequestMapping(method = RequestMethod.PATCH, value = "/assignlist", produces = "application/json")
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{monitorId]/list/{listId}", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> assignNotificationListToMonitor(@AuthenticationPrincipal User user, @RequestParam(name = "monitorid") long monitorId, @RequestParam(name = "listid") long listId) throws EntityNotFoundException {
+    public ResponseEntity<Response> assignNotificationListToMonitor(@AuthenticationPrincipal User user, @PathVariable long monitorId, @PathVariable long listId) throws EntityNotFoundException {
         Monitor monitor = monitorService.assignNotificationListToMonitor(user, monitorId, listId);
         return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
     }
 
-    @RequestMapping(method = RequestMethod.PATCH, value = "/unassignlist", produces = "application/json")
+    //I think using DELETE sort of makes sense here - I'm "deleting" the link between list and monitor
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{monitorId]/list/{listId}", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> unassignNotificationListFromMonitor(@AuthenticationPrincipal User user, @RequestParam(name = "monitorid") long monitorId) throws EntityNotFoundException {
+    //listId isn't used but is here on purpose - I'm probably going to switch the relationship between monitor and list to ManyToMany
+    public ResponseEntity<Response> unassignNotificationListFromMonitor(@AuthenticationPrincipal User user, @PathVariable long monitorId, @PathVariable long listId) throws EntityNotFoundException {
         Monitor monitor = monitorService.unassignNotificationListFromMonitor(user, monitorId);
         return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
     }
 
-    @RequestMapping(method = RequestMethod.PATCH, value = "/assignpage", produces = "application/json")
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{monitorId}/statuspage/{pageId}", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> assignStatuspageToMonitor(@AuthenticationPrincipal User user, @RequestParam(name = "monitorid") long monitorId, @RequestParam(name = "pageid") long pageId) throws EntityNotFoundException {
+    public ResponseEntity<Response> assignStatuspageToMonitor(@AuthenticationPrincipal User user, @PathVariable long monitorId, @PathVariable long pageId) throws EntityNotFoundException {
         Monitor monitor = monitorService.assignMonitorToStatuspage(user, monitorId, pageId);
         return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
     }
 
-    @RequestMapping(method = RequestMethod.PATCH, value = "/unassignpage", produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{monitorId}/statuspage/{pageId}", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> unassignStatuspageFromMonitor(@AuthenticationPrincipal User user, @RequestParam(name = "monitorid") long monitorId, @RequestParam(name = "pageid") long pageId) throws EntityNotFoundException {
+    public ResponseEntity<Response> unassignStatuspageFromMonitor(@AuthenticationPrincipal User user, @PathVariable long monitorId, @PathVariable long pageId) throws EntityNotFoundException {
         Monitor monitor = monitorService.unassignMonitorFromStatuspage(user, monitorId, pageId);
         return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
     }

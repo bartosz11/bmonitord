@@ -1,4 +1,5 @@
 src/main/resources/application.yml
+notes.txt
 
 .gradle
 build/

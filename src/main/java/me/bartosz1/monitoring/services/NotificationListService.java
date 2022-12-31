@@ -31,7 +31,7 @@ public class NotificationListService {
                 return notificationList;
             }
         }
-        throw new EntityNotFoundException("Notification list with ID "+id+" not found.");
+        throw new EntityNotFoundException("Notification list with ID " + id + " not found.");
     }
 
     public NotificationList getNotificationListByIdAndUser(long id, User user) throws EntityNotFoundException {
@@ -42,7 +42,7 @@ public class NotificationListService {
                 return notificationList;
             }
         }
-        throw new EntityNotFoundException("Notification list with ID "+id+" not found.");
+        throw new EntityNotFoundException("Notification list with ID " + id + " not found.");
     }
 
     public Iterable<NotificationList> getAllNotificationListsByUser(User user) {
@@ -59,6 +59,6 @@ public class NotificationListService {
                 return newNotificationList;
             }
         }
-        throw new EntityNotFoundException("Notification list with ID "+id+" not found.");
+        throw new EntityNotFoundException("Notification list with ID " + id + " not found.");
     }
 }

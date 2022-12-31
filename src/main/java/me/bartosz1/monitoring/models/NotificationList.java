@@ -35,7 +35,9 @@ public class NotificationList {
         this.gotifyInstanceURL = cdo.getGotifyInstanceURL();
     }
 
-    public NotificationList() {}
+    public NotificationList() {
+    }
+
     public long getId() {
         return id;
     }

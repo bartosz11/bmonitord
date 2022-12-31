@@ -28,6 +28,7 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
     //todo alphanumeric username only protection here
     public User createUserAccount(String username, String password) throws UsernameAlreadyTakenException, InvalidPasswordException, RegistrationDisabledException, IllegalUsernameException {
         if (!registrationEnabled)

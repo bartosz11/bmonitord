@@ -12,6 +12,35 @@ public class DiskData {
     private long usedBytes;
     private long totalBytes;
 
+    //expects a string in format
+    // mountpoint,usage,totalBytes,usedBytes
+    public static DiskData fromString(String s) {
+        String[] split = s.split(",");
+        DiskData diskData = new DiskData();
+        diskData.setMountpoint(split[0]);
+        diskData.setUsage(Float.parseFloat(split[1]));
+        diskData.setTotalBytes(Long.parseLong(split[2]));
+        diskData.setUsedBytes(Long.parseLong(split[3]));
+        return diskData;
+    }
+
+    //expects a string <diskData format from above method>;<some disk again>;...;...
+    public static List<DiskData> multipleFromString(String s) {
+        List<String> disksString = Arrays.asList(s.split(";"));
+        List<DiskData> disks = new ArrayList<>();
+        disksString.forEach(diskString -> disks.add(fromString(diskString)));
+        return disks;
+    }
+
+    public static String listToString(List<DiskData> list) {
+        StringBuilder builder = new StringBuilder();
+        for (DiskData diskData : list) {
+            builder.append(diskData);
+            builder.append(";");
+        }
+        return builder.toString();
+    }
+
     public String getMountpoint() {
         return mountpoint;
     }
@@ -48,37 +77,8 @@ public class DiskData {
         return this;
     }
 
-    //expects a string in format
-    // mountpoint,usage,totalBytes,usedBytes
-    public static DiskData fromString(String s) {
-        String[] split = s.split(",");
-        DiskData diskData = new DiskData();
-        diskData.setMountpoint(split[0]);
-        diskData.setUsage(Float.parseFloat(split[1]));
-        diskData.setTotalBytes(Long.parseLong(split[2]));
-        diskData.setUsedBytes(Long.parseLong(split[3]));
-        return diskData;
-    }
-
-    //expects a string <diskData format from above method>;<some disk again>;...;...
-    public static List<DiskData> multipleFromString(String s) {
-        List<String> disksString = Arrays.asList(s.split(";"));
-        List<DiskData> disks = new ArrayList<>();
-        disksString.forEach(diskString -> disks.add(fromString(diskString)));
-        return disks;
-    }
-
     @Override
     public String toString() {
         return String.format("%s,%f,%d,%d", getMountpoint(), getUsage(), getTotalBytes(), getUsedBytes());
-    }
-
-    public static String listToString(List<DiskData> list) {
-        StringBuilder builder = new StringBuilder();
-        for (DiskData diskData : list) {
-            builder.append(diskData);
-            builder.append(";");
-        }
-        return builder.toString();
     }
 }
