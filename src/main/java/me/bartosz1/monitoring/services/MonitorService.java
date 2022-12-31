@@ -1,105 +1,71 @@
 package me.bartosz1.monitoring.services;
 
-import com.influxdb.client.domain.DeletePredicateRequest;
-import me.bartosz1.monitoring.Monitoring;
-import me.bartosz1.monitoring.models.Agent;
-import me.bartosz1.monitoring.models.ContactList;
-import me.bartosz1.monitoring.models.User;
-import me.bartosz1.monitoring.models.monitor.Monitor;
-import me.bartosz1.monitoring.models.monitor.MonitorCDO;
-import me.bartosz1.monitoring.models.monitor.MonitorType;
-import me.bartosz1.monitoring.models.statuspage.Statuspage;
-import me.bartosz1.monitoring.repos.*;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
+import me.bartosz1.monitoring.models.*;
+import me.bartosz1.monitoring.models.enums.MonitorType;
+import me.bartosz1.monitoring.repositories.AgentRepository;
+import me.bartosz1.monitoring.repositories.MonitorRepository;
+import me.bartosz1.monitoring.repositories.NotificationListRepository;
+import me.bartosz1.monitoring.repositories.StatuspageRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class MonitorService {
 
-    @Autowired
-    private MonitorRepository monitorRepository;
-    @Autowired
-    private IncidentRepository incidentRepository;
-    @Autowired
-    private ContactListRepository contactListRepository;
-    @Autowired
-    private AgentRepository agentRepository;
-    @Autowired
-    private StatuspageRepository statuspageRepository;
+    private final MonitorRepository monitorRepository;
+    private final AgentRepository agentRepository;
+    private final NotificationListRepository notificationListRepository;
+    private final StatuspageRepository statuspageRepository;
 
-    @Value("${monitoring.influxdb.enabled}")
-    private boolean influxEnabled;
-    @Value("${monitoring.influxdb.organization}")
-    private String influxOrg;
-    @Value("${monitoring.influxdb.bucket}")
-    private String influxBucket;
-    @Autowired
-    private ZoneId zoneId;
-
-    public Monitor addMonitor(User user, MonitorCDO cdo) {
-        if (cdo.getType() == MonitorType.AGENT) {
-            String id;
-            do {
-                id = RandomStringUtils.random(16, true, true);
-            } while (agentRepository.existsById(id));
-            Agent agent = new Agent().setId(id);
-            return monitorRepository.save(new Monitor(cdo, user, agent, Instant.now()));
-        } else return monitorRepository.save(new Monitor(cdo, user, Instant.now()));
+    public MonitorService(MonitorRepository monitorRepository, AgentRepository agentRepository, NotificationListRepository notificationListRepository,
+                          StatuspageRepository statuspageRepository) {
+        this.monitorRepository = monitorRepository;
+        this.agentRepository = agentRepository;
+        this.notificationListRepository = notificationListRepository;
+        this.statuspageRepository = statuspageRepository;
     }
 
-    public Monitor deleteMonitor(long id, User user) {
+    public Monitor createMonitor(MonitorCDO cdo, User user) {
+        if (cdo.getType() == MonitorType.AGENT) {
+            return monitorRepository.save(new Monitor(cdo, user, Instant.now(), new Agent()));
+        }
+        return monitorRepository.save(new Monitor(cdo, user, Instant.now()));
+    }
+
+    public Monitor deleteMonitor(long id, User user) throws EntityNotFoundException {
         Optional<Monitor> optionalMonitor = monitorRepository.findById(id);
         if (optionalMonitor.isPresent()) {
             Monitor monitor = optionalMonitor.get();
             if (monitor.getUser().getId() == user.getId()) {
-                List<Statuspage> bulkSaveStatuspages = new ArrayList<>();
-                monitor.getStatuspages().forEach(statuspage -> {
-                    statuspage.getMonitors().remove(monitor);
-                    bulkSaveStatuspages.add(statuspage);
-                });
-                statuspageRepository.saveAll(bulkSaveStatuspages);
-                incidentRepository.deleteAllByMonitorId(monitor.getId());
+                //todo add cascading stuff here if needed
+               /* NotificationList notificationList = monitor.getNotificationList();
+                notificationList.getMonitors().remove(monitor);
+                notificationListRepository.save(notificationList);
+                */
                 monitorRepository.delete(monitor);
-                if (influxEnabled) {
-                    OffsetDateTime createdAt = OffsetDateTime.ofInstant(Instant.ofEpochSecond(monitor.getCreatedAt()), zoneId);
-                    DeletePredicateRequest deletePredicateRequest = new DeletePredicateRequest().start(createdAt);
-                    if (monitor.getType() == MonitorType.AGENT) {
-                        String agentId = monitor.getAgent().getId();
-                        deletePredicateRequest.predicate("_measurement=\"" + agentId + "\"");
-                    } else deletePredicateRequest.predicate("_measurement=\"" + monitor.getId() + "\"");
-                    deletePredicateRequest.stop(OffsetDateTime.now(zoneId));
-                    Monitoring.getInfluxClient().getDeleteApi().delete(deletePredicateRequest, influxBucket, influxOrg);
-                }
                 return monitor;
             }
         }
-        return null;
+        throw new EntityNotFoundException("Monitor with ID " + id + " not found.");
     }
 
-    //Maybe I shouldn't proxy this?
-    public Iterable<Monitor> findAllByUser(User user) {
-        return monitorRepository.findAllByUserId(user.getId());
-    }
-
-    public Monitor findByIdAndUser(long id, User user) {
+    public Monitor getMonitorByIdAndUser(long id, User user) throws EntityNotFoundException {
         Optional<Monitor> optionalMonitor = monitorRepository.findById(id);
         if (optionalMonitor.isPresent()) {
             Monitor monitor = optionalMonitor.get();
             if (monitor.getUser().getId() == user.getId()) return monitor;
         }
-        return null;
+        throw new EntityNotFoundException("Monitor with ID " + id + " not found.");
     }
 
-    public Monitor renameMonitor(long id, String name, User user) {
+    public Iterable<Monitor> getAllMonitorsByUser(User user) {
+        return monitorRepository.findAllByUser(user);
+    }
+
+    public Monitor renameMonitor(long id, String name, User user) throws EntityNotFoundException {
         Optional<Monitor> optionalMonitor = monitorRepository.findById(id);
         if (optionalMonitor.isPresent()) {
             Monitor monitor = optionalMonitor.get();
@@ -108,10 +74,10 @@ public class MonitorService {
                 return monitorRepository.save(monitor);
             }
         }
-        return null;
+        throw new EntityNotFoundException("Monitor with ID " + id + " not found.");
     }
 
-    public Monitor pauseMonitor(long id, boolean pause, User user) {
+    public Monitor pauseMonitor(long id, boolean pause, User user) throws EntityNotFoundException {
         Optional<Monitor> optionalMonitor = monitorRepository.findById(id);
         if (optionalMonitor.isPresent()) {
             Monitor monitor = optionalMonitor.get();
@@ -120,88 +86,91 @@ public class MonitorService {
                 return monitorRepository.save(monitor);
             }
         }
-        return null;
+        throw new EntityNotFoundException("Monitor with ID " + id + " not found.");
     }
 
-    public Monitor assignContactList(User user, long monitorId, long contactListId) {
-        Optional<ContactList> optionalContactList = contactListRepository.findById(contactListId);
-        Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
-        if (optionalContactList.isPresent() && optionalMonitor.isPresent()) {
-            ContactList contactList = optionalContactList.get();
-            Monitor monitor = optionalMonitor.get();
-            if (contactList.getUser().getId() == user.getId() && monitor.getUser().getId() == user.getId()) {
-                contactList.getMonitors().add(monitor);
-                monitor.setContactList(contactList);
-                contactListRepository.save(contactList);
-                return monitorRepository.save(monitor);
-            }
-        }
-        return null;
-    }
-
-    public Monitor unassignContactList(User user, long monitorId) {
-        Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
+    public Monitor publishMonitor(long id, boolean publish, User user) throws EntityNotFoundException, IllegalStateException {
+        Optional<Monitor> optionalMonitor = monitorRepository.findById(id);
         if (optionalMonitor.isPresent()) {
             Monitor monitor = optionalMonitor.get();
             if (monitor.getUser().getId() == user.getId()) {
-                ContactList contactList = monitor.getContactList();
-                if (contactList != null) {
-                    monitor.getContactList().getMonitors().remove(monitor);
-                    contactListRepository.save(monitor.getContactList());
-                }
-                monitor.setContactList(null);
+                if (!monitor.getStatuspages().isEmpty() && !publish)
+                    //subject-to-change maybe use some wrapper of IllegalStateException????
+                    throw new IllegalStateException("Monitors can't be unpublished when assigned to any statuspage.");
+                monitor.setPublished(publish);
                 return monitorRepository.save(monitor);
             }
         }
-        return null;
-    }
-    
-    public Monitor assignStatuspage(User user, long monitorId, long statuspageId) {
-        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(statuspageId);
-        Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
-        if (optionalStatuspage.isPresent() && optionalMonitor.isPresent()) {
-            Statuspage statuspage = optionalStatuspage.get();
-            Monitor monitor = optionalMonitor.get();
-            if (statuspage.getUser().getId() == user.getId() && monitor.getUser().getId() == user.getId()) {
-                monitor.setPublic(true);
-                statuspage.getMonitors().add(monitor);
-                monitor.getStatuspages().add(statuspage);
-                monitor = monitorRepository.save(monitor);
-                statuspageRepository.save(statuspage);
-                return monitor;
-            }
-        }
-        return null;
+        throw new EntityNotFoundException("Monitor with ID " + id + " not found.");
     }
 
-    public Monitor unassignStatuspage(User user, long monitorId, long statuspageId) {
-        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(statuspageId);
+    public Monitor assignNotificationListToMonitor(User user, long monitorId, long notificationListId) throws EntityNotFoundException {
         Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
-        if (optionalStatuspage.isPresent() && optionalMonitor.isPresent()) {
-            Statuspage statuspage = optionalStatuspage.get();
+        Optional<NotificationList> optionalNotificationList = notificationListRepository.findById(notificationListId);
+        if (optionalMonitor.isPresent() && optionalNotificationList.isPresent()) {
             Monitor monitor = optionalMonitor.get();
-            if (statuspage.getUser().getId() == user.getId() && monitor.getUser().getId() == user.getId()) {
-                statuspage.getMonitors().remove(monitor);
-                monitor.getStatuspages().remove(statuspage);
-                monitor = monitorRepository.save(monitor);
-                statuspageRepository.save(statuspage);
-                return monitor;
+            NotificationList notificationList = optionalNotificationList.get();
+            if (monitor.getUser().getId() == user.getId() && notificationList.getUser().getId() == user.getId()) {
+                monitor.setNotificationList(notificationList);
+                notificationList.getMonitors().add(monitor);
+                notificationListRepository.save(notificationList);
+                return monitorRepository.save(monitor);
             }
         }
-        return null;
+        throw new EntityNotFoundException("Monitor or notification list with given ID not found.");
     }
 
-    public Monitor publishMonitor(User user, long monitorId, boolean publish) {
+    public Monitor unassignNotificationListFromMonitor(User user, long monitorId) throws EntityNotFoundException {
         Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
         if (optionalMonitor.isPresent()) {
             Monitor monitor = optionalMonitor.get();
-            if (monitor.getUser().getId()==user.getId()) {
-                //todo block unpublishing when there's any statuspage assigned
-                //if (monitor.getStatuspages().isEmpty() && !publish) monitor
-                monitor.setPublic(publish);
+            NotificationList notificationList = monitor.getNotificationList();
+            if (monitor.getUser().getId() == user.getId()) {
+                //technically it has to be assigned somehow, but better safe than sorry or something
+                if (notificationList != null) {
+                    notificationList.getMonitors().remove(monitor);
+                    notificationListRepository.save(notificationList);
+                    monitor.setNotificationList(null);
+                    monitor = monitorRepository.save(monitor);
+                }
+                return monitor;
+            }
+        }
+        throw new EntityNotFoundException("Monitor with ID "+monitorId+" not found.");
+    }
+
+    public Monitor assignMonitorToStatuspage(User user, long monitorId, long pageId) throws EntityNotFoundException {
+        Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
+        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(pageId);
+        if (optionalMonitor.isPresent() && optionalStatuspage.isPresent()) {
+            Monitor monitor = optionalMonitor.get();
+            Statuspage statuspage = optionalStatuspage.get();
+            if (monitor.getUser().getId() == user.getId() && statuspage.getUser().getId() == user.getId()) {
+                monitor.setPublished(true);
+                //prevent duplicates
+                if (!statuspage.getMonitors().contains(monitor)) statuspage.getMonitors().add(monitor);
+                if (!monitor.getStatuspages().contains(statuspage)) monitor.getStatuspages().add(statuspage);
+                statuspageRepository.save(statuspage);
                 return monitorRepository.save(monitor);
             }
         }
-        return null;
+        throw new EntityNotFoundException("Monitor or statuspage with given ID not found.");
+    }
+
+    public Monitor unassignMonitorFromStatuspage(User user, long monitorId, long pageId) throws EntityNotFoundException {
+        Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
+        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(pageId);
+        if (optionalMonitor.isPresent() && optionalStatuspage.isPresent()) {
+            Monitor monitor = optionalMonitor.get();
+            Statuspage statuspage = optionalStatuspage.get();
+            if (statuspage.getUser().getId() == user.getId() && monitor.getUser().getId() == user.getId()) {
+                //i don't think we need any duplicate protection here but might be subject-to-change
+                monitor.getStatuspages().remove(statuspage);
+                statuspage.getMonitors().remove(monitor);
+                statuspageRepository.save(statuspage);
+                return monitorRepository.save(monitor);
+            }
+        }
+        throw new EntityNotFoundException("Monitor or statuspage with given ID not found.");
     }
 }

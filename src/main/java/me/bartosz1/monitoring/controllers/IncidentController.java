@@ -1,69 +1,48 @@
 package me.bartosz1.monitoring.controllers;
 
+import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
+import me.bartosz1.monitoring.exceptions.IllegalParameterException;
 import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.Response;
 import me.bartosz1.monitoring.models.User;
 import me.bartosz1.monitoring.services.IncidentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
-//Meant to have only GET endpoints
 @RestController
-@RequestMapping("/api/v1/incident")
+@RequestMapping("/api/incident")
 public class IncidentController {
 
-    @Autowired
-    private IncidentService incidentService;
+    private final IncidentService incidentService;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IncidentController.class);
+    public IncidentController(IncidentService incidentService) {
+        this.incidentService = incidentService;
+    }
 
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> getById(@AuthenticationPrincipal User user, @RequestParam long id, HttpServletRequest req) {
-        Incident incident = incidentService.getIncidentById(user, id);
-        if (incident != null) {
-            if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/get ID: " + id);
-            else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/get ID: " + id);
-            return new ResponseEntity<>(new Response("ok").addAdditionalData(incident), HttpStatus.OK);
-        }
-        if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/get ID: " + id + " FAIL: not found");
-        else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/get ID: " + id + " FAIL: not found");
-        return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
+    public ResponseEntity<Response> getIncidentById(@RequestParam long id, @AuthenticationPrincipal User user) throws EntityNotFoundException {
+        Incident incident = incidentService.findByIdAndUser(id, user);
+        return new Response(HttpStatus.OK).addAdditionalData(incident).toResponseEntity();
     }
 
     @RequestMapping(value = "/last", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> getLastByMonitorId(@AuthenticationPrincipal User user, @RequestParam long id, HttpServletRequest req) {
-        Incident incident = incidentService.getLastIncidentByMonitorId(user, id);
-        if (incident != null) {
-            if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/last ID: " + id);
-            else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/last ID: " + id);
-            return new ResponseEntity<>(new Response("ok").addAdditionalData(incident), HttpStatus.OK);
-        }
-        if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/last ID: " + id + " FAIL: not found");
-        else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/last ID: " + id + " FAIL: not found");
-        return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
+    public ResponseEntity<Response> getLastIncidentByMonitorId(@RequestParam long id, @AuthenticationPrincipal User user) throws EntityNotFoundException {
+        Incident incident = incidentService.findLastByMonitorIdAndUser(id, user);
+        return new Response(HttpStatus.OK).addAdditionalData(incident).toResponseEntity();
     }
 
-    @RequestMapping(value = "/five", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/page", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> getLastFiveByMonitorId(@AuthenticationPrincipal User user, @RequestParam long id, @RequestParam int page, HttpServletRequest req) {
-        Page<Incident> result = incidentService.getFiveIncidentsByMonitorId(user, id, page);
-        if (result != null) {
-            if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/five ID: " + id);
-            else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/five ID: " + id);
-            return new ResponseEntity<>(new Response("ok").addAdditionalData(result.toList()), HttpStatus.OK);
-        }
-        if (user != null) LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/incident/five ID: " + id + " FAIL: not found");
-        else LOGGER.info(req.getRemoteAddr() + " USER ANONYMOUS -> /v1/incident/five ID: " + id + " FAIL: not found");
-        return new ResponseEntity<>(new Response("not found"), HttpStatus.NOT_FOUND);
+    public ResponseEntity<Response> getIncidentPageByMonitorId(@RequestParam long id, @RequestParam int page, @RequestParam int size, @AuthenticationPrincipal User user) throws EntityNotFoundException, IllegalParameterException {
+        if (page < 0 || size < 5 || size > 50)
+            throw new IllegalParameterException("Page index must be greater than 0. Page size must fit in range 5-50.");
+        Page<Incident> incidentPage = incidentService.findIncidentPageByMonitorIdAndUser(id, user, PageRequest.of(page, size));
+        return new Response(HttpStatus.OK).addAdditionalData(incidentPage.getContent()).toResponseEntity();
     }
 }

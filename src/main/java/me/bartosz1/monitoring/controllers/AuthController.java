@@ -1,93 +1,60 @@
 package me.bartosz1.monitoring.controllers;
 
+import me.bartosz1.monitoring.exceptions.*;
 import me.bartosz1.monitoring.models.AuthRequest;
 import me.bartosz1.monitoring.models.Response;
 import me.bartosz1.monitoring.models.User;
 import me.bartosz1.monitoring.security.JwtTokenUtils;
 import me.bartosz1.monitoring.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping(path = "/api/v1/auth")
-//There's no logout endpoint as JWT tokens can't really be invalidated
+@RequestMapping("/api/auth")
 public class AuthController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final JwtTokenUtils jwtTokenUtils;
 
-    @Autowired
-    private JwtTokenUtils tokenUtils;
-
-    @Autowired
-    private UserService userService;
-
-    @Value("${monitoring.registration-enabled}")
-    private boolean registrationEnabled;
-
-    @RequestMapping(path = "/login", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<?> login(@RequestBody AuthRequest request, HttpServletRequest req) throws Exception {
-        authenticate(request.getUsername(), request.getPassword(), req.getRemoteAddr());
-        UserDetails user = userService.loadUserByUsername(request.getUsername());
-        return new ResponseEntity<>(new Response("ok").addAdditionalInfo("token", tokenUtils.generateToken(user)), HttpStatus.OK);
+    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtTokenUtils jwtTokenUtils) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.jwtTokenUtils = jwtTokenUtils;
     }
 
-    @RequestMapping(path = "/register", method = RequestMethod.POST)
+    @RequestMapping(path = "/login", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> register(@RequestBody AuthRequest request, HttpServletRequest req) {
-        if (!registrationEnabled) {
-            LOGGER.info(req.getRemoteAddr() + " -> USER " + request.getUsername() + " REGISTER FAIL: registration disabled");
-            return new ResponseEntity<>(new Response("register disabled"), HttpStatus.FORBIDDEN);
-        }
-        User user = userService.save(request);
-        LOGGER.info(req.getRemoteAddr() + " -> USER " + user.getUsername() + " REGISTER SUCCESS");
-        return new ResponseEntity<>(
-                new Response("ok")
-                        .addAdditionalInfo("username", user.getUsername())
-                        .addAdditionalInfo("authorities", user.getAuthoritiesAsString())
-                        .addAdditionalInfo("id", user.getId()),
-                HttpStatus.OK
-        );
+    public ResponseEntity<Response> login(HttpServletRequest req, @RequestBody AuthRequest authRequest) throws InvalidCredentialsException, UserDisabledException {
+        //casting go brrrt
+        //there's just no way it can return something else than User
+        User user = (User) userService.loadUserByUsername(authRequest.getUsername());
+        authenticate(authRequest);
+        return new Response(HttpStatus.OK).addAdditionalField("token", jwtTokenUtils.generateToken(user)).toResponseEntity();
     }
 
-    @RequestMapping(path = "/current", method = RequestMethod.GET)
+    @RequestMapping(path = "/register", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> currentUser(@AuthenticationPrincipal User user, HttpServletRequest req) {
-        LOGGER.info(req.getRemoteAddr() + " USER " + user.getId() + " -> /v1/auth/currentuser");
-        return new ResponseEntity<>(
-                new Response("ok")
-                        .addAdditionalInfo("username", user.getUsername())
-                        .addAdditionalInfo("authorities", user.getAuthoritiesAsString())
-                        .addAdditionalInfo("id", user.getId()),
-                HttpStatus.OK
-        );
+    public ResponseEntity<Response> register(HttpServletRequest req, @RequestBody AuthRequest authRequest) throws InvalidPasswordException, UsernameAlreadyTakenException, RegistrationDisabledException, IllegalUsernameException {
+        User userAccount = userService.createUserAccount(authRequest.getUsername(), authRequest.getPassword());
+        return new Response(HttpStatus.CREATED).addAdditionalData(userAccount).toResponseEntity();
     }
 
-    private void authenticate(String username, String password, String addr) throws Exception {
+    private void authenticate(AuthRequest authRequest) throws InvalidCredentialsException, UserDisabledException {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            LOGGER.info(addr + " -> USER " + username + " AUTH SUCCESS");
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         } catch (DisabledException e) {
-            LOGGER.info(addr + " -> USER " + username + " AUTH FAIL: ACCOUNT DISABLED");
-            throw new DisabledException("User " + username + " disabled", e);
+            throw new UserDisabledException("User with username " + authRequest.getUsername() + " is disabled.");
         } catch (BadCredentialsException e) {
-            LOGGER.info(addr + " -> USER " + username + " AUTH FAIL: INVALID CREDENTIALS");
-            throw new BadCredentialsException("Invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid credentials");
         }
     }
 }

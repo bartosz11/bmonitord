@@ -1,56 +1,35 @@
 package me.bartosz1.monitoring.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import me.bartosz1.monitoring.models.monitor.Monitor;
-import me.bartosz1.monitoring.models.statuspage.Statuspage;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
+@JsonIncludeProperties({"id", "username", "enabled"})
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(unique = true)
     private String username;
     private String password;
+    @JsonIgnore
+    private String authSalt;
     private boolean enabled;
-    private String authorities;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToMany
     private List<Monitor> monitors;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<AccessToken> accessTokens;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<ContactList> contactLists;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToMany
     private List<Statuspage> statuspages;
+    @OneToMany
+    private List<NotificationList> notificationLists;
 
-    public long getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public User setUsername(String username) {
-        this.username = username;
-        return this;
-    }
-
+    @Override
     public String getPassword() {
         return password;
     }
@@ -60,47 +39,14 @@ public class User implements UserDetails {
         return this;
     }
 
-    //Too complicated, I know
-    //just wanted to avoid making another 10 tables in the DB and complete mess
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        Arrays.stream(authorities.split("\\s+")).forEach(authority -> grantedAuthorities.add(new SimpleGrantedAuthority(authority)));
-        return grantedAuthorities;
+    public String getUsername() {
+        return username;
     }
 
-    public String getAuthoritiesAsString() {
-        return authorities;
-    }
-
-    public User setAuthorities(Collection<GrantedAuthority> grantedAuthorities) {
-        StringBuilder sb = new StringBuilder();
-        grantedAuthorities.forEach(grantedAuthority -> sb.append(grantedAuthority.getAuthority()).append(" "));
-        this.authorities = sb.toString();
+    public User setUsername(String username) {
+        this.username = username;
         return this;
-    }
-
-    public User setAuthoritiesAsString(String authorities) {
-        this.authorities = authorities;
-        return this;
-    }
-
-    //We don't use account expiry, so this will always return true
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    //We don't use this too
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    //And this
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
     }
 
     @Override
@@ -113,19 +59,64 @@ public class User implements UserDetails {
         return this;
     }
 
+    //Spring's bullshit
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
     public List<Monitor> getMonitors() {
         return monitors;
     }
 
-    public void setMonitors(List<Monitor> monitors) {
+    public User setMonitors(List<Monitor> monitors) {
         this.monitors = monitors;
+        return this;
     }
 
-    public List<AccessToken> getAccessTokens() {
-        return accessTokens;
+    public long getId() {
+        return id;
     }
 
-    public void setAccessTokens(List<AccessToken> accessTokens) {
-        this.accessTokens = accessTokens;
+    public List<NotificationList> getNotificationLists() {
+        return notificationLists;
+    }
+
+    public User setNotificationLists(List<NotificationList> notificationLists) {
+        this.notificationLists = notificationLists;
+        return this;
+    }
+
+    public List<Statuspage> getStatuspages() {
+        return statuspages;
+    }
+
+    public User setStatuspages(List<Statuspage> statuspages) {
+        this.statuspages = statuspages;
+        return this;
+    }
+
+    public String getAuthSalt() {
+        return authSalt;
+    }
+
+    public User setAuthSalt(String authSalt) {
+        this.authSalt = authSalt;
+        return this;
     }
 }

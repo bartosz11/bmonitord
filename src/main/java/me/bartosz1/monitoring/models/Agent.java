@@ -1,69 +1,37 @@
 package me.bartosz1.monitoring.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import me.bartosz1.monitoring.models.monitor.Monitor;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "agents")
 public class Agent {
 
     @Id
-    private String id;
-    @OneToOne(mappedBy = "agent")
-    @JsonIgnore
-    private Monitor monitor;
-    private long lastDataReceived;
-    //Other props start
-    //Previously they were stored in InfluxDB, but they can't be visualized so what's the point?
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private UUID id;
     private String agentVersion;
-    private String os;
-    //ok, uptime could actually be visualized, but the graph would be useless
-    private long uptime;
     private int cpuCores;
     private String cpuModel;
+    private String ipAddress;
+    private long lastDataReceived;
+    private String os;
     private long ramTotal;
     private long swapTotal;
-    private String ipAddress;
+    private int uptime;
 
-    public String getId() {
+    @OneToOne
+    private Monitor monitor;
+
+    public UUID getId() {
         return id;
     }
 
-    public Agent setId(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public long getLastDataReceived() {
-        return lastDataReceived;
-    }
-
-    public Agent setLastDataReceived(long lastDataReceived) {
-        this.lastDataReceived = lastDataReceived;
-        return this;
-    }
-
-    public long getUptime() {
-        return uptime;
-    }
-
-    public Agent setUptime(long uptime) {
-        this.uptime = uptime;
-        return this;
-    }
-
-    public String getOs() {
-        return os;
-    }
-
-    public Agent setOs(String os) {
-        this.os = os;
-        return this;
+    public String getIdAsString() {
+        return id.toString();
     }
 
     public String getAgentVersion() {
@@ -93,12 +61,30 @@ public class Agent {
         return this;
     }
 
-    public long getSwapTotal() {
-        return swapTotal;
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public Agent setSwapTotal(long swapTotal) {
-        this.swapTotal = swapTotal;
+    public Agent setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+        return this;
+    }
+
+    public long getLastDataReceived() {
+        return lastDataReceived;
+    }
+
+    public Agent setLastDataReceived(long lastDataReceived) {
+        this.lastDataReceived = lastDataReceived;
+        return this;
+    }
+
+    public String getOs() {
+        return os;
+    }
+
+    public Agent setOs(String os) {
+        this.os = os;
         return this;
     }
 
@@ -111,19 +97,30 @@ public class Agent {
         return this;
     }
 
+    public long getSwapTotal() {
+        return swapTotal;
+    }
+
+    public Agent setSwapTotal(long swapTotal) {
+        this.swapTotal = swapTotal;
+        return this;
+    }
+
+    public int getUptime() {
+        return uptime;
+    }
+
+    public Agent setUptime(int uptime) {
+        this.uptime = uptime;
+        return this;
+    }
+
     public Monitor getMonitor() {
         return monitor;
     }
 
-    public void setMonitor(Monitor monitor) {
+    public Agent setMonitor(Monitor monitor) {
         this.monitor = monitor;
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
+        return this;
     }
 }

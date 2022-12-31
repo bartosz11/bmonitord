@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import me.bartosz1.monitoring.models.User;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +15,7 @@ import java.util.Date;
 
 @Component
 public class JwtTokenUtils implements InitializingBean {
-    //validity = 6 hours in milliseconds
+    //subject-to-change - 6 hrs, more might be useful, maybe I should make a parameter on auth to generate a token with requested validity
     private static final long VALIDITY = 6 * 60 * 60 * 1000;
     @Value("${monitoring.jwt.secret}")
     private String secret;
@@ -23,17 +24,20 @@ public class JwtTokenUtils implements InitializingBean {
     private Algorithm algo;
     private JWTVerifier verifier;
 
-    public String generateToken(UserDetails user) {
+    public String generateToken(User user) {
+        String subject = user.getUsername()+"+"+user.getAuthSalt();
         return JWT.create()
-                .withExpiresAt(Instant.ofEpochMilli(System.currentTimeMillis() + VALIDITY)).withIssuedAt(Instant.now()).withSubject(user.getUsername()).withIssuer(issuer)
+                .withExpiresAt(Instant.ofEpochMilli(System.currentTimeMillis() + VALIDITY)).withIssuedAt(Instant.now()).withSubject(subject).withIssuer(issuer)
                 .sign(algo);
     }
 
-    public boolean validateToken(String token, UserDetails user) {
+    public boolean validateToken(String token, User user) {
         DecodedJWT jwt = verifier.verify(token);
-        String tokenUsername = jwt.getSubject();
+        String tokenSubject = jwt.getSubject();
         Date tokenExpiry = jwt.getExpiresAt();
-        return (tokenUsername.equals(user.getUsername()) && !tokenExpiry.before(new Date()));
+        String s = user.getUsername() + "+" + user.getAuthSalt();
+        System.out.println(tokenSubject+" : "+s);
+        return (tokenSubject.equals(s) && !tokenExpiry.before(new Date()));
     }
 
     public String getUsernameFromToken(String token) {

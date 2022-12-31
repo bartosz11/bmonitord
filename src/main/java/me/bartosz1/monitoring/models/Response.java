@@ -1,44 +1,64 @@
 package me.bartosz1.monitoring.models;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Response {
 
-    private final String status;
-    private final HashMap<String, Object> additionalInfo = new HashMap<>();
+    private final int code;
+    @JsonIgnore
+    private final HttpStatus status;
+    @JsonIncludeProperties({"message", "error", "code"})
+    private final List<Object> errors = new ArrayList<>();
+    private final HashMap<String, Object> additionalFields = new HashMap<>();
     private Object data;
 
-    public Response(String status) {
+    public Response(HttpStatus status) {
+        this.code = status.value();
         this.status = status;
     }
 
-    //Jackson's using these getters I guess
-    @JsonAnyGetter
-    public HashMap<String, Object> getAdditionalInfo() {
-        return additionalInfo;
+    public int getCode() {
+        return code;
     }
 
-    public String getStatus() {
-        return status;
+    public List<Object> getErrors() {
+        return errors;
     }
 
     public Object getData() {
         return data;
     }
 
-    public Response addAdditionalInfo(String key, Object value) {
-        additionalInfo.put(key, value);
+    @JsonAnyGetter
+    public HashMap<String, Object> getAdditionalFields() {
+        return additionalFields;
+    }
+
+    public Response addError(Object error) {
+        errors.add(error);
         return this;
     }
 
-    public Response addAdditionalData(Object object) {
-        this.data = object;
+    public Response addAdditionalData(Object data) {
+        this.data = data;
         return this;
     }
 
+    public Response addAdditionalField(String key, Object value) {
+        additionalFields.put(key, value);
+        return this;
+    }
+
+    public ResponseEntity<Response> toResponseEntity() {
+        return new ResponseEntity<Response>(this, this.status);
+    }
 
 }

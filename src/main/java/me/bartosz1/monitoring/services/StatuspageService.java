@@ -1,45 +1,33 @@
 package me.bartosz1.monitoring.services;
 
-import me.bartosz1.monitoring.models.User;
-import me.bartosz1.monitoring.models.monitor.Monitor;
-import me.bartosz1.monitoring.models.statuspage.Statuspage;
-import me.bartosz1.monitoring.models.statuspage.StatuspageAnnouncement;
-import me.bartosz1.monitoring.models.statuspage.StatuspageAnnouncementCDO;
-import me.bartosz1.monitoring.models.statuspage.StatuspageMonitorObject;
-import me.bartosz1.monitoring.repos.MonitorRepository;
-import me.bartosz1.monitoring.repos.StatuspageAnnouncementRepository;
-import me.bartosz1.monitoring.repos.StatuspageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
+import me.bartosz1.monitoring.models.*;
+import me.bartosz1.monitoring.repositories.MonitorRepository;
+import me.bartosz1.monitoring.repositories.StatuspageAnnouncementRepository;
+import me.bartosz1.monitoring.repositories.StatuspageRepository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class StatuspageService {
 
-    @Autowired
-    private InfluxService influxService;
-    @Autowired
-    private StatuspageRepository statuspageRepository;
-    @Autowired
-    private StatuspageAnnouncementRepository statuspageAnnouncementRepository;
-    @Autowired
-    private MonitorRepository monitorRepository;
-    @Autowired
-    private IncidentService incidentService;
-    @Value("${monitoring.influxdb.enabled}")
-    private boolean influxEnabled;
+    private final StatuspageRepository statuspageRepository;
+    private final StatuspageAnnouncementRepository statuspageAnnouncementRepository;
+    private final MonitorRepository monitorRepository;
+
+    public StatuspageService(StatuspageRepository statuspageRepository, StatuspageAnnouncementRepository statuspageAnnouncementRepository, MonitorRepository monitorRepository) {
+        this.statuspageRepository = statuspageRepository;
+        this.statuspageAnnouncementRepository = statuspageAnnouncementRepository;
+        this.monitorRepository = monitorRepository;
+    }
 
     public Statuspage createStatuspage(User user, String name, List<Long> monitorIds) {
         Statuspage statuspage = new Statuspage().setUser(user).setName(name);
         if (!monitorIds.isEmpty()) {
-            List<Monitor> monitors = monitorRepository.findByIds(monitorIds);
+            List<Monitor> monitors = monitorRepository.findAllById(monitorIds);
             //check access
             List<Monitor> monitorsAllowed = new ArrayList<>();
             monitors.forEach(monitor -> {
@@ -53,96 +41,75 @@ public class StatuspageService {
         return statuspageRepository.save(statuspage);
     }
 
-    public Statuspage deleteStatuspage(long id, User user) {
-        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(id);
-        if (optionalStatuspage.isPresent()) {
-            Statuspage statuspage = optionalStatuspage.get();
+    public Statuspage deleteStatuspage(long id, User user) throws EntityNotFoundException {
+        Optional<Statuspage> byId = statuspageRepository.findById(id);
+        if (byId.isPresent()) {
+            Statuspage statuspage = byId.get();
             if (statuspage.getUser().getId() == user.getId()) {
-                List<Monitor> bulkSaveMonitor = new ArrayList<>();
-                if (!statuspage.getMonitors().isEmpty()) {
-                    statuspage.getMonitors().forEach(monitor -> {
-                        monitor.getStatuspages().remove(statuspage);
-                        bulkSaveMonitor.add(monitor);
-                    });
-                    statuspage.setMonitors(new ArrayList<>());
-                }
-                monitorRepository.saveAll(bulkSaveMonitor);
-                statuspageAnnouncementRepository.deleteAllByStatuspage(statuspage);
+                if (statuspage.getAnnouncement() != null) statuspageAnnouncementRepository.delete(statuspage.getAnnouncement());
                 statuspageRepository.delete(statuspage);
                 return statuspage;
             }
         }
-        return null;
+        throw new EntityNotFoundException("Statuspage with ID " + id + " not found.");
     }
 
-    public Statuspage findStatuspageById(long id) {
-        Optional<Statuspage> result = statuspageRepository.findById(id);
-        if (result.isEmpty()) return null;
-        return result.get();
+    public Statuspage getStatuspageByIdAndUser(long id, User user) throws EntityNotFoundException {
+        Optional<Statuspage> byId = statuspageRepository.findById(id);
+        if (byId.isPresent()) {
+            Statuspage statuspage = byId.get();
+            if (statuspage.getUser().getId() == user.getId()) {
+                return statuspage;
+            }
+        }
+        throw new EntityNotFoundException("Statuspage with ID " + id + " not found.");
     }
 
-    public Iterable<Statuspage> findAllByUser(User user) {
+    public Iterable<Statuspage> getAllStatuspagesByUser(User user) {
         return statuspageRepository.findAllByUser(user);
     }
 
-    public Statuspage findByIdAndUser(long id, User user) {
-        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(id);
-        if (optionalStatuspage.isPresent()) {
-            Statuspage statuspage = optionalStatuspage.get();
-            if (statuspage.getUser().getId() == user.getId()) return statuspage;
-        }
-        return null;
-    }
-
-    public Statuspage addAnnouncement(User user, StatuspageAnnouncementCDO cdo) {
-        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(cdo.getStatuspageId());
-        if (optionalStatuspage.isPresent()) {
-            Statuspage statuspage = optionalStatuspage.get();
+    public Statuspage addAnnouncement(User user, StatuspageAnnouncementCDO cdo) throws EntityNotFoundException {
+        Optional<Statuspage> byId = statuspageRepository.findById(cdo.getStatuspageId());
+        if (byId.isPresent()) {
+            Statuspage statuspage = byId.get();
             if (statuspage.getUser().getId() == user.getId()) {
-                StatuspageAnnouncement statuspageAnnouncement = new StatuspageAnnouncement(cdo, statuspage);
+                StatuspageAnnouncement announcement = new StatuspageAnnouncement(cdo, statuspage);
                 //This makes modifying possible
                 if (statuspage.getAnnouncement() != null)
-                    statuspageAnnouncement.setId(statuspage.getAnnouncement().getId());
-                statuspage.setAnnouncement(statuspageAnnouncement);
-                statuspageAnnouncementRepository.save(statuspageAnnouncement);
+                    announcement.setId(statuspage.getAnnouncement().getId());
+                statuspage.setAnnouncement(announcement);
+                statuspageAnnouncementRepository.save(announcement);
                 return statuspageRepository.save(statuspage);
             }
         }
-        return null;
+        throw new EntityNotFoundException("Statuspage with ID " + cdo.getStatuspageId() + " not found.");
     }
 
-    public Statuspage removeAnnouncement(User user, long statuspageId) {
-        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(statuspageId);
-        if (optionalStatuspage.isPresent()) {
-            Statuspage statuspage = optionalStatuspage.get();
-            if (statuspage.getUser().getId() == user.getId()) {
-                StatuspageAnnouncement statuspageAnnouncement = statuspage.getAnnouncement();
+    public Statuspage removeAnnouncement(User user, long statuspageId) throws EntityNotFoundException {
+        Optional<Statuspage> byId = statuspageRepository.findById(statuspageId);
+        if (byId.isPresent()) {
+            Statuspage statuspage = byId.get();
+            if (statuspage.getUser().getId()==user.getId()) {
+                StatuspageAnnouncement announcement = statuspage.getAnnouncement();
                 statuspage.setAnnouncement(null);
-                statuspageAnnouncementRepository.delete(statuspageAnnouncement);
+                statuspageAnnouncementRepository.delete(announcement);
                 return statuspageRepository.save(statuspage);
             }
         }
-        return null;
+        throw new EntityNotFoundException("Statuspage with ID "+ statuspageId+" not found.");
     }
 
-    public Statuspage getPublicStats(long id) {
-        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(id);
-        if (optionalStatuspage.isPresent()) {
-            Statuspage statuspage = optionalStatuspage.get();
-            statuspage.getMonitors().forEach(monitor -> {
-                StatuspageMonitorObject statuspageMonitorObject = monitor.toStatuspageObject();
-                statuspageMonitorObject.setLastIncidents(incidentService.getFiveIncidentsByMonitorId(null, monitor.getId(), 0).getContent());
-                if (influxEnabled) {
-                    if (monitor.getAgent() != null)
-                        influxService.getLastAgentData(monitor.getAgent().getId(), monitor.getAgent().getLastDataReceived(), statuspageMonitorObject);
-                    else
-                        influxService.getLastMonitorResponseTime(monitor.getId(), monitor.getLastSuccessfulCheck(), statuspageMonitorObject);
-                }
-                statuspage.getStatuspageMonitorObjects().add(statuspageMonitorObject);
-            });
-            return statuspage;
+    public Statuspage renameStatuspage(User user, long id, String newName) throws EntityNotFoundException {
+        Optional<Statuspage> byId = statuspageRepository.findById(id);
+        if (byId.isPresent()) {
+            Statuspage statuspage = byId.get();
+            if (statuspage.getUser().getId()== user.getId()) {
+                statuspage.setName(newName);
+                return statuspageRepository.save(statuspage);
+            }
         }
-        return null;
+        throw new EntityNotFoundException("Statuspage with ID "+id+" not found.");
     }
 
 }
