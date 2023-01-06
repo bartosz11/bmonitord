@@ -3,9 +3,8 @@ package me.bartosz1.monitoring.services;
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
 import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.models.enums.MonitorType;
-import me.bartosz1.monitoring.repositories.AgentRepository;
 import me.bartosz1.monitoring.repositories.MonitorRepository;
-import me.bartosz1.monitoring.repositories.NotificationListRepository;
+import me.bartosz1.monitoring.repositories.NotificationRepository;
 import me.bartosz1.monitoring.repositories.StatuspageRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +15,13 @@ import java.util.Optional;
 public class MonitorService {
 
     private final MonitorRepository monitorRepository;
-    private final AgentRepository agentRepository;
-    private final NotificationListRepository notificationListRepository;
+    private final NotificationRepository notificationRepository;
     private final StatuspageRepository statuspageRepository;
 
-    public MonitorService(MonitorRepository monitorRepository, AgentRepository agentRepository, NotificationListRepository notificationListRepository,
+    public MonitorService(MonitorRepository monitorRepository, NotificationRepository notificationRepository,
                           StatuspageRepository statuspageRepository) {
         this.monitorRepository = monitorRepository;
-        this.agentRepository = agentRepository;
-        this.notificationListRepository = notificationListRepository;
+        this.notificationRepository = notificationRepository;
         this.statuspageRepository = statuspageRepository;
     }
 
@@ -41,10 +38,6 @@ public class MonitorService {
             Monitor monitor = optionalMonitor.get();
             if (monitor.getUser().getId() == user.getId()) {
                 //todo add cascading stuff here if needed
-               /* NotificationList notificationList = monitor.getNotificationList();
-                notificationList.getMonitors().remove(monitor);
-                notificationListRepository.save(notificationList);
-                */
                 monitorRepository.delete(monitor);
                 return monitor;
             }
@@ -104,39 +97,36 @@ public class MonitorService {
         throw new EntityNotFoundException("Monitor with ID " + id + " not found.");
     }
 
-    public Monitor assignNotificationListToMonitor(User user, long monitorId, long notificationListId) throws EntityNotFoundException {
+    public Monitor assignNotficationToMonitor(User user, long monitorId, long notificationId) throws EntityNotFoundException {
         Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
-        Optional<NotificationList> optionalNotificationList = notificationListRepository.findById(notificationListId);
-        if (optionalMonitor.isPresent() && optionalNotificationList.isPresent()) {
+        Optional<Notification> optionalNotification = notificationRepository.findById(notificationId);
+        if (optionalMonitor.isPresent() && optionalNotification.isPresent()) {
             Monitor monitor = optionalMonitor.get();
-            NotificationList notificationList = optionalNotificationList.get();
-            if (monitor.getUser().getId() == user.getId() && notificationList.getUser().getId() == user.getId()) {
-                monitor.setNotificationList(notificationList);
-                notificationList.getMonitors().add(monitor);
-                notificationListRepository.save(notificationList);
+            Notification notification = optionalNotification.get();
+            if (monitor.getUser().getId() == user.getId() && notification.getUser().getId() == user.getId()) {
+                if (!monitor.getNotifications().contains(notification)) monitor.getNotifications().add(notification);
+                if (!notification.getMonitors().contains(monitor)) notification.getMonitors().add(monitor);
+                notificationRepository.save(notification);
                 return monitorRepository.save(monitor);
             }
         }
-        throw new EntityNotFoundException("Monitor or notification list with given ID not found.");
+        throw new EntityNotFoundException("Monitor or notification with given ID not found.");
     }
 
-    public Monitor unassignNotificationListFromMonitor(User user, long monitorId) throws EntityNotFoundException {
+    public Monitor unassignNotificationFromMonitor(User user, long monitorId, long notificationId) throws EntityNotFoundException {
         Optional<Monitor> optionalMonitor = monitorRepository.findById(monitorId);
-        if (optionalMonitor.isPresent()) {
+        Optional<Notification> optionalNotification = notificationRepository.findById(notificationId);
+        if (optionalMonitor.isPresent() && optionalNotification.isPresent()) {
             Monitor monitor = optionalMonitor.get();
-            NotificationList notificationList = monitor.getNotificationList();
-            if (monitor.getUser().getId() == user.getId()) {
-                //technically it has to be assigned somehow, but better safe than sorry or something
-                if (notificationList != null) {
-                    notificationList.getMonitors().remove(monitor);
-                    notificationListRepository.save(notificationList);
-                    monitor.setNotificationList(null);
-                    monitor = monitorRepository.save(monitor);
-                }
-                return monitor;
+            Notification notification = optionalNotification.get();
+            if (monitor.getUser().getId() == user.getId() && notification.getUser().getId() == user.getId()) {
+                monitor.getNotifications().remove(notification);
+                notification.getMonitors().remove(monitor);
+                notificationRepository.save(notification);
+                return monitorRepository.save(monitor);
             }
         }
-        throw new EntityNotFoundException("Monitor with ID " + monitorId + " not found.");
+        throw new EntityNotFoundException("Monitor or notification with given ID not found.");
     }
 
     public Monitor assignMonitorToStatuspage(User user, long monitorId, long pageId) throws EntityNotFoundException {
@@ -164,7 +154,6 @@ public class MonitorService {
             Monitor monitor = optionalMonitor.get();
             Statuspage statuspage = optionalStatuspage.get();
             if (statuspage.getUser().getId() == user.getId() && monitor.getUser().getId() == user.getId()) {
-                //i don't think we need any duplicate protection here but might be subject-to-change
                 monitor.getStatuspages().remove(statuspage);
                 statuspage.getMonitors().remove(monitor);
                 statuspageRepository.save(statuspage);

@@ -5,7 +5,6 @@ import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.enums.MonitorStatus;
 import me.bartosz1.monitoring.models.enums.MonitorType;
 import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,14 +20,17 @@ public class EmailNotificationProvider extends NotificationProvider {
     private static final String TEST_NOTIFICATION = "This is a test notification.";
     @Value("${spring.mail.properties.mail.smtp.from}")
     private String from;
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+
+    public EmailNotificationProvider(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     @Override
-    public void sendNotification(Monitor monitor, Incident incident, String... args) {
+    public void sendNotification(Monitor monitor, Incident incident, String args) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
-        message.setTo(args[0]);
+        message.setTo(args);
         String replacement = monitor.getType() == MonitorType.AGENT ? "Server Agent" : monitor.getHost();
         String text;
         if (monitor.getLastStatus() == MonitorStatus.UP) {
@@ -48,10 +50,10 @@ public class EmailNotificationProvider extends NotificationProvider {
     }
 
     @Override
-    public void sendTestNotification(String... args) {
+    public void sendTestNotification(String args) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
-        message.setTo(args[0]);
+        message.setTo(args);
         message.setSubject("Monitoring - test notification");
         message.setText(TEST_NOTIFICATION);
         mailSender.send(message);

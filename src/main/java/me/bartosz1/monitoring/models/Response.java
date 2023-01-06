@@ -58,7 +58,7 @@ public class Response {
     }
 
     public ResponseEntity<Response> toResponseEntity() {
-        return new ResponseEntity<Response>(this, this.status);
+        return new ResponseEntity<>(this, this.status);
     }
 
 }
