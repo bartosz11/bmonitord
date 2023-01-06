@@ -29,18 +29,17 @@ public abstract class NotificationProvider {
             response.close();
         }
     };
-    //Utils
+    //Utils, might move these to beans
     private final OkHttpClient httpClient = new OkHttpClient.Builder().callTimeout(5, TimeUnit.SECONDS).build();
     private final ObjectMapper objectMapper = new ObjectMapper();
     //I have to use autowired because I can't really make a constructor
     //todo change
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Europe/Warsaw"));
 
-    //Args - things required to send the notification, specified as array because some providers might require more than one of these
     //Both methods are returning void because they're mostly asynchronous
-    public abstract void sendNotification(Monitor monitor, Incident incident, String... args);
+    public abstract void sendNotification(Monitor monitor, Incident incident, String args);
 
-    public abstract void sendTestNotification(String... args);
+    public abstract void sendTestNotification(String args);
 
     protected OkHttpClient getHttpClient() {
         return httpClient;

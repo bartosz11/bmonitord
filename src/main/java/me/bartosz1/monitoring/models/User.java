@@ -27,7 +27,7 @@ public class User implements UserDetails {
     @OneToMany
     private List<Statuspage> statuspages;
     @OneToMany
-    private List<NotificationList> notificationLists;
+    private List<Notification> notifications;
 
     @Override
     public String getPassword() {
@@ -93,12 +93,12 @@ public class User implements UserDetails {
         return id;
     }
 
-    public List<NotificationList> getNotificationLists() {
-        return notificationLists;
+    public List<Notification> getNotifications() {
+        return notifications;
     }
 
-    public User setNotificationLists(List<NotificationList> notificationLists) {
-        this.notificationLists = notificationLists;
+    public User setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
         return this;
     }
 

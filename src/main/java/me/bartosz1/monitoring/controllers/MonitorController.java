@@ -13,10 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/monitor")
+@Transactional
 public class MonitorController {
 
     private final MonitorService monitorService;
@@ -72,19 +74,18 @@ public class MonitorController {
         return new Response(HttpStatus.OK).addAdditionalField("name", monitor.getName()).addAdditionalField("id", monitor.getId()).toResponseEntity();
     }
 
-    @RequestMapping(method = RequestMethod.PATCH, value = "/{monitorId]/list/{listId}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{monitorId}/notification/{notificationId}", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> assignNotificationListToMonitor(@AuthenticationPrincipal User user, @PathVariable long monitorId, @PathVariable long listId) throws EntityNotFoundException {
-        Monitor monitor = monitorService.assignNotificationListToMonitor(user, monitorId, listId);
+    public ResponseEntity<Response> assignNotificationToMonitor(@AuthenticationPrincipal User user, @PathVariable long monitorId, @PathVariable long notificationId) throws EntityNotFoundException {
+        Monitor monitor = monitorService.assignNotficationToMonitor(user, monitorId, notificationId);
         return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
     }
 
     //I think using DELETE sort of makes sense here - I'm "deleting" the link between list and monitor
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{monitorId]/list/{listId}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{monitorId}/notification/{notificationId}", produces = "application/json")
     @ResponseBody
-    //listId isn't used but is here on purpose - I'm probably going to switch the relationship between monitor and list to ManyToMany
-    public ResponseEntity<Response> unassignNotificationListFromMonitor(@AuthenticationPrincipal User user, @PathVariable long monitorId, @PathVariable long listId) throws EntityNotFoundException {
-        Monitor monitor = monitorService.unassignNotificationListFromMonitor(user, monitorId);
+    public ResponseEntity<Response> unassignNotificationFromMonitor(@AuthenticationPrincipal User user, @PathVariable long monitorId, @PathVariable long notificationId) throws EntityNotFoundException {
+        Monitor monitor = monitorService.unassignNotificationFromMonitor(user, monitorId, notificationId);
         return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
     }
 

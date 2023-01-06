@@ -41,8 +41,8 @@ public class Monitor {
     @ManyToOne
     private User user;
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
-    private NotificationList notificationList;
+    @ManyToMany
+    private List<Notification> notifications;
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Statuspage> statuspages;
@@ -51,7 +51,7 @@ public class Monitor {
     private Agent agent;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Heartbeat> timeSeriesRecords;
+    private List<Heartbeat> heartbeats;
 
     public Monitor() {
     }
@@ -248,12 +248,12 @@ public class Monitor {
         return this;
     }
 
-    public NotificationList getNotificationList() {
-        return notificationList;
+    public List<Notification> getNotifications() {
+        return notifications;
     }
 
-    public Monitor setNotificationList(NotificationList notificationList) {
-        this.notificationList = notificationList;
+    public Monitor setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
         return this;
     }
 
@@ -280,12 +280,12 @@ public class Monitor {
         return Arrays.stream(allowedHttpCodes.split(",")).map(Integer::parseInt).collect(Collectors.toList());
     }
 
-    public List<Heartbeat> getTimeSeriesRecords() {
-        return timeSeriesRecords;
+    public List<Heartbeat> getHeartbeats() {
+        return heartbeats;
     }
 
-    public Monitor setTimeSeriesRecords(List<Heartbeat> timeSeriesRecords) {
-        this.timeSeriesRecords = timeSeriesRecords;
+    public Monitor setHeartbeats(List<Heartbeat> heartbeats) {
+        this.heartbeats = heartbeats;
         return this;
     }
 }
