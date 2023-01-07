@@ -1,6 +1,5 @@
 package me.bartosz1.monitoring.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +18,8 @@ public class User implements UserDetails {
     private long id;
     private String username;
     private String password;
-    @JsonIgnore
-    private String authSalt;
     private boolean enabled;
+    private long lastUpdated;
     @OneToMany
     private List<Monitor> monitors;
     @OneToMany
@@ -111,12 +109,12 @@ public class User implements UserDetails {
         return this;
     }
 
-    public String getAuthSalt() {
-        return authSalt;
+    public long getLastUpdated() {
+        return lastUpdated;
     }
 
-    public User setAuthSalt(String authSalt) {
-        this.authSalt = authSalt;
+    public User setLastUpdated(long lastUpdated) {
+        this.lastUpdated = lastUpdated;
         return this;
     }
 }
