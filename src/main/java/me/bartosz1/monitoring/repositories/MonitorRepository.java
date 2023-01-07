@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.repositories;
 
+import jakarta.persistence.QueryHint;
 import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.QueryHint;
 import java.util.List;
 
 @Repository

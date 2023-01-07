@@ -1,9 +1,9 @@
 package me.bartosz1.monitoring.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import me.bartosz1.monitoring.models.enums.MonitorStatus;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Entity

@@ -14,7 +14,6 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -32,7 +31,7 @@ public class AuthController {
 
     @RequestMapping(path = "/login", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> login(HttpServletRequest req, @RequestBody AuthRequest authRequest) throws InvalidCredentialsException, UserDisabledException {
+    public ResponseEntity<Response> login(@RequestBody AuthRequest authRequest) throws InvalidCredentialsException, UserDisabledException {
         //casting go brrrt
         //there's just no way it can return something else than User
         User user = (User) userService.loadUserByUsername(authRequest.getUsername());
@@ -42,7 +41,7 @@ public class AuthController {
 
     @RequestMapping(path = "/register", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> register(HttpServletRequest req, @RequestBody AuthRequest authRequest) throws InvalidPasswordException, UsernameAlreadyTakenException, RegistrationDisabledException, IllegalUsernameException {
+    public ResponseEntity<Response> register(@RequestBody AuthRequest authRequest) throws InvalidPasswordException, UsernameAlreadyTakenException, RegistrationDisabledException, IllegalUsernameException {
         User userAccount = userService.createUserAccount(authRequest.getUsername(), authRequest.getPassword());
         return new Response(HttpStatus.CREATED).addAdditionalData(userAccount).toResponseEntity();
     }

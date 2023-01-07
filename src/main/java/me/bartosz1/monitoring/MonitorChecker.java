@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring;
 
+import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.enums.MonitorStatus;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
@@ -84,6 +84,7 @@ public class MonitorChecker implements InitializingBean {
         if (currentStatus == MonitorStatus.UP) {
             monitor.setLastSuccessfulCheck(epochSecond);
         }
+        monitor.setLastCheck(epochSecond);
     }
 
     private void incrementChecks(Monitor monitor, MonitorStatus currentStatus) {

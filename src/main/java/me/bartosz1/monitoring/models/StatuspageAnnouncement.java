@@ -1,8 +1,7 @@
 package me.bartosz1.monitoring.models;
 
+import jakarta.persistence.*;
 import me.bartosz1.monitoring.models.enums.StatuspageAnnouncementType;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "statuspage_announcements")

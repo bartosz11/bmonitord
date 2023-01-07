@@ -23,12 +23,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //CSRF will get enabled once I start doing frontend I think
-        http.csrf().disable().authorizeRequests()
-                .antMatchers("/").permitAll()
+        http.csrf().disable().authorizeHttpRequests()
+                .requestMatchers("/").permitAll()
                 //All login and register requests need to be allowed
-                .antMatchers("/api/auth/login", "/api/auth/register").permitAll()
+                .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
                 //Allow all requests to Actuator endpoints - the only one exposed is /health
-                .antMatchers("/app/**").permitAll()
+                .requestMatchers("/app/**").permitAll()
                 //Require authentication for all other requests
                 .anyRequest().authenticated().and()
                 //Use stateless sessions

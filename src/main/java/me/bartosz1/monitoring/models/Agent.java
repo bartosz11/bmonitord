@@ -1,8 +1,8 @@
 package me.bartosz1.monitoring.models;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
 import java.util.UUID;
 
 @Entity

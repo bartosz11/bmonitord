@@ -1,10 +1,10 @@
 package me.bartosz1.monitoring.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import me.bartosz1.monitoring.models.enums.MonitorStatus;
 import me.bartosz1.monitoring.models.enums.MonitorType;
 
-import javax.persistence.*;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;

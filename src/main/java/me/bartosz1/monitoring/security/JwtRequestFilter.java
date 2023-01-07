@@ -1,6 +1,10 @@
 package me.bartosz1.monitoring.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import me.bartosz1.monitoring.models.User;
 import me.bartosz1.monitoring.services.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,10 +13,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 //Yes, JWT classes are mostly copied from the old version of this project
