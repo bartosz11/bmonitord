@@ -73,6 +73,6 @@ public class NotificationService {
                 return notification;
             }
         }
-        throw new EntityNotFoundException("Notification with ID "+id+" not found.");
+        throw new EntityNotFoundException("Notification with ID " + id + " not found.");
     }
 }

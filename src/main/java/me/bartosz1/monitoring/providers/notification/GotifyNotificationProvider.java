@@ -13,6 +13,7 @@ public class GotifyNotificationProvider extends NotificationProvider {
     //Yes, Gotify notifications contain less info than others, and it'll stay like this I think, push notifications aren't really supposed to be bulky
     private static final String REQUEST_BODY_TEMPLATE = "{ \"priority\": 7, \"title\": \"Monitoring alert\", \"message\": \"%name% is now %status%. Host: %host%\" }";
     private static final String TEST_NOTIFICATION = "{ \"priority\": 4, \"title\": \"Monitoring\", \"message\": \"This is a test notification.\" }";
+
     @Override
     public void sendNotification(Monitor monitor, Incident incident, String args) {
         String[] arg = args.split("\\|");

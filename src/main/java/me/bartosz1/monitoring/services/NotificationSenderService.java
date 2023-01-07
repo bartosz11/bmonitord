@@ -14,13 +14,13 @@ import java.util.HashMap;
 //this class shows how to avoid boilerplate using boilerplate
 public class NotificationSenderService implements InitializingBean {
 
-    private HashMap<NotificationType, NotificationProvider> lookup;
     private final DiscordNotificationProvider discordNotificationProvider;
     private final EmailNotificationProvider emailNotificationProvider;
     private final GenericWebhookNotificationProvider genericWebhookNotificationProvider;
     private final GotifyNotificationProvider gotifyNotificationProvider;
     private final PushbulletNotificationProvider pushbulletNotificationProvider;
     private final SlackNotificationProvider slackNotificationProvider;
+    private HashMap<NotificationType, NotificationProvider> lookup;
 
     public NotificationSenderService(DiscordNotificationProvider discordNotificationProvider, EmailNotificationProvider emailNotificationProvider, GenericWebhookNotificationProvider genericWebhookNotificationProvider, GotifyNotificationProvider gotifyNotificationProvider, PushbulletNotificationProvider pushbulletNotificationProvider, SlackNotificationProvider slackNotificationProvider) {
         this.discordNotificationProvider = discordNotificationProvider;
@@ -31,7 +31,11 @@ public class NotificationSenderService implements InitializingBean {
         this.slackNotificationProvider = slackNotificationProvider;
     }
 
-    public void sendNotification(Notification notification, Monitor monitor, Incident incident) {
+    public void sendNotifications(Monitor monitor, Incident incident) {
+        monitor.getNotifications().forEach(notification -> sendNotification(notification, monitor, incident));
+    }
+
+    private void sendNotification(Notification notification, Monitor monitor, Incident incident) {
         lookup.get(notification.getType()).sendNotification(monitor, incident, notification.getCredentials());
     }
 

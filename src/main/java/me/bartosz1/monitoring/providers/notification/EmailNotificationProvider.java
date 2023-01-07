@@ -18,9 +18,9 @@ public class EmailNotificationProvider extends NotificationProvider {
     private static final String UP_EMAIL_TEMPLATE = "Monitor: %name%\nHost: %host%\nTime: %timestamp%\nDuration: %duration%";
     private static final String DOWN_EMAIL_TEMPLATE = "Monitor: %name%\nHost: %host%\nTime: %timestamp%";
     private static final String TEST_NOTIFICATION = "This is a test notification.";
+    private final JavaMailSender mailSender;
     @Value("${spring.mail.properties.mail.smtp.from}")
     private String from;
-    private final JavaMailSender mailSender;
 
     public EmailNotificationProvider(JavaMailSender mailSender) {
         this.mailSender = mailSender;

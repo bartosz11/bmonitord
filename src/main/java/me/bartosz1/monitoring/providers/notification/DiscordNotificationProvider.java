@@ -5,7 +5,6 @@ import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.enums.MonitorStatus;
 import me.bartosz1.monitoring.models.enums.MonitorType;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -19,6 +18,7 @@ public class DiscordNotificationProvider extends NotificationProvider {
     private static final String UP_EMBED_TEMPLATE = "{ \"content\": null, \"embeds\": [ { \"title\": \"%name% is now UP.\", \"description\": \"Time: %timestamp%\\nDuration: %duration%\\nHost: %host%\", \"color\": 2215705 }], \"attachments\": [] }";
     private static final String DOWN_EMBED_TEMPLATE = "{ \"content\": null, \"embeds\": [ { \"title\": \"%name% is now DOWN.\", \"description\": \"Time: %timestamp%\\nHost: %host%\", \"color\": 13572377 } ], \"attachments\": [] }";
     private static final String TEST_NOTIFICATION = "{ \"content\": null, \"embeds\": [ {\"description\": \"This is a test notification.\", \"color\" :6250335 } ], \"attachments\": [] }";
+
     @Override
     public void sendNotification(Monitor monitor, Incident incident, String args) {
         if (args.startsWith("http://") || args.startsWith("https://")) {

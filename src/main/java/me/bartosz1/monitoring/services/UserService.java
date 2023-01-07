@@ -29,7 +29,6 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    //todo alphanumeric username only protection here
     public User createUserAccount(String username, String password) throws UsernameAlreadyTakenException, InvalidPasswordException, RegistrationDisabledException, IllegalUsernameException {
         if (!registrationEnabled)
             throw new RegistrationDisabledException("Registration of new users is turned off on this instance.");
@@ -46,7 +45,6 @@ public class UserService implements UserDetailsService {
     }
 
     //Just so users can delete their own accounts if they want
-    //subject-to-change when we introduce user's properties like monitors, statuspages, contact lists and their monitors incidents
     public User deleteUserAccount(User user) {
         //no need to mess with auth salts here
         userRepository.delete(user);

@@ -226,7 +226,8 @@ public class Monitor {
 
     public float getUptimePercent() {
         if (!(checksUp + checksDown == 0)) {
-            return (float) (checksUp / (checksUp + checksDown)) * 100;
+            float i = (float) checksUp / (checksUp + checksDown);
+            return i * 100;
         } else return 0;
     }
 
