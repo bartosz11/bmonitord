@@ -1,6 +1,5 @@
 package me.bartosz1.monitoring.services;
 
-import me.bartosz1.monitoring.TextUtils;
 import me.bartosz1.monitoring.exceptions.*;
 import me.bartosz1.monitoring.models.PasswordMDO;
 import me.bartosz1.monitoring.models.User;
@@ -12,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
             //don't ask why I use error messages like these
             throw new InvalidPasswordException("Invalid password. A valid password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.");
         }
-        return userRepository.save(new User().setUsername(username).setPassword(passwordEncoder.encode(password)).setEnabled(true).setAuthSalt(TextUtils.generateAuthSalt()));
+        return userRepository.save(new User().setUsername(username).setPassword(passwordEncoder.encode(password)).setEnabled(true).setLastUpdated(Instant.now().toEpochMilli()));
     }
 
     //Just so users can delete their own accounts if they want
@@ -60,17 +60,17 @@ public class UserService implements UserDetailsService {
         if (!newPassword.matches(PASSWORD_VALIDATION_PATTERN))
             throw new InvalidPasswordException("Entered new password is invalid. A valid password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.");
         //Change users password and return the new user object
-        return userRepository.save(user.setPassword(passwordEncoder.encode(newPassword)).setAuthSalt(TextUtils.generateAuthSalt()));
+        return userRepository.save(user.setPassword(passwordEncoder.encode(newPassword)).setLastUpdated(Instant.now().toEpochMilli()));
     }
 
     public User changeUsername(User user, String newUsername) throws UsernameAlreadyTakenException {
         if (userRepository.existsByUsername(newUsername))
             throw new UsernameAlreadyTakenException("Username " + newUsername + " is already taken.");
-        return userRepository.save(user.setUsername(newUsername).setAuthSalt(TextUtils.generateAuthSalt()));
+        return userRepository.save(user.setUsername(newUsername).setLastUpdated(Instant.now().toEpochMilli()));
     }
 
     public User invalidateAllUserSessions(User user) {
-        return userRepository.save(user.setAuthSalt(TextUtils.generateAuthSalt()));
+        return userRepository.save(user.setLastUpdated(Instant.now().toEpochMilli()));
     }
 
     @Override

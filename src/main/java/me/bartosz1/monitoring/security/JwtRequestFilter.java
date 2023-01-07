@@ -39,8 +39,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } catch (IllegalArgumentException | JWTVerificationException ignored) {
             }
         }
-        if (username != null && username.contains("+") && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User user = (User) userService.loadUserByUsername(username.split("\\+")[0]);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            User user = (User) userService.loadUserByUsername(username);
             if (tokenUtils.validateToken(token, user)) {
                 UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 upat.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

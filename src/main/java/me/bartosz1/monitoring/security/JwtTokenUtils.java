@@ -24,9 +24,8 @@ public class JwtTokenUtils implements InitializingBean {
     private JWTVerifier verifier;
 
     public String generateToken(User user) {
-        String subject = user.getUsername() + "+" + user.getAuthSalt();
         return JWT.create()
-                .withExpiresAt(Instant.ofEpochMilli(System.currentTimeMillis() + VALIDITY)).withIssuedAt(Instant.now()).withSubject(subject).withIssuer(issuer)
+                .withExpiresAt(Instant.ofEpochMilli(System.currentTimeMillis() + VALIDITY)).withIssuedAt(Instant.now()).withSubject(user.getUsername()).withIssuer(issuer)
                 .sign(algo);
     }
 
@@ -34,8 +33,7 @@ public class JwtTokenUtils implements InitializingBean {
         DecodedJWT jwt = verifier.verify(token);
         String tokenSubject = jwt.getSubject();
         Date tokenExpiry = jwt.getExpiresAt();
-        String s = user.getUsername() + "+" + user.getAuthSalt();
-        return (tokenSubject.equals(s) && !tokenExpiry.before(new Date()));
+        return (tokenSubject.equals(user.getUsername()) && !tokenExpiry.before(new Date()) && jwt.getIssuedAtAsInstant().toEpochMilli() > user.getLastUpdated());
     }
 
     public String getUsernameFromToken(String token) {
