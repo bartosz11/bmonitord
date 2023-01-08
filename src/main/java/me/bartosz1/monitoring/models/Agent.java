@@ -22,6 +22,8 @@ public class Agent {
     private long ramTotal;
     private long swapTotal;
     private int uptime;
+    private boolean installed;
+    private int timeout;
 
     @OneToOne
     private Monitor monitor;
@@ -121,6 +123,24 @@ public class Agent {
 
     public Agent setMonitor(Monitor monitor) {
         this.monitor = monitor;
+        return this;
+    }
+
+    public boolean isInstalled() {
+        return installed;
+    }
+
+    public Agent setInstalled(boolean installed) {
+        this.installed = installed;
+        return this;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public Agent setTimeout(int timeout) {
+        this.timeout = timeout;
         return this;
     }
 }

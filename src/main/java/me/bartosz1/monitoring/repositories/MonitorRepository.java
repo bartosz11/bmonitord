@@ -17,11 +17,11 @@ public interface MonitorRepository extends JpaRepository<Monitor, Long> {
 
     //For status checks only, avoids n+1 and cartesian product 😎
     @Query("select distinct m from Monitor m left join fetch m.incidents left join fetch m.agent")
-    @QueryHints({@QueryHint(name = "hibernate.query.passDistinctThrough", value = "false")})
     List<Monitor> findAllMonitors();
-
     @Query("select distinct m from Monitor m left join fetch m.notifications notifications where m in :monitors")
-    @QueryHints({@QueryHint(name = "hibernate.query.passDistinctThrough", value = "false")})
     List<Monitor> findAllMonitors(List<Monitor> monitors);
+
+    @Query("select distinct m from Monitor m left join fetch m.heartbeats heartbeats where m in :monitors")
+    List<Monitor> findAllMonitors2(List<Monitor> monitors);
 
 }

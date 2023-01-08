@@ -1,10 +1,13 @@
 package me.bartosz1.monitoring;
 
 import jakarta.transaction.Transactional;
+import me.bartosz1.monitoring.models.Agent;
+import me.bartosz1.monitoring.models.Heartbeat;
 import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.enums.MonitorStatus;
 import me.bartosz1.monitoring.models.enums.MonitorType;
+import me.bartosz1.monitoring.repositories.HeartbeatRepository;
 import me.bartosz1.monitoring.repositories.IncidentRepository;
 import me.bartosz1.monitoring.repositories.MonitorRepository;
 import me.bartosz1.monitoring.services.NotificationSenderService;
@@ -28,29 +31,54 @@ public class MonitorChecker implements InitializingBean {
     private final MonitorRepository monitorRepository;
     private final NotificationSenderService notificationSenderService;
     private final IncidentRepository incidentRepository;
+    private final HeartbeatRepository heartbeatRepository;
     private final ExecutorService executorService;
     private long started;
 
-    public MonitorChecker(MonitorRepository monitorRepository, NotificationSenderService notificationSenderService, IncidentRepository incidentRepository, @Value("${monitoring.check-thread-pool-size:2}") int checkThreadPoolSize) {
+    public MonitorChecker(MonitorRepository monitorRepository, NotificationSenderService notificationSenderService, IncidentRepository incidentRepository, HeartbeatRepository heartbeatRepository, @Value("${monitoring.check-thread-pool-size:2}") int checkThreadPoolSize) {
         this.monitorRepository = monitorRepository;
         this.notificationSenderService = notificationSenderService;
         this.incidentRepository = incidentRepository;
+        this.heartbeatRepository = heartbeatRepository;
         this.executorService = Executors.newFixedThreadPool(checkThreadPoolSize);
     }
 
+    //we use fixed delay instead of cron, so the check will run after app start and not at XX:XX:00
     @Scheduled(fixedDelay = 60000)
     //might not be a good solution
-    @Transactional
+    @Transactional()
     public void checkMonitors() {
-        List<Monitor> allMonitors = monitorRepository.findAllMonitors(monitorRepository.findAllMonitors());
+        LOGGER.info("Checking monitors...");
+        //very brh
+        List<Monitor> allMonitors = monitorRepository.findAllMonitors2(monitorRepository.findAllMonitors(monitorRepository.findAllMonitors()));
         allMonitors.forEach(monitor -> {
-            if (!(monitor.getType() == MonitorType.AGENT && started + 300 < Instant.now().getEpochSecond())) {
-                if (!monitor.isPaused()) executorService.execute(() -> {
-                    MonitorStatus currentStatus = monitor.getType().getCheckProvider().check(monitor);
-                    processStatus(monitor, currentStatus);
-                    monitorRepository.save(monitor);
-                    LOGGER.debug(monitor.getName() + " " + currentStatus);
-                });
+            if (!monitor.isPaused()) {
+                if (!(monitor.getType() == MonitorType.AGENT)) {
+                    executorService.execute(() -> {
+                        Heartbeat hb = monitor.getType().getCheckProvider().check(monitor);
+                        MonitorStatus currentStatus = hb.getStatus();
+                        //Here we don't do any magic with the host thing
+                        processStatus(monitor, currentStatus);
+                        monitor.getHeartbeats().add(hb);
+                        heartbeatRepository.save(hb);
+                        monitorRepository.save(monitor);
+
+                    });
+                } else {
+                    Agent agent = monitor.getAgent();
+                    if (agent.isInstalled() && started + 300 < Instant.now().getEpochSecond()) {
+                        long epochSecond = Instant.now().getEpochSecond();
+                        MonitorStatus status;
+                        //Here we don't make heartbeats, they'd be duplicate, kind of
+                        if (monitor.getAgent().getLastDataReceived() + (long) agent.getTimeout() < epochSecond) {
+                            status = MonitorStatus.DOWN;
+                        } else {
+                            status = MonitorStatus.UP;
+                        }
+                        processStatus(monitor, status);
+                        monitorRepository.save(monitor);
+                    }
+                }
             }
         });
     }
@@ -89,7 +117,7 @@ public class MonitorChecker implements InitializingBean {
 
     private void incrementChecks(Monitor monitor, MonitorStatus currentStatus) {
         if (currentStatus == MonitorStatus.UP) monitor.incrementChecksUp();
-        else monitor.incrementChecksDown();
+        else if (currentStatus == MonitorStatus.DOWN) monitor.incrementChecksDown();
     }
 
     @Override

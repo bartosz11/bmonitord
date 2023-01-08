@@ -1,18 +1,23 @@
 package me.bartosz1.monitoring.providers.check;
 
+import me.bartosz1.monitoring.models.Heartbeat;
 import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.enums.MonitorStatus;
 
 import java.io.IOException;
+import java.time.Instant;
 
 public class PingCheckProvider extends CheckProvider {
 
-    public MonitorStatus check(Monitor monitor) {
+    public Heartbeat check(Monitor monitor) {
         try {
-            return ping(monitor.getHost(), monitor.getTimeout() * 1000) ? MonitorStatus.UP : MonitorStatus.DOWN;
+            long start = Instant.now().getEpochSecond();
+            return ping(monitor.getHost(), monitor.getTimeout() * 1000)
+                    ? new Heartbeat().setMonitor(monitor).setTimestamp(Instant.now().getEpochSecond()).setStatus(MonitorStatus.UP).setResponseTime(Instant.now().getEpochSecond() - start)
+                    : new Heartbeat().setMonitor(monitor).setTimestamp(Instant.now().getEpochSecond()).setStatus(MonitorStatus.DOWN);
         } catch (IOException | InterruptedException ignored) {
         }
-        return MonitorStatus.DOWN;
+        return new Heartbeat().setMonitor(monitor).setTimestamp(Instant.now().getEpochSecond()).setStatus(MonitorStatus.DOWN);
     }
 
     private boolean ping(String host, int timeout) throws IOException, InterruptedException {

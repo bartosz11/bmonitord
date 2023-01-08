@@ -1,13 +1,12 @@
 package me.bartosz1.monitoring.models.enums;
 
-import me.bartosz1.monitoring.providers.check.AgentCheckProvider;
 import me.bartosz1.monitoring.providers.check.CheckProvider;
 import me.bartosz1.monitoring.providers.check.HTTPCheckProvider;
 import me.bartosz1.monitoring.providers.check.PingCheckProvider;
 
 public enum MonitorType {
 
-    HTTP(new HTTPCheckProvider()), PING(new PingCheckProvider()), AGENT(new AgentCheckProvider());
+    HTTP(new HTTPCheckProvider()), PING(new PingCheckProvider()), AGENT(null);
 
     private final CheckProvider checkProvider;
 
