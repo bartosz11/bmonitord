@@ -1,0 +1,72 @@
+#"Blank" config file. Everything you need to fill is in <>
+
+spring:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    #All SQL queries are going to be logged. DON'T USE THIS IN PRODUCTION ENVIRONMENTS!
+    show-sql: false
+  #Uncomment if you're using PostgreSQL
+  #database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    # "db type" can be mysql, postgresql
+    url: jdbc:<db type>://<host:port>/<database name>
+    #Leave these two blank if you're using sqlite
+    username: <DB user>
+    password: <DB user password>
+  #Mail needs to be configured
+  #it's SMTP, not some provider's API
+  mail:
+      host: <smtp host>
+      port: <port>
+      username: <username>
+      password: <password>
+      properties:
+        mail.smtp.starttls.enable: true
+        mail.smtp.auth: true
+        mail.smtp.starttls.required: true
+        mail.smtp.from: <from>
+      default-encoding: UTF-8
+      test-connection: false
+
+monitoring:
+  jwt:
+    #Change this to any randomly generated string
+    secret: "<secret>"
+    #Can be anything, doesn't need to be changed
+    issuer: "Monitoring"
+  #Timezone used for formatting dates in some notifications
+  #List of compatible TZ timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  timezone: <timezone>
+  #Change this to false to disable /api/auth/register API route, new users won't be able to register
+  registration-enabled: true
+  #Amount of monitors that can be checked simultaneously
+  check-thread-pool-size: 2
+
+#You don't need to modify lines below
+
+server:
+  #Webserver port, might be useful if you're running this outside Docker
+  port: 8080
+
+#Logging
+logging:
+  level:
+    org.hibernate: info
+    org.springframework: info
+    root: info
+    me.bartosz1: info
+
+#Spring Boot Actuator setup
+management:
+  endpoints:
+    web.base-path: /app
+  endpoint:
+    health:
+      show-details: always
+  health:
+    diskSpace:
+      enabled: false
+    ping:
+      enabled: false
