@@ -1,6 +1,7 @@
 package me.bartosz1.monitoring.services;
 
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
+import me.bartosz1.monitoring.exceptions.IllegalParameterException;
 import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.models.enums.MonitorType;
 import me.bartosz1.monitoring.repositories.MonitorRepository;
@@ -82,14 +83,13 @@ public class MonitorService {
         throw new EntityNotFoundException("Monitor with ID " + id + " not found.");
     }
 
-    public Monitor publishMonitor(long id, boolean publish, User user) throws EntityNotFoundException, IllegalStateException {
+    public Monitor publishMonitor(long id, boolean publish, User user) throws EntityNotFoundException, IllegalStateException, IllegalParameterException {
         Optional<Monitor> optionalMonitor = monitorRepository.findById(id);
         if (optionalMonitor.isPresent()) {
             Monitor monitor = optionalMonitor.get();
             if (monitor.getUser().getId() == user.getId()) {
                 if (!monitor.getStatuspages().isEmpty() && !publish)
-                    //subject-to-change maybe use some wrapper of IllegalStateException????
-                    throw new IllegalStateException("Monitors can't be unpublished when assigned to any statuspage.");
+                    throw new IllegalParameterException("Monitors can't be unpublished when assigned to any statuspage.");
                 monitor.setPublished(publish);
                 return monitorRepository.save(monitor);
             }

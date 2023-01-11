@@ -103,5 +103,12 @@ public class MonitorController {
         return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
     }
 
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{monitorId}/publish", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<Response> publishMonitor(@PathVariable long monitorId, @RequestParam(name = "public") boolean published, @AuthenticationPrincipal User user) throws EntityNotFoundException, IllegalParameterException {
+        Monitor monitor = monitorService.publishMonitor(monitorId, published, user);
+        return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
+    }
+
 }
 
