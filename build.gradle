@@ -19,7 +19,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     //JWT
-    implementation 'com.auth0:java-jwt:4.0.0'
+    implementation 'com.auth0:java-jwt:4.2.2'
     //Databases
     implementation 'com.influxdb:influxdb-client-java:6.5.0'
     implementation 'mysql:mysql-connector-java'
