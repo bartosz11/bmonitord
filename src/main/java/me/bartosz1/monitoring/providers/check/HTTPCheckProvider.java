@@ -60,9 +60,10 @@ public class HTTPCheckProvider extends CheckProvider {
             int code = resp.code();
             resp.close();
             if (monitor.getAllowedHttpCodesAsList().contains(code)) {
-                return new Heartbeat().setMonitor(monitor).setStatus(MonitorStatus.UP).setResponseTime(resp.receivedResponseAtMillis()-resp.sentRequestAtMillis()).setTimestamp(Instant.now().getEpochSecond());
+                return new Heartbeat().setMonitor(monitor).setStatus(MonitorStatus.UP).setResponseTime(resp.receivedResponseAtMillis() - resp.sentRequestAtMillis()).setTimestamp(Instant.now().getEpochSecond());
                 //This else is for invalid HTTP codes, even if the connection was successful
-            } else return new Heartbeat().setMonitor(monitor).setStatus(MonitorStatus.DOWN).setResponseTime(resp.receivedResponseAtMillis()-resp.sentRequestAtMillis()).setTimestamp(Instant.now().getEpochSecond());
+            } else
+                return new Heartbeat().setMonitor(monitor).setStatus(MonitorStatus.DOWN).setResponseTime(resp.receivedResponseAtMillis() - resp.sentRequestAtMillis()).setTimestamp(Instant.now().getEpochSecond());
         } catch (IOException e) {
             //For failed requests, no response time here because server probably hasn't responded at all
             return new Heartbeat().setMonitor(monitor).setStatus(MonitorStatus.DOWN).setTimestamp(Instant.now().getEpochSecond());

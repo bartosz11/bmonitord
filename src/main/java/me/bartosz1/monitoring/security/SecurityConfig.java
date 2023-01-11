@@ -27,6 +27,8 @@ public class SecurityConfig {
                 .requestMatchers("/").permitAll()
                 //All login and register requests need to be allowed
                 .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
+                //Allow all requests agents make - install signal, post data
+                .requestMatchers("/api/agent/**").permitAll()
                 //Allow all requests to Actuator endpoints - the only one exposed is /health
                 .requestMatchers("/app/**").permitAll()
                 //Require authentication for all other requests
