@@ -1,9 +1,11 @@
 package me.bartosz1.monitoring.providers.notification;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.Monitor;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,13 @@ import java.util.HashMap;
 public class GenericWebhookNotificationProvider extends NotificationProvider {
 
     private static final String TEST_NOTIFICATION = "{\"event\": \"test-notification\"}";
+    private final OkHttpClient httpClient;
+    private final ObjectMapper objectMapper;
+
+    public GenericWebhookNotificationProvider(OkHttpClient httpClient, ObjectMapper objectMapper) {
+        this.httpClient = httpClient;
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public void sendNotification(Monitor monitor, Incident incident, String args) {
@@ -24,9 +33,9 @@ public class GenericWebhookNotificationProvider extends NotificationProvider {
             bodyContent.put("monitor", monitor);
             bodyContent.put("incident", incident);
             try {
-                RequestBody requestBody = RequestBody.create(super.getObjectMapper().writeValueAsString(bodyContent), MediaType.parse("application/json"));
+                RequestBody requestBody = RequestBody.create(objectMapper.writeValueAsString(bodyContent), MediaType.parse("application/json"));
                 Request req = new Request.Builder().post(requestBody).url(args).build();
-                super.getHttpClient().newCall(req).enqueue(BLANK_CALLBACK);
+                httpClient.newCall(req).enqueue(BLANK_CALLBACK);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -37,9 +46,9 @@ public class GenericWebhookNotificationProvider extends NotificationProvider {
     public void sendTestNotification(String args) {
         if (args.startsWith("http://") || args.startsWith("https://")) {
             try {
-                RequestBody requestBody = RequestBody.create(super.getObjectMapper().writeValueAsString(TEST_NOTIFICATION), MediaType.parse("application/json"));
+                RequestBody requestBody = RequestBody.create(objectMapper.writeValueAsString(TEST_NOTIFICATION), MediaType.parse("application/json"));
                 Request req = new Request.Builder().post(requestBody).url(args).build();
-                super.getHttpClient().newCall(req).enqueue(BLANK_CALLBACK);
+                httpClient.newCall(req).enqueue(BLANK_CALLBACK);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }

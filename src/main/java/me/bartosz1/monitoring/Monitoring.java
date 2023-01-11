@@ -1,5 +1,7 @@
 package me.bartosz1.monitoring;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 @EnableScheduling
@@ -32,9 +35,20 @@ public class Monitoring {
         return ZoneId.of(timezone);
     }
 
+    //beans used by notification providers
     @Bean
     public DateTimeFormatter dateTimeFormatter() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of(timezone));
+    }
+
+    @Bean
+    public OkHttpClient httpClient() {
+        return new OkHttpClient.Builder().callTimeout(5, TimeUnit.SECONDS).build();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
 }

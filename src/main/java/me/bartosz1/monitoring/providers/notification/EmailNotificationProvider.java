@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class EmailNotificationProvider extends NotificationProvider {
@@ -19,11 +20,13 @@ public class EmailNotificationProvider extends NotificationProvider {
     private static final String DOWN_EMAIL_TEMPLATE = "Monitor: %name%\nHost: %host%\nTime: %timestamp%";
     private static final String TEST_NOTIFICATION = "This is a test notification.";
     private final JavaMailSender mailSender;
+    private final DateTimeFormatter dateTimeFormatter;
     @Value("${spring.mail.properties.mail.smtp.from}")
     private String from;
 
-    public EmailNotificationProvider(JavaMailSender mailSender) {
+    public EmailNotificationProvider(JavaMailSender mailSender, DateTimeFormatter dateTimeFormatter) {
         this.mailSender = mailSender;
+        this.dateTimeFormatter = dateTimeFormatter;
     }
 
     @Override
@@ -36,11 +39,11 @@ public class EmailNotificationProvider extends NotificationProvider {
         if (monitor.getLastStatus() == MonitorStatus.UP) {
             text = UP_EMAIL_TEMPLATE.replaceFirst("%name%", monitor.getName())
                     .replaceFirst("%duration%", DurationFormatUtils.formatDurationWords(incident.getDuration() * 1000, true, true))
-                    .replaceFirst("%timestamp%", super.getDateTimeFormatter().format(Instant.ofEpochSecond(incident.getEndTimestamp())))
+                    .replaceFirst("%timestamp%", dateTimeFormatter.format(Instant.ofEpochSecond(incident.getEndTimestamp())))
                     .replaceFirst("%host%", replacement);
         } else {
             text = DOWN_EMAIL_TEMPLATE.replaceFirst("%name%", monitor.getName())
-                    .replaceFirst("%timestamp%", super.getDateTimeFormatter().format(Instant.ofEpochSecond(incident.getStartTimestamp())))
+                    .replaceFirst("%timestamp%", dateTimeFormatter.format(Instant.ofEpochSecond(incident.getStartTimestamp())))
                     .replaceFirst("%host%", replacement);
         }
         //how to reduce code duplication 101
