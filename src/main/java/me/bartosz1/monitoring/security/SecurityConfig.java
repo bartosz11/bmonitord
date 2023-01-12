@@ -24,11 +24,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //CSRF will get enabled once I start doing frontend I think
         http.csrf().disable().authorizeHttpRequests()
+                //Frontend requests
                 .requestMatchers("/").permitAll()
+                .requestMatchers("/index.html").permitAll()
+                .requestMatchers("/assets/**").permitAll()
                 //All login and register requests need to be allowed
                 .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
                 //Allow all requests agents make - install signal, post data
                 .requestMatchers("/api/agent/**").permitAll()
+                //Public data
+                .requestMatchers("/api/heartbeat/**").permitAll()
                 //Allow all requests to Actuator endpoints - the only one exposed is /health
                 .requestMatchers("/app/**").permitAll()
                 //Require authentication for all other requests
