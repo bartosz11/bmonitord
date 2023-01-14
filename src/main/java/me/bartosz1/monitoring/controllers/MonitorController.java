@@ -7,7 +7,6 @@ import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.MonitorCDO;
 import me.bartosz1.monitoring.models.Response;
 import me.bartosz1.monitoring.models.User;
-import me.bartosz1.monitoring.models.enums.MonitorType;
 import me.bartosz1.monitoring.services.MonitorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +30,7 @@ public class MonitorController {
     @ResponseBody
     public ResponseEntity<Response> createMonitor(@RequestBody MonitorCDO cdo, @AuthenticationPrincipal User user) {
         Monitor monitor = monitorService.createMonitor(cdo, user);
-        if (monitor.getType() == MonitorType.AGENT)
-            return new Response(HttpStatus.CREATED).addAdditionalField("id", monitor.getId()).addAdditionalField("agentid", monitor.getAgent().getId()).toResponseEntity();
-        return new Response(HttpStatus.CREATED).addAdditionalField("id", monitor.getId()).toResponseEntity();
+        return new Response(HttpStatus.CREATED).addAdditionalData(monitor).toResponseEntity();
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
@@ -61,7 +58,7 @@ public class MonitorController {
     @ResponseBody
     public ResponseEntity<Response> pauseMonitor(@PathVariable long id, @RequestParam boolean pause, @AuthenticationPrincipal User user) throws EntityNotFoundException {
         Monitor monitor = monitorService.pauseMonitor(id, pause, user);
-        return new Response(HttpStatus.OK).addAdditionalField("pause", monitor.isPaused()).addAdditionalField("id", monitor.getId()).toResponseEntity();
+        return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/{id}/rename", produces = "application/json")
@@ -71,7 +68,7 @@ public class MonitorController {
         if (!body.containsKey("name") || body.get("name") == null)
             throw new IllegalParameterException("Name cannot be null.");
         Monitor monitor = monitorService.renameMonitor(id, body.get("name"), user);
-        return new Response(HttpStatus.OK).addAdditionalField("name", monitor.getName()).addAdditionalField("id", monitor.getId()).toResponseEntity();
+        return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/{monitorId}/notification/{notificationId}", produces = "application/json")

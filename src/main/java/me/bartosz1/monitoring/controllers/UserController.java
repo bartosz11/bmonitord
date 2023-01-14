@@ -39,15 +39,15 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<Response> changeUsername(@AuthenticationPrincipal User user, @RequestParam(name = "username") String newUsername) throws UsernameAlreadyTakenException {
         User user1 = userService.changeUsername(user, newUsername);
-        return new Response(HttpStatus.NO_CONTENT).addAdditionalData(user1).toResponseEntity();
+        return new Response(HttpStatus.OK).addAdditionalData(user1).toResponseEntity();
     }
 
     @RequestMapping(path = "/password", method = RequestMethod.PATCH, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Response> changePassword(@AuthenticationPrincipal User user, @RequestBody PasswordMDO mdo) throws InvalidPasswordException, InvalidOldPasswordException {
         if (mdo.getNewPassword().equals(mdo.getNewPasswordConfirmation())) {
-            userService.changeUserPassword(user, mdo);
-            return new Response(HttpStatus.NO_CONTENT).toResponseEntity();
+            User user1 = userService.changeUserPassword(user, mdo);
+            return new Response(HttpStatus.OK).addAdditionalData(user1).toResponseEntity();
         }
         //I hope this is understandable
         throw new InvalidPasswordException("New passwords don't match.");
@@ -56,7 +56,7 @@ public class UserController {
     @RequestMapping(path = "/invalidate", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Response> invalidateAllSessions(@AuthenticationPrincipal User user) {
-        userService.invalidateAllUserSessions(user);
-        return new Response(HttpStatus.NO_CONTENT).toResponseEntity();
+        User user1 = userService.invalidateAllUserSessions(user);
+        return new Response(HttpStatus.OK).addAdditionalData(user1).toResponseEntity();
     }
 }

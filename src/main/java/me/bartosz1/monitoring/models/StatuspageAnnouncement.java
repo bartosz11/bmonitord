@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import me.bartosz1.monitoring.models.enums.StatuspageAnnouncementType;
 
@@ -10,6 +11,7 @@ public class StatuspageAnnouncement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @OneToOne
+    @JsonIgnore
     private Statuspage statuspage;
     private String title;
     private String content;

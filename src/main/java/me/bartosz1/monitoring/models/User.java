@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@JsonIncludeProperties({"id", "username", "enabled"})
+@JsonIncludeProperties({"id", "username", "enabled", "lastUpdated"})
 public class User implements UserDetails {
 
     @Id

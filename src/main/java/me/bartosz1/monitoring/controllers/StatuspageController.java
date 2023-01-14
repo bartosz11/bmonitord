@@ -67,7 +67,7 @@ public class StatuspageController {
         if (!body.containsKey("name") || body.get("name") == null)
             throw new IllegalParameterException("Name cannot be null.");
         Statuspage statuspage = statuspageService.renameStatuspage(user, id, body.get("name"));
-        return new Response(HttpStatus.OK).addAdditionalField("id", statuspage.getId()).addAdditionalField("name", statuspage.getName()).toResponseEntity();
+        return new Response(HttpStatus.OK).addAdditionalData(statuspage).toResponseEntity();
     }
 
     //used for editing too
@@ -75,7 +75,7 @@ public class StatuspageController {
     @ResponseBody
     private ResponseEntity<Response> addAnnouncement(@AuthenticationPrincipal User user, @RequestBody StatuspageAnnouncementCDO cdo, @PathVariable long id) throws EntityNotFoundException {
         Statuspage statuspage = statuspageService.addAnnouncement(user, cdo, id);
-        return new Response(HttpStatus.OK).addAdditionalField("statuspageId", statuspage.getId()).addAdditionalField("announcementId", statuspage.getAnnouncement().getId()).toResponseEntity();
+        return new Response(HttpStatus.OK).addAdditionalData(statuspage).toResponseEntity();
     }
 
     @RequestMapping(path = "/{id}/announcement", method = RequestMethod.DELETE, produces = "application/json")

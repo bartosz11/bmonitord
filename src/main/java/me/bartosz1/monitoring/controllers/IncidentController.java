@@ -43,6 +43,6 @@ public class IncidentController {
         if (page < 0 || size < 5 || size > 50)
             throw new IllegalParameterException("Page index must be greater than 0. Page size must fit in range 5-50.");
         Page<Incident> incidentPage = incidentService.findIncidentPageByMonitorIdAndUser(id, user, PageRequest.of(page, size));
-        return new Response(HttpStatus.OK).addAdditionalData(incidentPage.getContent()).toResponseEntity();
+        return new Response(HttpStatus.OK).addAdditionalData(incidentPage).toResponseEntity();
     }
 }

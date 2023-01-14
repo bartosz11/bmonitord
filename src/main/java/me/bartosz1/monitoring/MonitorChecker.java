@@ -19,6 +19,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -44,26 +45,25 @@ public class MonitorChecker implements InitializingBean {
     }
 
     //we use fixed delay instead of cron, so the check will run after app start and not at XX:XX:00
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 10000)
     //might not be a good solution
     @Transactional()
     public void checkMonitors() {
         LOGGER.info("Checking monitors...");
         //very brh
         List<Monitor> allMonitors = monitorRepository.findAllMonitors2(monitorRepository.findAllMonitors(monitorRepository.findAllMonitors()));
+        List<Monitor> bulkSaveMonitor = new ArrayList<>();
+        List<Heartbeat> bulkSaveHeartbeat = new ArrayList<>();
         allMonitors.forEach(monitor -> {
             if (!monitor.isPaused()) {
                 if (!(monitor.getType() == MonitorType.AGENT)) {
-                    executorService.execute(() -> {
-                        Heartbeat hb = monitor.getType().getCheckProvider().check(monitor);
-                        MonitorStatus currentStatus = hb.getStatus();
-                        //Here we don't do any magic with the host thing
-                        processStatus(monitor, currentStatus);
-                        monitor.getHeartbeats().add(hb);
-                        heartbeatRepository.save(hb);
-                        monitorRepository.save(monitor);
-
-                    });
+                    Heartbeat hb = monitor.getType().getCheckProvider().check(monitor);
+                    MonitorStatus currentStatus = hb.getStatus();
+                    //Here we don't do any magic with the host thing
+                    processStatus(monitor, currentStatus);
+                    monitor.getHeartbeats().add(hb);
+                    bulkSaveHeartbeat.add(hb);
+                    bulkSaveMonitor.add(monitor);
                 } else {
                     Agent agent = monitor.getAgent();
                     if (agent.isInstalled() && started + 300 < Instant.now().getEpochSecond()) {
@@ -76,11 +76,13 @@ public class MonitorChecker implements InitializingBean {
                             status = MonitorStatus.UP;
                         }
                         processStatus(monitor, status);
-                        monitorRepository.save(monitor);
+                        bulkSaveMonitor.add(monitor);
                     }
                 }
             }
         });
+        heartbeatRepository.saveAll(bulkSaveHeartbeat);
+        monitorRepository.saveAll(bulkSaveMonitor);
     }
 
     //copied from V1
