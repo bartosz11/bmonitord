@@ -45,7 +45,7 @@ public class MonitorChecker implements InitializingBean {
     }
 
     //we use fixed delay instead of cron, so the check will run after app start and not at XX:XX:00
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 60000)
     //might not be a good solution
     @Transactional()
     public void checkMonitors() {
