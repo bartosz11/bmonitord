@@ -38,7 +38,8 @@ public class AuthController {
         //there's just no way it can return something else than User
         User user = (User) userService.loadUserByUsername(authRequest.getUsername());
         authenticate(authRequest);
-        return new Response(HttpStatus.OK).addAdditionalData(new HashMap<String, String>().put("token", jwtTokenUtils.generateToken(user))).toResponseEntity();
+        //todo change field to data -> field
+        return new Response(HttpStatus.OK).addAdditionalField("token", jwtTokenUtils.generateToken(user)).toResponseEntity();
     }
 
     @RequestMapping(path = "/register", method = RequestMethod.POST, produces = "application/json")

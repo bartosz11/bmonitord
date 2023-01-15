@@ -1,0 +1,44 @@
+/* Write your global styles here, in PostCSS syntax */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-zinc-900 text-white;
+}
+
+.input-primary {
+  @apply bg-zinc-700 rounded-md px-1.5 py-1 text-white;
+}
+
+.hint-primary {
+  @apply text-red-400;
+}
+
+.btn-ok-primary {
+  @apply bg-green-600 hover:bg-green-700 px-3 py-1 rounded-md;
+}
+
+.btn-danger-primary {
+  @apply bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md;
+}
+
+.btn-warning-primary {
+  @apply bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded-md;
+}
+
+.h-nav {
+  height: 10vh;
+}
+
+.nav-element {
+  @apply my-2 ml-8 bg-none border-transparent border-b-2 hover:border-amber-500;
+}
+
+.h-view {
+  height: 90vh;
+}
+
+.card {
+  @apply bg-zinc-800 rounded-lg h-fit p-5 w-fit;
+}
