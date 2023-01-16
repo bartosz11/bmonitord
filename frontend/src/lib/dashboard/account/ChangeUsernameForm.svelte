@@ -1,32 +1,21 @@
 <script>
-    import axios from "axios";
     import { useForm, validators, required, Hint } from "svelte-use-form";
     import toast from "svelte-french-toast";
     import { push } from "svelte-spa-router";
-    import { getCookie } from "svelte-cookie";
+    import http from "@/http";
   
     const form = useForm();
     let username;
   
     function onSubmit(e) {
       e.preventDefault();
-      axios
-        .patch(
-          `/api/user/username?username=${username}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${getCookie("auth-token")}`,
-            },
-          }
-        )
-        .then((response) => {
+      http
+        .patch(`/api/user/username?username=${username}`)
+        .then(() => {
           toast.success("Changed username successfully.");
           push("/auth/logout");
         }).catch(err => { 
-          if (err.response && err.response.data.errors) {
-            toast.error(err.response.data.errors[0].message);
-          } else toast.error("Something went wrong while changing your username.");
+          toast.error(err.response?.data?.errors[0]?.message ?? "Something went wrong while changing your username.");
         });
     }
   </script>
@@ -43,14 +32,14 @@
           use:validators={[required]}
           class="input-primary"
         />
-        <Hint class="hint-primary" for="newusername" on="required"
-          >This field is required.</Hint
-        >
+        <Hint class="hint-primary" for="newusername" on="required">
+          This field is required.
+        </Hint>
       </div>
       
-      <button disabled={!$form.valid} class="btn-ok-primary"
-        >Change username</button
-      >
+      <button disabled={!$form.valid} class="btn-ok-primary">
+        Change username
+      </button>
     </form>
   </div>
   

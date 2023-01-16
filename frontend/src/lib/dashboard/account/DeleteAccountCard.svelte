@@ -1,19 +1,17 @@
 <script>
-  import axios from "axios";
-  import { deleteCookie, getCookie } from "svelte-cookie";
+  import http from "@/http";
+  import { deleteCookie } from "svelte-cookie";
   import toast from "svelte-french-toast";
   import { push } from "svelte-spa-router";
+
   let clicks = 0;
+  
   function onClick() {
     clicks++;
     if (clicks === 1) toast("Are you sure?", { duration: 2000 });
     if (clicks >= 2)
-      axios
-        .delete("/api/user", {
-          headers: {
-            Authorization: `Bearer ${getCookie("auth-token")}`,
-          },
-        })
+      http
+        .delete("/api/user")
         .then((response) => {
           if (response.status == 204) {
             toast.success("Your account has been successfully deleted.");
@@ -31,8 +29,8 @@
 <div class="card">
   <span>Delete account (click 2 times)</span>
   <div>
-    <button class="btn-danger-primary mt-3" on:click={onClick}
-      >Delete account</button
-    >
+    <button class="btn-danger-primary mt-3" on:click={onClick}>
+      Delete account
+    </button>
   </div>
 </div>
