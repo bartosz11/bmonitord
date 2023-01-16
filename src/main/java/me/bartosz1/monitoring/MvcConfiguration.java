@@ -1,12 +1,19 @@
 package me.bartosz1.monitoring;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.EncodedResourceResolver;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
 @Configuration
-//this exists just so we can use our fancy request logging interceptor which prevents a lot of boilerplate :)
 public class MvcConfiguration implements WebMvcConfigurer {
+
+    @Value("${monitoring.production}")
+    private boolean production;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -20,11 +27,12 @@ public class MvcConfiguration implements WebMvcConfigurer {
                 .setCachePeriod(3600)
                 .addResourceLocations("classpath:/static/assets/")
                 .resourceChain(true)
+                .addResolver(new EncodedResourceResolver())
                 .addResolver(new PathResourceResolver());
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("http://localhost:5173").allowCredentials(true);
+        if (!production) registry.addMapping("/**").allowedOrigins("http://localhost:5173").allowCredentials(true);
     }
 }

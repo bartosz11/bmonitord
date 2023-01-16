@@ -31,6 +31,8 @@ spring:
       test-connection: false
 
 monitoring:
+  #Change this to false if you're using frontend dev web server
+  production: true
   jwt:
     #Change this to any randomly generated string
     secret: "<secret>"
@@ -39,15 +41,16 @@ monitoring:
   #Timezone used for formatting dates in some notifications
   #List of compatible TZ timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   timezone: <timezone>
-  #Change this to false to disable /api/auth/register API route, new users won't be able to register
+  #set this to false to disable /api/auth/register API route, new users won't be able to register
   registration-enabled: true
   #Amount of monitors that can be checked simultaneously
+  #Change this
   check-thread-pool-size: 2
 
 #You don't need to modify lines below
 
 server:
-  #Webserver port, might be useful if you're running this outside Docker
+  #Webserver port, might be useful if you're running this outside Docker, frontend will break unless you change base API url
   port: 8080
 
 #Logging
