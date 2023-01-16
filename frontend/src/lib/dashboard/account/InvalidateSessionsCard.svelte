@@ -1,20 +1,12 @@
 <script>
-  import axios from "axios";
+  import http from "@/http";
   import { deleteCookie, getCookie } from "svelte-cookie";
   import toast from "svelte-french-toast";
   import { push } from "svelte-spa-router";
 
   function onClick() {
-    axios
-      .post(
-        "/api/user/invalidate",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie("auth-token")}`,
-          },
-        }
-      )
+    http
+      .post("/api/user/invalidate")
       .then((response) => {
         if (response.status == 200) {
           toast.success("You've been logged out everywhere.");
@@ -32,7 +24,8 @@
 <div class="card">
   <span>Log out everywhere</span>
   <div>
-    <button class="btn-warning-primary mt-3" on:click={onClick}>Log out everywhere</button
-    >
+    <button class="btn-warning-primary mt-3" on:click={onClick}>
+      Log out everywhere
+    </button>
   </div>
 </div>

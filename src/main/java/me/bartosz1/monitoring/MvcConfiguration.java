@@ -15,6 +15,16 @@ public class MvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/assets/**").setCachePeriod(3600).addResourceLocations("classpath:/static/assets/").resourceChain(true).addResolver(new PathResourceResolver());
+        registry
+                .addResourceHandler("/assets/**")
+                .setCachePeriod(3600)
+                .addResourceLocations("classpath:/static/assets/")
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver());
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("http://localhost:5173").allowCredentials(true);
     }
 }

@@ -23,7 +23,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //CSRF will get enabled once I start doing frontend I think
-        http.csrf().disable().authorizeHttpRequests()
+        http.cors().and().csrf().disable().authorizeHttpRequests()
                 //Frontend requests
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/index.html").permitAll()

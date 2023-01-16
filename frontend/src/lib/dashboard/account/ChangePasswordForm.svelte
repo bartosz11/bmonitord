@@ -1,9 +1,8 @@
 <script>
-  import axios from "axios";
   import { useForm, validators, required, Hint } from "svelte-use-form";
   import toast from "svelte-french-toast";
   import { push } from "svelte-spa-router";
-  import { getCookie } from "svelte-cookie";
+  import http from "@/http";
 
   const form = useForm();
   let oldPassword;
@@ -12,27 +11,13 @@
 
   function onSubmit(e) {
     e.preventDefault();
-    axios
-      .patch(
-        "/api/user/password",
-        {
-          oldPassword: oldPassword,
-          newPassword: newPassword,
-          newPasswordConfirmation: newPasswordConfirmation,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie("auth-token")}`,
-          },
-        }
-      )
-      .then((response) => {
+    http
+      .patch("/api/user/password")
+      .then(() => {
         toast.success("Changed password successfully.");
         push("/auth/logout");
-      }).catch(err => { 
-        if (err.response && err.response.data.errors) {
-          toast.error(err.response.data.errors[0].message);
-        } else toast.error("Something went wrong while changing your password.");
+      }).catch(err => {
+        toast.error(err.response?.data?.errors[0]?.message ?? "Something went wrong while changing your password.");
       });
   }
 </script>
@@ -49,9 +34,9 @@
         use:validators={[required]}
         class="input-primary"
       />
-      <Hint class="hint-primary" for="oldpassword" on="required"
-        >This field is required.</Hint
-      >
+      <Hint class="hint-primary" for="oldpassword" on="required">
+        This field is required.
+      </Hint>
     </div>
 
     <div class="my-3">
@@ -63,9 +48,9 @@
         use:validators={[required]}
         class="input-primary"
       />
-      <Hint class="hint-primary" for="newpassword" on="required"
-        >This field is required.</Hint
-      >
+      <Hint class="hint-primary" for="newpassword" on="required">
+        This field is required.
+      </Hint>
     </div>
     <div class="my-3">
       <input
@@ -76,12 +61,12 @@
         use:validators={[required]}
         class="input-primary"
       />
-      <Hint class="hint-primary" for="newpasswordconfirm" on="required"
-        >This field is required.</Hint
-      >
+      <Hint class="hint-primary" for="newpasswordconfirm" on="required">
+        This field is required.
+      </Hint>
     </div>
-    <button disabled={!$form.valid} class="btn-ok-primary"
-      >Change password</button
-    >
+    <button disabled={!$form.valid} class="btn-ok-primary">
+      Change password
+    </button>
   </form>
 </div>

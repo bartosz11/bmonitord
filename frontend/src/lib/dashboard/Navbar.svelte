@@ -12,9 +12,9 @@
     <button on:click={() => push("/dashboard/monitors")}>Monitors</button>
   </div>
   <div class="nav-element">
-    <button on:click={() => push("/dashboard/notifications")}
-      >Notifications</button
-    >
+    <button on:click={() => push("/dashboard/notifications")}>
+      Notifications
+    </button>
   </div>
   <div class="nav-element">
     <button on:click={() => push("/dashboard/statuspages")}>Statuspages</button>
