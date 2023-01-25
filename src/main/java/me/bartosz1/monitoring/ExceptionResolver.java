@@ -28,7 +28,6 @@ public class ExceptionResolver extends ResponseEntityExceptionHandler {
             if (annotation != null) status = annotation.value();
             else {
                 status = HttpStatus.INTERNAL_SERVER_ERROR;
-                //subject-to-change
                 ex.printStackTrace();
             }
             Response responseBody = new Response(status).addError(ex);

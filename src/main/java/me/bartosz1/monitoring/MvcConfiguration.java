@@ -33,6 +33,6 @@ public class MvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        if (!production) registry.addMapping("/**").allowedOrigins("http://localhost:5173").allowCredentials(true);
+        if (!production) registry.addMapping("/**").allowedOrigins("http://localhost:5173").allowCredentials(true).allowedMethods("GET", "HEAD", "POST", "OPTIONS", "DELETE", "PATCH", "PUT");
     }
 }

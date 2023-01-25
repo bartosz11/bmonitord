@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class Notification {
     private String credentials;
     private NotificationType type;
     @ManyToMany
+    @JsonIgnore
     private List<Monitor> monitors;
     @ManyToOne
     private User user;
