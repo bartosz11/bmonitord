@@ -6,6 +6,7 @@ const http = axios.create({
     withCredentials: true,
     headers: {
         Authorization: `Bearer ${getCookie("auth-token")}`,
+        Accept: "application/json"
     }
 })
 

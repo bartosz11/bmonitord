@@ -94,8 +94,9 @@ public class StatuspageService {
             if (statuspage.getUser().getId() == user.getId()) {
                 StatuspageAnnouncement announcement = statuspage.getAnnouncement();
                 statuspage.setAnnouncement(null);
+                Statuspage save = statuspageRepository.save(statuspage);
                 statuspageAnnouncementRepository.delete(announcement);
-                return statuspageRepository.save(statuspage);
+                return save;
             }
         }
         throw new EntityNotFoundException("Statuspage with ID " + statuspageId + " not found.");
