@@ -17,7 +17,6 @@ public class Notification {
     private String credentials;
     private NotificationType type;
     @ManyToMany
-    @JsonIgnore
     private List<Monitor> monitors;
     @ManyToOne
     private User user;

@@ -1,13 +1,14 @@
 <script>
   import http from "@/http";
-  import StatuspageActionsCell from "./StatuspageActionsCell.svelte";
   import SvelteTable from "svelte-table";
   import { openModal } from "svelte-modals";
-  import StatuspageCreateModal from "./StatuspageCreateModal.svelte";
+  import Home from "@/lib/Home.svelte";
+  import NotificationCreateModal from "./NotificationCreateModal.svelte";
+  import NotificationActionsCell from "./NotificationActionsCell.svelte";
 
   const fetchData = new Promise((resolve, reject) => {
     http
-      .get("/api/statuspage")
+      .get("/api/notification")
       .then((response) => {
         resolve(response.data.data);
       })
@@ -28,29 +29,31 @@
       sortable: true,
     },
     {
-      key: "announcement",
-      title: "Announcement",
-      value: (v) => v.announcement?.title ?? "None",
+      key: "type",
+      title: "Type",
+      value: (v) => {
+        return v.type.substring(0, 1).toUpperCase()+v.type.substring(1).toLowerCase();
+      },
       sortable: true,
     },
     {
       key: "actions",
       title: "Actions",
-      renderComponent: StatuspageActionsCell,
+      renderComponent: NotificationActionsCell,
       sortable: true,
     },
   ];
 </script>
 
 {#await fetchData}
-  <p>Fetching statuspages...</p>
+  <p>Fetching notifications...</p>
 {:then data}
   <div class="flex flex-col md:flex-row">
-    <button class="w-fit h-fit" on:click={() => openModal(StatuspageCreateModal)}>
+    <button class="w-fit h-fit" on:click={() => openModal(NotificationCreateModal)}>
       <i class="ph-plus text-green-500 hover:text-green-600 text-3xl" />
     </button>
     <SvelteTable columns={columnSettings} rows={data} />
   </div>
 {:catch}
-  <p>Couldn't fetch statuspages.</p>
+  <p>Couldn't fetch notifications.</p>
 {/await}

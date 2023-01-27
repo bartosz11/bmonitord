@@ -3,7 +3,7 @@
   import Account from "./account/Account.svelte";
   import Monitors from "./Monitors.svelte";
   import Navbar from "./Navbar.svelte";
-  import Notifications from "./Notifications.svelte";
+  import Notifications from "./notifications/Notifications.svelte";
   import Overview from "./Overview.svelte";
   import Statuspages from "./statuspages/Statuspages.svelte";
   import {Modals, closeModal } from "svelte-modals";
