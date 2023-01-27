@@ -1,5 +1,5 @@
 <script>
-  import Router from "svelte-spa-router";
+  import Router, { push } from "svelte-spa-router";
   import Account from "./account/Account.svelte";
   import Monitors from "./Monitors.svelte";
   import Navbar from "./Navbar.svelte";
@@ -7,6 +7,9 @@
   import Overview from "./Overview.svelte";
   import Statuspages from "./statuspages/Statuspages.svelte";
   import {Modals, closeModal } from "svelte-modals";
+  import { onMount } from "svelte";
+  import http from "@/http";
+  import { deleteCookie } from "svelte-cookie";
   const prefix = "/dashboard";
   const routes = { 
     "/monitors": Monitors,
@@ -15,6 +18,12 @@
     "/account": Account,
     "*": Overview
   };
+  onMount(() => { 
+    http.get("/api/user").catch(err => { 
+      deleteCookie("auth-token");
+      push("/auth/login");
+    })
+  })
 </script>
 
 <Navbar/>
