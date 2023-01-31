@@ -5,6 +5,7 @@
   import StatuspageAnnouncementModal from "./StatuspageAnnouncementModal.svelte";
   import StatuspageEditModal from "./StatuspageEditModal.svelte";
   import StatuspageMonitorsModal from "./StatuspageMonitorsModal.svelte";
+  import { tooltip } from "@svelte-plugins/tooltips";
   export let row;
   let count = 0;
 
@@ -37,8 +38,8 @@
       statuspageId: row.id,
     });
   }
-  
-  function onMonitorsClick() { 
+
+  function onMonitorsClick() {
     openModal(StatuspageMonitorsModal, { statuspage: row });
   }
 </script>
@@ -47,7 +48,11 @@
   <!--delete-->
   <button
     on:click={onDeleteClick}
-    class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white"
+    class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white" use:tooltip={{
+      content: "Delete statuspage",
+      autoPosition: "true",
+      position: "bottom",
+    }}
   >
     <i class="ph-trash" />
   </button>
@@ -55,6 +60,11 @@
   <button
     on:click={onEditClick}
     class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    use:tooltip={{
+      content: "Rename statuspage",
+      autoPosition: "true",
+      position: "bottom",
+    }}
   >
     <i class="ph-pencil" />
   </button>
@@ -62,6 +72,11 @@
   <button
     on:click={onAnnouncementClick}
     class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    use:tooltip={{
+      content: "Manage statuspage announcement",
+      autoPosition: "true",
+      position: "bottom",
+    }}
   >
     <i class="ph-megaphone" />
   </button>
@@ -69,6 +84,12 @@
   <button
     on:click={onMonitorsClick}
     class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    use:tooltip={{
+      content: "View monitors added to this statuspage",
+      autoPosition: "true",
+      position: "bottom",
+    }}
   >
     <i class="ph-activity" />
+  </button>
 </div>

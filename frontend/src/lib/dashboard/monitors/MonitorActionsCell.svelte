@@ -7,6 +7,7 @@
   import MonitorNotificationsModal from "./MonitorNotificationsModal.svelte";
   import MonitorRenameModal from "./MonitorRenameModal.svelte";
   import MonitorStatuspagesModal from "./MonitorStatuspagesModal.svelte";
+  import { tooltip } from "@svelte-plugins/tooltips";
   export let row;
   let count = 0;
 
@@ -84,6 +85,11 @@
   <button
     on:click={onDeleteClick}
     class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white"
+    use:tooltip={{
+      content: "Delete monitor",
+      autoPosition: "true",
+      position: "bottom",
+    }}
   >
     <i class="ph-trash" />
   </button>
@@ -91,6 +97,11 @@
   <button
     on:click={onEditClick}
     class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    use:tooltip={{
+      content: "Rename monitor",
+      autoPosition: "true",
+      position: "bottom",
+    }}
   >
     <i class="ph-pencil" />
   </button>
@@ -99,6 +110,11 @@
     <button
       on:click={onPauseClick}
       class="border border-green-500 p-1 w-fit h-fit text-green-500 hover:bg-green-500 hover:text-white"
+      use:tooltip={{
+        content: "Resume monitor",
+        autoPosition: "true",
+        position: "bottom",
+      }}
     >
       <i class="ph-play" />
     </button>
@@ -106,6 +122,11 @@
     <button
       on:click={onPauseClick}
       class="border border-yellow-500 p-1 w-fit h-fit text-yellow-500 hover:bg-yellow-500 hover:text-white"
+      use:tooltip={{
+        content: "Pause monitor",
+        autoPosition: "true",
+        position: "bottom",
+      }}
     >
       <i class="ph-pause" />
     </button>
@@ -115,6 +136,11 @@
     <button
       on:click={onPublishClick}
       class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white"
+      use:tooltip={{
+        content: "Make monitor private",
+        autoPosition: "true",
+        position: "bottom",
+      }}
     >
       <i class="ph-share-network" />
     </button>
@@ -122,6 +148,11 @@
     <button
       on:click={onPublishClick}
       class="border border-green-500 p-1 w-fit h-fit text-green-500 hover:bg-green-500 hover:text-white"
+      use:tooltip={{
+        content: "Make monitor public",
+        autoPosition: "true",
+        position: "bottom",
+      }} 
     >
       <i class="ph-share-network" />
     </button>
@@ -130,6 +161,11 @@
   <button
     on:click={onNotificationsClick}
     class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    use:tooltip={{
+      content: "Manage monitors notifications",
+      autoPosition: "true",
+      position: "bottom",
+    }} 
   >
     <i class="ph-bell-ringing" />
   </button>
@@ -137,6 +173,11 @@
   <button
     on:click={onStatuspagesClick}
     class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    use:tooltip={{
+      content: "Manage monitors statuspages",
+      autoPosition: "true",
+      position: "bottom",
+    }} 
   >
     <i class="ph-list-checks" />
   </button>
@@ -144,6 +185,11 @@
   <button
     on:click={onInfoClick}
     class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    use:tooltip={{
+      content: "Monitor stats",
+      autoPosition: "true",
+      position: "bottom",
+    }} 
   >
     <i class="ph-info" />
   </button>
@@ -154,6 +200,11 @@
         openModal(MonitorAgentSetupModal, { monitor: row });
       }}
       class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+      use:tooltip={{
+        content: "Set up Server Agent",
+        autoPosition: "true",
+        position: "bottom",
+      }} 
     >
       <i class="ph-heartbeat" />
     </button>

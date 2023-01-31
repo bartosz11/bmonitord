@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@svelte-plugins/tooltips": "^0.1.6",
     "@sveltejs/vite-plugin-svelte": "^2.0.0",
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.14",

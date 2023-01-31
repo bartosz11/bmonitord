@@ -4,6 +4,7 @@
   import { openModal } from "svelte-modals";
   import NotificationEditModal from "./NotificationEditModal.svelte";
   import NotificationMonitorsModal from "./NotificationMonitorsModal.svelte";
+  import {tooltip} from "@svelte-plugins/tooltips";
   export let row;
   let count = 0;
 
@@ -52,6 +53,11 @@
   <button
     on:click={onDeleteClick}
     class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white"
+    use:tooltip={{
+      content: "Delete notification",
+      autoPosition: "true",
+      position: "bottom",
+    }}
   >
     <i class="ph-trash" />
   </button>
@@ -59,6 +65,11 @@
   <button
     on:click={onEditClick}
     class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    use:tooltip={{
+      content: "Edit notification",
+      autoPosition: "true",
+      position: "bottom",
+    }}
   >
     <i class="ph-pencil" />
   </button>
@@ -66,11 +77,21 @@
   <button
     on:click={onTestClick}
     class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    use:tooltip={{
+      content: "Send test notification",
+      autoPosition: "true",
+      position: "bottom",
+    }}
   >
     <i class="ph-bell-ringing" />
   </button>
   <!--monitors-->
-  <button on:click={onMonitorsClick} class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white">
+  <button on:click={onMonitorsClick} class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white" 
+  use:tooltip={{
+    content: "View monitors using this notification",
+    autoPosition: "true",
+    position: "bottom",
+  }}>
     <i class="ph-activity"/>
   </button>
 </div>

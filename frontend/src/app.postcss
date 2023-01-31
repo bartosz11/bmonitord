@@ -5,6 +5,19 @@
 
 body {
   @apply bg-zinc-900 text-white;
+  /*tooltip stuff*/
+  --tooltip-background-color: rgba(63, 63, 70, 0.9);
+  --tooltip-border-radius: 4px;
+  --tooltip-box-shadow: 0 1px 20px rgba(0, 0, 0, 0.25);
+  --tooltip-font-size: 14px;
+  --tooltip-font-weight: 500;
+  --tooltip-line-height: 1.25rem;
+  --tooltip-color: white;
+  --tooltip-offset-x: 12px;
+  --tooltip-offset-y: 12px;
+  --tooltip-padding: 10px;
+  --tooltip-z-index: 100;
+  --tooltip-arrow-size: 10px;
 }
 
 .input-primary {
@@ -36,7 +49,7 @@ body {
 }
 /* for nav elements - underlines the current active route on navbar with orange-500*/
 .active {
- @apply border-orange-500;
+  @apply border-orange-500;
 }
 
 .h-view {
@@ -61,11 +74,13 @@ body {
   @apply bg-zinc-800 flex flex-col justify-between pointer-events-auto p-4 rounded-md;
 }
 
-table, th, td {
+table,
+th,
+td {
   @apply border-collapse border border-solid border-zinc-600;
 }
 
-td { 
+td {
   @apply text-center;
 }
 
@@ -73,10 +88,10 @@ td {
   min-width: 80px;
 }
 
-.min-w-150 { 
+.min-w-150 {
   min-width: 150px;
 }
 
-.grid-cell { 
+.grid-cell {
   @apply space-y-0.5;
 }

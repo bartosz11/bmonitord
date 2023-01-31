@@ -4,6 +4,7 @@
   import SvelteTable from "svelte-table";
   import { openModal } from "svelte-modals";
   import StatuspageCreateModal from "./StatuspageCreateModal.svelte";
+  import { tooltip } from "@svelte-plugins/tooltips";
 
   const fetchData = new Promise((resolve, reject) => {
     http
@@ -46,8 +47,16 @@
   <p>Fetching statuspages...</p>
 {:then data}
   <div class="flex flex-col md:flex-row">
-    <button class="w-fit h-fit m-4" on:click={() => openModal(StatuspageCreateModal)}>
-      <i class="ph-plus-circle text-green-500 hover:text-green-600 text-3xl" />
+    <button
+      class="w-fit h-fit m-4 text-green-500 hover:text-green-600 text-3xl"
+      on:click={() => openModal(StatuspageCreateModal)}
+      use:tooltip={{
+        content: "Create statuspage",
+        autoPosition: "true",
+        position: "right",
+      }}
+    >
+      <i class="ph-plus-circle" />
     </button>
     <SvelteTable columns={columnSettings} rows={data} />
   </div>

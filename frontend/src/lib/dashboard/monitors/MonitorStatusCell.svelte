@@ -1,7 +1,7 @@
 <script>
+  import { tooltip } from "@svelte-plugins/tooltips";
   export let row;
   let classes = "text-3xl";
-
   switch (row.lastStatus) {
     case "UP":
       classes += " ph-arrow-circle-up";
@@ -21,4 +21,11 @@
   }
 </script>
 
-<i class={classes} />
+<i
+  class={classes}
+  use:tooltip={{
+    content: `Last status: ${row.lastStatus.substring(0,1).toUpperCase()+row.lastStatus.substring(1).toLowerCase()}<br>Paused: ${row.paused ? "Yes" : "No"}`,
+    autoPosition: "true",
+    position: "bottom",
+  }}
+/>

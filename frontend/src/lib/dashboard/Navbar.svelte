@@ -7,7 +7,7 @@
   <div class="nav-element" use:active={"/dashboard/overview"}>
     <button on:click={() => push("/dashboard/overview")}>bmonitord</button>
   </div>
-  <div class="nav-element" use:active={"/dashboard/monitors"} use:active={"/dashboard/monitors/:id"}>
+  <div class="nav-element" use:active={"/dashboard/monitors"}>
     <button on:click={() => push("/dashboard/monitors")}>Monitors</button>
   </div>
   <div class="nav-element" use:active={"/dashboard/notifications"}>
