@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.services;
 
+import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
 import me.bartosz1.monitoring.exceptions.IllegalParameterException;
 import me.bartosz1.monitoring.models.*;
@@ -10,9 +11,12 @@ import me.bartosz1.monitoring.repositories.StatuspageRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class MonitorService {
 
     private final MonitorRepository monitorRepository;
@@ -38,7 +42,18 @@ public class MonitorService {
         if (optionalMonitor.isPresent()) {
             Monitor monitor = optionalMonitor.get();
             if (monitor.getUser().getId() == user.getId()) {
-                //todo add cascading stuff here if needed
+                List<Statuspage> bulkSaveStatuspage = new ArrayList<>();
+                monitor.getStatuspages().forEach(statuspage -> {
+                    statuspage.getMonitors().remove(monitor);
+                    bulkSaveStatuspage.add(statuspage);
+                });
+                statuspageRepository.saveAll(bulkSaveStatuspage);
+                List<Notification> bulkSaveNotification = new ArrayList<>();
+                monitor.getNotifications().forEach(notification -> {
+                    notification.getMonitors().remove(monitor);
+                    bulkSaveNotification.add(notification);
+                });
+                notificationRepository.saveAll(bulkSaveNotification);
                 monitorRepository.delete(monitor);
                 return monitor;
             }

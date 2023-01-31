@@ -32,7 +32,8 @@
       key: "type",
       title: "Type",
       value: (v) => {
-        return v.type.substring(0, 1).toUpperCase()+v.type.substring(1).toLowerCase();
+        let uppercased = v.type.substring(0, 1).toUpperCase()+v.type.substring(1).toLowerCase();
+        return uppercased.replaceAll("_", " ");
       },
       sortable: true,
     },
@@ -49,8 +50,8 @@
   <p>Fetching notifications...</p>
 {:then data}
   <div class="flex flex-col md:flex-row">
-    <button class="w-fit h-fit" on:click={() => openModal(NotificationCreateModal)}>
-      <i class="ph-plus text-green-500 hover:text-green-600 text-3xl" />
+    <button class="w-fit h-fit m-4" on:click={() => openModal(NotificationCreateModal)}>
+      <i class="ph-plus-circle text-green-500 hover:text-green-600 text-3xl" />
     </button>
     <SvelteTable columns={columnSettings} rows={data} />
   </div>

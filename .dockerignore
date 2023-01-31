@@ -1,0 +1,15 @@
+.gitignore
+a.out
+notes.txt
+readme.md
+gradlew.bat
+venv/
+src/main/resources/application.yml
+src/main/resources/static/
+build/
+bin/
+agent/
+.vscode/
+.idea/
+.gradle/
+.git/

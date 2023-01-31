@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.services;
 
+import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
 import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.repositories.MonitorRepository;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class StatuspageService {
 
     private final StatuspageRepository statuspageRepository;
@@ -48,6 +50,12 @@ public class StatuspageService {
             if (statuspage.getUser().getId() == user.getId()) {
                 if (statuspage.getAnnouncement() != null)
                     statuspageAnnouncementRepository.delete(statuspage.getAnnouncement());
+                List<Monitor> bulkSaveMonitor = new ArrayList<>();
+                statuspage.getMonitors().forEach(monitor -> {
+                    monitor.getStatuspages().remove(statuspage);
+                    bulkSaveMonitor.add(monitor);
+                });
+                monitorRepository.saveAll(bulkSaveMonitor);
                 statuspageRepository.delete(statuspage);
                 return statuspage;
             }

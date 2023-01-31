@@ -1,6 +1,5 @@
 package me.bartosz1.monitoring.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,11 +20,11 @@ public class User implements UserDetails {
     private String password;
     private boolean enabled;
     private long lastUpdated;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private List<Monitor> monitors;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private List<Statuspage> statuspages;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private List<Notification> notifications;
 
     @Override

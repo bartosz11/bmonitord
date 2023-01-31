@@ -36,13 +36,14 @@ public class AgentController {
         Optional<Agent> optionalAgent = agentRepository.findById(UUID.fromString(id));
         if (optionalAgent.isPresent()) {
             Agent agent = optionalAgent.get();
-            agent.setLastDataReceived(Instant.now().getEpochSecond()).setAgentVersion(split[0]).setOs(new String(Base64.getDecoder().decode(split[1]), StandardCharsets.UTF_8))
+            long epochSecond = Instant.now().getEpochSecond();
+            agent.setLastDataReceived(epochSecond).setAgentVersion(split[0]).setOs(new String(Base64.getDecoder().decode(split[1]), StandardCharsets.UTF_8))
                     .setUptime(Integer.parseInt(split[2])).setCpuCores(Integer.parseInt(split[3])).setCpuModel(new String(Base64.getDecoder().decode(split[5]), StandardCharsets.UTF_8))
                     .setIpAddress(getIPAddress(req)).setRamTotal(Long.parseLong(split[7])).setSwapTotal(Long.parseLong(split[9])).setInstalled(true); //set installed just in case
             Heartbeat heartbeat = new Heartbeat().setMonitor(agent.getMonitor()).setCpuFrequency(Integer.parseInt(split[4]))
                     .setCpuUsage(Float.parseFloat(split[6])).setRamUsage(Float.parseFloat(split[8])).setSwapUsage(Float.parseFloat(split[10]))
                     .setIowait(Float.parseFloat(split[11])).setRx(Long.parseLong(split[12])).setTx(Long.parseLong(split[13]))
-                    .setDisksUsage(Float.parseFloat(split[15])).setDiskData(new String(Base64.getDecoder().decode(split[14]), StandardCharsets.UTF_8));
+                    .setDisksUsage(Float.parseFloat(split[15])).setDiskData(new String(Base64.getDecoder().decode(split[14]), StandardCharsets.UTF_8)).setTimestamp(epochSecond);
             agentRepository.save(agent);
             heartbeatService.saveHeartbeat(heartbeat);
             return new Response(HttpStatus.OK).toResponseEntity();

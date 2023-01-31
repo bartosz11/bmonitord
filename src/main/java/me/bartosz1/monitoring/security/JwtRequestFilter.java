@@ -30,10 +30,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String tokenHeader = request.getHeader("Authorization");
+        String cookieHeader = request.getHeader("Cookie");
         String username = null;
         String token = null;
         if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
             token = tokenHeader.substring(7);
+        }
+        if (cookieHeader != null && cookieHeader.startsWith("auth-token=")) {
+            token = cookieHeader.substring(11);
+        }
+        if (token != null) {
             try {
                 username = tokenUtils.getUsernameFromToken(token);
             } catch (IllegalArgumentException | JWTVerificationException ignored) {

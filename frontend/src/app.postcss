@@ -34,6 +34,10 @@ body {
 .nav-element {
   @apply my-2 ml-8 bg-none border-transparent border-b-2 hover:border-amber-500 w-fit;
 }
+/* for nav elements - underlines the current active route on navbar with orange-500*/
+.active {
+ @apply border-orange-500;
+}
 
 .h-view {
   height: 90vh;
@@ -63,4 +67,16 @@ table, th, td {
 
 td { 
   @apply text-center;
+}
+
+.min-w-80 {
+  min-width: 80px;
+}
+
+.min-w-150 { 
+  min-width: 150px;
+}
+
+.grid-cell { 
+  @apply space-y-0.5;
 }

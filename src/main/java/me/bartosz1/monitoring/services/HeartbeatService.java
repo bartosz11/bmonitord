@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.services;
 
+import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
 import me.bartosz1.monitoring.models.Heartbeat;
 import me.bartosz1.monitoring.models.Monitor;
@@ -8,11 +9,13 @@ import me.bartosz1.monitoring.repositories.HeartbeatRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class HeartbeatService {
 
     private final HeartbeatRepository heartbeatRepository;
@@ -26,7 +29,7 @@ public class HeartbeatService {
     }
 
     public Heartbeat findLastByMonitorId(long monitorId, User user) throws EntityNotFoundException {
-        Page<Heartbeat> heartbeats = heartbeatRepository.findByMonitorIdOrderByTimestampDesc(monitorId, PageRequest.of(0, 1));
+        Page<Heartbeat> heartbeats = heartbeatRepository.findByMonitorId(monitorId, PageRequest.of(0, 1, Sort.Direction.DESC));
         if (!heartbeats.isEmpty()) {
             Optional<Heartbeat> optionalHeartbeat = heartbeats.get().findFirst();
             if (optionalHeartbeat.isPresent()) {
@@ -53,7 +56,7 @@ public class HeartbeatService {
     }
 
     public Page<Heartbeat> findHeartbeatPageByMonitorId(long monitorId, Pageable pageable, User user) throws EntityNotFoundException {
-        Page<Heartbeat> heartbeatPage = heartbeatRepository.findByMonitorIdOrderByTimestampDesc(monitorId, pageable);
+        Page<Heartbeat> heartbeatPage = heartbeatRepository.findByMonitorId(monitorId, pageable);
         if (!heartbeatPage.isEmpty()) {
             Optional<Heartbeat> first = heartbeatPage.stream().findFirst();
             if (first.isPresent()) {
@@ -68,7 +71,7 @@ public class HeartbeatService {
     }
 
     public Page<Heartbeat> findHeartbeatPageByMonitorIdAndTimestampRange(long monitorId, Pageable pageable, User user, long timestampMin, long timestampMax) throws EntityNotFoundException {
-        Page<Heartbeat> heartbeatPage = heartbeatRepository.findByMonitorIdAndTimestampBetweenOrderByTimestampDesc(monitorId, pageable, timestampMin, timestampMax);
+        Page<Heartbeat> heartbeatPage = heartbeatRepository.findByMonitorIdAndTimestampBetween(monitorId, pageable, timestampMin, timestampMax);
         if (!heartbeatPage.isEmpty()) {
             //we check ownership on first one only if needed
             Optional<Heartbeat> first = heartbeatPage.stream().findFirst();

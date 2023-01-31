@@ -2,23 +2,30 @@ package me.bartosz1.monitoring.services;
 
 import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
+import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.Notification;
 import me.bartosz1.monitoring.models.NotificationCDO;
 import me.bartosz1.monitoring.models.User;
+import me.bartosz1.monitoring.repositories.MonitorRepository;
 import me.bartosz1.monitoring.repositories.NotificationRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final NotificationSenderService notificationSenderService;
+    private final MonitorRepository monitorRepository;
 
-    public NotificationService(NotificationRepository notificationRepository, NotificationSenderService notificationSenderService) {
+    public NotificationService(NotificationRepository notificationRepository, NotificationSenderService notificationSenderService, MonitorRepository monitorRepository) {
         this.notificationRepository = notificationRepository;
         this.notificationSenderService = notificationSenderService;
+        this.monitorRepository = monitorRepository;
     }
 
     public Notification createNotification(NotificationCDO cdo, User user) {
@@ -30,6 +37,12 @@ public class NotificationService {
         if (byId.isPresent()) {
             Notification notification = byId.get();
             if (notification.getUser().getId() == user.getId()) {
+                List<Monitor> bulkSaveMonitor = new ArrayList<>();
+                notification.getMonitors().forEach(monitor -> {
+                    monitor.getNotifications().remove(notification);
+                    bulkSaveMonitor.add(monitor);
+                });
+                monitorRepository.saveAll(bulkSaveMonitor);
                 notificationRepository.delete(notification);
                 return notification;
             }

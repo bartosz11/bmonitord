@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.services;
 
+import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.exceptions.*;
 import me.bartosz1.monitoring.models.PasswordMDO;
 import me.bartosz1.monitoring.models.User;
@@ -15,6 +16,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -46,7 +48,6 @@ public class UserService implements UserDetailsService {
 
     //Just so users can delete their own accounts if they want
     public User deleteUserAccount(User user) {
-        //no need to mess with auth salts here
         userRepository.delete(user);
         return user;
     }

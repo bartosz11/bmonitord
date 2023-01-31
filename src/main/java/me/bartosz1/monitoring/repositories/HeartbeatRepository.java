@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HeartbeatRepository extends JpaRepository<Heartbeat, Long> {
 
-    Page<Heartbeat> findByMonitorIdOrderByTimestampDesc(long monitorId, Pageable pageable);
+    Page<Heartbeat> findByMonitorId(long monitorId, Pageable pageable);
 
-    Page<Heartbeat> findByMonitorIdAndTimestampBetweenOrderByTimestampDesc(long monitorId, Pageable pageable, long fromTimestamp, long toTimestamp);
+    Page<Heartbeat> findByMonitorIdAndTimestampBetween(long monitorId, Pageable pageable, long fromTimestamp, long toTimestamp);
 
 }

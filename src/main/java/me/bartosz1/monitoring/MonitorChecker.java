@@ -59,7 +59,6 @@ public class MonitorChecker implements InitializingBean {
                 if (!(monitor.getType() == MonitorType.AGENT)) {
                     Heartbeat hb = monitor.getType().getCheckProvider().check(monitor);
                     MonitorStatus currentStatus = hb.getStatus();
-                    //Here we don't do any magic with the host thing
                     processStatus(monitor, currentStatus);
                     monitor.getHeartbeats().add(hb);
                     bulkSaveHeartbeat.add(hb);
@@ -70,7 +69,7 @@ public class MonitorChecker implements InitializingBean {
                         long epochSecond = Instant.now().getEpochSecond();
                         MonitorStatus status;
                         //Here we don't make heartbeats, they'd be duplicate, kind of
-                        if (monitor.getAgent().getLastDataReceived() + (long) agent.getTimeout() < epochSecond) {
+                        if (monitor.getAgent().getLastDataReceived() + (long) monitor.getTimeout() < epochSecond) {
                             status = MonitorStatus.DOWN;
                         } else {
                             status = MonitorStatus.UP;

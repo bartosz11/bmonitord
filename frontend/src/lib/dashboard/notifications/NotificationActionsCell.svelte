@@ -1,6 +1,5 @@
 <script>
   import http from "@/http";
-  import { onMount } from "svelte";
   import toast from "svelte-french-toast";
   import { openModal } from "svelte-modals";
   import NotificationEditModal from "./NotificationEditModal.svelte";
@@ -8,9 +7,6 @@
   export let row;
   let count = 0;
 
-  onMount(() => {
-    console.log(row);
-  });
   function onDeleteClick() {
     count++;
     if (count === 1) toast("Are you sure?", { duration: 2000 });

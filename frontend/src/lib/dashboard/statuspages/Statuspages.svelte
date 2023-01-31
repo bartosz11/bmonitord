@@ -46,8 +46,8 @@
   <p>Fetching statuspages...</p>
 {:then data}
   <div class="flex flex-col md:flex-row">
-    <button class="w-fit h-fit" on:click={() => openModal(StatuspageCreateModal)}>
-      <i class="ph-plus text-green-500 hover:text-green-600 text-3xl" />
+    <button class="w-fit h-fit m-4" on:click={() => openModal(StatuspageCreateModal)}>
+      <i class="ph-plus-circle text-green-500 hover:text-green-600 text-3xl" />
     </button>
     <SvelteTable columns={columnSettings} rows={data} />
   </div>

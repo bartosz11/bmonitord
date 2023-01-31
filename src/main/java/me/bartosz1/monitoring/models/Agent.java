@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -23,9 +24,8 @@ public class Agent {
     private long swapTotal;
     private int uptime;
     private boolean installed;
-    private int timeout;
-
     @OneToOne
+    @JsonIgnore
     private Monitor monitor;
 
     public UUID getId() {
@@ -135,12 +135,4 @@ public class Agent {
         return this;
     }
 
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public Agent setTimeout(int timeout) {
-        this.timeout = timeout;
-        return this;
-    }
 }

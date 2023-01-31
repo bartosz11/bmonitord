@@ -44,9 +44,8 @@ public class Monitor {
     @ManyToMany
     private List<Notification> notifications;
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Statuspage> statuspages;
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     private Agent agent;
     @JsonIgnore
@@ -65,9 +64,11 @@ public class Monitor {
         this.allowedHttpCodes = cdo.getAllowedHttpCodes();
         this.timeout = cdo.getTimeout();
         this.retries = cdo.getRetries();
+        this.lastStatus = MonitorStatus.UNKNOWN;
     }
 
     public Monitor(MonitorCDO cdo, User user, Instant createdOn, Agent agent) {
+        agent.setMonitor(this);
         this.user = user;
         this.createdOn = createdOn.getEpochSecond();
         this.name = cdo.getName();
@@ -77,6 +78,7 @@ public class Monitor {
         this.timeout = cdo.getTimeout();
         this.retries = cdo.getRetries();
         this.agent = agent;
+        this.lastStatus = MonitorStatus.UNKNOWN;
     }
 
 

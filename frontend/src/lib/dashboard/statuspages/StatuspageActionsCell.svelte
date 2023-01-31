@@ -4,6 +4,7 @@
   import { openModal } from "svelte-modals";
   import StatuspageAnnouncementModal from "./StatuspageAnnouncementModal.svelte";
   import StatuspageEditModal from "./StatuspageEditModal.svelte";
+  import StatuspageMonitorsModal from "./StatuspageMonitorsModal.svelte";
   export let row;
   let count = 0;
 
@@ -36,6 +37,10 @@
       statuspageId: row.id,
     });
   }
+  
+  function onMonitorsClick() { 
+    openModal(StatuspageMonitorsModal, { statuspage: row });
+  }
 </script>
 
 <div class="flex flex-row space-x-2 m-2">
@@ -60,4 +65,10 @@
   >
     <i class="ph-megaphone" />
   </button>
+  <!--monitors-->
+  <button
+    on:click={onMonitorsClick}
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+  >
+    <i class="ph-activity" />
 </div>

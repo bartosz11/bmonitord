@@ -1,6 +1,5 @@
 package me.bartosz1.monitoring.controllers;
 
-import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
 import me.bartosz1.monitoring.exceptions.IllegalParameterException;
 import me.bartosz1.monitoring.models.Monitor;
@@ -17,7 +16,6 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/monitor")
-@Transactional
 public class MonitorController {
 
     private final MonitorService monitorService;

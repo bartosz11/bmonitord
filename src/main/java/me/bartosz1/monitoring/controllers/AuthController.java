@@ -14,9 +14,6 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -38,8 +35,8 @@ public class AuthController {
         //there's just no way it can return something else than User
         User user = (User) userService.loadUserByUsername(authRequest.getUsername());
         authenticate(authRequest);
-        //todo change field to data -> field
-        return new Response(HttpStatus.OK).addAdditionalField("token", jwtTokenUtils.generateToken(user)).toResponseEntity();
+        String value = jwtTokenUtils.generateToken(user);
+        return new Response(HttpStatus.OK).addAdditionalField("token", value).toResponseEntity();
     }
 
     @RequestMapping(path = "/register", method = RequestMethod.POST, produces = "application/json")
@@ -58,4 +55,5 @@ public class AuthController {
             throw new InvalidCredentialsException("Invalid credentials");
         }
     }
+
 }

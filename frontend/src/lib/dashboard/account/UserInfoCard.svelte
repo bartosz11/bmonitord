@@ -20,7 +20,6 @@
         <li>Username: {data.username}</li>
         <li>Enabled: {data.enabled}</li>
         <li>ID: {data.id}</li>
-        <li>Last updated: {data.lastUpdated}</li>
     </ul>
   {:catch}
     <p>Couldn't fetch account data.</p>

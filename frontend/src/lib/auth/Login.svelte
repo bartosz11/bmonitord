@@ -5,7 +5,7 @@
   import { Hint, required, useForm, validators } from "svelte-use-form";
   import toast from "svelte-french-toast";
   import http from "@/http";
-  
+
   const form = useForm();
   let username;
   let password;
@@ -18,16 +18,21 @@
         password,
       })
       .then((response) => {
-        setCookie("auth-token", response.data.token, 1, true);
+        setCookie("auth-token", response.data.token, 0.25, true);
         push("/dashboard/overview");
         toast.success("Logged in successfully.");
       })
-      .catch((err) => { 
-        toast.error(err.response?.data?.errors[0]?.message ?? "Something went wrong while logging in.");
+      .catch((err) => {
+        toast.error(
+          err.response?.data?.errors[0]?.message ??
+            "Something went wrong while logging in."
+        );
       });
-  }
+  };
+  
   onMount(() => {
-    if (getCookie("auth-token") !== "") {
+    let cookie = getCookie("auth-token");
+    if (cookie !== "") {
       push("/dashboard/overview");
     }
   });

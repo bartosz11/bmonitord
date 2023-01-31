@@ -11,9 +11,9 @@ import java.util.List;
 public class Heartbeat {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JsonIgnore
     private Monitor monitor;
     private int cpuFrequency;
@@ -165,10 +165,12 @@ public class Heartbeat {
         return this;
     }
 
+    @JsonIgnore
     public DiskData getDiskDataObject() {
         return DiskData.fromString(diskData);
     }
 
+    @JsonIgnore
     public List<DiskData> getDiskDataObjects() {
         return DiskData.multipleFromString(diskData);
     }

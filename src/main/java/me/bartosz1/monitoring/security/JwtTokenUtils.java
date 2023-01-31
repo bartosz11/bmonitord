@@ -15,7 +15,7 @@ import java.util.Date;
 @Component
 public class JwtTokenUtils implements InitializingBean {
     //subject-to-change - 6 hrs, more might be useful, maybe I should make a parameter on auth to generate a token with requested validity
-    private static final long VALIDITY = 6 * 60 * 60 * 1000;
+    public static final long VALIDITY = 6 * 60 * 60 * 1000;
     @Value("${monitoring.jwt.secret}")
     private String secret;
     @Value("${monitoring.jwt.issuer}")

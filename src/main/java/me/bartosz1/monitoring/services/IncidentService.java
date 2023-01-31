@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.services;
 
+import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
 import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.User;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class IncidentService {
 
     private final IncidentRepository incidentRepository;

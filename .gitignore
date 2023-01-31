@@ -1,6 +1,7 @@
 src/main/resources/application.yml
 src/main/resources/static/**
 notes.txt
+docker-compose.yml
 
 .gradle
 build/
