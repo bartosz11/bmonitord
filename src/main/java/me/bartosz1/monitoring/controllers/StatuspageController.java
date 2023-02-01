@@ -2,10 +2,7 @@ package me.bartosz1.monitoring.controllers;
 
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
 import me.bartosz1.monitoring.exceptions.IllegalParameterException;
-import me.bartosz1.monitoring.models.Response;
-import me.bartosz1.monitoring.models.Statuspage;
-import me.bartosz1.monitoring.models.StatuspageAnnouncementCDO;
-import me.bartosz1.monitoring.models.User;
+import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.services.StatuspageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,14 +71,14 @@ public class StatuspageController {
     @RequestMapping(path = "/{id}/announcement", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     private ResponseEntity<Response> addAnnouncement(@AuthenticationPrincipal User user, @RequestBody StatuspageAnnouncementCDO cdo, @PathVariable long id) throws EntityNotFoundException {
-        Statuspage statuspage = statuspageService.addAnnouncement(user, cdo, id);
-        return new Response(HttpStatus.OK).addAdditionalData(statuspage).toResponseEntity();
+        StatuspageAnnouncement statuspageAnnouncement = statuspageService.addAnnouncement(user, cdo, id);
+        return new Response(HttpStatus.OK).addAdditionalData(statuspageAnnouncement).toResponseEntity();
     }
 
     @RequestMapping(path = "/{id}/announcement", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     private ResponseEntity<Response> deleteAnnouncement(@AuthenticationPrincipal User user, @PathVariable long id) throws EntityNotFoundException {
-        Statuspage statuspage = statuspageService.removeAnnouncement(user, id);
+        statuspageService.removeAnnouncement(user, id);
         return new Response(HttpStatus.NO_CONTENT).toResponseEntity();
     }
 }

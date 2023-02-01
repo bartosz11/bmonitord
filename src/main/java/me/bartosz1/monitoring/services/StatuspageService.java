@@ -78,7 +78,7 @@ public class StatuspageService {
         return statuspageRepository.findAllByUser(user);
     }
 
-    public Statuspage addAnnouncement(User user, StatuspageAnnouncementCDO cdo, long pageId) throws EntityNotFoundException {
+    public StatuspageAnnouncement addAnnouncement(User user, StatuspageAnnouncementCDO cdo, long pageId) throws EntityNotFoundException {
         Optional<Statuspage> byId = statuspageRepository.findById(pageId);
         if (byId.isPresent()) {
             Statuspage statuspage = byId.get();
@@ -88,14 +88,14 @@ public class StatuspageService {
                 if (statuspage.getAnnouncement() != null)
                     announcement.setId(statuspage.getAnnouncement().getId());
                 statuspage.setAnnouncement(announcement);
-                statuspageAnnouncementRepository.save(announcement);
-                return statuspageRepository.save(statuspage);
+                statuspageRepository.save(statuspage);
+                return statuspageAnnouncementRepository.save(announcement);
             }
         }
         throw new EntityNotFoundException("Statuspage with ID " + pageId + " not found.");
     }
 
-    public Statuspage removeAnnouncement(User user, long statuspageId) throws EntityNotFoundException {
+    public StatuspageAnnouncement removeAnnouncement(User user, long statuspageId) throws EntityNotFoundException {
         Optional<Statuspage> byId = statuspageRepository.findById(statuspageId);
         if (byId.isPresent()) {
             Statuspage statuspage = byId.get();
@@ -104,7 +104,7 @@ public class StatuspageService {
                 statuspage.setAnnouncement(null);
                 Statuspage save = statuspageRepository.save(statuspage);
                 statuspageAnnouncementRepository.delete(announcement);
-                return save;
+                return announcement;
             }
         }
         throw new EntityNotFoundException("Statuspage with ID " + statuspageId + " not found.");

@@ -21,9 +21,12 @@ dependencies {
     //JWT
     implementation 'com.auth0:java-jwt:4.2.1'
     //Database clients
-    //implementation 'com.influxdb:influxdb-client-java:6.7.0'
     implementation 'mysql:mysql-connector-java'
     implementation 'org.postgresql:postgresql'
+    //Spring doesn't manage SQLite driver versions
+    implementation 'org.xerial:sqlite-jdbc:3.40.0.0'
+    //Non-official dialects including SQLite
+    implementation 'org.hibernate.orm:hibernate-community-dialects:6.1.4.Final'
     //Commons
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     //HTTP
