@@ -164,12 +164,16 @@
         resolve();
       })
       .catch((err) => {
-        if (err.response?.status === 404) resolve();
-        else reject();
+        if (err.response?.status === 404) {
+          incidents = [];
+          resolve();
+        } else {
+          reject();
+        }
       });
   });
 
-  function getIncidents() { 
+  function getIncidents() {
     fetchIncidents;
   }
 
@@ -197,15 +201,19 @@
       class="border-solid border-zinc-700 rounded-lg border-4 py-3 px-4 mt-2 space-y-2"
     >
       <h1 class="text-xl">Recent incidents</h1>
-      {#await getIncidents}
+      {#await fetchIncidents}
         <p>Fetching incidents...</p>
       {:then a}
-        <SvelteTable columns={incidentColSettings} rows={incidents} />
-        <button
-          class="btn-ok-primary"
-          disabled={lastIncidentResponse?.last}
-          on:click={getIncidents}>Fetch more incidents</button
-        >
+        {#if incidents.length === 0}
+          <p>No incidents have been found for this monitor.</p>
+        {:else}
+          <SvelteTable columns={incidentColSettings} rows={incidents} />
+          <button
+            class="btn-ok-primary"
+            disabled={lastIncidentResponse?.last}
+            on:click={getIncidents}>Fetch more incidents</button
+          >
+        {/if}
       {:catch}
         <p>Couldn't fetch incidents.</p>
       {/await}
