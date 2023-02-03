@@ -10,7 +10,7 @@
 
   onMount(() => {
     let check = row.monitors?.some(m => { 
-        return JSON.stringify(m) === JSON.stringify(monitor);
+        return m.id === monitor.id;
     })
     if (check==true) checkValue = true;
     else checkValue = false;
