@@ -1,15 +1,23 @@
 <script>
   import Router from "svelte-spa-router";
-  import AuthRouter from "./lib/auth/AuthRouter.svelte";
-  import Dashboard from "./lib/dashboard/DashboardRouter.svelte";
-  import Home from "./lib/Home.svelte";
+  import wrap from "svelte-spa-router/wrap";
   import { Toaster } from "svelte-french-toast";
   const routes = {
-    "/dashboard": Dashboard,
-    "/dashboard/*": Dashboard,
-    "/auth": AuthRouter,
-    "/auth/*": AuthRouter,
-    "*": Home,
+    "/dashboard": wrap({
+      asyncComponent: () => import("./lib/dashboard/DashboardRouter.svelte"),
+    }),
+    "/dashboard/*": wrap({
+      asyncComponent: () => import("./lib/dashboard/DashboardRouter.svelte"),
+    }),
+    "/auth": wrap({
+      asyncComponent: () => import("./lib/auth/AuthRouter.svelte"),
+    }),
+    "/auth/*": wrap({
+      asyncComponent: () => import("./lib/auth/AuthRouter.svelte"),
+    }),
+    "*": wrap({
+      asyncComponent: () => import("./lib/Home.svelte"),
+    }),
   };
 </script>
 

@@ -5,7 +5,8 @@
   import MonitorActionsCell from "./MonitorActionsCell.svelte";
   import MonitorCreateModal from "./MonitorCreateModal.svelte";
   import MonitorStatusCell from "./MonitorStatusCell.svelte";
-  import { tooltip} from "@svelte-plugins/tooltips";
+  import { tooltip } from "@svelte-plugins/tooltips";
+  import { PlusCircle } from "phosphor-svelte";
   const fetchData = new Promise((resolve, reject) => {
     http
       .get("/api/monitor")
@@ -78,7 +79,7 @@
         position: "right",
       }}
     >
-      <i class="ph-plus-circle" />
+      <PlusCircle />
     </button>
     <SvelteTable columns={columnSettings} rows={data} />
   </div>

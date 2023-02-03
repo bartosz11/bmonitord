@@ -4,7 +4,8 @@
   import { openModal } from "svelte-modals";
   import NotificationEditModal from "./NotificationEditModal.svelte";
   import NotificationMonitorsModal from "./NotificationMonitorsModal.svelte";
-  import {tooltip} from "@svelte-plugins/tooltips";
+  import { tooltip } from "@svelte-plugins/tooltips";
+  import { Trash, Pencil, BellRinging, Activity } from "phosphor-svelte";
   export let row;
   let count = 0;
 
@@ -43,8 +44,8 @@
         )
       );
   }
-  function onMonitorsClick() { 
-    openModal(NotificationMonitorsModal, {notification: row});
+  function onMonitorsClick() {
+    openModal(NotificationMonitorsModal, { notification: row });
   }
 </script>
 
@@ -52,46 +53,49 @@
   <!--delete-->
   <button
     on:click={onDeleteClick}
-    class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white"
+    class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white text-xl"
     use:tooltip={{
       content: "Delete notification",
       autoPosition: "true",
       position: "bottom",
     }}
   >
-    <i class="ph-trash" />
+    <Trash />
   </button>
   <!--edit-->
   <button
     on:click={onEditClick}
-    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
     use:tooltip={{
       content: "Edit notification",
       autoPosition: "true",
       position: "bottom",
     }}
   >
-    <i class="ph-pencil" />
+    <Pencil />
   </button>
   <!--test-->
   <button
     on:click={onTestClick}
-    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
     use:tooltip={{
       content: "Send test notification",
       autoPosition: "true",
       position: "bottom",
     }}
   >
-    <i class="ph-bell-ringing" />
+    <BellRinging />
   </button>
   <!--monitors-->
-  <button on:click={onMonitorsClick} class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white" 
-  use:tooltip={{
-    content: "View monitors using this notification",
-    autoPosition: "true",
-    position: "bottom",
-  }}>
-    <i class="ph-activity"/>
+  <button
+    on:click={onMonitorsClick}
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
+    use:tooltip={{
+      content: "View monitors using this notification",
+      autoPosition: "true",
+      position: "bottom",
+    }}
+  >
+    <Activity />
   </button>
 </div>

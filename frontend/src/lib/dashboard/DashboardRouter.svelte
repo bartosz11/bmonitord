@@ -1,21 +1,28 @@
 <script>
   import Router from "svelte-spa-router";
-  import Account from "./account/Account.svelte";
-  import Monitors from "./monitors/Monitors.svelte";
+  import wrap from "svelte-spa-router/wrap";
   import Navbar from "./Navbar.svelte";
-  import Notifications from "./notifications/Notifications.svelte";
-  import Overview from "./Overview.svelte";
-  import Statuspages from "./statuspages/Statuspages.svelte";
   import { Modals, closeModal } from "svelte-modals";
-  import MonitorStats from "./monitors/MonitorStats.svelte";
   const prefix = "/dashboard";
   const routes = {
-    "/monitors": Monitors,
-    "/monitors/:id": MonitorStats,
-    "/notifications": Notifications,
-    "/statuspages": Statuspages,
-    "/account": Account,
-    "*": Overview,
+    "/monitors": wrap({
+      asyncComponent: () => import("./monitors/Monitors.svelte"),
+    }),
+    "/monitors/:id": wrap({
+      asyncComponent: () => import("./monitors/MonitorStats.svelte"),
+    }),
+    "/notifications": wrap({
+      asyncComponent: () => import("./notifications/Notifications.svelte"),
+    }),
+    "/statuspages": wrap({
+      asyncComponent: () => import("./statuspages/Statuspages.svelte"),
+    }),
+    "/account": wrap({
+      asyncComponent: () => import("./account/Account.svelte"),
+    }),
+    "*": wrap({
+      asyncComponent: () => import("./Overview.svelte"),
+    }),
   };
 </script>
 

@@ -12,11 +12,12 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY gradle/ gradle/
 COPY --from=build_node /home/root/dist src/main/resources/static
+RUN chmod u+x ./gradlew
 RUN ./gradlew bootJar --no-daemon
 
 FROM eclipse-temurin:17-jre-alpine AS run
 COPY --from=build_java /home/root/build/libs/monitoring.jar /bin/monitoring.jar
 #App has to run as root for ping check provider to work properly
 WORKDIR /home/root
-VOLUME["/home/root"]
+VOLUME /home/root
 ENTRYPOINT exec java -jar /bin/monitoring.jar

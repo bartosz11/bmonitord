@@ -1,6 +1,5 @@
 <script>
   import http from "@/http";
-  import { closeModal } from "svelte-modals";
   import { Line } from "svelte-chartjs";
   import {
     cpuChart,
@@ -21,6 +20,7 @@
     CategoryScale,
   } from "chart.js";
   import toast from "svelte-french-toast";
+  import SvelteTable from "svelte-table";
 
   ChartJS.register(
     Title,
@@ -31,6 +31,40 @@
     PointElement,
     CategoryScale
   );
+
+  const incidentColSettings = [
+    {
+      key: "id",
+      title: "ID",
+      value: (v) => v.id,
+      sortable: true,
+    },
+    {
+      key: "start",
+      title: "Start",
+      value: (v) => {
+        return new Date(v.startTimestamp).toLocaleString();
+      },
+      sortable: true,
+    },
+    {
+      key: "end",
+      title: "End",
+      value: (v) => {
+        return new Date(v.endTimestamp).toLocaleString();
+      },
+      sortable: true,
+    },
+    {
+      key: "ongoing",
+      title: "Ongoing",
+      value: (v) => {
+        return v.ongoing ? "Yes" : "No";
+      },
+      sortable: true,
+    },
+  ];
+
   export let params;
   let labels = [];
   let latencyData = [];
@@ -49,6 +83,9 @@
   let lastResponse;
   let hbPage = 0;
   let monitor;
+  let incidents;
+  let lastIncidentResponse;
+  let incidentPage = 0;
   async function drawLatencyGraph() {
     http
       .get(
@@ -116,8 +153,27 @@
       });
   }
 
+  const fetchIncidents = new Promise((resolve, reject) => {
+    http
+      .get(
+        `/api/incident/page?id=${params.id}&page=${incidentPage}&size=5&sort=startTimestamp,desc`
+      )
+      .then((resp) => {
+        incidents = resp.data.data.content;
+        lastIncidentResponse = resp.data.data;
+        resolve();
+      })
+      .catch((err) => {
+        if (err.response?.status === 404) resolve();
+        else reject();
+      });
+  });
+
+  function getIncidents() { 
+    fetchIncidents;
+  }
+
   onMount(() => {
-    console.log(params);
     http
       .get(`/api/monitor/${params.id}`)
       .then((response) => {
@@ -136,6 +192,23 @@
       {#if monitor.type !== "AGENT"}
         <span>{monitor.host}</span>
       {/if}
+    </div>
+    <div
+      class="border-solid border-zinc-700 rounded-lg border-4 py-3 px-4 mt-2 space-y-2"
+    >
+      <h1 class="text-xl">Recent incidents</h1>
+      {#await getIncidents}
+        <p>Fetching incidents...</p>
+      {:then a}
+        <SvelteTable columns={incidentColSettings} rows={incidents} />
+        <button
+          class="btn-ok-primary"
+          disabled={lastIncidentResponse?.last}
+          on:click={getIncidents}>Fetch more incidents</button
+        >
+      {:catch}
+        <p>Couldn't fetch incidents.</p>
+      {/await}
     </div>
     {#if monitor.type === "AGENT"}
       <div
@@ -200,7 +273,7 @@
         <Line data={latencyChartData} options={{ responsive: true }} />
       </div>
       <button
-        class="btn-ok-primary"
+        class="btn-ok-primary mt-2"
         disabled={lastResponse?.last}
         on:click={drawLatencyGraph}>Fetch more data</button
       >
