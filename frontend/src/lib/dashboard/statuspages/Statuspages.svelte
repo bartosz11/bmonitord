@@ -5,6 +5,7 @@
   import { openModal } from "svelte-modals";
   import StatuspageCreateModal from "./StatuspageCreateModal.svelte";
   import { tooltip } from "@svelte-plugins/tooltips";
+  import { PlusCircle } from "phosphor-svelte";
 
   const fetchData = new Promise((resolve, reject) => {
     http
@@ -56,7 +57,7 @@
         position: "right",
       }}
     >
-      <i class="ph-plus-circle" />
+      <PlusCircle/>
     </button>
     <SvelteTable columns={columnSettings} rows={data} />
   </div>

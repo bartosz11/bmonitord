@@ -6,6 +6,7 @@
   import StatuspageEditModal from "./StatuspageEditModal.svelte";
   import StatuspageMonitorsModal from "./StatuspageMonitorsModal.svelte";
   import { tooltip } from "@svelte-plugins/tooltips";
+  import { Trash, Pencil, Megaphone, Activity } from "phosphor-svelte";
   export let row;
   let count = 0;
 
@@ -48,48 +49,49 @@
   <!--delete-->
   <button
     on:click={onDeleteClick}
-    class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white" use:tooltip={{
+    class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white text-xl"
+    use:tooltip={{
       content: "Delete statuspage",
       autoPosition: "true",
       position: "bottom",
     }}
   >
-    <i class="ph-trash" />
+    <Trash />
   </button>
   <!--edit-->
   <button
     on:click={onEditClick}
-    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
     use:tooltip={{
       content: "Rename statuspage",
       autoPosition: "true",
       position: "bottom",
     }}
   >
-    <i class="ph-pencil" />
+    <Pencil />
   </button>
   <!--announcement-->
   <button
     on:click={onAnnouncementClick}
-    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
     use:tooltip={{
       content: "Manage statuspage announcement",
       autoPosition: "true",
       position: "bottom",
     }}
   >
-    <i class="ph-megaphone" />
+    <Megaphone />
   </button>
   <!--monitors-->
   <button
     on:click={onMonitorsClick}
-    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
     use:tooltip={{
       content: "View monitors added to this statuspage",
       autoPosition: "true",
       position: "bottom",
     }}
   >
-    <i class="ph-activity" />
+    <Activity />
   </button>
 </div>

@@ -24,6 +24,7 @@
   "dependencies": {
     "axios": "^1.2.2",
     "chart.js": "^4.2.0",
+    "phosphor-svelte": "^1.2.1",
     "svelte-chartjs": "^3.1.2",
     "svelte-cookie": "^1.0.1",
     "svelte-french-toast": "^1.0.3",

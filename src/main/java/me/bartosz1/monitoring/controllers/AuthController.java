@@ -41,7 +41,7 @@ public class AuthController {
         User user = (User) userService.loadUserByUsername(authRequest.getUsername());
         authenticate(authRequest);
         String value = jwtTokenUtils.generateToken(user);
-        ResponseCookie responseCookie = ResponseCookie.from("auth-token", value).httpOnly(false).sameSite("Strict").secure(secureCookies).path("/").maxAge((int) JwtTokenUtils.VALIDITY).build();
+        ResponseCookie responseCookie = ResponseCookie.from("auth-token", value).httpOnly(false).sameSite("Strict").secure(secureCookies).path("/").maxAge((int) JwtTokenUtils.VALIDITY/1000).build();
         response.addHeader("Set-Cookie", responseCookie.toString());
         return new Response(HttpStatus.OK).addAdditionalField("token", value).toResponseEntity();
     }

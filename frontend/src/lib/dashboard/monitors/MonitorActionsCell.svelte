@@ -8,6 +8,17 @@
   import MonitorRenameModal from "./MonitorRenameModal.svelte";
   import MonitorStatuspagesModal from "./MonitorStatuspagesModal.svelte";
   import { tooltip } from "@svelte-plugins/tooltips";
+  import {
+    Trash,
+    Pencil,
+    Play,
+    Pause,
+    ShareNetwork,
+    BellRinging,
+    ListChecks,
+    Info,
+    Heartbeat,
+  } from "phosphor-svelte";
   export let row;
   let count = 0;
 
@@ -84,114 +95,114 @@
   <!--delete-->
   <button
     on:click={onDeleteClick}
-    class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white"
+    class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white text-xl"
     use:tooltip={{
       content: "Delete monitor",
       autoPosition: "true",
       position: "bottom",
     }}
   >
-    <i class="ph-trash" />
+    <Trash />
   </button>
   <!--edit-->
   <button
     on:click={onEditClick}
-    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
     use:tooltip={{
       content: "Rename monitor",
       autoPosition: "true",
       position: "bottom",
     }}
   >
-    <i class="ph-pencil" />
+    <Pencil />
   </button>
   <!--pause-->
   {#if row.paused}
     <button
       on:click={onPauseClick}
-      class="border border-green-500 p-1 w-fit h-fit text-green-500 hover:bg-green-500 hover:text-white"
+      class="border border-green-500 p-1 w-fit h-fit text-green-500 hover:bg-green-500 hover:text-white text-xl"
       use:tooltip={{
         content: "Resume monitor",
         autoPosition: "true",
         position: "bottom",
       }}
     >
-      <i class="ph-play" />
+      <Play />
     </button>
   {:else}
     <button
       on:click={onPauseClick}
-      class="border border-yellow-500 p-1 w-fit h-fit text-yellow-500 hover:bg-yellow-500 hover:text-white"
+      class="border border-yellow-500 p-1 w-fit h-fit text-yellow-500 hover:bg-yellow-500 hover:text-white text-xl"
       use:tooltip={{
         content: "Pause monitor",
         autoPosition: "true",
         position: "bottom",
       }}
     >
-      <i class="ph-pause" />
+      <Pause />
     </button>
   {/if}
   <!--publish-->
   {#if row.published}
     <button
       on:click={onPublishClick}
-      class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white"
+      class="border border-red-500 p-1 w-fit h-fit text-red-500 hover:bg-red-500 hover:text-white text-xl"
       use:tooltip={{
-        content: "Make monitor private",
+        content: "Make monitor stats private",
         autoPosition: "true",
         position: "bottom",
       }}
     >
-      <i class="ph-share-network" />
+      <ShareNetwork />
     </button>
   {:else}
     <button
       on:click={onPublishClick}
-      class="border border-green-500 p-1 w-fit h-fit text-green-500 hover:bg-green-500 hover:text-white"
+      class="border border-green-500 p-1 w-fit h-fit text-green-500 hover:bg-green-500 hover:text-white text-xl"
       use:tooltip={{
-        content: "Make monitor public",
+        content: "Make monitor stats public",
         autoPosition: "true",
         position: "bottom",
-      }} 
+      }}
     >
-      <i class="ph-share-network" />
+      <ShareNetwork />
     </button>
   {/if}
   <!--notifications-->
   <button
     on:click={onNotificationsClick}
-    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
     use:tooltip={{
       content: "Manage monitors notifications",
       autoPosition: "true",
       position: "bottom",
-    }} 
+    }}
   >
-    <i class="ph-bell-ringing" />
+    <BellRinging />
   </button>
   <!--statuspages-->
   <button
     on:click={onStatuspagesClick}
-    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
     use:tooltip={{
       content: "Manage monitors statuspages",
       autoPosition: "true",
       position: "bottom",
-    }} 
+    }}
   >
-    <i class="ph-list-checks" />
+    <ListChecks />
   </button>
   <!--info-->
   <button
     on:click={onInfoClick}
-    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
     use:tooltip={{
       content: "Monitor stats",
       autoPosition: "true",
       position: "bottom",
-    }} 
+    }}
   >
-    <i class="ph-info" />
+    <Info />
   </button>
   <!--agent setup-->
   {#if row.type === "AGENT"}
@@ -199,14 +210,14 @@
       on:click={() => {
         openModal(MonitorAgentSetupModal, { monitor: row });
       }}
-      class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white"
+      class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
       use:tooltip={{
         content: "Set up Server Agent",
         autoPosition: "true",
         position: "bottom",
-      }} 
+      }}
     >
-      <i class="ph-heartbeat" />
+      <Heartbeat />
     </button>
   {/if}
 </div>
