@@ -1,14 +1,18 @@
 <script>
-    import Router from "svelte-spa-router";
-    import Login from "../auth/Login.svelte";
-    import Logout from "../auth/Logout.svelte";
-    import Register from "../auth/Register.svelte";
-    const prefix = "/auth";
-    const routes = { 
-        "/register": Register,
-        "/logout": Logout,
-        "*": Login,
-    };
-  </script>
-  
-  <Router {prefix} {routes}/>
+  import Router from "svelte-spa-router";
+  import wrap from "svelte-spa-router/wrap";
+  const prefix = "/auth";
+  const routes = {
+    "/register": wrap({
+      asyncComponent: () => import("./Register.svelte"),
+    }),
+    "/logout": wrap({
+      asyncComponent: () => import("./Logout.svelte"),
+    }),
+    "*": wrap({
+      asyncComponent: () => import("./Login.svelte"),
+    }),
+  };
+</script>
+
+<Router {prefix} {routes} />
