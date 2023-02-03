@@ -12,6 +12,7 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY gradle/ gradle/
 COPY --from=build_node /home/root/dist src/main/resources/static
+RUN chmod u+x ./gradlew
 RUN ./gradlew bootJar --no-daemon
 
 FROM eclipse-temurin:17-jre-alpine AS run
