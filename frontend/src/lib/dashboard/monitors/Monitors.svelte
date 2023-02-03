@@ -5,8 +5,7 @@
   import MonitorActionsCell from "./MonitorActionsCell.svelte";
   import MonitorCreateModal from "./MonitorCreateModal.svelte";
   import MonitorStatusCell from "./MonitorStatusCell.svelte";
-  import { tooltip } from "@svelte-plugins/tooltips";
-  import { PlusCircle } from "phosphor-svelte";
+  import { Plus } from "phosphor-svelte";
   const fetchData = new Promise((resolve, reject) => {
     http
       .get("/api/monitor")
@@ -69,20 +68,19 @@
 {#await fetchData}
   <p>Fetching monitors...</p>
 {:then data}
-  <div class="flex flex-col md:flex-row">
+  <div class="m-4 flex flex-row space-x-8">
+    <h1 class="text-xl">Your monitors</h1>
     <button
-      class="w-fit h-fit m-4 text-green-500 hover:text-green-600 text-3xl"
+      class="btn-create"
       on:click={() => openModal(MonitorCreateModal)}
-      use:tooltip={{
-        content: "Create monitor",
-        autoPosition: "true",
-        position: "right",
-      }}
     >
-      <PlusCircle />
+      <span>Create monitor</span>
+      <div class="icon-align">
+        <Plus />
+      </div>
     </button>
-    <SvelteTable columns={columnSettings} rows={data} />
   </div>
+  <SvelteTable columns={columnSettings} rows={data} />
 {:catch}
   <p>Couldn't fetch monitors.</p>
 {/await}

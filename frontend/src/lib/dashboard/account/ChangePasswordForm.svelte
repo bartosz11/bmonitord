@@ -27,26 +27,26 @@
   <form use:form on:submit={onSubmit}>
     <div class="my-3">
       <input
-        type="password"
-        bind:value={oldPassword}
-        name="oldpassword"
-        placeholder="Old password"
-        use:validators={[required]}
-        class="input-primary"
+      type="password"
+      bind:value={oldPassword}
+      name="oldpassword"
+      placeholder="Old password"
+      use:validators={[required]}
+      class="input-primary"
       />
       <Hint class="hint-primary" for="oldpassword" on="required">
         This field is required.
       </Hint>
     </div>
-
+    
     <div class="my-3">
       <input
-        type="password"
-        bind:value={newPassword}
-        name="newpassword"
-        placeholder="New password"
-        use:validators={[required]}
-        class="input-primary"
+      type="password"
+      bind:value={newPassword}
+      name="newpassword"
+      placeholder="New password"
+      use:validators={[required]}
+      class="input-primary"
       />
       <Hint class="hint-primary" for="newpassword" on="required">
         This field is required.

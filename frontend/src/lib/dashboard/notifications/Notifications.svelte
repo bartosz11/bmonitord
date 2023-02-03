@@ -4,8 +4,7 @@
   import { openModal } from "svelte-modals";
   import NotificationCreateModal from "./NotificationCreateModal.svelte";
   import NotificationActionsCell from "./NotificationActionsCell.svelte";
-  import { tooltip } from "@svelte-plugins/tooltips";
-  import { PlusCircle } from "phosphor-svelte";
+  import { Plus } from "phosphor-svelte";
 
   const fetchData = new Promise((resolve, reject) => {
     http
@@ -52,20 +51,19 @@
 {#await fetchData}
   <p>Fetching notifications...</p>
 {:then data}
-  <div class="flex flex-col md:flex-row">
+  <div class="m-4 flex flex-row space-x-8">
+    <h1 class="text-xl">Your notifications</h1>
     <button
-      class="w-fit h-fit m-4 text-green-500 hover:text-green-600 text-3xl"
+      class="btn-create"
       on:click={() => openModal(NotificationCreateModal)}
-      use:tooltip={{
-        content: "Create notification",
-        autoPosition: "true",
-        position: "right",
-      }}
     >
-      <PlusCircle/>
+      <span>Create notification</span>
+      <div class="icon-align">
+        <Plus />
+      </div>
     </button>
-    <SvelteTable columns={columnSettings} rows={data} />
   </div>
+  <SvelteTable columns={columnSettings} rows={data} />
 {:catch}
   <p>Couldn't fetch notifications.</p>
 {/await}

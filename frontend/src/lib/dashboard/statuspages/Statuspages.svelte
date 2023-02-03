@@ -4,8 +4,7 @@
   import SvelteTable from "svelte-table";
   import { openModal } from "svelte-modals";
   import StatuspageCreateModal from "./StatuspageCreateModal.svelte";
-  import { tooltip } from "@svelte-plugins/tooltips";
-  import { PlusCircle } from "phosphor-svelte";
+  import { Plus } from "phosphor-svelte";
 
   const fetchData = new Promise((resolve, reject) => {
     http
@@ -47,20 +46,19 @@
 {#await fetchData}
   <p>Fetching statuspages...</p>
 {:then data}
-  <div class="flex flex-col md:flex-row">
+  <div class="m-4 flex flex-row space-x-8">
+    <h1 class="text-xl">Your statuspages</h1>
     <button
-      class="w-fit h-fit m-4 text-green-500 hover:text-green-600 text-3xl"
+      class="btn-create"
       on:click={() => openModal(StatuspageCreateModal)}
-      use:tooltip={{
-        content: "Create statuspage",
-        autoPosition: "true",
-        position: "right",
-      }}
     >
-      <PlusCircle/>
+      <span>Create statuspage</span>
+      <div class="icon-align">
+        <Plus />
+      </div>
     </button>
-    <SvelteTable columns={columnSettings} rows={data} />
   </div>
+  <SvelteTable columns={columnSettings} rows={data} />
 {:catch}
   <p>Couldn't fetch statuspages.</p>
 {/await}
