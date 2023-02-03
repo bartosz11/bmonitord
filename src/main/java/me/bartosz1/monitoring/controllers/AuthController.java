@@ -1,11 +1,14 @@
 package me.bartosz1.monitoring.controllers;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import me.bartosz1.monitoring.exceptions.*;
 import me.bartosz1.monitoring.models.AuthRequest;
 import me.bartosz1.monitoring.models.Response;
 import me.bartosz1.monitoring.models.User;
 import me.bartosz1.monitoring.security.JwtTokenUtils;
 import me.bartosz1.monitoring.services.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +24,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtTokenUtils jwtTokenUtils;
+    @Value("${monitoring.secure-cookies}")
+    private boolean secureCookies;
 
     public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtTokenUtils jwtTokenUtils) {
         this.authenticationManager = authenticationManager;
@@ -30,12 +35,16 @@ public class AuthController {
 
     @RequestMapping(path = "/login", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> login(@RequestBody AuthRequest authRequest) throws InvalidCredentialsException, UserDisabledException {
+    public ResponseEntity<Response> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) throws InvalidCredentialsException, UserDisabledException {
         //casting go brrrt
         //there's just no way it can return something else than User
         User user = (User) userService.loadUserByUsername(authRequest.getUsername());
         authenticate(authRequest);
         String value = jwtTokenUtils.generateToken(user);
+        Cookie cookie = new Cookie("auth-token", value);
+        cookie.setMaxAge((int) JwtTokenUtils.VALIDITY);
+        cookie.setSecure(secureCookies);
+        response.addCookie(cookie);
         return new Response(HttpStatus.OK).addAdditionalField("token", value).toResponseEntity();
     }
 

@@ -7,7 +7,7 @@ import me.bartosz1.monitoring.models.Response;
 import me.bartosz1.monitoring.models.User;
 import me.bartosz1.monitoring.services.IncidentService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,10 +39,10 @@ public class IncidentController {
 
     @RequestMapping(value = "/page", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> getIncidentPageByMonitorId(@RequestParam long id, @RequestParam int page, @RequestParam int size, @AuthenticationPrincipal User user) throws EntityNotFoundException, IllegalParameterException {
-        if (page < 0 || size < 5 || size > 50)
+    public ResponseEntity<Response> getIncidentPageByMonitorId(@RequestParam long id, Pageable pageable, @AuthenticationPrincipal User user) throws EntityNotFoundException, IllegalParameterException {
+        if (pageable.getPageNumber() < 0 || pageable.getPageSize() < 5 || pageable.getPageSize() > 50)
             throw new IllegalParameterException("Page index must be greater than 0. Page size must fit in range 5-50.");
-        Page<Incident> incidentPage = incidentService.findIncidentPageByMonitorIdAndUser(id, user, PageRequest.of(page, size));
+        Page<Incident> incidentPage = incidentService.findIncidentPageByMonitorIdAndUser(id, user, pageable);
         return new Response(HttpStatus.OK).addAdditionalData(incidentPage).toResponseEntity();
     }
 }

@@ -18,7 +18,7 @@
         password,
       })
       .then((response) => {
-        setCookie("auth-token", response.data.token, 0.25, true);
+        //setCookie("auth-token", response.data.token, 0.25, true);
         push("/dashboard/overview");
         toast.success("Logged in successfully.");
       })
