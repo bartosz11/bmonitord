@@ -37,7 +37,7 @@ jobs:
       - name: Create public directory
         run: mkdir -p src/main/resources/static
       - name: Move frontend files
-        run: mv frontend/dist/* src/main/resources/public/
+        run: mv frontend/dist/* src/main/resources/static/
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
