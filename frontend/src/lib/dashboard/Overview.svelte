@@ -23,8 +23,8 @@
                 break;
             }
           }
-          resolve();
         });
+        resolve();
       })
       .catch((err) => reject());
   });
