@@ -1,27 +1,27 @@
 <script>
   import http from "@/http";
+  import { error, info, success } from "@/toast-util";
   import { deleteCookie } from "svelte-cookie";
-  import toast from "svelte-french-toast";
   import { push } from "svelte-spa-router";
 
   let clicks = 0;
   
   function onClick() {
     clicks++;
-    if (clicks === 1) toast("Are you sure?", { duration: 2000 });
+    if (clicks === 1) info("Are you sure?", 2000);
     if (clicks >= 2)
       http
         .delete("/api/user")
         .then((response) => {
           if (response.status == 204) {
-            toast.success("Your account has been successfully deleted.");
+            success("Your account has been successfully deleted.");
             deleteCookie("auth-token");
             //makes more sense than pushing to /logout i think
             push("/auth/login");
           }
         })
         .catch((err) =>
-          toast.error("Something went wrong while deleting your account.")
+          error("Something went wrong while deleting your account.")
         );
   }
 </script>

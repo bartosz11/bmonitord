@@ -1,26 +1,26 @@
 <script>
   import http from "@/http";
-  import toast from "svelte-french-toast";
+  import { error, info, success } from "@/toast-util";
+  import { tooltip } from "@svelte-plugins/tooltips";
+  import { Activity, BellRinging, Pencil, Trash } from "phosphor-svelte";
   import { openModal } from "svelte-modals";
   import NotificationEditModal from "./NotificationEditModal.svelte";
   import NotificationMonitorsModal from "./NotificationMonitorsModal.svelte";
-  import { tooltip } from "@svelte-plugins/tooltips";
-  import { Trash, Pencil, BellRinging, Activity } from "phosphor-svelte";
   export let row;
   let count = 0;
 
   function onDeleteClick() {
     count++;
-    if (count === 1) toast("Are you sure?", { duration: 2000 });
+    if (count === 1) info("Are you sure?", { duration: 2000 });
     if (count >= 2)
       http
         .delete(`/api/notification/${row.id}`)
         .then((response) => {
           location.reload();
-          toast.success(`Successfully deleted notification with ID ${row.id}`);
+          success(`Successfully deleted notification with ID ${row.id}`);
         })
         .catch((err) =>
-          toast.error(
+          error(
             err.response?.data?.errors[0]?.message ??
               "Something went wrong while deleting notification."
           )
@@ -35,10 +35,10 @@
     http
       .post(`/api/notification/${row.id}/test`)
       .then((response) => {
-        toast.success("Successfully sent a test notification.");
+        success("Successfully sent a test notification.");
       })
       .catch((err) =>
-        toast.error(
+        error(
           err.response?.data?.errors[0]?.message ??
             "Something went wrong while sending test notification."
         )

@@ -1,8 +1,8 @@
 <script>
   import http from "@/http";
+  import { error, success } from "@/toast-util";
   import { closeModal } from "svelte-modals";
   import { Hint, required, useForm, validators } from "svelte-use-form";
-  import toast from "svelte-french-toast";
 
   export let isOpen;
   export let id;
@@ -14,12 +14,12 @@
         name: newName,
       })
       .then((response) => {
-        toast.success("Successfully renamed statuspage.");
+        success("Successfully renamed statuspage.");
         //once again im too lazy to change all the data
         location.reload();
       })
       .catch((err) => {
-        toast.error(
+        error(
           err.response?.data?.errors[0]?.message ??
             "Something went wrong while renaming statuspage."
         );

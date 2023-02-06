@@ -1,8 +1,8 @@
 <script>
-  import { useForm, Hint, required, validators } from "svelte-use-form";
-  import { closeModal } from "svelte-modals";
   import http from "@/http";
-  import toast from "svelte-french-toast";
+  import { error, success } from "@/toast-util";
+  import { closeModal } from "svelte-modals";
+  import { Hint, required, useForm, validators } from "svelte-use-form";
   export let isOpen;
   export let announcement;
   export let statuspageId;
@@ -20,11 +20,11 @@
         type: type,
       })
       .then((response) => {
-        toast.success("Successfully saved announcement.");
+        success("Successfully saved announcement.");
         location.reload();
       })
       .catch((err) => {
-        toast.error(
+        error(
           err.response?.data?.errors[0]?.message ??
             "Something went wrong while saving announcement."
         );
@@ -35,11 +35,11 @@
     http
       .delete(`/api/statuspage/${statuspageId}/announcement`)
       .then((response) => {
-        toast.success("Successfully removed announcement.");
+        success("Successfully removed announcement.");
         location.reload();
       })
       .catch((err) => {
-        toast.error(
+        error(
           err.response?.data?.errors[0]?.message ??
             "Something went wrong while removing announcement."
         );

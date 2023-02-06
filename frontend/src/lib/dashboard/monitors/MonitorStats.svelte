@@ -1,25 +1,19 @@
 <script>
-  import http from "@/http";
-  import { Line } from "svelte-chartjs";
   import {
     cpuChart,
     diskChart,
     latencyChart,
     netChart,
-    ramChart,
+    ramChart
   } from "@/chartTemplates";
-  import { onMount } from "svelte";
+  import http from "@/http";
+  import { error } from "@/toast-util";
   import {
-    Chart as ChartJS,
-    Title,
-    Tooltip,
-    Legend,
-    LineElement,
-    LinearScale,
-    PointElement,
-    CategoryScale,
+    CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title,
+    Tooltip
   } from "chart.js";
-  import toast from "svelte-french-toast";
+  import { onMount } from "svelte";
+  import { Line } from "svelte-chartjs";
   import SvelteTable from "svelte-table";
 
   ChartJS.register(
@@ -234,7 +228,7 @@
         if (monitor.type !== "AGENT") drawLatencyGraph();
         else drawAgentGraphs();
       })
-      .catch((err) => toast.error("Couldn't fetch data."));
+      .catch((err) => error("Couldn't fetch data."));
   });
 </script>
 

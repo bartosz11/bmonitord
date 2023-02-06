@@ -1,7 +1,7 @@
 <script>
   import http from "@/http";
-  import { deleteCookie, getCookie } from "svelte-cookie";
-  import toast from "svelte-french-toast";
+  import { error, success } from "@/toast-util";
+  import { deleteCookie } from "svelte-cookie";
   import { push } from "svelte-spa-router";
 
   function onClick() {
@@ -9,14 +9,14 @@
       .post("/api/user/invalidate")
       .then((response) => {
         if (response.status == 200) {
-          toast.success("You've been logged out everywhere.");
+          success("You've been logged out everywhere.");
           deleteCookie("auth-token");
           //makes more sense than pushing to /logout i think
           push("/auth/login");
         }
       })
       .catch((err) =>
-        toast.error("Something went wrong while logging you out everywhere.")
+        error("Something went wrong while logging you out everywhere.")
       );
   }
 </script>

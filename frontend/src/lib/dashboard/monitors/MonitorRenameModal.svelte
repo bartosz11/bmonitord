@@ -2,7 +2,7 @@
     import http from "@/http";
     import { closeModal } from "svelte-modals";
     import { Hint, required, useForm, validators } from "svelte-use-form";
-    import toast from "svelte-french-toast";
+  import { error, success } from "@/toast-util";
   
     export let isOpen;
     export let id;
@@ -14,11 +14,11 @@
           name: newName,
         })
         .then((response) => {
-          toast.success("Successfully renamed monitor.");
+          success("Successfully renamed monitor.");
           location.reload();
         })
         .catch((err) => {
-          toast.error(
+          error(
             err.response?.data?.errors[0]?.message ??
               "Something went wrong while renaming monitor."
           );

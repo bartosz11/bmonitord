@@ -9,7 +9,7 @@
     useForm,
     validators,
   } from "svelte-use-form";
-  import toast from "svelte-french-toast";
+  import { error, success } from "@/toast-util";
 
   export let isOpen;
   let name;
@@ -36,11 +36,11 @@
       })
       .then((response) => {
         console.log(response.data.data.agent?.id);
-        toast.success("Successfully created a new monitor.");
+        success("Successfully created a new monitor.");
         location.reload();
       })
       .catch((err) => {
-        toast.error(
+        error(
           err.response?.data?.errors[0]?.message ??
             "Something went wrong while creating monitor."
         );

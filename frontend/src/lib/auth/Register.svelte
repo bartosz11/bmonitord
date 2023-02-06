@@ -3,7 +3,7 @@
   import { getCookie } from "svelte-cookie";
   import { link, push } from "svelte-spa-router";
   import { Hint, required, useForm, validators } from "svelte-use-form";
-  import toast from "svelte-french-toast";
+  import { success, error } from "@/toast-util";
   import http from "@/http";
 
   const form = useForm();
@@ -19,15 +19,15 @@
       })
       .then((response) => {
         if (response.status === 201) {
-          toast.success("Registered successfully.");
+          success("Registered successfully.");
           push("/auth/login");
         }
       })
       .catch((err) => {
         if (err.response && err.response.data.errors) {
-          toast.error(err.response.data.errors[0].message);
+          error(err.response.data.errors[0].message);
         } else
-          toast.error("Something went wrong while creating your account.");
+          error("Something went wrong while creating your account.");
       });
   };
   onMount(() => {

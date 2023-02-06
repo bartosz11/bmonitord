@@ -1,7 +1,7 @@
 <script>
   import http from "@/http";
+  import { error, success } from "@/toast-util";
   import { onMount } from "svelte";
-  import toast from "svelte-french-toast";
 
   export let row;
   export let monitor;
@@ -21,10 +21,10 @@
       http
         .patch(`/api/monitor/${monitor.id}/statuspage/${row.id}`)
         .then((response) => {
-          toast.success("Successfully added monitor to statuspage.");
+          success("Successfully added monitor to statuspage.");
         })
         .catch((err) => {
-          toast.error(
+          error(
             err.response?.data?.errors[0]?.message ??
               "Something went wrong while adding monitor to statuspage."
           );
@@ -33,10 +33,10 @@
       http
         .delete(`/api/monitor/${monitor.id}/statuspage/${row.id}`)
         .then((response) => {
-          toast.success("Successfully removed monitor from statuspage.");
+          success("Successfully removed monitor from statuspage.");
         })
         .catch((err) => {
-          toast.error(
+          error(
             err.response?.data?.errors[0]?.message ??
               "Something went wrong while removing monitor from statuspage."
           );

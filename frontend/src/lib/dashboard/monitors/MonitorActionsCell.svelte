@@ -1,6 +1,5 @@
 <script>
   import http from "@/http";
-  import toast from "svelte-french-toast";
   import { openModal } from "svelte-modals";
   import { push } from "svelte-spa-router";
   import MonitorAgentSetupModal from "./MonitorAgentSetupModal.svelte";
@@ -19,21 +18,22 @@
     Info,
     Heartbeat,
   } from "phosphor-svelte";
+  import { error, info, success } from "@/toast-util";
   export let row;
   let count = 0;
 
   function onDeleteClick() {
     count++;
-    if (count === 1) toast("Are you sure?", { duration: 2000 });
+    if (count === 1) info("Are you sure?", { duration: 2000 });
     if (count >= 2)
       http
         .delete(`/api/monitor/${row.id}`)
         .then((response) => {
           location.reload();
-          toast.success(`Successfully deleted monitor with ID ${row.id}`);
+          success(`Successfully deleted monitor with ID ${row.id}`);
         })
         .catch((err) =>
-          toast.error(
+          error(
             err.response?.data?.errors[0]?.message ??
               "Something went wrong while deleting monitor."
           )
@@ -49,12 +49,12 @@
       .patch(`/api/monitor/${row.id}/pause?pause=${!row.paused}`)
       .then((response) => {
         location.reload();
-        toast.success(
+        success(
           `Successfully changed pause state for monitor with ID ${row.id}`
         );
       })
       .catch((err) =>
-        toast.error(
+        error(
           err.response?.data?.errors[0]?.message ??
             "Something went wrong while changing pause state for monitor."
         )
@@ -66,12 +66,12 @@
       .patch(`/api/monitor/${row.id}/publish?public=${!row.published}`)
       .then((response) => {
         location.reload();
-        toast.success(
+        success(
           `Successfully changed published state for monitor with ID ${row.id}`
         );
       })
       .catch((err) =>
-        toast.error(
+        error(
           err.response?.data?.errors[0]?.message ??
             "Something went wrong while changing published state for monitor."
         )

@@ -1,8 +1,8 @@
 <script>
   import http from "@/http";
+  import { error, success } from "@/toast-util";
   import { closeModal } from "svelte-modals";
   import { Hint, required, useForm, validators } from "svelte-use-form";
-  import toast from "svelte-french-toast";
 
   export let isOpen;
   let name;
@@ -11,11 +11,11 @@
     http
       .post(`/api/statuspage?name=${name}`)
       .then((response) => {
-        toast.success("Successfully created a new statuspage.");
+        success("Successfully created a new statuspage.");
         location.reload();
       })
       .catch((err) => {
-        toast.error(
+        error(
           err.response?.data?.errors[0]?.message ??
             "Something went wrong while creating statuspage."
         );

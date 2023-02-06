@@ -1,11 +1,11 @@
 <script>
   import http from "@/http";
-  import toast from "svelte-french-toast";
+  import { error } from "@/toast-util";
   const fetchData = new Promise((resolve, reject) => {
     http.get("/api/user").then((response) => {
       resolve(response.data.data);
     }).catch((err) => { 
-        toast.error(err.response?.data?.errors[0]?.message ?? "Something went wrong while fetching account data.");
+        error(err.response?.data?.errors[0]?.message ?? "Something went wrong while fetching account data.");
         reject();
     });
   });

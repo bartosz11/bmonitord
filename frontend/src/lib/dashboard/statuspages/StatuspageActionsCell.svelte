@@ -1,28 +1,28 @@
 <script>
   import http from "@/http";
-  import toast from "svelte-french-toast";
   import { openModal } from "svelte-modals";
   import StatuspageAnnouncementModal from "./StatuspageAnnouncementModal.svelte";
   import StatuspageEditModal from "./StatuspageEditModal.svelte";
   import StatuspageMonitorsModal from "./StatuspageMonitorsModal.svelte";
   import { tooltip } from "@svelte-plugins/tooltips";
   import { Trash, Pencil, Megaphone, Activity } from "phosphor-svelte";
+  import { error, info, success } from "@/toast-util";
   export let row;
   let count = 0;
 
   function onDeleteClick() {
     count++;
-    if (count === 1) toast("Are you sure?", { duration: 2000 });
+    if (count === 1) info("Are you sure?", { duration: 2000 });
     if (count >= 2)
       http
         .delete(`/api/statuspage/${row.id}`)
         .then((response) => {
           //i cba changing the data in the table
           location.reload();
-          toast.success(`Successfully deleted statuspage with ID ${row.id}`);
+          success(`Successfully deleted statuspage with ID ${row.id}`);
         })
         .catch((err) =>
-          toast.error(
+          error(
             err.response?.data?.errors[0]?.message ??
               "Something went wrong while deleting statuspage."
           )

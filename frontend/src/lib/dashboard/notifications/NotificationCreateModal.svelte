@@ -2,7 +2,7 @@
   import http from "@/http";
   import { closeModal } from "svelte-modals";
   import { Hint, required, useForm, validators } from "svelte-use-form";
-  import toast from "svelte-french-toast";
+  import { error, success } from "@/toast-util";
 
   export let isOpen;
   let name;
@@ -43,11 +43,11 @@
         credentials: [field1, field2].filter(Boolean).join("|")
       })
       .then((response) => {
-        toast.success("Successfully created a new notification.");
+        success("Successfully created a new notification.");
         location.reload();
       })
       .catch((err) => {
-        toast.error(
+        error(
           err.response?.data?.errors[0]?.message ??
             "Something went wrong while creating notification."
         );

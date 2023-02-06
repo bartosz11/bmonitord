@@ -3,7 +3,7 @@
   import { getCookie } from "svelte-cookie";
   import { link, push } from "svelte-spa-router";
   import { Hint, required, useForm, validators } from "svelte-use-form";
-  import toast from "svelte-french-toast";
+  import { success, error } from "@/toast-util";
   import http from "@/http";
 
   const form = useForm();
@@ -19,10 +19,10 @@
       })
       .then((response) => {
         push("/dashboard/overview");
-        toast.success("Logged in successfully.");
+        success("Logged in successfully.");
       })
       .catch((err) => {
-        toast.error(
+        error(
           err.response?.data?.errors[0]?.message ??
             "Something went wrong while logging in."
         );
