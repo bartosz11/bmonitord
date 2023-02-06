@@ -6,7 +6,6 @@ gradlew.bat
 venv/
 src/main/resources/application.yml
 src/main/resources/static/
-build/
 bin/
 agent/
 .vscode/
