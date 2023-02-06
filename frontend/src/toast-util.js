@@ -14,7 +14,7 @@ export function error(msg) {
 
 export function info(msg, duration) { 
     toast(msg, {
-        style: 'border-radius: 200px; background: #333; color: #fff;'
+        style: 'border-radius: 200px; background: #333; color: #fff;',
         duration: duration
     });
 }
