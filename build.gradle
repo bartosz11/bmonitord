@@ -47,5 +47,5 @@ springBoot {
 }
 
 bootJar {
-    archiveFileName = "monitoring.jar"
+    archiveFileName = "bmonitord.jar"
 }
