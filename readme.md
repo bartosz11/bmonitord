@@ -1,3 +1,3 @@
-# Monitoring/bmonitord (V2)
+# bmonitord
 
-Current state: most of the backend work is done, still need to make an API, test it, add some time-series related features and make a UI/frontend  
+Current state: frontend and backend are mostly done and ready for release, there are some things that need to be fixed, not ready for production use yet, no docs at the moment
