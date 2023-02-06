@@ -46,12 +46,6 @@ jobs:
         with:
           name: bmonitord.jar
           path: build/libs/bmonitord.jar
-      - name: Get source code
-        uses: actions/checkout@v3
-      - uses: actions/download-artifact@v2
-        with:
-          name: bmonitord.jar
-          path: build/libs/bmonitord.jar
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
