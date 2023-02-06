@@ -1,58 +1,70 @@
-#"Blank" config file. Everything you need to fill is in <>
+# Example configuration file for bmonitord. Read through comments carefully, uncomment lines which need to be uncommented.
+# There are examples for some values. Values that need to be replaced are in <>
 
 spring:
   jpa:
     open-in-view: false
     hibernate:
       ddl-auto: update
-    #All SQL queries are going to be logged. DON'T USE THIS IN PRODUCTION ENVIRONMENTS!
-    show-sql: false
-  #Uncomment if you're using PostgreSQL
-  #database-platform: org.hibernate.dialect.PostgreSQLDialect
+  #Uncomment if you're going to use sqlite  
+  #database-platform: org.hibernate.community.dialect.SQLiteDialect
+  #Your DB credentials go here
   datasource:
-    # "db type" can be mysql, postgresql
-    url: jdbc:<db type>://<host:port>/<database name>
-    #Leave these two blank if you're using sqlite
-    username: <DB user>
-    password: <DB user password>
+    #Format:
+    #Example for sqlite: jdbc:sqlite:database.db - database will be saved to a file "database.db"
+    #Example for postgres: jdbc:postgresql://<postgres host>:<port>/<database name>
+    #Example for mysql/mariadb: jdbc:mysql://<mysql/mariadb host><port>/<database name>
+    url: <url>
+    #Username and password can be left as blank if you're using sqlite
+    username: <username>
+    password: <password>
+    #Uncomment next two lines if you're using sqlite
+    #hikari:
+    #  maximum-pool-size: 1
   #Mail needs to be configured
-  #it's SMTP, not some provider's API
+  #it's SMTP, not some provider's Web API
   mail:
       host: <smtp host>
-      port: <port>
-      username: <username>
-      password: <password>
+      port: <smtp port>
+      username: <smtp user> 
+      password: <smtp password>
       properties:
+        #True or false, depending if your SMTP provider requires a TLS connection. Leaving it as true is recommended if your TLS provider supports TLS.
         mail.smtp.starttls.enable: true
         mail.smtp.auth: true
-        mail.smtp.starttls.required: true
-        mail.smtp.from: <from>
+        mail.smtp.from: <from - usually the same as username>
       default-encoding: UTF-8
       test-connection: false
 
 monitoring:
-  #Change this to false if you're using frontend dev web server
+  #Set this to false to allow frontend dev server to access this instances API
   production: true
+  #Set this to true if your instance is available via HTTPS - cookies will have the Secure flag
+  secure-cookies: false
   jwt:
-    #Change this to any randomly generated string
-    secret: "<secret>"
+    #Change this to any randomly generated string, length doesn't matter
+    secret: <change this>
     #Can be anything, doesn't need to be changed
-    issuer: "Monitoring"
+    issuer: "bmonitord"
   #Timezone used for formatting dates in some notifications
   #List of compatible TZ timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   timezone: <timezone>
-  #set this to false to disable /api/auth/register API route, new users won't be able to register
+  #Change this to false to disable /api/auth/register endpoint, new users won't be able to register
   registration-enabled: true
-  #Amount of monitors that can be checked simultaneously
-  #Change this
+  #Amount of monitors that can be checked simultaneously - currently not used
   check-thread-pool-size: 2
 
-#You don't need to modify lines below
-
 server:
-  #Webserver port, might be useful if you're running this outside Docker, frontend will break unless you change base API url
+  #You can change port here if you need to
   port: 8080
-
+  
+#You don't need to touch lines below  
+  compression-enabled: true
+  compression:
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
+    min-response-size: 1024
+  http2:
+    enabled: true
 #Logging
 logging:
   level:
@@ -60,7 +72,6 @@ logging:
     org.springframework: info
     root: info
     me.bartosz1: info
-
 #Spring Boot Actuator setup
 management:
   endpoints:
