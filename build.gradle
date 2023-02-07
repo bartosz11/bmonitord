@@ -19,7 +19,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     //JWT
-    implementation 'com.auth0:java-jwt:4.2.1'
+    implementation 'com.auth0:java-jwt:4.2.2'
     //Database clients
     implementation 'mysql:mysql-connector-java'
     implementation 'org.postgresql:postgresql'
