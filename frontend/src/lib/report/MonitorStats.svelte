@@ -44,7 +44,7 @@
       key: "start",
       title: "Start",
       value: (v) => {
-        return new Date(v.startTimestamp).toLocaleString();
+        return new Date(v.startTimestamp * 1000).toLocaleString();
       },
       sortable: true,
     },
@@ -52,7 +52,7 @@
       key: "end",
       title: "End",
       value: (v) => {
-        return new Date(v.endTimestamp).toLocaleString();
+        return new Date(v.endTimestamp * 1000).toLocaleString();
       },
       sortable: true,
     },
@@ -123,7 +123,7 @@
   let lastResponse;
   let hbPage = 0;
   let monitor;
-  let incidents;
+  let incidents = [];
   let lastIncidentResponse;
   let incidentPage = 0;
   let disksData;
@@ -208,26 +208,6 @@
       .catch((err) => {});
   }
 
-  const fetchIncidents = new Promise((resolve, reject) => {
-    http
-      .get(
-        `/api/incident/page?id=${params.id}&page=${incidentPage}&size=5&sort=startTimestamp,desc`
-      )
-      .then((resp) => {
-        incidents = resp.data.data.content;
-        lastIncidentResponse = resp.data.data;
-        resolve();
-      })
-      .catch((err) => {
-        if (err.response?.status === 404) {
-          incidents = [];
-          resolve();
-        } else {
-          reject();
-        }
-      });
-  });
-
   async function fetchAgent() {
     http
       .get(`/api/monitor/${monitor.id}/agent`)
@@ -237,8 +217,25 @@
       .catch((err) => {});
   }
 
-  function getIncidents() {
-    fetchIncidents;
+  async function getIncidents() {
+    http
+      .get(
+        `/api/incident/page?id=${params.id}&page=${incidentPage}&size=5&sort=startTimestamp,desc`
+      )
+      .then((resp) => {
+        resp.data.data.content.forEach((element) => {
+          incidents.push(element);
+        });
+        incidents = incidents;
+        lastIncidentResponse = resp.data.data;
+        incidentPage++;
+      })
+      .catch((err) => {
+        if (err.response?.status === 404) {
+          incidents = [];
+        } else {
+        }
+      });
   }
 
   onMount(() => {
@@ -246,6 +243,7 @@
       .get(`/api/monitor/${params.id}`)
       .then((response) => {
         monitor = response.data.data;
+        getIncidents();
         if (monitor.type !== "AGENT") drawLatencyGraph();
         else {
           drawAgentGraphs();
@@ -268,11 +266,8 @@
         <span>{monitor.host}</span>
       {/if}
     </div>
-    <div class="card w-full">
+    <div class="card w-full space-y-2">
       <h1 class="text-xl">Recent incidents</h1>
-      {#await fetchIncidents}
-        <p>Fetching incidents...</p>
-      {:then a}
         {#if incidents.length === 0}
           <p>No incidents have been found for this monitor.</p>
         {:else}
@@ -283,9 +278,6 @@
             on:click={getIncidents}>Fetch more incidents</button
           >
         {/if}
-      {:catch}
-        <p>Couldn't fetch incidents.</p>
-      {/await}
     </div>
     {#if monitor.type === "AGENT"}
       <div class="card w-full">
