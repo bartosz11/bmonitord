@@ -1,4 +1,4 @@
-package me.bartosz1.monitoring.models;
+package me.bartosz1.monitoring.models.enums;
 
 public enum NotificationType {
 

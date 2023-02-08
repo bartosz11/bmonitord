@@ -3,6 +3,7 @@ package me.bartosz1.monitoring.services;
 import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
 import me.bartosz1.monitoring.models.Incident;
+import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.User;
 import me.bartosz1.monitoring.repositories.IncidentRepository;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,8 @@ public class IncidentService {
         Optional<Incident> optionalIncident = incidentRepository.findById(id);
         if (optionalIncident.isPresent()) {
             Incident incident = optionalIncident.get();
-            if (incident.getMonitor().getUser().getId() == user.getId()) return incident;
+            Monitor monitor = incident.getMonitor();
+            if ((user != null && monitor.getUser().getId() == user.getId()) || monitor.isPublished()) return incident;
         }
         throw new EntityNotFoundException("Incident with ID " + id + " not found.");
     }
@@ -37,7 +39,8 @@ public class IncidentService {
             Optional<Incident> optionalIncident = incidentPage.get().findFirst();
             if (optionalIncident.isPresent()) {
                 Incident incident = optionalIncident.get();
-                if (incident.getMonitor().getUser().getId() == user.getId()) return incident;
+                Monitor monitor = incident.getMonitor();
+                if ((user != null && monitor.getUser().getId() == user.getId()) || monitor.isPublished()) return incident;
             }
         }
         throw new EntityNotFoundException("No incidents found for monitor with ID " + monitorId + ".");
@@ -50,7 +53,8 @@ public class IncidentService {
             Optional<Incident> optionalIncident = incidentPage.get().findFirst();
             if (optionalIncident.isPresent()) {
                 Incident incident = optionalIncident.get();
-                if (incident.getMonitor().getUser().getId() == user.getId()) return incidentPage;
+                Monitor monitor = incident.getMonitor();
+                if ((user != null && monitor.getUser().getId() == user.getId()) || monitor.isPublished()) return incidentPage;
             }
         }
         throw new EntityNotFoundException("No incidents found for monitor with ID " + monitorId + ".");

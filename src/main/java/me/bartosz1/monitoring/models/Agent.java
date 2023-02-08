@@ -32,10 +32,6 @@ public class Agent {
         return id;
     }
 
-    public String getIdAsString() {
-        return id.toString();
-    }
-
     public String getAgentVersion() {
         return agentVersion;
     }

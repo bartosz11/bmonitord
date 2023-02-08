@@ -1,5 +1,7 @@
 package me.bartosz1.monitoring.models;
 
+import me.bartosz1.monitoring.models.enums.NotificationType;
+
 public class NotificationCDO {
 
     private String name;

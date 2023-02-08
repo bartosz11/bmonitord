@@ -2,6 +2,7 @@ package me.bartosz1.monitoring.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,6 +35,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/agent/**").permitAll()
                 //Public data
                 .requestMatchers("/api/heartbeat/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/monitor/{id}").permitAll()
+                .requestMatchers("/api/incident/**").permitAll()
                 //Allow all requests to Actuator endpoints - the only one exposed is /health
                 .requestMatchers("/app/**").permitAll()
                 //Require authentication for all other requests

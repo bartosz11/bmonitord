@@ -81,4 +81,10 @@ public class StatuspageController {
         statuspageService.removeAnnouncement(user, id);
         return new Response(HttpStatus.NO_CONTENT).toResponseEntity();
     }
+
+    @RequestMapping(path = "/{id}/public", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    private ResponseEntity<Response> getStatuspageAsPublicObject(@PathVariable long id) throws EntityNotFoundException {
+        return new Response(HttpStatus.OK).addAdditionalData(statuspageService.getStatuspageAsPublicObject(id)).toResponseEntity();
+    }
 }

@@ -55,14 +55,14 @@ export const netChart = {
   labels: [],
   datasets: [
     {
-      label: "Received (bytes per second)",
+      label: "Received (MB/s)",
       fill: false,
       tension: 0.1,
       borderColor: "#ef4444",
       data: [],
     },
     {
-      label: "Transmitted (bytes per second)",
+      label: "Transmitted (MB/s)",
       fill: false,
       tension: 0.1, 
       borderColor: "#f97316",

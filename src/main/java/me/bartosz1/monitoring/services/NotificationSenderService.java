@@ -3,7 +3,7 @@ package me.bartosz1.monitoring.services;
 import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.Notification;
-import me.bartosz1.monitoring.models.NotificationType;
+import me.bartosz1.monitoring.models.enums.NotificationType;
 import me.bartosz1.monitoring.providers.notification.*;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;

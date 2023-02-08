@@ -87,7 +87,7 @@
   }
 
   function onInfoClick() {
-    push(`/dashboard/monitors/${row.id}`);
+    push(`/report/${row.id}`);
   }
 </script>
 

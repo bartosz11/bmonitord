@@ -8,9 +8,6 @@
     "/monitors": wrap({
       asyncComponent: () => import("./monitors/Monitors.svelte"),
     }),
-    "/monitors/:id": wrap({
-      asyncComponent: () => import("./monitors/MonitorStats.svelte"),
-    }),
     "/notifications": wrap({
       asyncComponent: () => import("./notifications/Notifications.svelte"),
     }),

@@ -1,6 +1,7 @@
 package me.bartosz1.monitoring.models;
 
 import jakarta.persistence.*;
+import me.bartosz1.monitoring.models.enums.NotificationType;
 
 import java.util.List;
 

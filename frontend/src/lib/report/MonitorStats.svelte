@@ -7,6 +7,7 @@
     ramChart
   } from "@/chartTemplates";
   import http from "@/http";
+  import { convertSize } from "@/size-unit-util";
   import { error } from "@/toast-util";
   import {
     CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title,
@@ -75,22 +76,26 @@
     },
     {
       key: "used",
-      title: "Used bytes",
-      value: (v) => v.usedBytes,
+      title: "Used space",
+      value: (v) => {
+        return convertSize(v.usedBytes);
+      },
       sortable: true,
     },
     {
       key: "free",
-      title: "Free bytes",
+      title: "Free space",
       value: (v) => {
-        return (v.totalBytes = v.usedBytes);
+        return convertSize(v.totalBytes = v.usedBytes);
       },
       sortable: true,
     },
     {
       key: "total",
-      title: "Total bytes",
-      value: (v) => v.totalBytes,
+      title: "Total space",
+      value: (v) => {
+        return convertSize(v.totalBytes)
+      },
       sortable: true,
     },
   ];
@@ -157,8 +162,8 @@
           swapData.unshift(element.swapUsage);
           cpuData.unshift(element.cpuUsage);
           iowaitData.unshift(element.iowait);
-          txData.unshift(element.tx);
-          rxData.unshift(element.rx);
+          txData.unshift(element.tx/1000000);
+          rxData.unshift(element.rx/1000000);
           diskData.unshift(element.disksUsage);
         });
         let cpuCopy = Object.assign({}, cpuChart);
@@ -228,7 +233,7 @@
         if (monitor.type !== "AGENT") drawLatencyGraph();
         else drawAgentGraphs();
       })
-      .catch((err) => error("Couldn't fetch data."));
+      .catch((err) => error("Couldn't fetch data. You might not have permission to access it."));
   });
 </script>
 

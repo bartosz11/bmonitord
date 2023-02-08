@@ -122,4 +122,12 @@ public class StatuspageService {
         throw new EntityNotFoundException("Statuspage with ID " + id + " not found.");
     }
 
+    public PublicStatuspage getStatuspageAsPublicObject(long id) throws EntityNotFoundException {
+        Optional<Statuspage> byId = statuspageRepository.findById(id);
+        if (byId.isPresent()) {
+            Statuspage statuspage = byId.get();
+            return new PublicStatuspage(statuspage);
+        }
+        throw new EntityNotFoundException("Statuspage with ID " + id + " not found.");
+    }
 }

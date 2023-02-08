@@ -65,7 +65,9 @@ public class MonitorService {
         Optional<Monitor> optionalMonitor = monitorRepository.findById(id);
         if (optionalMonitor.isPresent()) {
             Monitor monitor = optionalMonitor.get();
-            if (monitor.getUser().getId() == user.getId()) return monitor;
+            if ((user != null && monitor.getUser().getId() == user.getId()) || monitor.isPublished()) {
+                return monitor;
+            }
         }
         throw new EntityNotFoundException("Monitor with ID " + id + " not found.");
     }

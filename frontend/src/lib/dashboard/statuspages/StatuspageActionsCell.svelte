@@ -5,7 +5,7 @@
   import StatuspageEditModal from "./StatuspageEditModal.svelte";
   import StatuspageMonitorsModal from "./StatuspageMonitorsModal.svelte";
   import { tooltip } from "@svelte-plugins/tooltips";
-  import { Trash, Pencil, Megaphone, Activity } from "phosphor-svelte";
+  import { Trash, Pencil, Megaphone, Activity, ArrowUpRight } from "phosphor-svelte";
   import { error, info, success } from "@/toast-util";
   export let row;
   let count = 0;
@@ -42,6 +42,10 @@
 
   function onMonitorsClick() {
     openModal(StatuspageMonitorsModal, { statuspage: row });
+  }
+
+  function onRedirectClick() { 
+    window.open(`#/statuspage/${row.id}`, "_blank").focus();
   }
 </script>
 
@@ -93,5 +97,17 @@
     }}
   >
     <Activity />
+  </button>
+  <!--redirect-->
+  <button
+    on:click={onRedirectClick}
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
+    use:tooltip={{
+      content: "Open statuspage in another tab",
+      autoPosition: "true",
+      position: "bottom",
+    }}
+  >
+    <ArrowUpRight />
   </button>
 </div>

@@ -9,6 +9,12 @@
     "/dashboard/*": wrap({
       asyncComponent: () => import("./lib/dashboard/DashboardRouter.svelte"),
     }),
+    "/report/:id": wrap({
+      asyncComponent: () => import("./lib/report/MonitorStats.svelte"),
+    }),
+    "/statuspage/:id": wrap({
+      asyncComponent: () => import("./lib/statuspage/PublicStatuspage.svelte"),
+    }),
     "/auth": wrap({
       asyncComponent: () => import("./lib/auth/AuthRouter.svelte"),
     }),
