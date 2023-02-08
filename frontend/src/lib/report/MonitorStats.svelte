@@ -4,14 +4,20 @@
     diskChart,
     latencyChart,
     netChart,
-    ramChart
+    ramChart,
   } from "@/chartTemplates";
   import http from "@/http";
   import { convertSize } from "@/size-unit-util";
   import { error } from "@/toast-util";
   import {
-    CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title,
-    Tooltip
+    CategoryScale,
+    Chart as ChartJS,
+    Legend,
+    LinearScale,
+    LineElement,
+    PointElement,
+    Title,
+    Tooltip,
   } from "chart.js";
   import { onMount } from "svelte";
   import { Line } from "svelte-chartjs";
@@ -86,7 +92,7 @@
       key: "free",
       title: "Free space",
       value: (v) => {
-        return convertSize(v.totalBytes = v.usedBytes);
+        return convertSize((v.totalBytes = v.usedBytes));
       },
       sortable: true,
     },
@@ -94,7 +100,7 @@
       key: "total",
       title: "Total space",
       value: (v) => {
-        return convertSize(v.totalBytes)
+        return convertSize(v.totalBytes);
       },
       sortable: true,
     },
@@ -121,6 +127,7 @@
   let lastIncidentResponse;
   let incidentPage = 0;
   let disksData;
+  let agent;
   async function drawLatencyGraph() {
     http
       .get(
@@ -162,8 +169,8 @@
           swapData.unshift(element.swapUsage);
           cpuData.unshift(element.cpuUsage);
           iowaitData.unshift(element.iowait);
-          txData.unshift(element.tx/1000000);
-          rxData.unshift(element.rx/1000000);
+          txData.unshift(element.tx / 1000000);
+          rxData.unshift(element.rx / 1000000);
           diskData.unshift(element.disksUsage);
         });
         let cpuCopy = Object.assign({}, cpuChart);
@@ -221,6 +228,15 @@
       });
   });
 
+  async function fetchAgent() {
+    http
+      .get(`/api/monitor/${monitor.id}/agent`)
+      .then((response) => {
+        agent = response.data.data;
+      })
+      .catch((err) => {});
+  }
+
   function getIncidents() {
     fetchIncidents;
   }
@@ -231,9 +247,16 @@
       .then((response) => {
         monitor = response.data.data;
         if (monitor.type !== "AGENT") drawLatencyGraph();
-        else drawAgentGraphs();
+        else {
+          drawAgentGraphs();
+          fetchAgent();
+        }
       })
-      .catch((err) => error("Couldn't fetch data. You might not have permission to access it."));
+      .catch((err) =>
+        error(
+          "Couldn't fetch data. You might not have permission to access it."
+        )
+      );
   });
 </script>
 
@@ -267,50 +290,50 @@
     {#if monitor.type === "AGENT"}
       <div class="card w-full">
         <h1 class="text-xl mb-2">Agent summary</h1>
-        <div class="grid grid-rows-3 grid-flow-col">
-          <div class="grid-cell">
-            <div class="text-lg">CPU model</div>
-            <div>{monitor.agent.cpuModel ?? "Unknown"}</div>
-          </div>
-          <div class="grid-cell">
-            <div class="text-lg">CPU cores</div>
-            <div>
-              {monitor.agent.cpuCores === 0
-                ? "Unknown"
-                : monitor.agent.cpuCores}
+        {#if agent !== undefined}
+          <div class="grid grid-rows-3 grid-flow-col">
+            <div class="grid-cell">
+              <div class="text-lg">CPU model</div>
+              <div>{agent.cpuModel ?? "Unknown"}</div>
+            </div>
+            <div class="grid-cell">
+              <div class="text-lg">CPU cores</div>
+              <div>
+                {agent.cpuCores === 0 ? "Unknown" : agent.cpuCores}
+              </div>
+            </div>
+            <!--empty-->
+            <div class="grid-cell" />
+            <div class="grid-cell">
+              <div class="text-lg">Agent version</div>
+              <div>{agent.agentVersion ?? "Unknown"}</div>
+            </div>
+            <div class="grid-cell">
+              <div class="text-lg">Installed</div>
+              <div>
+                {agent.installed ? "Yes" : "No"}
+              </div>
+            </div>
+            <div class="grid-cell">
+              <div class="text-lg">Last heartbeat</div>
+              <div>
+                {new Date(agent.lastDataReceived * 1000).toLocaleString()}
+              </div>
+            </div>
+            <div class="grid-cell">
+              <div class="text-lg">Operating system</div>
+              <div>{agent.os ?? "Unknown"}</div>
+            </div>
+            <div class="grid-cell">
+              <div class="text-lg">Uptime (seconds)</div>
+              <div>{agent.uptime}</div>
+            </div>
+            <div class="grid-cell">
+              <div class="text-lg">IP address</div>
+              <div>{agent.ipAddress ?? "Unknown"}</div>
             </div>
           </div>
-          <!--empty-->
-          <div class="grid-cell" />
-          <div class="grid-cell">
-            <div class="text-lg">Agent version</div>
-            <div>{monitor.agent.agentVersion ?? "Unknown"}</div>
-          </div>
-          <div class="grid-cell">
-            <div class="text-lg">Installed</div>
-            <div>
-              {monitor.agent.installed ? "Yes" : "No"}
-            </div>
-          </div>
-          <div class="grid-cell">
-            <div class="text-lg">Last heartbeat</div>
-            <div>
-              {new Date(monitor.agent.lastDataReceived * 1000).toLocaleString()}
-            </div>
-          </div>
-          <div class="grid-cell">
-            <div class="text-lg">Operating system</div>
-            <div>{monitor.agent.os ?? "Unknown"}</div>
-          </div>
-          <div class="grid-cell">
-            <div class="text-lg">Uptime (seconds)</div>
-            <div>{monitor.agent.uptime}</div>
-          </div>
-          <div class="grid-cell">
-            <div class="text-lg">IP address</div>
-            <div>{monitor.agent.ipAddress ?? "Unknown"}</div>
-          </div>
-        </div>
+        {/if}
       </div>
       <div class="space-y-2 card w-full">
         <h1 class="text-xl">Server stats</h1>

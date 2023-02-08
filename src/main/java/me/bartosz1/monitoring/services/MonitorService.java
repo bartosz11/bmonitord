@@ -23,8 +23,7 @@ public class MonitorService {
     private final NotificationRepository notificationRepository;
     private final StatuspageRepository statuspageRepository;
 
-    public MonitorService(MonitorRepository monitorRepository, NotificationRepository notificationRepository,
-                          StatuspageRepository statuspageRepository) {
+    public MonitorService(MonitorRepository monitorRepository, NotificationRepository notificationRepository, StatuspageRepository statuspageRepository) {
         this.monitorRepository = monitorRepository;
         this.notificationRepository = notificationRepository;
         this.statuspageRepository = statuspageRepository;
@@ -178,5 +177,21 @@ public class MonitorService {
             }
         }
         throw new EntityNotFoundException("Monitor or statuspage with given ID not found.");
+    }
+
+    public Agent getAgentByMonitorId(long monitorId, User user) throws EntityNotFoundException {
+        Optional<Monitor> byId = monitorRepository.findById(monitorId);
+        if (byId.isPresent()) {
+            Monitor monitor = byId.get();
+            if (monitor.getType() == MonitorType.AGENT) {
+                Agent agent = monitor.getAgent();
+                if (user != null && monitor.getUser().getId() == user.getId()) {
+                    return agent;
+                } else if (monitor.isPublished()) {
+                    return new Agent().setAgentVersion(agent.getAgentVersion()).setCpuCores(agent.getCpuCores()).setCpuModel(agent.getCpuModel()).setInstalled(agent.isInstalled()).setIpAddress(agent.getIpAddress()).setLastDataReceived(agent.getLastDataReceived()).setOs(agent.getOs()).setRamTotal(agent.getRamTotal()).setSwapTotal(agent.getSwapTotal()).setUptime(agent.getUptime());
+                }
+            }
+        }
+        throw new EntityNotFoundException("Agent not found for monitor with ID " + monitorId + ".");
     }
 }

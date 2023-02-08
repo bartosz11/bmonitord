@@ -1,6 +1,7 @@
 package me.bartosz1.monitoring.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -8,6 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "agents")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Agent {
 
     @Id

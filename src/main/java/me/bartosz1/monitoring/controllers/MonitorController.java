@@ -2,10 +2,7 @@ package me.bartosz1.monitoring.controllers;
 
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
 import me.bartosz1.monitoring.exceptions.IllegalParameterException;
-import me.bartosz1.monitoring.models.Monitor;
-import me.bartosz1.monitoring.models.MonitorCDO;
-import me.bartosz1.monitoring.models.Response;
-import me.bartosz1.monitoring.models.User;
+import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.services.MonitorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,6 +100,13 @@ public class MonitorController {
     public ResponseEntity<Response> publishMonitor(@PathVariable long monitorId, @RequestParam(name = "public") boolean published, @AuthenticationPrincipal User user) throws EntityNotFoundException, IllegalParameterException {
         Monitor monitor = monitorService.publishMonitor(monitorId, published, user);
         return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{monitorId}/agent", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<Response> getAgentByMonitorId(@PathVariable long monitorId, @AuthenticationPrincipal User user) throws EntityNotFoundException {
+        Agent agent = monitorService.getAgentByMonitorId(monitorId, user);
+        return new Response(HttpStatus.OK).addAdditionalData(agent).toResponseEntity();
     }
 
 }
