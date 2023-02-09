@@ -6,15 +6,29 @@
   import MonitorCreateModal from "./MonitorCreateModal.svelte";
   import MonitorStatusCell from "./MonitorStatusCell.svelte";
   import { Plus } from "phosphor-svelte";
-  const fetchData = new Promise((resolve, reject) => {
+  import { error, info } from "@/toast-util";
+  import { onMount } from "svelte";
+
+  let data;
+
+  function getData() {
+    info("Fetching monitors...");
     http
       .get("/api/monitor")
       .then((response) => {
-        resolve(response.data.data);
+        data = response.data.data;
       })
-      .catch((err) => reject());
-  });
+      .catch((err) => {
+        error(
+          err.response?.data?.errors[0]?.message ??
+            "Something went wrong while fetching monitors."
+        );
+      });
+    setTimeout(getData, 60000);
+  }
 
+  onMount(getData);
+  
   const columnSettings = [
     {
       key: "id",
@@ -65,15 +79,10 @@
   ];
 </script>
 
-{#await fetchData}
-  <p>Fetching monitors...</p>
-{:then data}
+{#if data !== undefined}
   <div class="m-4 flex flex-row space-x-8">
     <h1 class="text-xl">Your monitors</h1>
-    <button
-      class="btn-create"
-      on:click={() => openModal(MonitorCreateModal)}
-    >
+    <button class="btn-create" on:click={() => openModal(MonitorCreateModal)}>
       <span>Create monitor</span>
       <div class="icon-align">
         <Plus />
@@ -81,6 +90,4 @@
     </button>
   </div>
   <SvelteTable columns={columnSettings} rows={data} />
-{:catch}
-  <p>Couldn't fetch monitors.</p>
-{/await}
+{/if}
