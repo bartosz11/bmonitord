@@ -2,6 +2,8 @@
   import Router from "svelte-spa-router";
   import wrap from "svelte-spa-router/wrap";
   import { Toaster } from "svelte-french-toast";
+  import { location } from "svelte-spa-router";
+  import { timeout } from "./timeoutStore";
   const routes = {
     "/dashboard": wrap({
       asyncComponent: () => import("./lib/dashboard/DashboardRouter.svelte"),
@@ -25,6 +27,14 @@
       asyncComponent: () => import("./lib/Home.svelte"),
     }),
   };
+
+  let prevValue;
+  location.subscribe((v) => {
+    if (prevValue !== null && prevValue !== undefined) {
+      clearTimeout($timeout);
+    }
+    prevValue = v;
+  });
 </script>
 
 <body>

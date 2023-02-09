@@ -8,6 +8,7 @@
   import { Info, Warning, WarningCircle } from "phosphor-svelte";
   import { error, info } from "@/toast-util";
   import { onMount } from "svelte";
+  import { timeout } from "@/timeoutStore";
   export let params;
 
   let conditionalClasses = "text-2xl space-x-1.5";
@@ -33,7 +34,7 @@
         data = response.data.data;
       })
       .catch((err) => error("Failed to fetch data. Retrying in 1 minute."));
-    setTimeout(getData, 60000);  
+    timeout.set(setTimeout(getData, 60000));
    }
 
   onMount(getData);
@@ -110,7 +111,7 @@
 </div>
 
 <div
-  class="bottom-0 fixed bg-zinc-800 w-full h-12 items-center flex flex-col justify-center"
+  class="bottom-0 bg-zinc-800 w-full h-12 items-center flex flex-col justify-center"
 >
   <div>
     <p>

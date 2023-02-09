@@ -8,6 +8,7 @@
   import { Plus } from "phosphor-svelte";
   import { error, info } from "@/toast-util";
   import { onMount } from "svelte";
+  import { timeout } from "@/timeoutStore";
 
   let data;
 
@@ -24,7 +25,7 @@
             "Something went wrong while fetching monitors."
         );
       });
-    setTimeout(getData, 60000);
+    timeout.set(setTimeout(getData, 60000));
   }
 
   onMount(getData);
