@@ -6,16 +6,21 @@
   import StatuspageStatsRedirectButton from "./StatuspageStatsRedirectButton.svelte";
   import SvelteTable from "svelte-table";
   import { Info, Warning, WarningCircle } from "phosphor-svelte";
+  import { error, info } from "@/toast-util";
+  import { onMount } from "svelte";
   export let params;
 
   let conditionalClasses = "text-2xl space-x-1.5";
+  let data;
 
-  const fetchData = new Promise((resolve, reject) => {
+  
+  function getData() {
+    info("Fetching data...");
     http
       .get(`/api/statuspage/${params.id}/public`)
       .then((response) => {
-        switch (response.data.data.announcement?.type) { 
-          case "INFO": 
+        switch (response.data.data.announcement?.type) {
+          case "INFO":
             conditionalClasses += " text-sky-400";
             break;
           case "WARNING":
@@ -23,12 +28,15 @@
             break;
           case "CRITICAL":
             conditionalClasses += " text-red-400";
-            break;    
+            break;
         }
-        resolve(response.data.data);
+        data = response.data.data;
       })
-      .catch((err) => reject());
-  });
+      .catch((err) => error("Failed to fetch data. Retrying in 1 minute."));
+    setTimeout(getData, 60000);  
+   }
+
+  onMount(getData);
 
   const columnConfig = [
     {
@@ -69,10 +77,8 @@
 </script>
 
 <div class="py-10 px-32">
-  {#await fetchData}
-    <p>Fetching data...</p>
-  {:then data}
-    <div class="space-y-8">
+  <div class="space-y-8">
+    {#if data !== undefined}
       <h1 class="text-5xl text-center">{data.name}</h1>
       {#if data.announcement !== null}
         <div class="card space-y-3">
@@ -99,10 +105,8 @@
         <h1 class="text-xl mb-5">Monitors</h1>
         <SvelteTable columns={columnConfig} rows={data.monitors} />
       </div>
-    </div>
-  {:catch}
-    <p>Couldn't fetch data.</p>
-  {/await}
+    {/if}
+  </div>
 </div>
 
 <div
