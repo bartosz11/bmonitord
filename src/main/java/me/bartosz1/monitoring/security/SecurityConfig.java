@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/monitor/{id}").permitAll()
                 .requestMatchers("/api/monitor/{monitorId}/agent").permitAll()
                 .requestMatchers("/api/incident/**").permitAll()
+                .requestMatchers("/api/statuspage/{id}/public").permitAll()
                 //Allow all requests to Actuator endpoints - the only one exposed is /health
                 .requestMatchers("/app/**").permitAll()
                 //Require authentication for all other requests
