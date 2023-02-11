@@ -12,7 +12,11 @@
   function onSubmit(e) {
     e.preventDefault();
     http
-      .patch("/api/user/password")
+      .patch("/api/user/password", {
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        newPasswordConfirmation: newPasswordConfirmation,
+      })
       .then(() => {
         success("Changed password successfully.");
         push("/auth/logout");
