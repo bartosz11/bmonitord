@@ -14,7 +14,6 @@
   let conditionalClasses = "text-2xl space-x-1.5";
   let data;
 
-  
   function getData() {
     info("Fetching data...");
     http
@@ -35,7 +34,7 @@
       })
       .catch((err) => error("Failed to fetch data. Retrying in 1 minute."));
     timeout.set(setTimeout(getData, 60000));
-   }
+  }
 
   onMount(getData);
 
@@ -77,50 +76,52 @@
   ];
 </script>
 
-<div class="py-10 px-32">
-  <div class="space-y-8">
-    {#if data !== undefined}
-      <h1 class="text-5xl text-center">{data.name}</h1>
-      {#if data.announcement !== null}
-        <div class="card space-y-3">
-          <div class={conditionalClasses}>
-            {#if data.announcement.type === "INFO"}
-              <div class="icon-align">
-                <Info />
-              </div>
-            {:else if data.announcement.type === "WARNING"}
-              <div class="icon-align">
-                <Warning />
-              </div>
-            {:else}
-              <div class="icon-align">
-                <WarningCircle />
-              </div>
-            {/if}
-            <h1 class="inline-block">{data.announcement.title}</h1>
+<div class="min-h-screen flex flex-col justify-between">
+  <div class="py-10 px-32 mb-auto">
+    <div class="space-y-8">
+      {#if data !== undefined}
+        <h1 class="text-5xl text-center">{data.name}</h1>
+        {#if data.announcement !== null}
+          <div class="card space-y-3">
+            <div class={conditionalClasses}>
+              {#if data.announcement.type === "INFO"}
+                <div class="icon-align">
+                  <Info />
+                </div>
+              {:else if data.announcement.type === "WARNING"}
+                <div class="icon-align">
+                  <Warning />
+                </div>
+              {:else}
+                <div class="icon-align">
+                  <WarningCircle />
+                </div>
+              {/if}
+              <h1 class="inline-block">{data.announcement.title}</h1>
+            </div>
+            {@html DOMPurify.sanitize(marked.parse(data.announcement.content))}
           </div>
-          {@html DOMPurify.sanitize(marked.parse(data.announcement.content))}
+        {/if}
+        <div class="card">
+          <h1 class="text-xl mb-5">Monitors</h1>
+          <SvelteTable columns={columnConfig} rows={data.monitors} />
         </div>
       {/if}
-      <div class="card">
-        <h1 class="text-xl mb-5">Monitors</h1>
-        <SvelteTable columns={columnConfig} rows={data.monitors} />
-      </div>
-    {/if}
+    </div>
   </div>
-</div>
 
-<div
-  class="bottom-0 bg-zinc-800 w-full h-12 items-center flex flex-col justify-center"
->
-  <div>
-    <p>
-      proudly powered by <a href="https://github.com/bartosz11/monitoring"
-        ><span
-          class="underline decoration-wavy underline-offset-4 decoration-sky-500"
-          >bmonitord</span
-        ></a
-      >
-    </p>
+  <div
+    class="bottom-0 bg-zinc-800 w-full h-12 items-center flex flex-col justify-center"
+  >
+    <div>
+      <p>
+        proudly powered by <a href="https://github.com/bartosz11/monitoring"
+          ><span
+            class="underline decoration-wavy underline-offset-4 decoration-sky-500"
+            >bmonitord</span
+          ></a
+        >
+      </p>
+    </div>
   </div>
 </div>
