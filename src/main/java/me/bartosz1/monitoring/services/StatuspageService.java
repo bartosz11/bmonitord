@@ -102,7 +102,7 @@ public class StatuspageService {
             if (statuspage.getUser().getId() == user.getId()) {
                 StatuspageAnnouncement announcement = statuspage.getAnnouncement();
                 statuspage.setAnnouncement(null);
-                Statuspage save = statuspageRepository.save(statuspage);
+                statuspageRepository.save(statuspage);
                 statuspageAnnouncementRepository.delete(announcement);
                 return announcement;
             }
@@ -111,7 +111,7 @@ public class StatuspageService {
     }
 
     public Statuspage renameStatuspage(User user, long id, String newName) throws EntityNotFoundException {
-        Optional<Statuspage> byId = statuspageRepository.findById(id);
+        Optional<Statuspage> byId = statuspageRepository.getById(id);
         if (byId.isPresent()) {
             Statuspage statuspage = byId.get();
             if (statuspage.getUser().getId() == user.getId()) {

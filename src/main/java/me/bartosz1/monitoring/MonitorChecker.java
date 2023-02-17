@@ -19,7 +19,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -52,8 +51,6 @@ public class MonitorChecker implements InitializingBean {
         LOGGER.info("Checking monitors...");
         //very brh
         List<Monitor> allMonitors = monitorRepository.findAllMonitors2(monitorRepository.findAllMonitors(monitorRepository.findAllMonitors()));
-        List<Monitor> bulkSaveMonitor = new ArrayList<>();
-        List<Heartbeat> bulkSaveHeartbeat = new ArrayList<>();
         allMonitors.forEach(monitor -> {
             if (!monitor.isPaused()) {
                 if (!(monitor.getType() == MonitorType.AGENT)) {
@@ -61,8 +58,8 @@ public class MonitorChecker implements InitializingBean {
                     MonitorStatus currentStatus = hb.getStatus();
                     processStatus(monitor, currentStatus);
                     monitor.getHeartbeats().add(hb);
-                    bulkSaveHeartbeat.add(hb);
-                    bulkSaveMonitor.add(monitor);
+                    heartbeatRepository.save(hb);
+                    monitorRepository.save(monitor);
                 } else {
                     Agent agent = monitor.getAgent();
                     if (agent.isInstalled() && started + 300 < Instant.now().getEpochSecond()) {
@@ -75,13 +72,11 @@ public class MonitorChecker implements InitializingBean {
                             status = MonitorStatus.UP;
                         }
                         processStatus(monitor, status);
-                        bulkSaveMonitor.add(monitor);
+                        monitorRepository.save(monitor);
                     }
                 }
             }
         });
-        heartbeatRepository.saveAll(bulkSaveHeartbeat);
-        monitorRepository.saveAll(bulkSaveMonitor);
     }
 
     //copied from V1
