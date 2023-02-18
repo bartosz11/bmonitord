@@ -1,8 +1,11 @@
 <script>
-  import Router from "svelte-spa-router";
+  import Router, { push } from "svelte-spa-router";
   import wrap from "svelte-spa-router/wrap";
   import Navbar from "./Navbar.svelte";
   import { Modals, closeModal } from "svelte-modals";
+  import { onMount } from "svelte";
+  import { deleteCookie, getCookie } from "svelte-cookie";
+  import http from "@/http";
   const prefix = "/dashboard";
   const routes = {
     "/monitors": wrap({
@@ -21,6 +24,18 @@
       asyncComponent: () => import("./Overview.svelte"),
     }),
   };
+
+  onMount(() => {
+    let cookie = getCookie("auth-token");
+    //falsy values trick yes yes
+    if (!cookie) push("/auth/login");
+    else {
+      http.get("/api/user").catch((err) => {
+        deleteCookie("auth-token");
+        push("/auth/login");
+      });
+    }
+  });
 </script>
 
 <Navbar />
