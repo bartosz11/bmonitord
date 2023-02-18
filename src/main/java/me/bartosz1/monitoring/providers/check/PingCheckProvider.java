@@ -12,7 +12,7 @@ public class PingCheckProvider extends CheckProvider {
     public Heartbeat check(Monitor monitor) {
         try {
             long start = Instant.now().getEpochSecond();
-            return ping(monitor.getHost(), monitor.getTimeout() * 1000)
+            return ping(monitor.getHost(), monitor.getTimeout())
                     ? new Heartbeat().setMonitor(monitor).setTimestamp(Instant.now().getEpochSecond()).setStatus(MonitorStatus.UP).setResponseTime(Instant.now().getEpochSecond() - start)
                     : new Heartbeat().setMonitor(monitor).setTimestamp(Instant.now().getEpochSecond()).setStatus(MonitorStatus.DOWN);
         } catch (IOException | InterruptedException ignored) {
@@ -23,7 +23,8 @@ public class PingCheckProvider extends CheckProvider {
     private boolean ping(String host, int timeout) throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder();
         if (System.getProperty("os.name").contains("Windows"))
-            processBuilder.command("ping", "-n", "1", "-w", String.valueOf(timeout), host);
+            //windows expects timeout in ms
+            processBuilder.command("ping", "-n", "1", "-w", String.valueOf(timeout * 1000), host);
         else processBuilder.command("ping", "-c", "1", "-W", String.valueOf(timeout), host);
         int code = processBuilder.start().waitFor();
         return code == 0;

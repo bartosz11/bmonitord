@@ -3,6 +3,7 @@ a.out
 notes.txt
 readme.md
 gradlew.bat
+frontend/.env
 venv/
 src/main/resources/application.yml
 src/main/resources/static/
