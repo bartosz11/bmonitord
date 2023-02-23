@@ -2,20 +2,24 @@
   import { tooltip } from "@svelte-plugins/tooltips";
   import { ArrowCircleUp, ArrowCircleDown, Question } from "phosphor-svelte";
   export let row;
-  let classes = "flex justify-center text-3xl";
-  if (row.paused) {
-    classes += " text-amber-500";
-  } else {
-    switch (row.lastStatus) {
-      case "UP":
-        classes += " text-green-500";
-        break;
-      case "DOWN":
-        classes += " text-red-500";
-        break;
-      case "UNKNOWN":
-        classes += " text-gray-500";
-        break;
+  const classesTemplate = "flex justify-center text-3xl";
+  let classes;
+  $: {
+    classes = classesTemplate;
+    if (row.paused) {
+      classes += " text-amber-500";
+    } else {
+      switch (row.lastStatus) {
+        case "UP":
+          classes += " text-green-500";
+          break;
+        case "DOWN":
+          classes += " text-red-500";
+          break;
+        case "UNKNOWN":
+          classes += " text-gray-500";
+          break;
+      }
     }
   }
 </script>
