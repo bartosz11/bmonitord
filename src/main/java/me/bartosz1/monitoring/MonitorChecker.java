@@ -17,10 +17,13 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,36 +50,48 @@ public class MonitorChecker implements InitializingBean {
     @Scheduled(fixedDelay = 60000)
     //might not be a good solution
     @Transactional()
-    public void checkMonitors() {
+    public void checkMonitors() throws InterruptedException {
         LOGGER.info("Checking monitors...");
         //very brh
         List<Monitor> allMonitors = monitorRepository.findAllMonitors2(monitorRepository.findAllMonitors(monitorRepository.findAllMonitors()));
+        List<Monitor> bulkSaveMonitors = new ArrayList<>();
+        List<Heartbeat> bulkSaveHeartbeat = new ArrayList<>();
+        CountDownLatch latch = new CountDownLatch(allMonitors.size());
         allMonitors.forEach(monitor -> {
             if (!monitor.isPaused()) {
-                if (!(monitor.getType() == MonitorType.AGENT)) {
-                    Heartbeat hb = monitor.getType().getCheckProvider().check(monitor);
-                    MonitorStatus currentStatus = hb.getStatus();
-                    processStatus(monitor, currentStatus);
-                    monitor.getHeartbeats().add(hb);
-                    heartbeatRepository.save(hb);
-                    monitorRepository.save(monitor);
-                } else {
-                    Agent agent = monitor.getAgent();
-                    if (agent.isInstalled() && started + 300 < Instant.now().getEpochSecond()) {
-                        long epochSecond = Instant.now().getEpochSecond();
-                        MonitorStatus status;
-                        //Here we don't make heartbeats, they'd be duplicate, kind of
-                        if (monitor.getAgent().getLastDataReceived() + (long) monitor.getTimeout() < epochSecond) {
-                            status = MonitorStatus.DOWN;
-                        } else {
-                            status = MonitorStatus.UP;
+                executorService.execute(() -> {
+                    LOGGER.debug("Checking "+monitor.getName()+" ID "+monitor.getId());
+                    //idk i found this somewhere
+                    TransactionSynchronizationManager.setActualTransactionActive(true);
+                    if (!(monitor.getType() == MonitorType.AGENT)) {
+                        Heartbeat hb = monitor.getType().getCheckProvider().check(monitor);
+                        MonitorStatus currentStatus = hb.getStatus();
+                        processStatus(monitor, currentStatus);
+                        monitor.getHeartbeats().add(hb);
+                        bulkSaveHeartbeat.add(hb);
+                    } else {
+                        Agent agent = monitor.getAgent();
+                        if (agent.isInstalled() && started + 300 < Instant.now().getEpochSecond()) {
+                            long epochSecond = Instant.now().getEpochSecond();
+                            MonitorStatus status;
+                            //Here we don't make heartbeats, they'd be duplicate, kind of
+                            if (monitor.getAgent().getLastDataReceived() + (long) monitor.getTimeout() < epochSecond) {
+                                status = MonitorStatus.DOWN;
+                            } else {
+                                status = MonitorStatus.UP;
+                            }
+                            processStatus(monitor, status);
                         }
-                        processStatus(monitor, status);
-                        monitorRepository.save(monitor);
                     }
-                }
+                    bulkSaveMonitors.add(monitor);
+                    latch.countDown();
+                });
             }
         });
+        latch.await();
+        monitorRepository.saveAll(bulkSaveMonitors);
+        heartbeatRepository.saveAll(bulkSaveHeartbeat);
+        LOGGER.info("Saved monitors.");
     }
 
     //copied from V1
