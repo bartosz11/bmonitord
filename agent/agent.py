@@ -1,15 +1,17 @@
+# shipped with python3
 import base64
-import cpuinfo
-import distro
 import platform
+import time
+
+# 3rd party
+import cpuinfo
 import psutil
 import requests
-import time
+# included in requests
+import urllib3
 
 # Don't change the version
 VERSION = "1.0"
-# Agent ID
-SERVER = ""
 # API URL
 URL = "http://example.com/api/agent/id/post"
 
@@ -18,10 +20,11 @@ def get_data():
     sec = int(time.strftime("%S"))
     sleep = 60 - sec
     if platform.system() == "Linux":
-        os = base64.b64encode(f"{distro.name()} {distro.version()}".encode("utf-8")).decode("utf-8")
+        import distro
+        operating_system = base64.b64encode(f"{distro.name()} {distro.version()}".encode("utf-8")).decode("utf-8")
         iowait = psutil.cpu_times_percent(1).iowait
     else:
-        os = base64.b64encode(f"{platform.system()} {platform.release()}".encode("utf-8")).decode("utf-8")
+        operating_system = base64.b64encode(f"{platform.system()} {platform.release()}".encode("utf-8")).decode("utf-8")
         # IOWait is not supported on Windows
         iowait = 0
     uptime = int(time.time() - psutil.boot_time())
@@ -53,13 +56,10 @@ def get_data():
     # Decode at the end prevents the b prefix
     disks_encoded = base64.b64encode(';'.join(disks).encode("utf-8")).decode("utf-8")
     disks_total_percent = (disks_used_bytes / disks_total_bytes) * 100
-    return f"{VERSION}|{os}|{uptime}|{cpu_cores}|{cpu_freq}|{cpu_model}|{cpu_usage}|{ram_total}|{ram_usage}|{swap_total}|{swap_usage}|{iowait}|{rx}|{tx}|{disks_encoded}|{disks_total_percent}"
+    return f"{VERSION}|{operating_system}|{uptime}|{cpu_cores}|{cpu_freq}|{cpu_model}|{cpu_usage}|{ram_total}|{ram_usage}|{swap_total}|{swap_usage}|{iowait}|{rx}|{tx}|{disks_encoded}|{disks_total_percent}"
 
 
-while True:
-    try:
-        data = get_data()
-        print(data)
-        response = requests.post(URL, data=data, timeout=15, verify=False)
-    except:
-        pass
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+data = get_data()
+print(data)
+requests.post(URL, data=data, timeout=15, verify=False)

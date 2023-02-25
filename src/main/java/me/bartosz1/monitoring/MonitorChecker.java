@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -43,7 +44,7 @@ public class MonitorChecker implements InitializingBean {
         this.notificationSenderService = notificationSenderService;
         this.incidentRepository = incidentRepository;
         this.heartbeatRepository = heartbeatRepository;
-        this.executorService = Executors.newFixedThreadPool(checkThreadPoolSize);
+        this.executorService = Executors.newFixedThreadPool(checkThreadPoolSize, new CustomizableThreadFactory("check-pool-"));
     }
 
     //we use fixed delay instead of cron, so the check will run after app start and not at XX:XX:00

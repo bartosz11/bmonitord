@@ -33,7 +33,7 @@
           <input readonly class="input-primary w-full" value={ghLink} />
           <p>
             2. Install Python 3 (minimum version: 3.11), and required modules
-            with pip: py-cpuinfo requests psutil distro
+            with pip: py-cpuinfo requests psutil. If you're using a Linux distribution then you also need to install the distro module.
           </p>
           <p>
             3. Open the agent file with your favourite text editor and change
