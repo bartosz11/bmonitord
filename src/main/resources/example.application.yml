@@ -51,7 +51,7 @@ monitoring:
   timezone: <timezone>
   #Change this to false to disable /api/auth/register endpoint, new users won't be able to register
   registration-enabled: true
-  #Amount of monitors that can be checked simultaneously - currently not used
+  #Amount of monitors that can be checked simultaneously
   check-thread-pool-size: 2
 
 server:
