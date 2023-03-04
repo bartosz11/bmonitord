@@ -20,8 +20,8 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,7 +35,7 @@ public class MonitorChecker {
     private final IncidentRepository incidentRepository;
     private final HeartbeatRepository heartbeatRepository;
     private final ExecutorService executorService;
-    private final HashMap<Long, Integer> retries = new HashMap<>();
+    private final ConcurrentHashMap<Long, Integer> retries = new ConcurrentHashMap<>();
 
     public MonitorChecker(MonitorRepository monitorRepository, NotificationSenderService notificationSenderService, IncidentRepository incidentRepository, HeartbeatRepository heartbeatRepository, @Value("${monitoring.check-thread-pool-size:2}") int checkThreadPoolSize) {
         this.monitorRepository = monitorRepository;
@@ -72,13 +72,16 @@ public class MonitorChecker {
                     if (currentStatus == MonitorStatus.DOWN) {
                         retries.merge(monitor.getId(), 1, Integer::sum);
                         //Works properly even when monitor.getRetries() == 0 because 1 > 0
-                        if (retries.get(monitor.getId()) > monitor.getRetries())
+                        if (retries.get(monitor.getId()) > monitor.getRetries()) {
                             processStatus(monitor, currentStatus);
+                        }
                     } else {
                         retries.remove(monitor.getId());
                         processStatus(monitor, currentStatus);
                     }
-                } else processStatus(monitor, currentStatus);
+                } else {
+                    processStatus(monitor, currentStatus);
+                }
                 bulkSaveMonitors.add(monitor);
             }
             latch.countDown();
@@ -93,13 +96,14 @@ public class MonitorChecker {
     private void processStatus(Monitor monitor, MonitorStatus currentStatus) {
         long epochSecond = Instant.now().getEpochSecond();
         incrementChecksAndChangeTimestamps(monitor, currentStatus, epochSecond);
+        monitor.setLastStatus(currentStatus);
         //notification sending logic
         //Get incident sorted by start timestamp descending
         List<Incident> incidents = monitor.getIncidents().stream().sorted(Comparator.comparing(Incident::getStartTimestamp).reversed()).toList();
-        //monitor changed status from down to up
-        if (monitor.getLastStatus() == MonitorStatus.DOWN && currentStatus == MonitorStatus.UP) {
-            monitor.setLastStatus(currentStatus);
-            if (incidents.isEmpty()) return;
+        if (currentStatus == MonitorStatus.UP) {
+            if (incidents.isEmpty()) {
+                return;
+            }
             Incident lastIncident = incidents.get(0);
             if (lastIncident.isOngoing()) {
                 lastIncident.setOngoing(false);
@@ -107,14 +111,15 @@ public class MonitorChecker {
                 lastIncident.setDuration(lastIncident.getEndTimestamp() - lastIncident.getStartTimestamp());
                 notificationSenderService.sendNotifications(monitor, incidentRepository.save(lastIncident));
             }
-            //monitor changed status from up to down
-        } else if (monitor.getLastStatus() == MonitorStatus.UP && currentStatus == MonitorStatus.DOWN) {
-            monitor.setLastStatus(currentStatus);
+        }
+        if (currentStatus == MonitorStatus.DOWN) {
             if (!incidents.isEmpty()) {
                 Incident lastIncident = incidents.get(0);
-                if (lastIncident.isOngoing()) return;
+                if (lastIncident.isOngoing()) {
+                    return;
+                }
             }
-            Incident incident = incidentRepository.save(new Incident().setStartTimestamp(epochSecond).setOngoing(true).setMonitor(monitor));
+            Incident incident = new Incident().setStartTimestamp(epochSecond).setOngoing(true).setMonitor(monitor);
             monitor.getIncidents().add(incident);
             notificationSenderService.sendNotifications(monitor, incident);
         }
@@ -125,7 +130,9 @@ public class MonitorChecker {
         if (currentStatus == MonitorStatus.UP) {
             monitor.setLastSuccessfulCheck(epochSecond);
             monitor.incrementChecksUp();
-        } else if (currentStatus == MonitorStatus.DOWN) monitor.incrementChecksDown();
+        } else if (currentStatus == MonitorStatus.DOWN) {
+            monitor.incrementChecksDown();
+        }
     }
 
 }
