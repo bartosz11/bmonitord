@@ -35,7 +35,6 @@
         verifyCertificate: verifyCertificate ?? false,
       })
       .then((response) => {
-        console.log(response.data.data.agent?.id);
         success("Successfully created a new monitor.");
         location.reload();
       })
@@ -46,7 +45,6 @@
         );
       });
   }
-
 </script>
 
 {#if isOpen}
@@ -98,6 +96,27 @@
               >This field is required.</Hint
             >
           </div>
+          <div>
+            <input
+              class="input-primary w-full"
+              type="text"
+              bind:value={retries}
+              placeholder="Retries"
+              use:validators={[required, number]}
+              name="retries"
+            />
+            <HintGroup>
+              <Hint for="retries" on="required" class="hint-primary"
+                >This field is required.</Hint
+              >
+              <Hint
+                hideWhenRequired
+                for="retries"
+                on="number"
+                class="hint-primary">A number is expected.</Hint
+              >
+            </HintGroup>
+          </div>
         {/if}
         <div>
           <input
@@ -115,27 +134,6 @@
             <Hint
               hideWhenRequired
               for="timeout"
-              on="number"
-              class="hint-primary">A number is expected.</Hint
-            >
-          </HintGroup>
-        </div>
-        <div>
-          <input
-            class="input-primary w-full"
-            type="text"
-            bind:value={retries}
-            placeholder="Retries"
-            use:validators={[required, number]}
-            name="retries"
-          />
-          <HintGroup>
-            <Hint for="retries" on="required" class="hint-primary"
-              >This field is required.</Hint
-            >
-            <Hint
-              hideWhenRequired
-              for="retries"
               on="number"
               class="hint-primary">A number is expected.</Hint
             >
@@ -180,7 +178,9 @@
             type="button"
             on:click={() => closeModal()}>Cancel</button
           >
-          <button class="btn-ok-primary w-2/3" disabled={!$form.valid}>Create</button>
+          <button class="btn-ok-primary w-2/3" disabled={!$form.valid}
+            >Create</button
+          >
         </div>
       </form>
     </div>
