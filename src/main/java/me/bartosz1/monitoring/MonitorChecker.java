@@ -54,8 +54,10 @@ public class MonitorChecker {
         List<Monitor> allMonitors = monitorRepository.findAllMonitors2(monitorRepository.findAllMonitors(monitorRepository.findAllMonitors()));
         List<Monitor> bulkSaveMonitors = new ArrayList<>();
         List<Heartbeat> bulkSaveHeartbeat = new ArrayList<>();
-        CountDownLatch latch = new CountDownLatch(allMonitors.size());
-        allMonitors.stream().filter(monitor -> !monitor.isPaused()).forEach(monitor -> executorService.execute(() -> {
+        //monitors which are not paused
+        List<Monitor> active = allMonitors.stream().filter(monitor -> !monitor.isPaused()).toList();
+        CountDownLatch latch = new CountDownLatch(active.size());
+        active.forEach(monitor -> executorService.execute(() -> {
             LOGGER.debug("Checking " + monitor.getName() + " ID " + monitor.getId()+" type "+monitor.getType().name());
             //idk i found this somewhere
             TransactionSynchronizationManager.setActualTransactionActive(true);
