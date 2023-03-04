@@ -29,7 +29,7 @@ spring:
       username: <smtp user> 
       password: <smtp password>
       properties:
-        #True or false, depending if your SMTP provider requires a TLS connection. Leaving it as true is recommended if your TLS provider supports TLS.
+        #True or false, depending if your SMTP provider requires a TLS connection. Leaving it as true is recommended if your SMTP provider supports TLS.
         mail.smtp.starttls.enable: true
         mail.smtp.auth: true
         mail.smtp.from: <from - usually the same as username>
@@ -84,3 +84,10 @@ management:
       enabled: false
     ping:
       enabled: false
+
+springdoc:
+  packagesToScan: me.bartosz1.monitoring.controllers
+  api-docs:
+    path: "/api-doc"
+  swagger-ui:
+    path: "/api-doc/swagger"

@@ -41,6 +41,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/statuspage/{id}/public").permitAll()
                 //Allow all requests to Actuator endpoints - the only one exposed is /health
                 .requestMatchers("/app/**").permitAll()
+                //springdoc
+                .requestMatchers("/api-doc/**").permitAll()
                 //Require authentication for all other requests
                 .anyRequest().authenticated().and()
                 //Use stateless sessions
