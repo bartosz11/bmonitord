@@ -12,5 +12,6 @@ public interface HeartbeatRepository extends JpaRepository<Heartbeat, Long> {
     Page<Heartbeat> findByMonitorId(long monitorId, Pageable pageable);
 
     Page<Heartbeat> findByMonitorIdAndTimestampBetween(long monitorId, Pageable pageable, long fromTimestamp, long toTimestamp);
+    void deleteAllByMonitorId(long monitorId);
 
 }

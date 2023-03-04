@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface IncidentRepository extends JpaRepository<Incident, Long> {
 
     Page<Incident> findByMonitorIdOrderByStartTimestampDesc(long monitorId, Pageable pageable);
+    void deleteAllByMonitorId(long monitorId);
 }
