@@ -56,18 +56,20 @@ public class MonitorChecker {
         List<Heartbeat> bulkSaveHeartbeat = new ArrayList<>();
         CountDownLatch latch = new CountDownLatch(allMonitors.size());
         allMonitors.stream().filter(monitor -> !monitor.isPaused()).forEach(monitor -> executorService.execute(() -> {
-            LOGGER.debug("Checking " + monitor.getName() + " ID " + monitor.getId());
+            LOGGER.debug("Checking " + monitor.getName() + " ID " + monitor.getId()+" type "+monitor.getType().name());
             //idk i found this somewhere
             TransactionSynchronizationManager.setActualTransactionActive(true);
             Heartbeat hb = monitor.getType().getCheckProvider().check(monitor);
             MonitorStatus currentStatus = hb.getStatus();
             //.getCheckProvider().check has to return a heartbeat but the heartbeat shouldn't always be saved
             if (hb.getMonitor() != null) {
+                LOGGER.debug("Adding new heartbeat for monitor ID "+monitor.getId());
                 monitor.getHeartbeats().add(hb);
                 bulkSaveHeartbeat.add(hb);
             }
             //hb.getStatus(currentStatus) can be null if agent is not installed/5 min since the app start didn't pass
             if (currentStatus != null) {
+                LOGGER.debug("Check provider for ID "+monitor.getId()+" returned "+currentStatus);
                 if (monitor.getType().applyRetriesLogic()) {
                     if (currentStatus == MonitorStatus.DOWN) {
                         retries.merge(monitor.getId(), 1, Integer::sum);
@@ -87,6 +89,7 @@ public class MonitorChecker {
             latch.countDown();
         }));
         latch.await();
+        LOGGER.debug("All checks finished, saving");
         monitorRepository.saveAll(bulkSaveMonitors);
         heartbeatRepository.saveAll(bulkSaveHeartbeat);
         LOGGER.info("Saved monitors.");
