@@ -10,8 +10,7 @@
   import { onMount } from "svelte";
   import { timeout } from "@/timeoutStore";
   export let params;
-
-  let conditionalClasses = "text-2xl space-x-1.5";
+  let conditionalClasses;
   let data;
 
   function getData() {
@@ -21,13 +20,13 @@
       .then((response) => {
         switch (response.data.data.announcement?.type) {
           case "INFO":
-            conditionalClasses += " text-sky-400";
+            conditionalClasses = "text-2xl space-x-1.5 text-sky-400";
             break;
           case "WARNING":
-            conditionalClasses += " text-yellow-400";
+            conditionalClasses = "text-2xl space-x-1.5 text-yellow-400";
             break;
           case "CRITICAL":
-            conditionalClasses += " text-red-400";
+            conditionalClasses = "text-2xl space-x-1.5 text-red-400";
             break;
         }
         data = response.data.data;
