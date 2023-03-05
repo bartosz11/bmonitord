@@ -9,8 +9,11 @@
     "/logout": wrap({
       asyncComponent: () => import("./Logout.svelte"),
     }),
-    "*": wrap({
+    "/login": wrap({
       asyncComponent: () => import("./Login.svelte"),
+    }),
+    "*": wrap({
+      asyncComponent: () => import("../NotFound.svelte"),
     }),
   };
 </script>

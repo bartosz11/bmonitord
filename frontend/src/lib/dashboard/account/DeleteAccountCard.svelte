@@ -1,6 +1,6 @@
 <script>
   import http from "@/http";
-  import { error, info, success } from "@/toast-util";
+  import { error, info, success } from "@/toastUtil";
   import { deleteCookie } from "svelte-cookie";
   import { push } from "svelte-spa-router";
 

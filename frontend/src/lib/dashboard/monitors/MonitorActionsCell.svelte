@@ -18,7 +18,7 @@
     Info,
     Heartbeat,
   } from "phosphor-svelte";
-  import { error, info, success } from "@/toast-util";
+  import { error, info, success } from "@/toastUtil";
   export let row;
   let count = 0;
 

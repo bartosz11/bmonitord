@@ -7,8 +7,8 @@
     ramChart,
   } from "@/chartTemplates";
   import http from "@/http";
-  import { convertSize } from "@/size-unit-util";
-  import { error } from "@/toast-util";
+  import { convertSize } from "@/sizeUnitUtil";
+  import { error } from "@/toastUtil";
   import {
     CategoryScale,
     Chart as ChartJS,

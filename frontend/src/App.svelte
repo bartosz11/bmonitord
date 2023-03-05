@@ -23,8 +23,12 @@
     "/auth/*": wrap({
       asyncComponent: () => import("./lib/auth/AuthRouter.svelte"),
     }),
+    //login page = home page
+    "/": wrap({
+      asyncComponent: () => import("./lib/auth/Login.svelte"),
+    }), 
     "*": wrap({
-      asyncComponent: () => import("./lib/Home.svelte"),
+      asyncComponent: () => import("./lib/NotFound.svelte"),
     }),
   };
 

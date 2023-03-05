@@ -1,6 +1,6 @@
 <script>
   import http from "@/http";
-  import { error, success } from "@/toast-util";
+  import { error, success } from "@/toastUtil";
   import { closeModal } from "svelte-modals";
   import { Hint, required, useForm, validators } from "svelte-use-form";
   export let isOpen;

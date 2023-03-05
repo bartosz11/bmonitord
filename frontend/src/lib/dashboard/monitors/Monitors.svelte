@@ -6,7 +6,7 @@
   import MonitorCreateModal from "./MonitorCreateModal.svelte";
   import MonitorStatusCell from "./MonitorStatusCell.svelte";
   import { Plus } from "phosphor-svelte";
-  import { error, info } from "@/toast-util";
+  import { error, info } from "@/toastUtil";
   import { onMount } from "svelte";
   import { timeout } from "@/timeoutStore";
 

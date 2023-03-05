@@ -6,7 +6,7 @@
   import StatuspageStatsRedirectButton from "./StatuspageStatsRedirectButton.svelte";
   import SvelteTable from "svelte-table";
   import { Info, Warning, WarningCircle } from "phosphor-svelte";
-  import { error, info } from "@/toast-util";
+  import { error, info } from "@/toastUtil";
   import { onMount } from "svelte";
   import { timeout } from "@/timeoutStore";
   export let params;

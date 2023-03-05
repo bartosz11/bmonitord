@@ -1,6 +1,6 @@
 <script>
   import { useForm, validators, required, Hint } from "svelte-use-form";
-  import { error, success } from "@/toast-util";
+  import { error, success } from "@/toastUtil";
   import { push } from "svelte-spa-router";
   import http from "@/http";
 

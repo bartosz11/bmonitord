@@ -1,5 +1,5 @@
 <script>
-  import Router, { push } from "svelte-spa-router";
+  import Router, { push, location } from "svelte-spa-router";
   import wrap from "svelte-spa-router/wrap";
   import Navbar from "./Navbar.svelte";
   import { Modals, closeModal } from "svelte-modals";
@@ -7,6 +7,13 @@
   import { deleteCookie, getCookie } from "svelte-cookie";
   import http from "@/http";
   const prefix = "/dashboard";
+  const routesAsArray = [
+    "/dashboard/monitors",
+    "/dashboard/notifications",
+    "/dashboard/statuspages",
+    "/dashboard/account",
+    "/dashboard/overview",
+  ];
   const routes = {
     "/monitors": wrap({
       asyncComponent: () => import("./monitors/Monitors.svelte"),
@@ -20,25 +27,32 @@
     "/account": wrap({
       asyncComponent: () => import("./account/Account.svelte"),
     }),
-    "*": wrap({
+    "/overview": wrap({
       asyncComponent: () => import("./Overview.svelte"),
+    }),
+    "*": wrap({
+      asyncComponent: () => import("../NotFound.svelte"),
     }),
   };
 
   onMount(() => {
-    let cookie = getCookie("auth-token");
-    //falsy values trick yes yes
-    if (!cookie) push("/auth/login");
-    else {
-      http.get("/api/user").catch((err) => {
-        deleteCookie("auth-token");
-        push("/auth/login");
-      });
+    if (routesAsArray.includes($location)) {
+      let cookie = getCookie("auth-token");
+      //falsy values trick yes yes
+      if (!cookie) push("/auth/login");
+      else {
+        http.get("/api/user").catch((err) => {
+          deleteCookie("auth-token");
+          push("/auth/login");
+        });
+      }
     }
   });
 </script>
 
-<Navbar />
+{#if routesAsArray.includes($location)}
+  <Navbar />
+{/if}
 <div class="h-view relative">
   <Router {prefix} {routes} />
 </div>

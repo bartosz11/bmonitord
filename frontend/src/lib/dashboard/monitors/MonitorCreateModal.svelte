@@ -9,7 +9,7 @@
     useForm,
     validators,
   } from "svelte-use-form";
-  import { error, success } from "@/toast-util";
+  import { error, success } from "@/toastUtil";
 
   export let isOpen;
   let name;

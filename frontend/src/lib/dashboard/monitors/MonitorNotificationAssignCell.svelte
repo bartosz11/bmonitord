@@ -1,6 +1,6 @@
 <script>
   import http from "@/http";
-  import { error, success } from "@/toast-util";
+  import { error, success } from "@/toastUtil";
   import { onMount } from "svelte";
 
   export let row;
