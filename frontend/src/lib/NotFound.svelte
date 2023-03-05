@@ -2,7 +2,7 @@
   <div class="space-y-7">
     <h1 class="text-8xl font-medium">404</h1>
     <h2 class="text-2xl">The page you've requested couldn't be found.</h2>
-    <div class="space-x-4">
+    <div class="md:space-x-4">
       <a href="/#/auth/login">
         <button class="bg-blue-700 hover:bg-blue-800 px-3 py-1 rounded-md">
           Go to login page

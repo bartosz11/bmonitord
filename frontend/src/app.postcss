@@ -80,7 +80,7 @@ td {
   @apply border-collapse border border-solid border-zinc-600;
 }
 
-td {  
+td {
   @apply text-center;
 }
 
@@ -92,7 +92,7 @@ td {
   min-width: 150px;
 }
 
-.min-w-500 { 
+.min-w-500 {
   min-width: 500px;
 }
 
@@ -100,11 +100,33 @@ td {
   @apply space-y-0.5;
 }
 
-.icon-align { 
+.icon-align {
   @apply inline-block self-center relative;
-  top: .125em;
+  top: 0.125em;
 }
 
-.btn-create { 
+.btn-create {
   @apply btn-ok-primary space-x-1.5;
+}
+
+/* scrollbar */
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #71717a #3f3f46;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 16px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #3f3f46;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #71717a;
+  border-radius: 0px;
+  border: 0px none #ffffff;
 }
