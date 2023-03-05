@@ -1,7 +1,7 @@
 .gitignore
 a.out
 notes.txt
-readme.md
+README.MD
 gradlew.bat
 frontend/.env
 venv/
