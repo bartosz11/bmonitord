@@ -21,7 +21,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     //Springdoc
     implementation 'org.springdoc:springdoc-openapi-starter-common:2.0.2'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.3'
     //JWT
     implementation 'com.auth0:java-jwt:4.3.0'
     //Database clients
