@@ -35,7 +35,7 @@ public class Monitor {
     private boolean published;
     private boolean verifyCertificate;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Incident> incidents;
     @JsonIgnore
     @ManyToOne
@@ -49,7 +49,7 @@ public class Monitor {
     @OneToOne(cascade = CascadeType.ALL)
     private Agent agent;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Heartbeat> heartbeats;
 
     public Monitor() {
