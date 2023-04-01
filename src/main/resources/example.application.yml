@@ -21,20 +21,28 @@ spring:
     #Uncomment next two lines if you're using sqlite
     #hikari:
     #  maximum-pool-size: 1
+  flyway:
+    #Where should flyway look for migrations. Depends on DB you're using
+    # For postgres: classpath:migration/common,classpath:migration/postgresql
+    # For mysql/mariadb: classpath:migration/common,classpath:migration/mysql
+    # For sqlite: classpath:migration/common,classpath:migration/sqlite
+    locations: "<look at comments above>"
+    #Set this to true if you're running bmonitord for the first time since DB migrations were introduced (April 1st 2023)
+    baselineOnMigrate: false
   #Mail needs to be configured
   #it's SMTP, not some provider's Web API
   mail:
-      host: <smtp host>
-      port: <smtp port>
-      username: <smtp user> 
-      password: <smtp password>
-      properties:
-        #True or false, depending if your SMTP provider requires a TLS connection. Leaving it as true is recommended if your SMTP provider supports TLS.
-        mail.smtp.starttls.enable: true
-        mail.smtp.auth: true
-        mail.smtp.from: <from - usually the same as username>
-      default-encoding: UTF-8
-      test-connection: false
+    host: <smtp host>
+    port: <smtp port>
+    username: <smtp user>
+    password: <smtp password>
+    properties:
+      #True or false, depending if your SMTP provider requires a TLS connection. Leaving it as true is recommended if your SMTP provider supports TLS.
+      mail.smtp.starttls.enable: true
+      mail.smtp.auth: true
+      mail.smtp.from: <from - usually the same as username>
+    default-encoding: UTF-8
+    test-connection: false
 
 monitoring:
   #Set this to false to allow frontend dev server to access this instances API
@@ -58,7 +66,7 @@ server:
   #You can change port here if you need to
   port: 8080
   
-#You don't need to touch lines below  
+  #You don't need to touch lines below
   compression-enabled: true
   compression:
     mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript

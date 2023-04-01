@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.controllers;
 
+import me.bartosz1.monitoring.exceptions.IllegalUsernameException;
 import me.bartosz1.monitoring.exceptions.InvalidOldPasswordException;
 import me.bartosz1.monitoring.exceptions.InvalidPasswordException;
 import me.bartosz1.monitoring.exceptions.UsernameAlreadyTakenException;
@@ -37,7 +38,7 @@ public class UserController {
 
     @RequestMapping(path = "/username", method = RequestMethod.PATCH, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> changeUsername(@AuthenticationPrincipal User user, @RequestParam(name = "username") String newUsername) throws UsernameAlreadyTakenException {
+    public ResponseEntity<Response> changeUsername(@AuthenticationPrincipal User user, @RequestParam(name = "username") String newUsername) throws UsernameAlreadyTakenException, IllegalUsernameException {
         User user1 = userService.changeUsername(user, newUsername);
         return new Response(HttpStatus.OK).addAdditionalData(user1).toResponseEntity();
     }

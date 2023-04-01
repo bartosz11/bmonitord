@@ -98,7 +98,8 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user.setPassword(passwordEncoder.encode(newPassword)).setLastUpdated(Instant.now().toEpochMilli()));
     }
 
-    public User changeUsername(User user, String newUsername) throws UsernameAlreadyTakenException {
+    public User changeUsername(User user, String newUsername) throws UsernameAlreadyTakenException, IllegalUsernameException {
+        if (newUsername.equalsIgnoreCase("null")) throw new IllegalUsernameException("Username null can't be used.");
         if (userRepository.existsByUsername(newUsername))
             throw new UsernameAlreadyTakenException("Username " + newUsername + " is already taken.");
         return userRepository.save(user.setUsername(newUsername).setLastUpdated(Instant.now().toEpochMilli()));
