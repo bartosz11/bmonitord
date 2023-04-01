@@ -1,6 +1,7 @@
 <script>
   import http from "@/http";
   import { marked } from "marked";
+  import { location } from "svelte-spa-router";
   import DOMPurify from "dompurify";
   import MonitorStatusCell from "../dashboard/monitors/MonitorStatusCell.svelte";
   import StatuspageStatsRedirectButton from "./StatuspageStatsRedirectButton.svelte";
@@ -79,7 +80,14 @@
   <div class="py-10 px-32 mb-auto">
     <div class="space-y-8">
       {#if data !== undefined}
-        <h1 class="text-5xl text-center">{data.name}</h1>
+        <div class="grid place-items-center space-y-12">
+          {#if data.logoLink !== null}
+            <a href={data.logoRedirect ?? "javascript:void(0);"}>
+              <img src={data.logoLink} alt="Logo" />
+            </a>
+          {/if}
+          <h1 class="text-5xl text-center">{data.name}</h1>
+        </div>
         {#if data.announcement !== null}
           <div class="card space-y-3">
             <div class={conditionalClasses}>

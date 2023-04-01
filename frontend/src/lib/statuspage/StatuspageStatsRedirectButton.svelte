@@ -8,7 +8,7 @@
   }
 </script>
 
-<div class="m-2 ">
+<div class="m-2">
   <button
     on:click={onClick}
     class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"

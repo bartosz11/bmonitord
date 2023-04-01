@@ -18,6 +18,18 @@ public class Statuspage {
     private List<Monitor> monitors;
     @ManyToOne
     private User user;
+    private String logoLink;
+    private String logoRedirect;
+
+    public Statuspage() {
+    }
+
+    public Statuspage(StatuspageCDO cdo, User user) {
+        this.name = cdo.getName();
+        this.user = user;
+        this.logoLink = cdo.getLogoLink();
+        this.logoRedirect = cdo.getLogoRedirect();
+    }
 
     public long getId() {
         return id;
@@ -61,6 +73,24 @@ public class Statuspage {
 
     public Statuspage setUser(User user) {
         this.user = user;
+        return this;
+    }
+
+    public String getLogoLink() {
+        return logoLink;
+    }
+
+    public Statuspage setLogoLink(String logoLink) {
+        this.logoLink = logoLink;
+        return this;
+    }
+
+    public String getLogoRedirect() {
+        return logoRedirect;
+    }
+
+    public Statuspage setLogoRedirect(String logoRedirect) {
+        this.logoRedirect = logoRedirect;
         return this;
     }
 }

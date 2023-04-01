@@ -2,26 +2,30 @@
   import http from "@/http";
   import { error, success } from "@/toastUtil";
   import { closeModal } from "svelte-modals";
-  import { Hint, required, useForm, validators } from "svelte-use-form";
+  import { useForm } from "svelte-use-form";
 
   export let isOpen;
-  export let id;
-  let newName;
+  export let statuspage;
+  let name = statuspage.name;
+  let logoLink = statuspage.logoLink;
+  let logoRedirect = statuspage.logoRedirect;
   function onSubmit(e) {
     e.preventDefault();
     http
-      .patch(`/api/statuspage/${id}/rename`, {
-        name: newName,
+      .patch(`/api/statuspage/${statuspage.id}`, {
+        name: name,
+        logoLink: logoLink,
+        logoRedirect: logoRedirect,
       })
       .then((response) => {
-        success("Successfully renamed statuspage.");
+        success("Successfully edited statuspage.");
         //once again im too lazy to change all the data
         location.reload();
       })
       .catch((err) => {
         error(
           err.response?.data?.errors[0]?.message ??
-            "Something went wrong while renaming statuspage."
+            "Something went wrong while editing statuspage."
         );
       });
   }
@@ -30,30 +34,44 @@
 
 {#if isOpen}
   <div role="dialog" class="modal">
-    <div class="modal-contents">
-      <form use:form on:submit={onSubmit}>
-        <h1>Rename statuspage</h1>
+    <div class="modal-contents w-64">
+      <form use:form on:submit={onSubmit} class="space-y-4">
+        <h1>Edit statuspage</h1>
         <div>
           <input
-            class="input-primary mt-4"
+            class="input-primary w-full"
             type="text"
-            bind:value={newName}
+            bind:value={name}
             placeholder="New name"
-            use:validators={[required]}
             name="newname"
           />
-          <Hint for="newname" on="required" class="hint-primary"
-            >This field is required.</Hint
-          >
         </div>
-        <div class="mt-4">
+        <div>
+          <input
+            type="text"
+            name="logolink"
+            placeholder="Logo URL"
+            bind:value={logoLink}
+            class="input-primary w-full (optional)"
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            name="logoredirect"
+            placeholder="Logo redirect URL (optional)"
+            class="input-primary w-full"
+            bind:value={logoRedirect}
+          />
+        </div>
+        <div>
           <!--button type is specified to stop closing modal on enter-->
-          <button class="btn-danger-primary" type="button" on:click={() => closeModal()}
-            >Cancel</button
+          <button
+            class="btn-danger-primary"
+            type="button"
+            on:click={() => closeModal()}>Cancel</button
           >
-          <button class="btn-ok-primary" disabled={!$form.valid}
-            >Rename</button
-          >
+          <button class="btn-ok-primary" disabled={!$form.valid}>Edit</button>
         </div>
       </form>
     </div>

@@ -2,6 +2,7 @@ package me.bartosz1.monitoring.services;
 
 import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
+import me.bartosz1.monitoring.exceptions.IllegalParameterException;
 import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.repositories.MonitorRepository;
 import me.bartosz1.monitoring.repositories.StatuspageAnnouncementRepository;
@@ -26,8 +27,10 @@ public class StatuspageService {
         this.monitorRepository = monitorRepository;
     }
 
-    public Statuspage createStatuspage(User user, String name, List<Long> monitorIds) {
-        Statuspage statuspage = new Statuspage().setUser(user).setName(name);
+    public Statuspage createStatuspage(User user, StatuspageCDO cdo) throws IllegalParameterException {
+        if (cdo.getName() == null) throw new IllegalParameterException("Name cannot be null.");
+        Statuspage statuspage = new Statuspage(cdo, user);
+        List<Long> monitorIds = cdo.getMonitorIds();
         if (!monitorIds.isEmpty()) {
             List<Monitor> monitors = monitorRepository.findAllById(monitorIds);
             //check access
@@ -110,12 +113,15 @@ public class StatuspageService {
         throw new EntityNotFoundException("Statuspage with ID " + statuspageId + " not found.");
     }
 
-    public Statuspage renameStatuspage(User user, long id, String newName) throws EntityNotFoundException {
+    public Statuspage modifyStatuspage(User user, long id, StatuspageCDO cdo) throws EntityNotFoundException, IllegalParameterException {
+        if (cdo.getName() == null) throw new IllegalParameterException("Name cannot be null.");
         Optional<Statuspage> byId = statuspageRepository.getById(id);
         if (byId.isPresent()) {
             Statuspage statuspage = byId.get();
             if (statuspage.getUser().getId() == user.getId()) {
-                statuspage.setName(newName);
+                statuspage.setLogoLink(cdo.getLogoLink());
+                statuspage.setLogoRedirect(cdo.getLogoRedirect());
+                statuspage.setName(cdo.getName());
                 return statuspageRepository.save(statuspage);
             }
         }

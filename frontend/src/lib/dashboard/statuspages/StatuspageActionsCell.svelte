@@ -5,7 +5,13 @@
   import StatuspageEditModal from "./StatuspageEditModal.svelte";
   import StatuspageMonitorsModal from "./StatuspageMonitorsModal.svelte";
   import { tooltip } from "@svelte-plugins/tooltips";
-  import { Trash, Pencil, Megaphone, Activity, ArrowUpRight } from "phosphor-svelte";
+  import {
+    Trash,
+    Pencil,
+    Megaphone,
+    Activity,
+    ArrowUpRight,
+  } from "phosphor-svelte";
   import { error, info, success } from "@/toastUtil";
   export let row;
   let count = 0;
@@ -30,7 +36,7 @@
   }
 
   function onEditClick() {
-    openModal(StatuspageEditModal, { id: row.id });
+    openModal(StatuspageEditModal, { statuspage: row });
   }
 
   function onAnnouncementClick() {
@@ -44,7 +50,7 @@
     openModal(StatuspageMonitorsModal, { statuspage: row });
   }
 
-  function onRedirectClick() { 
+  function onRedirectClick() {
     window.open(`#/statuspage/${row.id}`, "_blank").focus();
   }
 </script>
@@ -67,7 +73,7 @@
     on:click={onEditClick}
     class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
     use:tooltip={{
-      content: "Rename statuspage",
+      content: "Edit statuspage",
       autoPosition: "true",
       position: "bottom",
     }}

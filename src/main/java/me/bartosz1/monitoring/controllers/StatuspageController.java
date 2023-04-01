@@ -9,10 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/statuspage")
 public class StatuspageController {
@@ -25,15 +21,9 @@ public class StatuspageController {
 
     @RequestMapping(path = "", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> createStatuspage(@AuthenticationPrincipal User user, @RequestParam String name, @RequestParam(required = false) String monitors) {
-        List<Long> ids = new ArrayList<>();
-        if (monitors != null) {
-            String[] idSplit = monitors.split(",");
-            for (String s : idSplit) {
-                ids.add(Long.parseLong(s));
-            }
-        }
-        Statuspage statuspage = statuspageService.createStatuspage(user, name, ids);
+    //TODO: THERE WAS A CHANGE IN API, WILL AFFECT STATUSPAGE CREATE
+    public ResponseEntity<Response> createStatuspage(@AuthenticationPrincipal User user, @RequestBody StatuspageCDO cdo) throws IllegalParameterException {
+        Statuspage statuspage = statuspageService.createStatuspage(user, cdo);
         return new Response(HttpStatus.CREATED).addAdditionalData(statuspage).toResponseEntity();
     }
 
@@ -57,13 +47,10 @@ public class StatuspageController {
         return new Response(HttpStatus.OK).addAdditionalData(statuspageService.getAllStatuspagesByUser(user)).toResponseEntity();
     }
 
-    @RequestMapping(path = "/{id}/rename", method = RequestMethod.PATCH, produces = "application/json")
+    @RequestMapping(path = "/{id}", method = RequestMethod.PATCH, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> renameStatuspage(@AuthenticationPrincipal User user, @PathVariable long id, @RequestBody HashMap<String, String> body) throws EntityNotFoundException, IllegalParameterException {
-        //subject-to-change maybe
-        if (!body.containsKey("name") || body.get("name") == null)
-            throw new IllegalParameterException("Name cannot be null.");
-        Statuspage statuspage = statuspageService.renameStatuspage(user, id, body.get("name"));
+    public ResponseEntity<Response> modifyStatuspage(@AuthenticationPrincipal User user, @PathVariable long id, @RequestBody StatuspageCDO cdo) throws EntityNotFoundException, IllegalParameterException {
+        Statuspage statuspage = statuspageService.modifyStatuspage(user, id, cdo);
         return new Response(HttpStatus.OK).addAdditionalData(statuspage).toResponseEntity();
     }
 
