@@ -8,6 +8,7 @@ import me.bartosz1.monitoring.models.enums.MonitorType;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -36,21 +37,21 @@ public class Monitor {
     private boolean verifyCertificate;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Incident> incidents;
+    private Set<Incident> incidents;
     @JsonIgnore
     @ManyToOne
     private User user;
     @JsonIgnore
     @ManyToMany
-    private List<Notification> notifications;
+    private Set<Notification> notifications;
     @JsonIgnore
     @ManyToMany
-    private List<Statuspage> statuspages;
+    private Set<Statuspage> statuspages;
     @OneToOne(cascade = CascadeType.ALL)
     private Agent agent;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Heartbeat> heartbeats;
+    private Set<Heartbeat> heartbeats;
 
     public Monitor() {
     }
@@ -233,11 +234,11 @@ public class Monitor {
         } else return 0;
     }
 
-    public List<Incident> getIncidents() {
+    public Set<Incident> getIncidents() {
         return incidents;
     }
 
-    public Monitor setIncidents(List<Incident> incidents) {
+    public Monitor setIncidents(Set<Incident> incidents) {
         this.incidents = incidents;
         return this;
     }
@@ -251,20 +252,20 @@ public class Monitor {
         return this;
     }
 
-    public List<Notification> getNotifications() {
+    public Set<Notification> getNotifications() {
         return notifications;
     }
 
-    public Monitor setNotifications(List<Notification> notifications) {
+    public Monitor setNotifications(Set<Notification> notifications) {
         this.notifications = notifications;
         return this;
     }
 
-    public List<Statuspage> getStatuspages() {
+    public Set<Statuspage> getStatuspages() {
         return statuspages;
     }
 
-    public Monitor setStatuspages(List<Statuspage> statuspages) {
+    public Monitor setStatuspages(Set<Statuspage> statuspages) {
         this.statuspages = statuspages;
         return this;
     }
@@ -283,11 +284,11 @@ public class Monitor {
         return Arrays.stream(allowedHttpCodes.split(",")).map(Integer::parseInt).collect(Collectors.toList());
     }
 
-    public List<Heartbeat> getHeartbeats() {
+    public Set<Heartbeat> getHeartbeats() {
         return heartbeats;
     }
 
-    public Monitor setHeartbeats(List<Heartbeat> heartbeats) {
+    public Monitor setHeartbeats(Set<Heartbeat> heartbeats) {
         this.heartbeats = heartbeats;
         return this;
     }

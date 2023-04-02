@@ -5,7 +5,6 @@ import me.bartosz1.monitoring.models.Heartbeat;
 import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.enums.MonitorStatus;
-import me.bartosz1.monitoring.repositories.HeartbeatRepository;
 import me.bartosz1.monitoring.repositories.IncidentRepository;
 import me.bartosz1.monitoring.repositories.MonitorRepository;
 import me.bartosz1.monitoring.services.NotificationSenderService;
@@ -33,19 +32,16 @@ public class MonitorChecker {
     private final MonitorRepository monitorRepository;
     private final NotificationSenderService notificationSenderService;
     private final IncidentRepository incidentRepository;
-    private final HeartbeatRepository heartbeatRepository;
     private final ExecutorService executorService;
     private final ConcurrentHashMap<Long, Integer> retries = new ConcurrentHashMap<>();
 
-    public MonitorChecker(MonitorRepository monitorRepository, NotificationSenderService notificationSenderService, IncidentRepository incidentRepository, HeartbeatRepository heartbeatRepository, @Value("${monitoring.check-thread-pool-size:2}") int checkThreadPoolSize) {
+    public MonitorChecker(MonitorRepository monitorRepository, NotificationSenderService notificationSenderService, IncidentRepository incidentRepository, @Value("${monitoring.check-thread-pool-size:2}") int checkThreadPoolSize) {
         this.monitorRepository = monitorRepository;
         this.notificationSenderService = notificationSenderService;
         this.incidentRepository = incidentRepository;
-        this.heartbeatRepository = heartbeatRepository;
         this.executorService = Executors.newFixedThreadPool(checkThreadPoolSize, new CustomizableThreadFactory("check-pool-"));
     }
 
-    //subject-to-change this fixed delay maybe should be a cron expression
     @Scheduled(fixedDelay = 60000)
     @Transactional
     public void checkMonitors() throws InterruptedException {
@@ -53,25 +49,23 @@ public class MonitorChecker {
         //very brh
         List<Monitor> allMonitors = monitorRepository.findAllMonitors2(monitorRepository.findAllMonitors(monitorRepository.findAllMonitors()));
         List<Monitor> bulkSaveMonitors = new ArrayList<>();
-        List<Heartbeat> bulkSaveHeartbeat = new ArrayList<>();
         //monitors which are not paused
         List<Monitor> active = allMonitors.stream().filter(monitor -> !monitor.isPaused()).toList();
         CountDownLatch latch = new CountDownLatch(active.size());
         active.forEach(monitor -> executorService.execute(() -> {
-            LOGGER.debug("Checking " + monitor.getName() + " ID " + monitor.getId()+" type "+monitor.getType().name());
+            LOGGER.debug("Checking " + monitor.getName() + " ID " + monitor.getId() + " type " + monitor.getType().name());
             //idk i found this somewhere
             TransactionSynchronizationManager.setActualTransactionActive(true);
             Heartbeat hb = monitor.getType().getCheckProvider().check(monitor);
             MonitorStatus currentStatus = hb.getStatus();
             //.getCheckProvider().check has to return a heartbeat but the heartbeat shouldn't always be saved
             if (hb.getMonitor() != null) {
-                LOGGER.debug("Adding new heartbeat for monitor ID "+monitor.getId());
+                LOGGER.debug("Adding new heartbeat for monitor ID " + monitor.getId());
                 monitor.getHeartbeats().add(hb);
-                bulkSaveHeartbeat.add(hb);
             }
             //hb.getStatus(currentStatus) can be null if agent is not installed/5 min since the app start didn't pass
             if (currentStatus != null) {
-                LOGGER.debug("Check provider for ID "+monitor.getId()+" returned "+currentStatus);
+                LOGGER.debug("Check provider for ID " + monitor.getId() + " returned " + currentStatus);
                 if (monitor.getType().applyRetriesLogic()) {
                     if (currentStatus == MonitorStatus.DOWN) {
                         retries.merge(monitor.getId(), 1, Integer::sum);
@@ -93,7 +87,6 @@ public class MonitorChecker {
         latch.await();
         LOGGER.debug("All checks finished, saving");
         monitorRepository.saveAll(bulkSaveMonitors);
-        heartbeatRepository.saveAll(bulkSaveHeartbeat);
         LOGGER.info("Saved monitors.");
     }
 
