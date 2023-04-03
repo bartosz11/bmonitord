@@ -2,11 +2,9 @@ package me.bartosz1.monitoring.services;
 
 import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.exceptions.*;
-import me.bartosz1.monitoring.models.Notification;
 import me.bartosz1.monitoring.models.PasswordMDO;
-import me.bartosz1.monitoring.models.Statuspage;
 import me.bartosz1.monitoring.models.User;
-import me.bartosz1.monitoring.repositories.*;
+import me.bartosz1.monitoring.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,8 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,25 +21,15 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MonitorRepository monitorRepository;
-    private final NotificationRepository notificationRepository;
-    private final IncidentRepository incidentRepository;
-    private final StatuspageRepository statuspageRepository;
-    private final HeartbeatRepository heartbeatRepository;
 
     //Copied from regexr.com/3bfsi
     private final String PASSWORD_VALIDATION_PATTERN = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$";
     @Value("${monitoring.registration-enabled}")
     private boolean registrationEnabled;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, MonitorRepository monitorRepository, NotificationRepository notificationRepository, IncidentRepository incidentRepository, StatuspageRepository statuspageRepository, HeartbeatRepository heartbeatRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.monitorRepository = monitorRepository;
-        this.notificationRepository = notificationRepository;
-        this.incidentRepository = incidentRepository;
-        this.statuspageRepository = statuspageRepository;
-        this.heartbeatRepository = heartbeatRepository;
     }
 
     public User createUserAccount(String username, String password) throws UsernameAlreadyTakenException, InvalidPasswordException, RegistrationDisabledException, IllegalUsernameException {
@@ -63,25 +49,6 @@ public class UserService implements UserDetailsService {
 
     //Just so users can delete their own accounts if they want
     public User deleteUserAccount(User user) {
-        //extracted from MonitorService
-        //TODO: find a better fix
-        userRepository.findById(user.getId()).get().getMonitors().forEach(monitor -> {
-            List<Statuspage> bulkSaveStatuspage = new ArrayList<>();
-            monitor.getStatuspages().forEach(statuspage -> {
-                statuspage.getMonitors().remove(monitor);
-                bulkSaveStatuspage.add(statuspage);
-            });
-            statuspageRepository.saveAll(bulkSaveStatuspage);
-            List<Notification> bulkSaveNotification = new ArrayList<>();
-            monitor.getNotifications().forEach(notification -> {
-                notification.getMonitors().remove(monitor);
-                bulkSaveNotification.add(notification);
-            });
-            notificationRepository.saveAll(bulkSaveNotification);
-            incidentRepository.deleteAllByMonitorId(monitor.getId());
-            heartbeatRepository.deleteAllByMonitorId(monitor.getId());
-            monitorRepository.delete(monitor);
-        });
         userRepository.delete(user);
         return user;
     }

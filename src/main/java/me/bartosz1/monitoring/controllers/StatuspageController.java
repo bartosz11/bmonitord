@@ -21,7 +21,6 @@ public class StatuspageController {
 
     @RequestMapping(path = "", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    //TODO: THERE WAS A CHANGE IN API, WILL AFFECT STATUSPAGE CREATE
     public ResponseEntity<Response> createStatuspage(@AuthenticationPrincipal User user, @RequestBody StatuspageCDO cdo) throws IllegalParameterException {
         Statuspage statuspage = statuspageService.createStatuspage(user, cdo);
         return new Response(HttpStatus.CREATED).addAdditionalData(statuspage).toResponseEntity();

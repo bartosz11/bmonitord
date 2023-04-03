@@ -40,7 +40,8 @@ public class IncidentService {
             if (optionalIncident.isPresent()) {
                 Incident incident = optionalIncident.get();
                 Monitor monitor = incident.getMonitor();
-                if ((user != null && monitor.getUser().getId() == user.getId()) || monitor.isPublished()) return incident;
+                if ((user != null && monitor.getUser().getId() == user.getId()) || monitor.isPublished())
+                    return incident;
             }
         }
         throw new EntityNotFoundException("No incidents found for monitor with ID " + monitorId + ".");
@@ -54,7 +55,8 @@ public class IncidentService {
             if (optionalIncident.isPresent()) {
                 Incident incident = optionalIncident.get();
                 Monitor monitor = incident.getMonitor();
-                if ((user != null && monitor.getUser().getId() == user.getId()) || monitor.isPublished()) return incidentPage;
+                if ((user != null && monitor.getUser().getId() == user.getId()) || monitor.isPublished())
+                    return incidentPage;
             }
         }
         throw new EntityNotFoundException("No incidents found for monitor with ID " + monitorId + ".");

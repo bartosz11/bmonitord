@@ -2,7 +2,7 @@ package me.bartosz1.monitoring.models;
 
 import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "statuspages")
@@ -12,10 +12,10 @@ public class Statuspage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private StatuspageAnnouncement announcement;
     @ManyToMany
-    private List<Monitor> monitors;
+    private Set<Monitor> monitors;
     @ManyToOne
     private User user;
     private String logoLink;
@@ -58,11 +58,11 @@ public class Statuspage {
         return this;
     }
 
-    public List<Monitor> getMonitors() {
+    public Set<Monitor> getMonitors() {
         return monitors;
     }
 
-    public Statuspage setMonitors(List<Monitor> monitors) {
+    public Statuspage setMonitors(Set<Monitor> monitors) {
         this.monitors = monitors;
         return this;
     }

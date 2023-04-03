@@ -3,7 +3,7 @@ package me.bartosz1.monitoring.models;
 import jakarta.persistence.*;
 import me.bartosz1.monitoring.models.enums.NotificationType;
 
-import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -17,7 +17,7 @@ public class Notification {
     private String credentials;
     private NotificationType type;
     @ManyToMany
-    private List<Monitor> monitors;
+    private Set<Monitor> monitors;
     @ManyToOne
     private User user;
 
@@ -67,11 +67,11 @@ public class Notification {
         return this;
     }
 
-    public List<Monitor> getMonitors() {
+    public Set<Monitor> getMonitors() {
         return monitors;
     }
 
-    public Notification setMonitors(List<Monitor> monitors) {
+    public Notification setMonitors(Set<Monitor> monitors) {
         this.monitors = monitors;
         return this;
     }

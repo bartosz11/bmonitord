@@ -5,7 +5,9 @@ import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
 import me.bartosz1.monitoring.exceptions.IllegalParameterException;
 import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.models.enums.MonitorType;
-import me.bartosz1.monitoring.repositories.*;
+import me.bartosz1.monitoring.repositories.MonitorRepository;
+import me.bartosz1.monitoring.repositories.NotificationRepository;
+import me.bartosz1.monitoring.repositories.StatuspageRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -20,15 +22,11 @@ public class MonitorService {
     private final MonitorRepository monitorRepository;
     private final NotificationRepository notificationRepository;
     private final StatuspageRepository statuspageRepository;
-    private final HeartbeatRepository heartbeatRepository;
-    private final IncidentRepository incidentRepository;
 
-    public MonitorService(MonitorRepository monitorRepository, NotificationRepository notificationRepository, StatuspageRepository statuspageRepository, HeartbeatRepository heartbeatRepository, IncidentRepository incidentRepository) {
+    public MonitorService(MonitorRepository monitorRepository, NotificationRepository notificationRepository, StatuspageRepository statuspageRepository) {
         this.monitorRepository = monitorRepository;
         this.notificationRepository = notificationRepository;
         this.statuspageRepository = statuspageRepository;
-        this.heartbeatRepository = heartbeatRepository;
-        this.incidentRepository = incidentRepository;
     }
 
     public Monitor createMonitor(MonitorCDO cdo, User user) {
@@ -55,8 +53,6 @@ public class MonitorService {
                     bulkSaveNotification.add(notification);
                 });
                 notificationRepository.saveAll(bulkSaveNotification);
-                incidentRepository.deleteAllByMonitorId(monitor.getId());
-                heartbeatRepository.deleteAllByMonitorId(monitor.getId());
                 monitorRepository.delete(monitor);
                 return monitor;
             }

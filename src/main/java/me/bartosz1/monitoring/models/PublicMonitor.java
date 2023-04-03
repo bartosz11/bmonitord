@@ -10,6 +10,7 @@ public class PublicMonitor {
     private final boolean paused;
     private final long lastCheck;
     private final float uptime;
+
     public PublicMonitor(Monitor monitor) {
         this.id = monitor.getId();
         this.name = monitor.getName();
@@ -30,6 +31,7 @@ public class PublicMonitor {
     public boolean isPaused() {
         return paused;
     }
+
     public long getLastCheck() {
         return lastCheck;
     }

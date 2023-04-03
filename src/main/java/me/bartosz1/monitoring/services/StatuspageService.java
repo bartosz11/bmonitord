@@ -9,9 +9,7 @@ import me.bartosz1.monitoring.repositories.StatuspageAnnouncementRepository;
 import me.bartosz1.monitoring.repositories.StatuspageRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -34,7 +32,7 @@ public class StatuspageService {
         if (!monitorIds.isEmpty()) {
             List<Monitor> monitors = monitorRepository.findAllById(monitorIds);
             //check access
-            List<Monitor> monitorsAllowed = new ArrayList<>();
+            Set<Monitor> monitorsAllowed = new HashSet<>();
             monitors.forEach(monitor -> {
                 if (monitor.getUser().getId() == user.getId()) {
                     monitor.getStatuspages().add(statuspage);

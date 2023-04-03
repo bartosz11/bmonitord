@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -21,11 +21,11 @@ public class User implements UserDetails {
     private boolean enabled;
     private long lastUpdated;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
-    private List<Monitor> monitors;
+    private Set<Monitor> monitors;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
-    private List<Statuspage> statuspages;
+    private Set<Statuspage> statuspages;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
-    private List<Notification> notifications;
+    private Set<Notification> notifications;
 
     @Override
     public String getPassword() {
@@ -78,11 +78,11 @@ public class User implements UserDetails {
         return null;
     }
 
-    public List<Monitor> getMonitors() {
+    public Set<Monitor> getMonitors() {
         return monitors;
     }
 
-    public User setMonitors(List<Monitor> monitors) {
+    public User setMonitors(Set<Monitor> monitors) {
         this.monitors = monitors;
         return this;
     }
@@ -91,20 +91,20 @@ public class User implements UserDetails {
         return id;
     }
 
-    public List<Notification> getNotifications() {
+    public Set<Notification> getNotifications() {
         return notifications;
     }
 
-    public User setNotifications(List<Notification> notifications) {
+    public User setNotifications(Set<Notification> notifications) {
         this.notifications = notifications;
         return this;
     }
 
-    public List<Statuspage> getStatuspages() {
+    public Set<Statuspage> getStatuspages() {
         return statuspages;
     }
 
-    public User setStatuspages(List<Statuspage> statuspages) {
+    public User setStatuspages(Set<Statuspage> statuspages) {
         this.statuspages = statuspages;
         return this;
     }

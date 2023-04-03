@@ -1,5 +1,6 @@
 src/main/resources/application.yml
 src/main/resources/static/**
+src/main/resources/migration/**/R__sample_data.sql
 notes.txt
 docker-compose.yml
 test.db
