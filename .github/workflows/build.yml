@@ -22,6 +22,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      # I guess using this action to set up docker is okay
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        if: ${{ matrix.profiles != 'testing-shared,testing-sqlite' }}
       - name: Set gradlew permissions
         run: chmod u+x gradlew
       - name: Run tests
