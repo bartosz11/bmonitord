@@ -24,10 +24,8 @@ jobs:
           distribution: 'temurin'
       - name: Set gradlew permissions
         run: chmod u+x gradlew
-      - name: Export profiles
-        run: export spring_profiles_active=${{ matrix.profiles }}
       - name: Run tests
-        run: ./gradlew test
+        run: ./gradlew test --no-daemon -Dspring.profiles.active=${{ matrix.profiles }}
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -64,7 +62,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: bootJar
+          arguments: bootJar --no-daemon
       - uses: actions/upload-artifact@v2
         with:
           name: bmonitord.jar
