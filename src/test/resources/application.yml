@@ -14,14 +14,24 @@ spring:
     url: "jdbc:tc:postgresql:15:///"
   flyway:
     locations: "migration/test,migration/postgresql"
-#MariaDB specific settings
+#MariaDB 10.11 specific settings
 ---
 spring:
   config:
     activate:
       on-profile: testing-mariadb
   datasource:
-    url: "jdbc:tc:mariadb:latest:///"
+    url: "jdbc:tc:mariadb:10.11:///"
+  flyway:
+    locations: "migration/test,migration/mysql"
+#MySQL 8 specific settings
+---
+spring:
+  config:
+    activate:
+      on-profile: testing-mysql
+  datasource:
+    url: "jdbc:tc:mysql:8.0:///"
   flyway:
     locations: "migration/test,migration/mysql"
 #SQLite specific settings

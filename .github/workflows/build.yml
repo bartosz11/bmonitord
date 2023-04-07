@@ -12,7 +12,7 @@ jobs:
   test:
     strategy:
       matrix:
-        profiles: [ "testing-shared,testing-sqlite", "testing-shared,testing-mariadb", "testing-shared,testing-postgresql" ]
+        profiles: [ "testing-shared,testing-sqlite", "testing-shared,testing-mariadb", "testing-shared,testing-postgresql", "testing-shared,testing-mysql" ]
     runs-on: ubuntu-latest
     steps:
       - name: Get source code
