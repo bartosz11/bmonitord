@@ -45,7 +45,6 @@ dependencies {
     testImplementation 'org.testcontainers:mysql'
     testImplementation 'org.testcontainers:mariadb'
     testImplementation 'org.testcontainers:postgresql'
-    testImplementation "com.icegreen:greenmail-junit5:2.0.0"
 }
 
 tasks.named('test') {
