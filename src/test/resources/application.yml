@@ -1,0 +1,108 @@
+#Always add testing-shared
+#Dependent on DB: testing-postgresql, testing-mariadb, testing-sqlite
+#spring:
+#  profiles:
+#    active: testing-shared,testing-mariadb
+
+#PostgreSQL specific settings
+---
+spring:
+  config:
+    activate:
+      on-profile: testing-postgresql
+  datasource:
+    url: "jdbc:tc:postgresql:15:///"
+  flyway:
+    locations: "migration/test,migration/postgresql"
+#MariaDB specific settings
+---
+spring:
+  config:
+    activate:
+      on-profile: testing-mariadb
+  datasource:
+    url: "jdbc:tc:mariadb:latest:///"
+  flyway:
+    locations: "migration/test,migration/mysql"
+#SQLite specific settings
+---
+spring:
+  config:
+    activate:
+      on-profile: testing-sqlite
+  database-platform: org.hibernate.community.dialect.SQLiteDialect
+  datasource:
+    url: "jdbc:sqlite:test.db"
+    hikari:
+      maximum-pool-size: 1
+  flyway:
+    locations: "migration/test,migration/sqlite"
+
+#Shared settings
+---
+spring:
+  config:
+    activate:
+      on-profile: testing-shared
+  mail:
+    host: 127.0.0.1
+    port: 3025
+    username: bmonitord-test
+    password: Test1234
+    protocol: smtp
+    properties:
+      mail.smtp.starttls.enable: true
+      mail.smtp.auth: true
+      mail.smtp.from: bmonitord-test@localhost
+    default-encoding: UTF-8
+    test-connection: false
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    baselineOnMigrate: true
+  datasource:
+    username: ""
+    password: ""
+
+monitoring:
+  production: true
+  secure-cookies: false
+  jwt:
+    secret: "bmonitord-tests"
+    issuer: "bmonitord"
+  timezone: "Europe/Warsaw"
+  registration-enabled: true
+  check-thread-pool-size: 1
+  scheduling:
+    enable: false
+
+server:
+  compression-enabled: true
+  compression:
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
+    min-response-size: 1024
+  http2:
+    enabled: true
+
+#Logging
+logging:
+  level:
+    org.hibernate: info
+    org.springframework: info
+    root: debug
+    me.bartosz1: info
+
+#Spring Boot Actuator setup
+management:
+  endpoints:
+    web.base-path: /app
+  endpoint:
+    health:
+      show-details: always
+  health:
+    diskSpace:
+      enabled: false
+    ping:
+      enabled: false

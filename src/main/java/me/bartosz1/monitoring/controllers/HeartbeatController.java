@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+
 @RestController
 @RequestMapping("/api/heartbeat")
 public class HeartbeatController {
@@ -48,13 +50,14 @@ public class HeartbeatController {
 
     @RequestMapping(value = "/{monitorId}/timerange", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Response> findHeartbeatPageByMonitorIdAndTimerange(@PathVariable long monitorId, Pageable pageRequest, @AuthenticationPrincipal User user, @RequestParam long start, @RequestParam(required = false) long end) throws IllegalParameterException, EntityNotFoundException {
-        //i hope this makes enough sense
-        if (end != 0 && end < start)
+    public ResponseEntity<Response> findHeartbeatPageByMonitorIdAndTimerange(@PathVariable long monitorId, Pageable pageRequest, @AuthenticationPrincipal User user, @RequestParam long start, @RequestParam(required = false) Long end) throws IllegalParameterException, EntityNotFoundException {
+        //I hope this makes enough sense
+        if (end != null && end != 0 && end < start)
             throw new IllegalParameterException("End timestamp cannot be earlier than start timestamp.");
         if (pageRequest.getPageNumber() < 0 || pageRequest.getPageSize() < 5 || pageRequest.getPageSize() > 50)
             throw new IllegalParameterException("Page index must be greater than 0. Page size must fit in range 5-50.");
-        Page<Heartbeat> heartbeatPage = heartbeatService.findHeartbeatPageByMonitorIdAndTimestampRange(monitorId, pageRequest, user, start, end);
+        long usingEnd = end == null ? Instant.now().getEpochSecond() : end;
+        Page<Heartbeat> heartbeatPage = heartbeatService.findHeartbeatPageByMonitorIdAndTimestampRange(monitorId, pageRequest, user, start, usingEnd);
         return new Response(HttpStatus.OK).addAdditionalData(heartbeatPage).toResponseEntity();
     }
 }

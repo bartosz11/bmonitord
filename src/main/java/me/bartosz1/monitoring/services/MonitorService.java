@@ -72,7 +72,7 @@ public class MonitorService {
     }
 
     public Iterable<Monitor> getAllMonitorsByUser(User user) {
-        return monitorRepository.findAllByUser(user);
+        return monitorRepository.findAllByUserId(user.getId());
     }
 
     public Monitor renameMonitor(long id, String name, User user) throws EntityNotFoundException {

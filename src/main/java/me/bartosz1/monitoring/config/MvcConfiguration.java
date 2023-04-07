@@ -1,5 +1,6 @@
-package me.bartosz1.monitoring;
+package me.bartosz1.monitoring.config;
 
+import me.bartosz1.monitoring.LoggerInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

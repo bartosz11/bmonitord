@@ -76,7 +76,7 @@ public class StatuspageService {
     }
 
     public Iterable<Statuspage> getAllStatuspagesByUser(User user) {
-        return statuspageRepository.findAllByUser(user);
+        return statuspageRepository.findAllByUserId(user.getId());
     }
 
     public StatuspageAnnouncement addAnnouncement(User user, StatuspageAnnouncementCDO cdo, long pageId) throws EntityNotFoundException {

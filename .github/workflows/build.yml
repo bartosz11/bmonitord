@@ -1,4 +1,4 @@
-name: Build JAR and Docker image
+name: Run tests, build JAR and Docker image
 
 on:
   push:
@@ -41,10 +41,16 @@ jobs:
         run: mkdir -p src/main/resources/static
       - name: Move frontend files
         run: mv frontend/dist/* src/main/resources/static/
+      - name: Run tests against SQLite
+        run: ./gradlew test -Dspring.profiles.active=testing-shared,testing-sqlite
+      - name: Run tests against MariaDB
+        run: ./gradlew test -Dspring.profiles.active=testing-shared,testing-mariadb
+      - name: Run tests against PostgreSQL
+        run: ./gradlew test -Dspring.profiles.active=testing-shared,testing-postgresql
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: bootJar --no-daemon
+          arguments: bootJar
       - uses: actions/upload-artifact@v2
         with:
           name: bmonitord.jar

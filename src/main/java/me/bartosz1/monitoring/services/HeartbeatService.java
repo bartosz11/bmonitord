@@ -29,7 +29,7 @@ public class HeartbeatService {
     }
 
     public Heartbeat findLastByMonitorId(long monitorId, User user) throws EntityNotFoundException {
-        Page<Heartbeat> heartbeats = heartbeatRepository.findByMonitorId(monitorId, PageRequest.of(0, 1, Sort.Direction.DESC));
+        Page<Heartbeat> heartbeats = heartbeatRepository.findByMonitorId(monitorId, PageRequest.of(0, 1, Sort.Direction.DESC, "timestamp"));
         if (!heartbeats.isEmpty()) {
             Optional<Heartbeat> optionalHeartbeat = heartbeats.get().findFirst();
             if (optionalHeartbeat.isPresent()) {
