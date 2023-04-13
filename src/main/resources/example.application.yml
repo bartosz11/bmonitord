@@ -61,11 +61,17 @@ monitoring:
   registration-enabled: true
   #Amount of monitors that can be checked simultaneously
   check-thread-pool-size: 2
+  prune:
+    #How old an incident/heartbeat object needs to be before automatic deletion, in days
+    #you might want to set this to lower value if host's cpu is weak and you're monitoring lots of resources for alert purposes only
+    age: 30
+    #delay between task runs in seconds, note that the task always runs on app startup
+    #86400 seconds = 1 day is default, 43200 = 12 hrs, 21600 = 6 hrs
+    delay: 86400
 
 server:
   #You can change port here if you need to
   port: 8080
-  
   #You don't need to touch lines below
   compression-enabled: true
   compression:

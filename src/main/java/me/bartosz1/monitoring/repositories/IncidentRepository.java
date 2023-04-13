@@ -11,4 +11,8 @@ public interface IncidentRepository extends JpaRepository<Incident, Long> {
 
     Page<Incident> findByMonitorIdOrderByStartTimestampDesc(long monitorId, Pageable pageable);
 
+    Iterable<Incident> findAllByStartTimestampLessThan(long startTimestamp);
+
+    void deleteAllByMonitorIsNull();
+
 }
