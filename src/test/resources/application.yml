@@ -2,7 +2,7 @@
 #Dependent on DB: testing-postgresql, testing-mariadb, testing-sqlite
 #spring:
 #  profiles:
-#    active: testing-shared,testing-mariadb
+#    active: testing-shared,testing-sqlite
 
 #PostgreSQL specific settings
 ---
