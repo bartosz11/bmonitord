@@ -1,4 +1,4 @@
-package me.bartosz1.monitoring;
+package me.bartosz1.monitoring.tasks;
 
 import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.models.Heartbeat;
@@ -26,16 +26,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
-public class MonitorChecker {
+public class CheckMonitorsTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MonitorChecker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CheckMonitorsTask.class);
     private final MonitorRepository monitorRepository;
     private final NotificationSenderService notificationSenderService;
     private final IncidentRepository incidentRepository;
     private final ExecutorService executorService;
     private final ConcurrentHashMap<Long, Integer> retries = new ConcurrentHashMap<>();
 
-    public MonitorChecker(MonitorRepository monitorRepository, NotificationSenderService notificationSenderService, IncidentRepository incidentRepository, @Value("${monitoring.check-thread-pool-size:2}") int checkThreadPoolSize) {
+    public CheckMonitorsTask(MonitorRepository monitorRepository, NotificationSenderService notificationSenderService, IncidentRepository incidentRepository, @Value("${monitoring.check-thread-pool-size:2}") int checkThreadPoolSize) {
         this.monitorRepository = monitorRepository;
         this.notificationSenderService = notificationSenderService;
         this.incidentRepository = incidentRepository;
