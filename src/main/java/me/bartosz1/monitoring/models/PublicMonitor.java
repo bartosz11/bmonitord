@@ -9,7 +9,7 @@ public class PublicMonitor {
     private final MonitorStatus lastStatus;
     private final boolean paused;
     private final long lastCheck;
-    private final float uptime;
+    private final double uptime;
 
     public PublicMonitor(Monitor monitor) {
         this.id = monitor.getId();
@@ -40,7 +40,7 @@ public class PublicMonitor {
         return id;
     }
 
-    public float getUptime() {
+    public double getUptime() {
         return uptime;
     }
 }

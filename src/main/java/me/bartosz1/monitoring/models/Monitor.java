@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import me.bartosz1.monitoring.models.enums.MonitorStatus;
 import me.bartosz1.monitoring.models.enums.MonitorType;
 
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +53,10 @@ public class Monitor {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Heartbeat> heartbeats;
+
+    @Transient
+    @JsonIgnore
+    public final DecimalFormat UPTIME_FORMAT = new DecimalFormat("##.#####");
 
     public Monitor() {
     }
@@ -227,10 +232,11 @@ public class Monitor {
         return this;
     }
 
-    public float getUptimePercent() {
+    public double getUptimePercent() {
         if (!(checksUp + checksDown == 0)) {
-            float i = (float) checksUp / (checksUp + checksDown);
-            return i * 100;
+            double i = (double) checksUp / (checksUp + checksDown);
+            double percent = i * 100;
+            return Double.parseDouble(UPTIME_FORMAT.format(percent));
         } else return 0;
     }
 
