@@ -21,7 +21,7 @@
   }
 </script>
 
-<div class="card">
+<div class="card w-fit">
   <span>Log out everywhere</span>
   <div>
     <button class="btn-warning-primary mt-3" on:click={onClick}>

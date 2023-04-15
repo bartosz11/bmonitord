@@ -11,7 +11,7 @@
   });
 </script>
 
-<div class="card">
+<div class="card w-fit">
   <p>User info</p>
   {#await fetchData}
     <p>Loading...</p>

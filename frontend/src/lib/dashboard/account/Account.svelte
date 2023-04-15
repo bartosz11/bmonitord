@@ -6,7 +6,7 @@
   import UserInfoCard from "./UserInfoCard.svelte";
 </script>
 
-<div class="flex flex-col md:flex-row md:space-x-8 mt-8 ml-8">
+<div class="flex flex-col md:flex-row gap-8 mt-8 ml-8">
   <UserInfoCard />
   <ChangePasswordForm />
   <ChangeUsernameForm />

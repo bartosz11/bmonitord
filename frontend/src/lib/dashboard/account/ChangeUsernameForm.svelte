@@ -24,7 +24,7 @@
   }
 </script>
 
-<div class="card">
+<div class="card w-fit">
   <span>Change username</span>
   <form use:form on:submit={onSubmit}>
     <div class="my-3">

@@ -26,7 +26,7 @@
   }
 </script>
 
-<div class="card">
+<div class="card w-fit">
   <span>Delete account (click 2 times)</span>
   <div>
     <button class="btn-danger-primary mt-3" on:click={onClick}>

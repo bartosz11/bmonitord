@@ -105,7 +105,7 @@ public class MonitorService {
             Monitor monitor = optionalMonitor.get();
             if (monitor.getUser().getId() == user.getId()) {
                 if (!monitor.getStatuspages().isEmpty() && !publish)
-                    throw new IllegalParameterException("Monitors can't be unpublished when assigned to any statuspage.");
+                    throw new IllegalParameterException("Monitors can't be made private when assigned to a statuspage.");
                 monitor.setPublished(publish);
                 return monitorRepository.save(monitor);
             }

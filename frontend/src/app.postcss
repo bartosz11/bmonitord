@@ -40,20 +40,16 @@ body {
   @apply bg-yellow-700 hover:bg-yellow-800 px-3 py-1 rounded-md;
 }
 
-.h-nav {
-  height: 10vh;
-}
-
 .nav-element {
-  @apply my-2 ml-8 bg-none border-transparent border-b-2 hover:border-amber-500 w-fit;
-}
-/* for nav elements - underlines the current active route on navbar with orange-500*/
-.active {
-  @apply border-orange-500;
+  @apply px-4 py-2 bg-none border-transparent border-b-2 hover:border-amber-500;
 }
 
-.h-view {
-  height: 90vh;
+.nav-element-mobile {
+  @apply px-4 py-2 bg-none border-transparent;
+}
+/* for non-mobile nav elements - underlines the current active route on navbar with orange-500 */
+.active {
+  @apply border-orange-500 font-medium;
 }
 
 .card {

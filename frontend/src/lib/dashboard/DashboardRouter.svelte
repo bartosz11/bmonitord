@@ -53,7 +53,7 @@
 {#if routesAsArray.includes($location)}
   <Navbar />
 {/if}
-<div class="h-view relative">
+<div class="relative">
   <Router {prefix} {routes} />
 </div>
 
