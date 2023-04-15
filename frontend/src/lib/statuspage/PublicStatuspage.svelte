@@ -122,7 +122,7 @@
   >
     <div>
       <p>
-        proudly powered by <a href="https://github.com/bartosz11/monitoring"
+        proudly powered by <a href="https://github.com/bartosz11/bmonitord"
           ><span
             class="underline decoration-wavy underline-offset-4 decoration-sky-500"
             >bmonitord</span
