@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@svelte-plugins/tooltips": "^0.1.6",
-    "@sveltejs/vite-plugin-svelte": "^2.0.3",
+    "@sveltejs/vite-plugin-svelte": "^2.0.4",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.14",
     "postcss-load-config": "^4.0.1",
