@@ -1,23 +1,22 @@
 <script>
   import http from "@/http";
-  import { marked } from "marked";
-  import { location } from "svelte-spa-router";
+  import { timeout } from "@/timeoutStore";
+  import { error, info } from "@/toastUtil";
   import DOMPurify from "dompurify";
+  import { marked } from "marked";
+  import { Info, Warning, WarningCircle } from "phosphor-svelte";
+  import { onMount } from "svelte";
+  import SvelteTable from "svelte-table";
   import MonitorStatusCell from "../dashboard/monitors/MonitorStatusCell.svelte";
   import StatuspageStatsRedirectButton from "./StatuspageStatsRedirectButton.svelte";
-  import SvelteTable from "svelte-table";
-  import { Info, Warning, WarningCircle } from "phosphor-svelte";
-  import { error, info } from "@/toastUtil";
-  import { onMount } from "svelte";
-  import { timeout } from "@/timeoutStore";
   export let params;
   let conditionalClasses;
   let data;
-
+  let id = params.id ?? window.location.host;
   function getData() {
     info("Fetching data...");
     http
-      .get(`/api/statuspage/${params.id}/public`)
+      .get(`/api/statuspage/${id}/public`)
       .then((response) => {
         switch (response.data.data.announcement?.type) {
           case "INFO":

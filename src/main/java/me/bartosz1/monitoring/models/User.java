@@ -26,6 +26,8 @@ public class User implements UserDetails {
     private Set<Statuspage> statuspages;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private Set<Notification> notifications;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
+    private Set<WhiteLabelDomain> whiteLabelDomains;
 
     @Override
     public String getPassword() {
@@ -115,6 +117,15 @@ public class User implements UserDetails {
 
     public User setLastUpdated(long lastUpdated) {
         this.lastUpdated = lastUpdated;
+        return this;
+    }
+
+    public Set<WhiteLabelDomain> getWhiteLabelDomains() {
+        return whiteLabelDomains;
+    }
+
+    public User setWhiteLabelDomains(Set<WhiteLabelDomain> whiteLabelDomains) {
+        this.whiteLabelDomains = whiteLabelDomains;
         return this;
     }
 }

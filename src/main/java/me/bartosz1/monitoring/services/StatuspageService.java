@@ -7,6 +7,7 @@ import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.repositories.MonitorRepository;
 import me.bartosz1.monitoring.repositories.StatuspageAnnouncementRepository;
 import me.bartosz1.monitoring.repositories.StatuspageRepository;
+import me.bartosz1.monitoring.repositories.WhiteLabelDomainRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -18,11 +19,13 @@ public class StatuspageService {
     private final StatuspageRepository statuspageRepository;
     private final StatuspageAnnouncementRepository statuspageAnnouncementRepository;
     private final MonitorRepository monitorRepository;
+    private final WhiteLabelDomainRepository whiteLabelDomainRepository;
 
-    public StatuspageService(StatuspageRepository statuspageRepository, StatuspageAnnouncementRepository statuspageAnnouncementRepository, MonitorRepository monitorRepository) {
+    public StatuspageService(StatuspageRepository statuspageRepository, StatuspageAnnouncementRepository statuspageAnnouncementRepository, MonitorRepository monitorRepository, WhiteLabelDomainRepository whiteLabelDomainRepository) {
         this.statuspageRepository = statuspageRepository;
         this.statuspageAnnouncementRepository = statuspageAnnouncementRepository;
         this.monitorRepository = monitorRepository;
+        this.whiteLabelDomainRepository = whiteLabelDomainRepository;
     }
 
     public Statuspage createStatuspage(User user, StatuspageCDO cdo) throws IllegalParameterException {
@@ -102,13 +105,15 @@ public class StatuspageService {
             Statuspage statuspage = byId.get();
             if (statuspage.getUser().getId() == user.getId()) {
                 StatuspageAnnouncement announcement = statuspage.getAnnouncement();
-                statuspage.setAnnouncement(null);
-                statuspageRepository.save(statuspage);
-                statuspageAnnouncementRepository.delete(announcement);
-                return announcement;
+                if (announcement != null) {
+                    statuspage.setAnnouncement(null);
+                    statuspageRepository.save(statuspage);
+                    statuspageAnnouncementRepository.delete(announcement);
+                    return announcement;
+                }
             }
         }
-        throw new EntityNotFoundException("Statuspage with ID " + statuspageId + " not found.");
+        throw new EntityNotFoundException("Statuspage with ID " + statuspageId + " not found, or it doesn't have an announcement.");
     }
 
     public Statuspage modifyStatuspage(User user, long id, StatuspageCDO cdo) throws EntityNotFoundException, IllegalParameterException {
@@ -126,11 +131,62 @@ public class StatuspageService {
         throw new EntityNotFoundException("Statuspage with ID " + id + " not found.");
     }
 
-    public PublicStatuspage getStatuspageAsPublicObject(long id) throws EntityNotFoundException {
-        Optional<Statuspage> byId = statuspageRepository.findById(id);
-        if (byId.isPresent()) {
-            Statuspage statuspage = byId.get();
-            return new PublicStatuspage(statuspage);
+    public Statuspage bindDomainToStatuspage(long statuspageId, long domainId, User user) throws EntityNotFoundException {
+        Optional<WhiteLabelDomain> optionalDomain = whiteLabelDomainRepository.findById(domainId);
+        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(statuspageId);
+        if (optionalStatuspage.isPresent() && optionalDomain.isPresent()) {
+            WhiteLabelDomain whiteLabelDomain = optionalDomain.get();
+            Statuspage statuspage = optionalStatuspage.get();
+            long userId = user.getId();
+            if (whiteLabelDomain.getUser().getId() == userId && statuspage.getUser().getId() == userId) {
+                statuspage.setWhiteLabelDomain(whiteLabelDomain);
+                whiteLabelDomain.setStatuspage(statuspage);
+                statuspageRepository.save(statuspage);
+                whiteLabelDomainRepository.save(whiteLabelDomain);
+                return statuspage;
+            }
+        }
+        throw new EntityNotFoundException("Statuspage or domain with given ID not found.");
+    }
+
+    public Statuspage unbindDomainToStatuspage(long statuspageId, User user) throws EntityNotFoundException {
+        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(statuspageId);
+        if (optionalStatuspage.isPresent()) {
+            Statuspage statuspage = optionalStatuspage.get();
+            WhiteLabelDomain whiteLabelDomain = statuspage.getWhiteLabelDomain();
+            long userId = user.getId();
+            if ((whiteLabelDomain != null && whiteLabelDomain.getUser().getId() == userId) && statuspage.getUser().getId() == userId) {
+                statuspage.setWhiteLabelDomain(null);
+                whiteLabelDomain.setStatuspage(null);
+                statuspageRepository.save(statuspage);
+                whiteLabelDomainRepository.save(whiteLabelDomain);
+                return statuspage;
+            }
+        }
+        throw new EntityNotFoundException("Statuspage with given ID not found, or it doesn't have a white label domain.");
+    }
+
+    public PublicStatuspage getStatuspageAsPublicObject(String id) throws EntityNotFoundException {
+        try {
+            long idLong = Long.parseLong(id);
+            Optional<Statuspage> byId = statuspageRepository.findById(idLong);
+            if (byId.isPresent()) {
+                Statuspage statuspage = byId.get();
+                return new PublicStatuspage(statuspage);
+            }
+        } catch (NumberFormatException e) {
+            Optional<WhiteLabelDomain> byDomain = whiteLabelDomainRepository.findByDomain(id);
+            if (byDomain.isPresent()) {
+                WhiteLabelDomain whiteLabelDomain = byDomain.get();
+                if (whiteLabelDomain.getStatuspage() != null) {
+                    long idLong = whiteLabelDomain.getStatuspage().getId();
+                    Optional<Statuspage> byId = statuspageRepository.findById(idLong);
+                    if (byId.isPresent()) {
+                        Statuspage statuspage = byId.get();
+                        return new PublicStatuspage(statuspage);
+                    }
+                }
+            }
         }
         throw new EntityNotFoundException("Statuspage with ID " + id + " not found.");
     }

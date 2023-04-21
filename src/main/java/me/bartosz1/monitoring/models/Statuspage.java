@@ -20,6 +20,8 @@ public class Statuspage {
     private User user;
     private String logoLink;
     private String logoRedirect;
+    @OneToOne
+    private WhiteLabelDomain whiteLabelDomain;
 
     public Statuspage() {
     }
@@ -91,6 +93,15 @@ public class Statuspage {
 
     public Statuspage setLogoRedirect(String logoRedirect) {
         this.logoRedirect = logoRedirect;
+        return this;
+    }
+
+    public WhiteLabelDomain getWhiteLabelDomain() {
+        return whiteLabelDomain;
+    }
+
+    public Statuspage setWhiteLabelDomain(WhiteLabelDomain whiteLabelDomain) {
+        this.whiteLabelDomain = whiteLabelDomain;
         return this;
     }
 }
