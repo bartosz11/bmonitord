@@ -1,7 +1,7 @@
 #Always add testing-shared
 #Dependent on DB: testing-postgresql, testing-mariadb, testing-sqlite
 #spring:
-#  profiles:
+# profiles:
 #    active: testing-shared,testing-sqlite
 
 #PostgreSQL specific settings
@@ -78,6 +78,7 @@ spring:
 
 monitoring:
   production: true
+  domain-origin: localhost:8080
   secure-cookies: false
   jwt:
     secret: "bmonitord-tests"
