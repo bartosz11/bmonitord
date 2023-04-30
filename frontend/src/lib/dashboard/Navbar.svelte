@@ -27,6 +27,7 @@
             <button class="nav-element" on:click={() => push("/dashboard/monitors")} use:active={"/dashboard/monitors"}>Monitors</button>
             <button class="nav-element" on:click={() => push("/dashboard/notifications")} use:active={"/dashboard/notifications"}>Notifications</button>
             <button class="nav-element" on:click={() => push("/dashboard/statuspages")} use:active={"/dashboard/statuspages"}>Statuspages</button>
+            <button class="nav-element" on:click={() => push("/dashboard/domains")} use:active={"/dashboard/domains"}>Domains</button>
             <button class="nav-element" on:click={() => push("/dashboard/account")} use:active={"/dashboard/account"}>Account</button>
             <button class="nav-element" on:click={() => push("/auth/logout")}>Log out</button>
         </nav>
@@ -42,6 +43,9 @@
         </div>
         <div class="nav-element-mobile">
           <button on:click={() => push("/dashboard/statuspages")}>Statuspages</button>
+        </div>
+        <div class="nav-element-mobile">
+          <button on:click={() => push("/dashboard/domains")}>Domains</button>
         </div>
         <div class="nav-element-mobile">
           <button on:click={() => push("/dashboard/account")}>Account</button>

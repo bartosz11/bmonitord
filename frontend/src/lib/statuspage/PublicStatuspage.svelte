@@ -14,7 +14,7 @@
   let data;
   let id = params.id ?? window.location.host;
   function getData() {
-    info("Fetching data...");
+    info("Fetching data...", 2000);
     http
       .get(`/api/statuspage/${id}/public`)
       .then((response) => {
