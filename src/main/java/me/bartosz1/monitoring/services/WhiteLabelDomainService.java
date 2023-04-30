@@ -1,6 +1,7 @@
 package me.bartosz1.monitoring.services;
 
 import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
+import me.bartosz1.monitoring.models.Statuspage;
 import me.bartosz1.monitoring.models.User;
 import me.bartosz1.monitoring.models.WhiteLabelDomain;
 import me.bartosz1.monitoring.models.WhiteLabelDomainCDO;
@@ -31,8 +32,10 @@ public class WhiteLabelDomainService {
         if (byId.isPresent()) {
             WhiteLabelDomain whiteLabelDomain = byId.get();
             if (whiteLabelDomain.getUser().getId() == user.getId()) {
-                //whiteLabelDomain.getStatuspage().setWhiteLabelDomain(null);
+                Statuspage statuspage = whiteLabelDomain.getStatuspage();
+                if (statuspage != null) statuspage.setWhiteLabelDomain(null);
                 whiteLabelDomainRepository.delete(whiteLabelDomain);
+                return whiteLabelDomain;
             }
         }
         throw new EntityNotFoundException("White label domain with ID " + id + " not found.");

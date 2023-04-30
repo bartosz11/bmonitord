@@ -7,17 +7,26 @@ INSERT INTO users (username, password, enabled, last_updated) VALUES ('disableda
 -- ^ disabledaccount:Test1234 id 2
 -- users section end
 
+--white label domains section start
+INSERT INTO white_label_domains (name, domain, user_id, statuspage_id)
+  VALUES ('Test white label domain', 'bmonitord-test1.example.com', 1, NULL);
+-- ^ id: 1 bound to 'testuser'
+INSERT INTO white_label_domains (name, domain, user_id, statuspage_id)
+  VALUES ('Another test domain', 'bmonitord-test2.example.com', 1, NULL);
+-- ^ id: 2 bound to 'testuser'
+--white label domains section end
 
 -- statuspages and announcements sections start
-INSERT INTO statuspages (name, logo_link, logo_redirect, announcement_id, user_id)
- VALUES ('Test statuspage', 'https://google.com/favicon.ico', 'https://google.com', NULL, 1);
+INSERT INTO statuspages (name, logo_link, logo_redirect, announcement_id, user_id, white_label_domain_id)
+ VALUES ('Test statuspage', 'https://google.com/favicon.ico', 'https://google.com', NULL, 1, NULL);
 -- ^ id: 1 bound to 'testuser'
 INSERT INTO statuspage_announcements (title, type, content, statuspage_id)
  VALUES ('Example announcement', 1, 'Example announcement content goes here', 1);
-UPDATE statuspages SET announcement_id = 1 WHERE id = 1;
--- ^ id: 1 bound to statuspage id 1 'Test statuspage'
-INSERT INTO statuspages (name, logo_link, logo_redirect, announcement_id, user_id)
- VALUES ('Blank statuspage', NULL, NULL, NULL, 1);
+UPDATE statuspages SET announcement_id = 1, white_label_domain_id = 1 WHERE id = 1;
+UPDATE white_label_domains SET statuspage_id = 1 WHERE id = 1;
+-- ^ id: 1 bound to statuspage id 1 'Test statuspage', bind domain ID 1 to statuspage ID 1
+INSERT INTO statuspages (name, logo_link, logo_redirect, announcement_id, user_id, white_label_domain_id)
+ VALUES ('Blank statuspage', NULL, NULL, NULL, 1, NULL);
 -- ^ id:2 bound to 'testuser'
 -- statuspages and announcements section end
 

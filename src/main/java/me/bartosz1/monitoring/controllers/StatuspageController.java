@@ -76,7 +76,7 @@ public class StatuspageController {
 
     @RequestMapping(path = "/{statuspageId}/domain/{domainId}", method = RequestMethod.PATCH, produces = "application/json")
     @ResponseBody
-    private ResponseEntity<Response> bindDomainToStatuspage(@PathVariable long statuspageId, @PathVariable long domainId, @AuthenticationPrincipal User user) throws EntityNotFoundException {
+    private ResponseEntity<Response> bindDomainToStatuspage(@PathVariable long statuspageId, @PathVariable long domainId, @AuthenticationPrincipal User user) throws EntityNotFoundException, IllegalParameterException {
         return new Response(HttpStatus.OK).addAdditionalData(statuspageService.bindDomainToStatuspage(statuspageId, domainId, user)).toResponseEntity();
     }
 

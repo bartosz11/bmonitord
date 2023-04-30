@@ -131,7 +131,7 @@ public class StatuspageService {
         throw new EntityNotFoundException("Statuspage with ID " + id + " not found.");
     }
 
-    public Statuspage bindDomainToStatuspage(long statuspageId, long domainId, User user) throws EntityNotFoundException {
+    public Statuspage bindDomainToStatuspage(long statuspageId, long domainId, User user) throws EntityNotFoundException, IllegalParameterException {
         Optional<WhiteLabelDomain> optionalDomain = whiteLabelDomainRepository.findById(domainId);
         Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(statuspageId);
         if (optionalStatuspage.isPresent() && optionalDomain.isPresent()) {
@@ -139,6 +139,10 @@ public class StatuspageService {
             Statuspage statuspage = optionalStatuspage.get();
             long userId = user.getId();
             if (whiteLabelDomain.getUser().getId() == userId && statuspage.getUser().getId() == userId) {
+                if (statuspage.getWhiteLabelDomain() != null)
+                    throw new IllegalParameterException("Statuspage with given ID has a domain bound to it already.");
+                if (whiteLabelDomain.getStatuspage() != null)
+                    throw new IllegalParameterException("Domain with given ID has a statuspage bound to it already.");
                 statuspage.setWhiteLabelDomain(whiteLabelDomain);
                 whiteLabelDomain.setStatuspage(statuspage);
                 statuspageRepository.save(statuspage);
@@ -163,7 +167,7 @@ public class StatuspageService {
                 return statuspage;
             }
         }
-        throw new EntityNotFoundException("Statuspage with given ID not found, or it doesn't have a white label domain.");
+        throw new EntityNotFoundException("Statuspage with given ID not found, or it doesn't have a white label domain bound.");
     }
 
     public PublicStatuspage getStatuspageAsPublicObject(String id) throws EntityNotFoundException {

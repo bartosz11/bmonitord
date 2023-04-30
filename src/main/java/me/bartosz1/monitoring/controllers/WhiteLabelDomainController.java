@@ -25,7 +25,7 @@ public class WhiteLabelDomainController {
     @ResponseBody
     public ResponseEntity<Response> createDomain(@RequestBody WhiteLabelDomainCDO cdo, @AuthenticationPrincipal User user) {
         WhiteLabelDomain whiteLabelDomain = whiteLabelDomainService.createWhiteLabelDomain(cdo, user);
-        return new Response(HttpStatus.OK).addAdditionalData(whiteLabelDomain).toResponseEntity();
+        return new Response(HttpStatus.CREATED).addAdditionalData(whiteLabelDomain).toResponseEntity();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
@@ -42,7 +42,7 @@ public class WhiteLabelDomainController {
         return new Response(HttpStatus.OK).addAdditionalData(whiteLabelDomainById).toResponseEntity();
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Response> getAllDomains(@AuthenticationPrincipal User user) {
         Iterable<WhiteLabelDomain> allWhiteLabelDomains = whiteLabelDomainService.findAllWhiteLabelDomains(user);

@@ -12,4 +12,6 @@ public interface WhiteLabelDomainRepository extends JpaRepository<WhiteLabelDoma
     Optional<WhiteLabelDomain> findByDomain(String domain);
 
     Iterable<WhiteLabelDomain> findAllByUserId(long userId);
+
+    boolean existsById(long id);
 }
