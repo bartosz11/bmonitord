@@ -70,7 +70,19 @@ public class StatuspageController {
 
     @RequestMapping(path = "/{id}/public", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    private ResponseEntity<Response> getStatuspageAsPublicObject(@PathVariable long id) throws EntityNotFoundException {
+    private ResponseEntity<Response> getStatuspageAsPublicObject(@PathVariable String id) throws EntityNotFoundException {
         return new Response(HttpStatus.OK).addAdditionalData(statuspageService.getStatuspageAsPublicObject(id)).toResponseEntity();
+    }
+
+    @RequestMapping(path = "/{statuspageId}/domain/{domainId}", method = RequestMethod.PATCH, produces = "application/json")
+    @ResponseBody
+    private ResponseEntity<Response> bindDomainToStatuspage(@PathVariable long statuspageId, @PathVariable long domainId, @AuthenticationPrincipal User user) throws EntityNotFoundException, IllegalParameterException {
+        return new Response(HttpStatus.OK).addAdditionalData(statuspageService.bindDomainToStatuspage(statuspageId, domainId, user)).toResponseEntity();
+    }
+
+    @RequestMapping(path = "/{statuspageId}/domain", method = RequestMethod.DELETE, produces = "application/json")
+    @ResponseBody
+    private ResponseEntity<Response> unbindDomainToStatuspage(@PathVariable long statuspageId, @AuthenticationPrincipal User user) throws EntityNotFoundException {
+        return new Response(HttpStatus.OK).addAdditionalData(statuspageService.unbindDomainToStatuspage(statuspageId, user)).toResponseEntity();
     }
 }

@@ -1,18 +1,18 @@
 package me.bartosz1.monitoring.controllers;
 
 import jakarta.transaction.Transactional;
-import me.bartosz1.monitoring.models.AuthRequest;
-import me.bartosz1.monitoring.models.Statuspage;
-import me.bartosz1.monitoring.models.StatuspageAnnouncementCDO;
-import me.bartosz1.monitoring.models.StatuspageCDO;
+import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.models.enums.StatuspageAnnouncementType;
 import me.bartosz1.monitoring.repositories.StatuspageRepository;
+import me.bartosz1.monitoring.repositories.WhiteLabelDomainRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
@@ -38,6 +38,8 @@ public class StatuspageControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private StatuspageRepository statuspageRepository;
+    @Autowired
+    private WhiteLabelDomainRepository whiteLabelDomainRepository;
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private String authToken;
@@ -53,8 +55,8 @@ public class StatuspageControllerTest {
 
     @Test
     @Order(1)
-    public void gettingStatuspagePublicDataSucceeds() throws Exception {
-        mockMvc.perform(get("/api/statuspage/{id}/public", 1))
+    public void gettingStatuspagePublicDataByDomainSucceeds() throws Exception {
+        mockMvc.perform(get("/api/statuspage/{id}/public", "bmonitord-test1.example.com"))
                 .andExpect(status().is(200)).andDo(print())
                 .andExpect(jsonPath("$.data.name").value("Test statuspage"))
                 .andExpect(jsonPath("$.data.logoLink").value("https://google.com/favicon.ico"))
@@ -68,6 +70,21 @@ public class StatuspageControllerTest {
 
     @Test
     @Order(2)
+    public void gettingStatuspagePublicDataByIdSucceeds() throws Exception {
+        mockMvc.perform(get("/api/statuspage/{id}/public", 1))
+                .andExpect(status().is(200)).andDo(print())
+                .andExpect(jsonPath("$.data.name").value("Test statuspage"))
+                .andExpect(jsonPath("$.data.logoLink").value("https://google.com/favicon.ico"))
+                .andExpect(jsonPath("$.data.logoRedirect").value("https://google.com"))
+                .andExpect(jsonPath("$.data.announcement.title").value("Example announcement"))
+                .andExpect(jsonPath("$.data.announcement.type").value("WARNING"))
+                .andExpect(jsonPath("$.data.announcement.content").value("Example announcement content goes here"))
+                .andExpect(jsonPath("$.data.monitors").isArray())
+                .andExpect(jsonPath("$.data.monitors", hasSize(1)));
+    }
+
+    @Test
+    @Order(3)
     public void statuspageCreationSucceeds() throws Exception {
         StatuspageCDO statuspageCDO = new StatuspageCDO().setName("New statuspage").setLogoLink("https://github.com/bartosz11/bmonitord").setLogoRedirect("https://github.com/bartosz11/bmonitord").setMonitorIds(List.of(1L));
         mockMvc.perform(post("/api/statuspage").content(OBJECT_MAPPER.writeValueAsString(statuspageCDO)).contentType("application/json").header("Authorization", "Bearer " + authToken))
@@ -79,7 +96,7 @@ public class StatuspageControllerTest {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     public void statuspageDeletionSucceeds() throws Exception {
         mockMvc.perform(delete("/api/statuspage/{id}", 2).header("Authorization", "Bearer " + authToken))
                 .andExpect(status().is(204)).andDo(print());
@@ -87,7 +104,7 @@ public class StatuspageControllerTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     public void getStatuspageSucceeds() throws Exception {
         mockMvc.perform(get("/api/statuspage/{id}", 1).header("Authorization", "Bearer " + authToken))
                 .andExpect(status().is(200)).andDo(print())
@@ -95,7 +112,7 @@ public class StatuspageControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     public void listStatuspagesSucceeds() throws Exception {
         mockMvc.perform(get("/api/statuspage").header("Authorization", "Bearer " + authToken))
                 .andExpect(status().is(200)).andDo(print())
@@ -105,7 +122,7 @@ public class StatuspageControllerTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     public void modifyStatuspageSucceeds() throws Exception {
         StatuspageCDO statuspageCDO = new StatuspageCDO().setName("Renamed statuspage");
         mockMvc.perform(patch("/api/statuspage/{id}", 1).content(OBJECT_MAPPER.writeValueAsString(statuspageCDO)).contentType("application/json").header("Authorization", "Bearer " + authToken))
@@ -115,7 +132,7 @@ public class StatuspageControllerTest {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     public void addStatuspageAnnouncementSucceeds() throws Exception {
         StatuspageAnnouncementCDO cdo = new StatuspageAnnouncementCDO().setType(StatuspageAnnouncementType.WARNING).setTitle("Test announcement").setContent("Test announcement content");
         mockMvc.perform(post("/api/statuspage/{id}/announcement", 1).content(OBJECT_MAPPER.writeValueAsString(cdo)).contentType("application/json").header("Authorization", "Bearer " + authToken))
@@ -126,7 +143,7 @@ public class StatuspageControllerTest {
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     public void modifyStatuspageAnnouncementSucceeds() throws Exception {
         StatuspageAnnouncementCDO cdo = new StatuspageAnnouncementCDO().setType(StatuspageAnnouncementType.WARNING).setTitle("Renamed announcement").setContent("Renamed announcement content");
         mockMvc.perform(post("/api/statuspage/{id}/announcement", 1).content(OBJECT_MAPPER.writeValueAsString(cdo)).contentType("application/json").header("Authorization", "Bearer " + authToken))
@@ -137,12 +154,37 @@ public class StatuspageControllerTest {
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     public void deleteStatuspageAnnouncementSucceeds() throws Exception {
         mockMvc.perform(delete("/api/statuspage/{id}/announcement", 1).header("Authorization", "Bearer " + authToken))
                 .andExpect(status().is(204)).andDo(print());
         Statuspage statuspage = statuspageRepository.findById(1L).get();
         Assertions.assertNull(statuspage.getAnnouncement());
     }
+
+    @Test
+    @Order(11)
+    //very fancy trick
+    @Rollback(false)
+    public void unbindDomainFromStatuspageSucceeds() throws Exception {
+        mockMvc.perform(delete("/api/statuspage/{statuspageId}/domain", 1).header("Authorization", "Bearer " + authToken))
+                .andExpect(status().is(200)).andDo(print());
+        Statuspage statuspage = statuspageRepository.findById(1L).get();
+        WhiteLabelDomain whiteLabelDomain = whiteLabelDomainRepository.findById(1L).get();
+        Assertions.assertNull(statuspage.getWhiteLabelDomain());
+        Assertions.assertNull(whiteLabelDomain.getStatuspage());
+    }
+
+    @Test
+    @Order(12)
+    public void bindDomainToStatuspageSucceeds() throws Exception {
+        MvcResult authorization = mockMvc.perform(patch("/api/statuspage/{statuspageId}/domain/{domainId}", 1, 1).header("Authorization", "Bearer " + authToken))
+                .andExpect(status().is(200)).andDo(print()).andReturn();
+        Statuspage statuspage = statuspageRepository.findById(1L).get();
+        WhiteLabelDomain whiteLabelDomain = whiteLabelDomainRepository.findById(1L).get();
+        Assertions.assertEquals(1, statuspage.getWhiteLabelDomain().getId());
+        Assertions.assertEquals(1, whiteLabelDomain.getStatuspage().getId());
+    }
+
 
 }
