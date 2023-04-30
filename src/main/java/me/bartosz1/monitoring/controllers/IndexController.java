@@ -22,7 +22,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String getIndex(HttpServletResponse response) {
-        String setCookie = ResponseCookie.from("actualOrigin", origin).secure(secureCookies).toString();
+        String setCookie = ResponseCookie.from("actualOrigin", origin).secure(secureCookies).build().toString();
         response.addHeader("Set-Cookie", setCookie);
         return "index.html";
     }

@@ -133,7 +133,7 @@ public class StatuspageService {
 
     public Statuspage bindDomainToStatuspage(long statuspageId, long domainId, User user) throws EntityNotFoundException, IllegalParameterException {
         Optional<WhiteLabelDomain> optionalDomain = whiteLabelDomainRepository.findById(domainId);
-        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(statuspageId);
+        Optional<Statuspage> optionalStatuspage = statuspageRepository.getById(statuspageId);
         if (optionalStatuspage.isPresent() && optionalDomain.isPresent()) {
             WhiteLabelDomain whiteLabelDomain = optionalDomain.get();
             Statuspage statuspage = optionalStatuspage.get();
@@ -145,16 +145,15 @@ public class StatuspageService {
                     throw new IllegalParameterException("Domain with given ID has a statuspage bound to it already.");
                 statuspage.setWhiteLabelDomain(whiteLabelDomain);
                 whiteLabelDomain.setStatuspage(statuspage);
-                statuspageRepository.save(statuspage);
                 whiteLabelDomainRepository.save(whiteLabelDomain);
-                return statuspage;
+                return statuspageRepository.save(statuspage);
             }
         }
         throw new EntityNotFoundException("Statuspage or domain with given ID not found.");
     }
 
     public Statuspage unbindDomainToStatuspage(long statuspageId, User user) throws EntityNotFoundException {
-        Optional<Statuspage> optionalStatuspage = statuspageRepository.findById(statuspageId);
+        Optional<Statuspage> optionalStatuspage = statuspageRepository.getById(statuspageId);
         if (optionalStatuspage.isPresent()) {
             Statuspage statuspage = optionalStatuspage.get();
             WhiteLabelDomain whiteLabelDomain = statuspage.getWhiteLabelDomain();
