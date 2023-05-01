@@ -13,6 +13,7 @@
     "/dashboard/statuspages",
     "/dashboard/account",
     "/dashboard/overview",
+    "/dashboard/domains",
   ];
   const routes = {
     "/monitors": wrap({
@@ -29,6 +30,9 @@
     }),
     "/overview": wrap({
       asyncComponent: () => import("./Overview.svelte"),
+    }),
+    "/domains": wrap({
+      asyncComponent: () => import("./domains/Domains.svelte"),
     }),
     "*": wrap({
       asyncComponent: () => import("../NotFound.svelte"),

@@ -13,7 +13,7 @@
   let data;
 
   function getData() {
-    info("Fetching monitors...");
+    info("Fetching monitors...", 2000);
     http
       .get("/api/monitor")
       .then((response) => {

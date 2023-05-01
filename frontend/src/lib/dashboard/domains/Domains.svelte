@@ -1,14 +1,21 @@
 <script>
   import http from "@/http";
-  import StatuspageActionsCell from "./StatuspageActionsCell.svelte";
   import SvelteTable from "svelte-table";
   import { openModal } from "svelte-modals";
-  import StatuspageCreateModal from "./StatuspageCreateModal.svelte";
   import { Plus } from "phosphor-svelte";
+  import DomainActionsCell from "./DomainActionsCell.svelte";
+  import DomainCreateModal from "./DomainCreateModal.svelte";
 
+  let statuspages;
   const fetchData = new Promise((resolve, reject) => {
     http
       .get("/api/statuspage")
+      .then((response) => {
+        statuspages = response.data.data;
+      })
+      .catch((err) => reject());
+    http
+      .get("/api/domain")
       .then((response) => {
         resolve(response.data.data);
       })
@@ -29,36 +36,35 @@
       sortable: true,
     },
     {
-      key: "announcement",
-      title: "Announcement",
-      value: (v) => v.announcement?.title ?? "None",
+      key: "domain",
+      title: "Domain",
+      value: (v) => v.domain,
       sortable: true,
     },
     {
-      key: "domain",
-      title: "Domain",
-      value: (v) => v.whiteLabelDomain?.name ?? "None",
+      key: "statuspage",
+      title: "Statuspage",
+      value: (v) => {
+        return statuspages.filter(page => page.whiteLabelDomain?.id === v.id)[0]?.name ?? "None";
+      },
       sortable: true,
     },
     {
       key: "actions",
       title: "Actions",
-      renderComponent: StatuspageActionsCell,
+      renderComponent: DomainActionsCell,
       sortable: true,
     },
   ];
 </script>
 
 {#await fetchData}
-  <p>Fetching statuspages...</p>
+  <p>Fetching data required to render this page...</p>
 {:then data}
   <div class="m-4 flex flex-row space-x-8">
-    <h1 class="text-xl">Your statuspages</h1>
-    <button
-      class="btn-create"
-      on:click={() => openModal(StatuspageCreateModal)}
-    >
-      <span>Create statuspage</span>
+    <h1 class="text-xl">Your white label domains</h1>
+    <button class="btn-create" on:click={() => openModal(DomainCreateModal)}>
+      <span>Create white label domain</span>
       <div class="icon-align">
         <Plus />
       </div>
@@ -66,5 +72,5 @@
   </div>
   <SvelteTable columns={columnSettings} rows={data} />
 {:catch}
-  <p>Couldn't fetch statuspages.</p>
+  <p>Couldn't fetch data required to render this page.</p>
 {/await}

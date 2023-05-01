@@ -24,7 +24,7 @@
 
   function onDeleteClick() {
     count++;
-    if (count === 1) info("Are you sure?", { duration: 2000 });
+    if (count === 1) info("Are you sure?", 2000);
     if (count >= 2)
       http
         .delete(`/api/monitor/${row.id}`)

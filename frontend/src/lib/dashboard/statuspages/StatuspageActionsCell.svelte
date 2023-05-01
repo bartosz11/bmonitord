@@ -11,14 +11,16 @@
     Megaphone,
     Activity,
     ArrowUpRight,
+    Globe,
   } from "phosphor-svelte";
   import { error, info, success } from "@/toastUtil";
+  import StatuspageAssignDomainModal from "./StatuspageAssignDomainModal.svelte";
   export let row;
   let count = 0;
 
   function onDeleteClick() {
     count++;
-    if (count === 1) info("Are you sure?", { duration: 2000 });
+    if (count === 1) info("Are you sure?", 2000);
     if (count >= 2)
       http
         .delete(`/api/statuspage/${row.id}`)
@@ -48,6 +50,10 @@
 
   function onMonitorsClick() {
     openModal(StatuspageMonitorsModal, { statuspage: row });
+  }
+
+  function onDomainsClick() {
+    openModal(StatuspageAssignDomainModal, { row: row });
   }
 
   function onRedirectClick() {
@@ -91,6 +97,18 @@
     }}
   >
     <Megaphone />
+  </button>
+  <!--domains-->
+  <button
+    on:click={onDomainsClick}
+    class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
+    use:tooltip={{
+      content: "Manage statuspage's domain",
+      autoPosition: "true",
+      position: "bottom",
+    }}
+  >
+    <Globe />
   </button>
   <!--monitors-->
   <button
