@@ -14,7 +14,7 @@
     http
       .patch(`/api/domain/${domain.id}`, {
         name: name,
-        domain: domain,
+        domain: domainName,
       })
       .then((response) => {
         success("Successfully edited white label domain.");

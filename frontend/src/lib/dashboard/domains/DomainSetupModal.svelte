@@ -9,7 +9,7 @@
 {#if isOpen}
   <div role="dialog" class="modal">
     <div class="modal-contents min-w-500 space-y-4">
-      <h1 class="text-xl">Agent setup instructions</h1>
+      <h1 class="text-xl">White label domain setup instructions</h1>
       <div class="space-y-2">
         <p>
           1. Add a DNS record for <b>{domain.domain}</b> pointing to <b>{actualOrigin}</b>
