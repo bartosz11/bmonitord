@@ -75,6 +75,7 @@ monitoring:
 
 server:
   #You can change port here if you need to
+  #Avoid doing this while running in Docker - builtin healthcheck will fail
   port: 8080
   #You don't need to touch lines below
   compression-enabled: true
