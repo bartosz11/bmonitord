@@ -1,33 +1,34 @@
 <script>
   import http from "@/http";
-  import { error, info, success } from "@/toastUtil";
   import { deleteCookie } from "svelte-cookie";
+  import { closeAllModals, openModal } from "svelte-modals";
   import { push } from "svelte-spa-router";
+  import DeleteAccountConfirmationModal from "./DeleteAccountConfirmationModal.svelte";
+  import toast from "svelte-french-toast";
 
-  let clicks = 0;
-  
   function onClick() {
-    clicks++;
-    if (clicks === 1) info("Are you sure?", 2000);
-    if (clicks >= 2)
-      http
-        .delete("/api/user")
-        .then((response) => {
-          if (response.status == 204) {
-            success("Your account has been successfully deleted.");
+    openModal(DeleteAccountConfirmationModal, {
+      onConfirm: () => {
+        toast.promise((async () => {
+          const response = await http.delete("/api/user")
+          if (response.status === 204) {
             deleteCookie("auth-token");
-            //makes more sense than pushing to /logout i think
             push("/auth/login");
+            return;
           }
-        })
-        .catch((err) =>
-          error("Something went wrong while deleting your account.")
-        );
+        })(), {
+          error: "Something went wrong while deleting your account.",
+          success: "Your account has been successfully deleted.",
+          loading: "Deleting your account..."
+        }, { style: 'border-radius: 200px; background: #333; color: #fff;' })
+        .finally(() => closeAllModals());
+      }
+    })
   }
 </script>
 
-<div class="card w-fit">
-  <span>Delete account (click 2 times)</span>
+<div class="card">
+  <span class="font-bold text-xl">Delete account</span>
   <div>
     <button class="btn-danger-primary mt-3" on:click={onClick}>
       Delete account

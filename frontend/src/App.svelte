@@ -48,24 +48,18 @@
     prevValue = v;
   });
 
-  const isWhiteLabelDomain = new Promise((resolve, reject) => {
+  const isWhiteLabelDomain = () => {
     let cookie = getCookie("actualOrigin");
     let browserLocation = window.location.host;
-    if (cookie === browserLocation) resolve(false);
-    else resolve(true);
-    reject("failed to determine if white label domain is in use");
-  });
+    return cookie !== browserLocation;
+  };
 </script>
 
 <body>
-  {#await isWhiteLabelDomain then value}
-    {#if value}
-      <Router routes={whiteLabelRoutes} />
-    {:else}
-      <Router routes={normalRoutes} />
-    {/if}
-  {:catch err}
-    <p>{err}</p>
-  {/await}
+  {#if isWhiteLabelDomain()}
+    <Router routes={whiteLabelRoutes} />
+  {:else}
+    <Router routes={normalRoutes} />
+  {/if}
   <Toaster />
 </body>

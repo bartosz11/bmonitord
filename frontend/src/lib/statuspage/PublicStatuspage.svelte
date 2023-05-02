@@ -9,30 +9,41 @@
   import SvelteTable from "svelte-table";
   import MonitorStatusCell from "../dashboard/monitors/MonitorStatusCell.svelte";
   import StatuspageStatsRedirectButton from "./StatuspageStatsRedirectButton.svelte";
+  import toast from "svelte-french-toast";
   export let params;
   let conditionalClasses;
   let data;
   let id = params.id ?? window.location.host;
+
+  const fetcher = async () => {
+    const response = await http.get(`/api/statuspage/${id}/public`)
+    switch (response.data.data.announcement?.type) {
+      case "INFO":
+        conditionalClasses = "text-2xl space-x-1.5 text-sky-400";
+        break;
+      case "WARNING":
+        conditionalClasses = "text-2xl space-x-1.5 text-yellow-400";
+        break;
+      case "CRITICAL":
+        conditionalClasses = "text-2xl space-x-1.5 text-red-400";
+        break;
+    }
+    data = response.data.data;
+  }
+
   function getData() {
-    info("Fetching data...", 2000);
-    http
-      .get(`/api/statuspage/${id}/public`)
-      .then((response) => {
-        switch (response.data.data.announcement?.type) {
-          case "INFO":
-            conditionalClasses = "text-2xl space-x-1.5 text-sky-400";
-            break;
-          case "WARNING":
-            conditionalClasses = "text-2xl space-x-1.5 text-yellow-400";
-            break;
-          case "CRITICAL":
-            conditionalClasses = "text-2xl space-x-1.5 text-red-400";
-            break;
-        }
-        data = response.data.data;
-      })
-      .catch((err) => error("Failed to fetch data. Retrying in 1 minute."));
-    timeout.set(setTimeout(getData, 60000));
+    toast.promise(
+      fetcher(),
+      {
+        loading: 'Fetching data...',
+        error: 'Failed to fetch data. Retrying in 1 minute.',
+        success: null
+      }, {
+        style: 'border-radius: 200px; background: #333; color: #fff;'
+      }
+    ).catch(() => {
+      timeout.set(setTimeout(getData, 60000));
+    })
   }
 
   onMount(getData);

@@ -23,6 +23,35 @@
   import { Line } from "svelte-chartjs";
   import SvelteTable from "svelte-table";
 
+  const chartOptions = { 
+    responsive: true, 
+    plugins: {
+      legend: {
+        labels: {
+          color: 'white'
+        },
+      }
+    },
+    scales: {
+      y: {
+        ticks: {
+          color: 'white'
+        },
+        grid: {
+          color: 'gray'
+        }
+      },
+      x: {
+        ticks: {
+          color: 'white'
+        },
+        grid: {
+          color: 'gray',
+        }
+      }
+    }
+}
+
   ChartJS.register(
     Title,
     Tooltip,
@@ -329,10 +358,10 @@
       <div class="space-y-2 card w-full">
         <h1 class="text-xl">Server stats</h1>
         {#if cpuChartData !== undefined && ramChartData !== undefined && netChartData !== undefined && diskChartData !== undefined}
-          <Line data={cpuChartData} options={{ responsive: true }} />
-          <Line data={ramChartData} options={{ responsive: true }} />
-          <Line data={netChartData} options={{ responsive: true }} />
-          <Line data={diskChartData} options={{ responsive: true }} />
+          <Line data={cpuChartData} options={chartOptions} />
+          <Line data={ramChartData} options={chartOptions} />
+          <Line data={netChartData} options={chartOptions} />
+          <Line data={diskChartData} options={chartOptions} />
           <button
             class="btn-ok-primary"
             disabled={lastResponse?.last}
@@ -355,7 +384,7 @@
       <div class="space-y-2 card w-full">
         <h1 class="text-xl">Latency stats</h1>
         {#if latencyChartData !== undefined}
-          <Line data={latencyChartData} options={{ responsive: true }} />
+          <Line data={latencyChartData} options={chartOptions}  />
           <button
             class="btn-ok-primary"
             disabled={lastResponse?.last}

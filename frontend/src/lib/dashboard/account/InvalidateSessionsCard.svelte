@@ -21,8 +21,8 @@
   }
 </script>
 
-<div class="card w-fit">
-  <span>Log out everywhere</span>
+<div class="card flex-1">
+  <span class="font-bold text-xl">Log out everywhere</span>
   <div>
     <button class="btn-warning-primary mt-3" on:click={onClick}>
       Log out everywhere

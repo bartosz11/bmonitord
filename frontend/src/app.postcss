@@ -21,7 +21,7 @@ body {
 }
 
 .input-primary {
-  @apply bg-zinc-700 rounded-md px-1.5 py-1 text-white;
+  @apply bg-zinc-700 rounded-md px-2 py-1.5 text-white;
 }
 
 .hint-primary {
@@ -45,11 +45,16 @@ body {
 }
 
 .nav-element-mobile {
-  @apply px-4 py-2 bg-none border-transparent;
+  @apply px-2 my-4 block bg-none border-transparent;
 }
+
 /* for non-mobile nav elements - underlines the current active route on navbar with orange-500 */
-.active {
+.active.nav-element {
   @apply border-orange-500 font-medium;
+}
+
+.active.nav-element-mobile {
+  @apply border-orange-500 border-l-4 font-medium;
 }
 
 .card {

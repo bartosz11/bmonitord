@@ -1,7 +1,7 @@
 <script>
   let menuOpen = false;
   import { List, X } from "phosphor-svelte";
-  import { push } from "svelte-spa-router";
+  import { link, push } from "svelte-spa-router";
   import active from "svelte-spa-router/active";
 
   function toggleMenu() {
@@ -10,7 +10,7 @@
 </script>
 
 <div class="bg-zinc-800 sticky">
-  <div class="container mx-auto">
+  <div class="px-4 container mx-auto">
     <div class="flex justify-between items-center py-2">
       <a href="#/dashboard/overview" class="text-white text-xl font-semibold">bmonitord</a>
       <div class="flex md:hidden">
@@ -24,35 +24,23 @@
       </div>
       <div class="hidden md:flex">
         <nav>
-            <button class="nav-element" on:click={() => push("/dashboard/monitors")} use:active={"/dashboard/monitors"}>Monitors</button>
-            <button class="nav-element" on:click={() => push("/dashboard/notifications")} use:active={"/dashboard/notifications"}>Notifications</button>
-            <button class="nav-element" on:click={() => push("/dashboard/statuspages")} use:active={"/dashboard/statuspages"}>Statuspages</button>
-            <button class="nav-element" on:click={() => push("/dashboard/domains")} use:active={"/dashboard/domains"}>Domains</button>
-            <button class="nav-element" on:click={() => push("/dashboard/account")} use:active={"/dashboard/account"}>Account</button>
-            <button class="nav-element" on:click={() => push("/auth/logout")}>Log out</button>
+            <a class="nav-element" href={"/dashboard/monitors"} use:link use:active={"/dashboard/monitors"}>Monitors</a>
+            <a class="nav-element" href={"/dashboard/notifications"} use:link use:active={"/dashboard/notifications"}>Notifications</a>
+            <a class="nav-element" href={"/dashboard/statuspages"} use:link use:active={"/dashboard/statuspages"}>Statuspages</a>
+            <a class="nav-element" href={"/dashboard/domains"} use:link use:active={"/dashboard/domains"}>Domains</a>
+            <a class="nav-element" href={"/dashboard/account"} use:link use:active={"/dashboard/account"}>Account</a>
+            <a class="nav-element" href={"/auth/logout"} use:link>Log out</a>
         </nav>
       </div>
     </div>
-    <div class="md:hidden {menuOpen ? 'block' : 'hidden'}">
+    <div class="md:hidden {menuOpen ? 'block' : 'hidden'} pb-2">
       <nav>
-        <div class="nav-element-mobile">
-          <button on:click={() => push("/dashboard/monitors")} >Monitors</button>
-        </div>
-        <div class="nav-element-mobile">
-          <button on:click={() => push("/dashboard/notifications")}>Notifications</button>
-        </div>
-        <div class="nav-element-mobile">
-          <button on:click={() => push("/dashboard/statuspages")}>Statuspages</button>
-        </div>
-        <div class="nav-element-mobile">
-          <button on:click={() => push("/dashboard/domains")}>Domains</button>
-        </div>
-        <div class="nav-element-mobile">
-          <button on:click={() => push("/dashboard/account")}>Account</button>
-        </div>
-        <div class="nav-element-mobile">
-          <button on:click={() => push("/auth/logout")}>Log out</button>
-        </div>
+        <a class="nav-element-mobile" href={"/dashboard/monitors"} use:link use:active={"/dashboard/monitors"}>Monitors</a>
+        <a class="nav-element-mobile" href={"/dashboard/notifications"} use:link use:active={"/dashboard/notifications"}>Notifications</a>
+        <a class="nav-element-mobile" href={"/dashboard/statuspages"} use:link use:active={"/dashboard/statuspages"}>Statuspages</a>
+        <a class="nav-element-mobile" href={"/dashboard/domains"} use:link use:active={"/dashboard/domains"}>Domains</a>
+        <a class="nav-element-mobile" href={"/dashboard/account"} use:link use:active={"/dashboard/account"}>Account</a>
+        <a class="nav-element-mobile" href={"/auth/logout"} use:link>Log out</a>
       </nav>
     </div>
   </div>

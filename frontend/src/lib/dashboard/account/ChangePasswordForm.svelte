@@ -30,51 +30,53 @@
   }
 </script>
 
-<div class="card w-fit">
-  <span>Change password</span>
-  <form use:form on:submit={onSubmit}>
-    <div class="my-3">
-      <input
-        type="password"
-        bind:value={oldPassword}
-        name="oldpassword"
-        placeholder="Old password"
-        use:validators={[required]}
-        class="input-primary"
-      />
-      <Hint class="hint-primary" for="oldpassword" on="required">
-        This field is required.
-      </Hint>
-    </div>
-
-    <div class="my-3">
-      <input
-        type="password"
-        bind:value={newPassword}
-        name="newpassword"
-        placeholder="New password"
-        use:validators={[required]}
-        class="input-primary"
-      />
-      <Hint class="hint-primary" for="newpassword" on="required">
-        This field is required.
-      </Hint>
-    </div>
-    <div class="my-3">
-      <input
-        type="password"
-        bind:value={newPasswordConfirmation}
-        name="newpasswordconfirm"
-        placeholder="Confirm new password"
-        use:validators={[required]}
-        class="input-primary"
-      />
-      <Hint class="hint-primary" for="newpasswordconfirm" on="required">
-        This field is required.
-      </Hint>
-    </div>
-    <button disabled={!$form.valid} class="btn-ok-primary">
-      Change password
-    </button>
-  </form>
+<div class="card !h-full md:row-span-2 md:col-span-2 flex items-center">
+  <div class="w-full">
+    <span class="font-bold text-xl">Change password</span>
+    <form use:form on:submit={onSubmit} class="flex flex-col gap-y-3 mt-2">
+      <div class="w-full">
+        <input
+          type="password"
+          bind:value={oldPassword}
+          name="oldpassword"
+          placeholder="Old password"
+          use:validators={[required]}
+          class="input-primary w-full"
+        />
+        <Hint class="hint-primary" for="oldpassword" on="required">
+          This field is required.
+        </Hint>
+      </div>
+  
+      <div>
+        <input
+          type="password"
+          bind:value={newPassword}
+          name="newpassword"
+          placeholder="New password"
+          use:validators={[required]}
+          class="input-primary w-full"
+        />
+        <Hint class="hint-primary" for="newpassword" on="required">
+          This field is required.
+        </Hint>
+      </div>
+      <div>
+        <input
+          type="password"
+          bind:value={newPasswordConfirmation}
+          name="newpasswordconfirm"
+          placeholder="Confirm new password"
+          use:validators={[required]}
+          class="input-primary w-full"
+        />
+        <Hint class="hint-primary" for="newpasswordconfirm" on="required">
+          This field is required.
+        </Hint>
+      </div>
+      <button disabled={!$form.valid} class="btn-ok-primary">
+        Change password
+      </button>
+    </form>
+  </div>
 </div>
