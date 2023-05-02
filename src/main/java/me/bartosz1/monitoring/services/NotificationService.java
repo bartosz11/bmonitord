@@ -51,7 +51,7 @@ public class NotificationService {
     }
 
     public Notification getNotificationByIdAndUser(long id, User user) throws EntityNotFoundException {
-        Optional<Notification> byId = notificationRepository.findById(id);
+        Optional<Notification> byId = notificationRepository.getById(id);
         if (byId.isPresent()) {
             Notification notification = byId.get();
             if (notification.getUser().getId() == user.getId()) {

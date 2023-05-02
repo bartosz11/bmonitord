@@ -68,7 +68,7 @@ public class StatuspageService {
     }
 
     public Statuspage getStatuspageByIdAndUser(long id, User user) throws EntityNotFoundException {
-        Optional<Statuspage> byId = statuspageRepository.findById(id);
+        Optional<Statuspage> byId = statuspageRepository.getById(id);
         if (byId.isPresent()) {
             Statuspage statuspage = byId.get();
             if (statuspage.getUser().getId() == user.getId()) {
