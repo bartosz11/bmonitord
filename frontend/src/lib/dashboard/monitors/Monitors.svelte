@@ -15,7 +15,7 @@
 
   function getData() {
     toast.promise((async () => {
-      const response = await http.get("/ap1i/monitor");
+      const response = await http.get("/api/monitor");
       data = response.data.data;
     })(), {
       loading: "Fetching monitors",
