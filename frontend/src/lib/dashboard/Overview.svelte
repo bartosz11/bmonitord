@@ -35,7 +35,7 @@
 {:then data}
   <div class="text-center m-5 card space-y-6 md:w-fit">
     <h1 class="text-4xl">Monitors summary</h1>
-    <div class="flex flex-col jusfity-centre md:flex-row md:space-x-5">
+    <div class="flex flex-col md:flex-row md:space-x-5">
       <div class="text-green-400">
         <h1 class="text-2xl">Up</h1>
         <span class="text-4xl">{up}</span>
