@@ -50,3 +50,4 @@ bin/
 .DS_Store
 
 frontend/.env
+database.db

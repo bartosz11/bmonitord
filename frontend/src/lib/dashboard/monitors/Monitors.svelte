@@ -9,22 +9,31 @@
   import { error, info } from "@/toastUtil";
   import { onMount } from "svelte";
   import { timeout } from "@/timeoutStore";
+  import toast from "svelte-french-toast";
 
   let data;
 
   function getData() {
-    info("Fetching monitors...", 2000);
-    http
-      .get("/api/monitor")
-      .then((response) => {
-        data = response.data.data;
-      })
-      .catch((err) => {
-        error(
-          err.response?.data?.errors[0]?.message ??
-            "Something went wrong while fetching monitors."
-        );
-      });
+    toast.promise((async () => {
+      const response = await http.get("/ap1i/monitor");
+      data = response.data.data;
+    })(), {
+      loading: "Fetching monitors",
+      error: null,
+      success: null
+    }, {
+      success: {
+        style: "display: none !important",
+      },
+      error: {
+        style: "display: none !important",
+      },
+      style: 'border-radius: 200px; background: #333; color: #fff;'
+    }).catch((err) => {
+      console.error(err);
+      error(err.response?.data?.errors?.at(0)?.message ?? 
+              "Something went wrong while fetching monitors.")
+    })
     timeout.set(setTimeout(getData, 60000));
   }
 

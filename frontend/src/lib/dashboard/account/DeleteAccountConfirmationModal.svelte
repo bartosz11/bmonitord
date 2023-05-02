@@ -13,7 +13,7 @@
     </h1>
     <div class="flex gap-2 justify-end mt-2">
         <button
-          class="btn-ok-primary"
+          class="btn-neutral-primary"
           type="button"
           on:click={() => closeModal()}>No</button
         >

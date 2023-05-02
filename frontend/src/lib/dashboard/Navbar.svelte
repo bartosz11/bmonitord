@@ -10,7 +10,7 @@
 </script>
 
 <div class="bg-zinc-800 sticky">
-  <div class="px-4 container mx-auto">
+  <div class="px-4 lg:px-0 container-lg mx-auto">
     <div class="flex justify-between items-center py-2">
       <a href="#/dashboard/overview" class="text-white text-xl font-semibold">bmonitord</a>
       <div class="flex md:hidden">
@@ -29,7 +29,7 @@
             <a class="nav-element" href={"/dashboard/statuspages"} use:link use:active={"/dashboard/statuspages"}>Statuspages</a>
             <a class="nav-element" href={"/dashboard/domains"} use:link use:active={"/dashboard/domains"}>Domains</a>
             <a class="nav-element" href={"/dashboard/account"} use:link use:active={"/dashboard/account"}>Account</a>
-            <a class="nav-element" href={"/auth/logout"} use:link>Log out</a>
+            <a class="nav-element break-none whitespace-nowrap" href={"/auth/logout"} use:link>Log out</a>
         </nav>
       </div>
     </div>

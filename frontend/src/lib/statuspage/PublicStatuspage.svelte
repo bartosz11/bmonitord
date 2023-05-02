@@ -39,7 +39,10 @@
         error: 'Failed to fetch data. Retrying in 1 minute.',
         success: null
       }, {
-        style: 'border-radius: 200px; background: #333; color: #fff;'
+        style: 'border-radius: 200px; background: #333; color: #fff;',
+        success: {
+          style: "display: none !important;"
+        }
       }
     ).catch(() => {
       timeout.set(setTimeout(getData, 60000));
