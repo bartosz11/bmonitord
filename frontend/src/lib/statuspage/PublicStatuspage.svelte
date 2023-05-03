@@ -28,7 +28,6 @@
         break;
     }
     data = response.data.data;
-    console.log("success")
   }
 
   function getData() {
