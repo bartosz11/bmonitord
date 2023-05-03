@@ -6,29 +6,20 @@
   import MonitorCreateModal from "./MonitorCreateModal.svelte";
   import MonitorStatusCell from "./MonitorStatusCell.svelte";
   import { Plus } from "phosphor-svelte";
-  import { error, info } from "@/toastUtil";
+  import { error, promise } from "@/toastUtil";
   import { onMount } from "svelte";
   import { timeout } from "@/timeoutStore";
-  import toast from "svelte-french-toast";
 
   let data;
 
   function getData() {
-    toast.promise((async () => {
+    promise((async () => {
       const response = await http.get("/api/monitor");
       data = response.data.data;
     })(), {
       loading: "Fetching monitors",
       error: null,
       success: null
-    }, {
-      success: {
-        style: "display: none !important",
-      },
-      error: {
-        style: "display: none !important",
-      },
-      style: 'border-radius: 200px; background: #333; color: #fff;'
     }).catch((err) => {
       console.error(err);
       error(err.response?.data?.errors?.at(0)?.message ?? 

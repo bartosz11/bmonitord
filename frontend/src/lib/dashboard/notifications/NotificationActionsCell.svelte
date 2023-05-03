@@ -1,30 +1,32 @@
 <script>
   import http from "@/http";
-  import { error, info, success } from "@/toastUtil";
+  import { error, promise, success } from "@/toastUtil";
   import { tooltip } from "@svelte-plugins/tooltips";
   import { Activity, BellRinging, Pencil, Trash } from "phosphor-svelte";
   import { openModal } from "svelte-modals";
   import NotificationEditModal from "./NotificationEditModal.svelte";
   import NotificationMonitorsModal from "./NotificationMonitorsModal.svelte";
+  import ConfirmationModal from "@/lib/ConfirmationModal.svelte";
   export let row;
-  let count = 0;
 
   function onDeleteClick() {
-    count++;
-    if (count === 1) info("Are you sure?", 2000);
-    if (count >= 2)
-      http
-        .delete(`/api/notification/${row.id}`)
-        .then((response) => {
-          location.reload();
-          success(`Successfully deleted notification with ID ${row.id}`);
+    openModal(ConfirmationModal, {
+      title: `Are you sure you want to delete ${row.name}?`,
+      onConfirm: () => {
+        promise(http.delete(`/api/notification/${row.id}`), {
+          success: `Successfully deleted ${row.name}!`,
+          error: null,
+          loading: "Deleting notification...",
         })
-        .catch((err) =>
+          .then(() =>  location.reload())
+          .catch((err) =>
           error(
             err.response?.data?.errors[0]?.message ??
               "Something went wrong while deleting notification."
           )
-        );
+        )
+      }
+    })
   }
 
   function onEditClick() {

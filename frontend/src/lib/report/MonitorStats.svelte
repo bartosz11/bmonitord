@@ -380,7 +380,7 @@
         {/if}
       </div>
     {/if}
-    {#if monitor.type !== "AGENT"}
+    {#if monitor.type === "HTTP"}
       <div class="space-y-2 card w-full">
         <h1 class="text-xl">Latency stats</h1>
         {#if latencyChartData !== undefined}

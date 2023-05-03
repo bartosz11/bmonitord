@@ -1,7 +1,7 @@
 <script>
   import http from "@/http";
   import { timeout } from "@/timeoutStore";
-  import { error, info } from "@/toastUtil";
+  import { promise } from "@/toastUtil";
   import DOMPurify from "dompurify";
   import { marked } from "marked";
   import { Info, Warning, WarningCircle } from "phosphor-svelte";
@@ -9,7 +9,6 @@
   import SvelteTable from "svelte-table";
   import MonitorStatusCell from "../dashboard/monitors/MonitorStatusCell.svelte";
   import StatuspageStatsRedirectButton from "./StatuspageStatsRedirectButton.svelte";
-  import toast from "svelte-french-toast";
   export let params;
   let conditionalClasses;
   let data;
@@ -29,22 +28,17 @@
         break;
     }
     data = response.data.data;
+    console.log("success")
   }
 
   function getData() {
-    toast.promise(
+    promise(
       fetcher(),
       {
         loading: 'Fetching data...',
         error: 'Failed to fetch data. Retrying in 1 minute.',
         success: null
-      }, {
-        style: 'border-radius: 200px; background: #333; color: #fff;',
-        success: {
-          style: "display: none !important;"
-        }
-      }
-    ).catch(() => {
+      }).catch(() => {
       timeout.set(setTimeout(getData, 60000));
     })
   }

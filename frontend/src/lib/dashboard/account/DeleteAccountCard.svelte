@@ -3,13 +3,14 @@
   import { deleteCookie } from "svelte-cookie";
   import { closeAllModals, openModal } from "svelte-modals";
   import { push } from "svelte-spa-router";
-  import DeleteAccountConfirmationModal from "./DeleteAccountConfirmationModal.svelte";
-  import toast from "svelte-french-toast";
+  import { promise } from "@/toastUtil";
+  import ConfirmationModal from "@/lib/ConfirmationModal.svelte";
 
   function onClick() {
-    openModal(DeleteAccountConfirmationModal, {
+    openModal(ConfirmationModal, {
+      title: 'Are you sure you want to delete your account?',
       onConfirm: () => {
-        toast.promise((async () => {
+        promise((async () => {
           const response = await http.delete("/api/user")
           if (response.status === 204) {
             deleteCookie("auth-token");
@@ -20,7 +21,7 @@
           error: "Something went wrong while deleting your account.",
           success: "Your account has been successfully deleted.",
           loading: "Deleting your account..."
-        }, { style: 'border-radius: 200px; background: #333; color: #fff;' })
+        })
         .finally(() => closeAllModals());
       }
     })

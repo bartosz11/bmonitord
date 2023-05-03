@@ -1,7 +1,7 @@
 <script>
   let menuOpen = false;
   import { List, X } from "phosphor-svelte";
-  import { link, push } from "svelte-spa-router";
+  import { link } from "svelte-spa-router";
   import active from "svelte-spa-router/active";
 
   function toggleMenu() {
@@ -10,7 +10,7 @@
 </script>
 
 <div class="bg-zinc-800 sticky">
-  <div class="px-4 lg:px-0 container-lg mx-auto">
+  <div class="px-4 md:px-2 container mx-auto">
     <div class="flex justify-between items-center py-2">
       <a href="#/dashboard/overview" class="text-white text-xl font-semibold">bmonitord</a>
       <div class="flex md:hidden">
@@ -33,7 +33,7 @@
         </nav>
       </div>
     </div>
-    <div class="md:hidden {menuOpen ? 'block' : 'hidden'} pb-2">
+    <div style={`grid-template-rows: ${menuOpen ? "1fr" : "0fr"}; padding-bottom: ${menuOpen ? "0.5rem" : "0px"}`} class="ease-in-out duration-300 md:hidden grid [&>*]:overflow-hidden transition-[grid-template-rows]">
       <nav>
         <a class="nav-element-mobile" href={"/dashboard/monitors"} use:link use:active={"/dashboard/monitors"}>Monitors</a>
         <a class="nav-element-mobile" href={"/dashboard/notifications"} use:link use:active={"/dashboard/notifications"}>Notifications</a>
