@@ -9,11 +9,9 @@
   let checkValue;
 
   onMount(() => {
-    let check = row.monitors?.some(m => { 
+    checkValue = row.monitors?.some(m => { 
         return m.id === monitor.id;
     })
-    if (check==true) checkValue = true;
-    else checkValue = false;
   });
 
   function onClick() {

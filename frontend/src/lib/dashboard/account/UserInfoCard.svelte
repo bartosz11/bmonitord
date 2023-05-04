@@ -11,15 +11,15 @@
   });
 </script>
 
-<div class="card w-fit">
-  <p>User info</p>
+<div class="card md:col-span-4">
+  <h2 class="font-bold text-xl">User info</h2>
   {#await fetchData}
     <p>Loading...</p>
   {:then data}
     <ul>
-        <li>Username: {data.username}</li>
-        <li>Enabled: {data.enabled}</li>
-        <li>ID: {data.id}</li>
+        <li><span class="font-bold">Username:</span> {data.username}</li>
+        <li><span class="font-bold">Enabled:</span> {data.enabled}</li>
+        <li><span class="font-bold">ID:</span> {data.id}</li>
     </ul>
   {:catch}
     <p>Couldn't fetch account data.</p>

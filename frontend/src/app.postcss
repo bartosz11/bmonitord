@@ -21,7 +21,7 @@ body {
 }
 
 .input-primary {
-  @apply bg-zinc-700 rounded-md px-1.5 py-1 text-white;
+  @apply bg-zinc-700 rounded-md px-2 py-1.5 text-white;
 }
 
 .hint-primary {
@@ -29,26 +29,35 @@ body {
 }
 
 .btn-ok-primary {
-  @apply bg-green-700 hover:bg-green-800 px-3 py-1 rounded-md;
+  @apply bg-green-700 hover:[&:not([disabled])]:bg-green-800 px-3 py-1 rounded-md disabled:opacity-50;
 }
 
 .btn-danger-primary {
-  @apply bg-red-700 hover:bg-red-800 px-3 py-1 rounded-md;
+  @apply bg-red-700 hover:[&:not([disabled])]:bg-red-800 px-3 py-1 rounded-md disabled:opacity-50;
 }
 
 .btn-warning-primary {
-  @apply bg-yellow-700 hover:bg-yellow-800 px-3 py-1 rounded-md;
+  @apply bg-yellow-700 hover:[&:not([disabled])]:bg-yellow-800 px-3 py-1 rounded-md disabled:opacity-50;
+}
+
+.btn-neutral-primary {
+  @apply bg-zinc-700 hover:[&:not([disabled])]:bg-zinc-900 text-white px-3 py-1 rounded-md disabled:opacity-50 ;
 }
 
 .nav-element {
-  @apply px-4 py-2 bg-none border-transparent border-b-2 hover:border-amber-500;
+  @apply px-4 py-2 bg-none transition border-transparent border-b-2 hover:border-amber-500;
 }
 
 .nav-element-mobile {
-  @apply px-4 py-2 bg-none border-transparent;
+  @apply px-2 my-4 block bg-none border-l-4 border-transparent transition-colors origin-top;
 }
+
 /* for non-mobile nav elements - underlines the current active route on navbar with orange-500 */
-.active {
+.active.nav-element {
+  @apply border-orange-500 font-medium;
+}
+
+.active.nav-element-mobile {
   @apply border-orange-500 font-medium;
 }
 

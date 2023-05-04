@@ -6,25 +6,25 @@
   import MonitorCreateModal from "./MonitorCreateModal.svelte";
   import MonitorStatusCell from "./MonitorStatusCell.svelte";
   import { Plus } from "phosphor-svelte";
-  import { error, info } from "@/toastUtil";
+  import { error, promise } from "@/toastUtil";
   import { onMount } from "svelte";
   import { timeout } from "@/timeoutStore";
 
   let data;
 
   function getData() {
-    info("Fetching monitors...", 2000);
-    http
-      .get("/api/monitor")
-      .then((response) => {
-        data = response.data.data;
-      })
-      .catch((err) => {
-        error(
-          err.response?.data?.errors[0]?.message ??
-            "Something went wrong while fetching monitors."
-        );
-      });
+    promise((async () => {
+      const response = await http.get("/api/monitor");
+      data = response.data.data;
+    })(), {
+      loading: "Fetching monitors",
+      error: null,
+      success: null
+    }).catch((err) => {
+      console.error(err);
+      error(err.response?.data?.errors?.at(0)?.message ?? 
+              "Something went wrong while fetching monitors.")
+    })
     timeout.set(setTimeout(getData, 60000));
   }
 

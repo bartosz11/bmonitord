@@ -1,33 +1,35 @@
 <script>
   import http from "@/http";
-  import { error, info, success } from "@/toastUtil";
   import { deleteCookie } from "svelte-cookie";
+  import { closeAllModals, openModal } from "svelte-modals";
   import { push } from "svelte-spa-router";
+  import { promise } from "@/toastUtil";
+  import ConfirmationModal from "@/lib/ConfirmationModal.svelte";
 
-  let clicks = 0;
-  
   function onClick() {
-    clicks++;
-    if (clicks === 1) info("Are you sure?", 2000);
-    if (clicks >= 2)
-      http
-        .delete("/api/user")
-        .then((response) => {
-          if (response.status == 204) {
-            success("Your account has been successfully deleted.");
+    openModal(ConfirmationModal, {
+      title: 'Are you sure you want to delete your account?',
+      onConfirm: () => {
+        promise((async () => {
+          const response = await http.delete("/api/user")
+          if (response.status === 204) {
             deleteCookie("auth-token");
-            //makes more sense than pushing to /logout i think
             push("/auth/login");
+            return;
           }
+        })(), {
+          error: "Something went wrong while deleting your account.",
+          success: "Your account has been successfully deleted.",
+          loading: "Deleting your account..."
         })
-        .catch((err) =>
-          error("Something went wrong while deleting your account.")
-        );
+        .finally(() => closeAllModals());
+      }
+    })
   }
 </script>
 
-<div class="card w-fit">
-  <span>Delete account (click 2 times)</span>
+<div class="card">
+  <span class="font-bold text-xl">Delete account</span>
   <div>
     <button class="btn-danger-primary mt-3" on:click={onClick}>
       Delete account

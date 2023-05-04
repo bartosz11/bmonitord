@@ -24,17 +24,17 @@
   }
 </script>
 
-<div class="card w-fit">
-  <span>Change username</span>
-  <form use:form on:submit={onSubmit}>
-    <div class="my-3">
+<div class="card md:col-span-2">
+  <span class="text-xl font-bold">Change username</span>
+  <form use:form on:submit={onSubmit} class="mt-2">
+    <div class="mb-2">
       <input
         type="username"
         bind:value={username}
         name="newusername"
         placeholder="New username"
         use:validators={[required]}
-        class="input-primary"
+        class="input-primary w-full"
       />
       <Hint class="hint-primary" for="newusername" on="required">
         This field is required.
