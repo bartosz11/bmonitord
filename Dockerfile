@@ -9,4 +9,6 @@ VOLUME /home/root
 #bmonitord takes a while to start, so 120s start period
 HEALTHCHECK --interval=45s --timeout=15s --start-period=120s \
   CMD curl --fail http://127.0.0.1:8080/app/health || exit 1
+#default port
+EXPOSE 8080
 ENTRYPOINT exec java -jar /bin/bmonitord.jar

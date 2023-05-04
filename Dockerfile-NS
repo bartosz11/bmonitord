@@ -6,16 +6,13 @@ WORKDIR /home/root
 RUN npm i && npm run build
 RUN gzip --keep --best -r dist/
 
-FROM eclipse-temurin:17-jdk-jammy AS build_java
+FROM gradle:8.1-jdk17-alpine AS build_java
 WORKDIR /home/root
 COPY src src/
-COPY gradlew .
 COPY build.gradle .
 COPY settings.gradle .
-COPY gradle gradle/
 COPY --from=build_node /home/root/dist src/main/resources/static
-RUN chmod u+x ./gradlew
-RUN ./gradlew bootJar --no-daemon
+RUN gradle bootJar --no-daemon
 
 FROM eclipse-temurin:17-jre-jammy AS run
 COPY --from=build_java /home/root/build/libs/bmonitord.jar /bin/bmonitord.jar
@@ -28,4 +25,6 @@ VOLUME /home/root
 #bmonitord takes a while to start, so 120s start period
 HEALTHCHECK --interval=45s --timeout=15s --start-period=120s \
   CMD curl --fail http://127.0.0.1:8080/app/health || exit 1
+#default port
+EXPOSE 8080
 ENTRYPOINT exec java -jar /bin/bmonitord.jar
