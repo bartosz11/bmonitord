@@ -48,9 +48,13 @@
     prevValue = v;
   });
 
+  const alwaysRenderDashboard = import.meta.env.VITE_ALWAYS_LOAD_DASHBOARD;
+
   const isWhiteLabelDomain = () => {
     let cookie = getCookie("actualOrigin");
     let browserLocation = window.location.host;
+    //I hate JS 
+    if (alwaysRenderDashboard === "true") return false;
     return cookie !== browserLocation;
   };
 </script>

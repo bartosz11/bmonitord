@@ -49,5 +49,6 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+frontend/.env.development
 frontend/.env
 database.db
