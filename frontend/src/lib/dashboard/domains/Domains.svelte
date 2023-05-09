@@ -7,13 +7,18 @@
   import DomainCreateModal from "./DomainCreateModal.svelte";
 
   let statuspages;
-  const fetchData = new Promise((resolve, reject) => {
+
+  const fetchStatuspages = new Promise((resolve, reject) => {
     http
       .get("/api/statuspage")
       .then((response) => {
         statuspages = response.data.data;
+        resolve();
       })
       .catch((err) => reject());
+  });
+
+  const fetchDomains = new Promise((resolve, reject) => {
     http
       .get("/api/domain")
       .then((response) => {
@@ -21,6 +26,8 @@
       })
       .catch((err) => reject());
   });
+  
+  const fetchData = Promise.all([fetchDomains, fetchStatuspages]);
 
   const columnSettings = [
     {
@@ -45,7 +52,10 @@
       key: "statuspage",
       title: "Statuspage",
       value: (v) => {
-        return statuspages.filter(page => page.whiteLabelDomain?.id === v.id)[0]?.name ?? "None";
+        return (
+          statuspages.filter((page) => page.whiteLabelDomain?.id === v.id)[0]
+            ?.name ?? "None"
+        );
       },
       sortable: true,
     },
@@ -70,7 +80,7 @@
       </div>
     </button>
   </div>
-  <SvelteTable columns={columnSettings} rows={data} />
+  <SvelteTable columns={columnSettings} rows={data[0]} />
 {:catch}
   <p>Couldn't fetch data required to render this page.</p>
 {/await}
