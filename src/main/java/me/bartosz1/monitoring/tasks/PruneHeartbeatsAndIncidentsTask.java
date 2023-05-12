@@ -30,7 +30,7 @@ public class PruneHeartbeatsAndIncidentsTask {
     private final boolean runGC;
     private static final Logger LOGGER = LoggerFactory.getLogger(PruneHeartbeatsAndIncidentsTask.class);
 
-    public PruneHeartbeatsAndIncidentsTask(HeartbeatRepository heartbeatRepository, IncidentRepository incidentRepository, MonitorRepository monitorRepository, @Value("${monitoring.prune.age:14}") int pruneDays, @Value("${monitoring.prune.call-gc-after:true}") boolean runGC) {
+    public PruneHeartbeatsAndIncidentsTask(HeartbeatRepository heartbeatRepository, IncidentRepository incidentRepository, MonitorRepository monitorRepository, @Value("${monitoring.prune.age:14}") int pruneDays, @Value("${monitoring.run-gc-after-tasks:false}") boolean runGC) {
         this.heartbeatRepository = heartbeatRepository;
         this.incidentRepository = incidentRepository;
         this.monitorRepository = monitorRepository;
@@ -69,7 +69,7 @@ public class PruneHeartbeatsAndIncidentsTask {
         monitorRepository.saveAll(bulkUpdateMonitors);
         LOGGER.info("At least " + targetHeartbeats.spliterator().getExactSizeIfKnown() + " heartbeats, " + targetIncidents.size() + " incidents affected");
         if (runGC) {
-            LOGGER.info("Running JVM garbage collector");
+            LOGGER.info("Running JVM garbage collector.");
             System.gc();
         }
     }
