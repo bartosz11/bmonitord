@@ -65,6 +65,9 @@ monitoring:
   #Domain/address your instance's dashboard should be accessible with
   #can be something like bmonitord.example.com, bmonitord.example.com:1234, 127.0.0.1:123
   domain-origin: <domain>
+  #Run System.gc() after monitor checking/data pruning is done. Might reduce RAM usage, default: false
+  #Might affect CPU usage (and maybe slightly performance???)
+  run-gc-after-tasks: false
   prune:
     #How old an incident/heartbeat object needs to be before automatic deletion, in days
     #you might want to set this to lower value if host's cpu is weak and you're monitoring lots of resources for alert purposes only
