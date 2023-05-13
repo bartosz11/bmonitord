@@ -29,7 +29,6 @@ public class ActualOriginCookieFilter extends OncePerRequestFilter {
         if (servletPath.matches(FRONTEND_PATHS_REGEX)) {
             String setCookie = ResponseCookie.from("actualOrigin", origin).secure(secureCookies).build().toString();
             response.addHeader("Set-Cookie", setCookie);
-            System.out.println("Added cookie to "+servletPath);
         }
         filterChain.doFilter(request, response);
     }
