@@ -1,5 +1,6 @@
 package me.bartosz1.monitoring.security;
 
+import me.bartosz1.monitoring.ActualOriginCookieFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,9 +17,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
+    private final ActualOriginCookieFilter actualOriginCookieFilter;
 
-    public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
+    public SecurityConfig(JwtRequestFilter jwtRequestFilter, ActualOriginCookieFilter actualOriginCookieFilter) {
         this.jwtRequestFilter = jwtRequestFilter;
+        this.actualOriginCookieFilter = actualOriginCookieFilter;
     }
 
     @Bean
@@ -28,6 +31,8 @@ public class SecurityConfig {
                 //Frontend requests
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/index.html").permitAll()
+                //These aren't related to API, just some routes that frontend might utilize if it doesn't use a hash router (stock one does)
+                .requestMatchers("/dashboard/**", "/auth/**", "/report/**", "/statuspage/**").permitAll()
                 .requestMatchers("/assets/**").permitAll()
                 //All login and register requests need to be allowed
                 .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
@@ -49,6 +54,8 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         //Add our custom JWT filter
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        //It can be placed anywhere
+        http.addFilterAfter(actualOriginCookieFilter, JwtRequestFilter.class);
         return http.build();
     }
 
