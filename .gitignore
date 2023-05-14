@@ -4,6 +4,7 @@ src/main/resources/migration/**/R__sample_data.sql
 notes.txt
 docker-compose.yml
 test.db
+a.out
 .VSCodeCounter/
 
 .gradle
