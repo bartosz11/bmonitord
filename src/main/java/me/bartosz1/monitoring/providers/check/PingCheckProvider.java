@@ -11,9 +11,9 @@ public class PingCheckProvider extends CheckProvider {
 
     public Heartbeat check(Monitor monitor) {
         try {
-            long start = Instant.now().getEpochSecond();
+            long start = Instant.now().toEpochMilli();
             return ping(monitor.getHost(), monitor.getTimeout())
-                    ? new Heartbeat().setMonitor(monitor).setTimestamp(Instant.now().getEpochSecond()).setStatus(MonitorStatus.UP).setResponseTime(Instant.now().getEpochSecond() - start)
+                    ? new Heartbeat().setMonitor(monitor).setTimestamp(Instant.now().getEpochSecond()).setStatus(MonitorStatus.UP).setResponseTime(Instant.now().toEpochMilli() - start)
                     : new Heartbeat().setMonitor(monitor).setTimestamp(Instant.now().getEpochSecond()).setStatus(MonitorStatus.DOWN);
         } catch (IOException | InterruptedException ignored) {
         }

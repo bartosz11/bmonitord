@@ -4,19 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32186a8-2899-42e4-8c1b-0de1c6c0e734" name="Changes" comment="feat: custom frontend support&#10;dev guides soon:tm:&#10;some intellij files too">
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/ActualOriginCookieFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jpa-buddy.xml" beforeDir="false" />
+    <list default="true" id="f32186a8-2899-42e4-8c1b-0de1c6c0e734" name="Changes" comment="possible fix for ping latency always 0">
+      <change afterPath="$PROJECT_DIR$/.idea/jpa-buddy.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/IndexController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/IndexController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/report/MonitorStats.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/lib/report/MonitorStats.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/check/PingCheckProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/check/PingCheckProvider.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +29,12 @@
         </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MonitoringV2" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -78,7 +76,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;v2&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.appearance&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
 }</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -111,13 +109,22 @@
       <option name="project" value="LOCAL" />
       <updated>1684019280874</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="[ci skip] remove a.out&#10;wtf is even a.out">
+      <created>1684061206493</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1684061206493</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="experimental: run gc after pruning hb's/incidents" />
     <MESSAGE value="feat: optionally run GC after data prune/check" />
     <MESSAGE value="feat: custom frontend support&#10;dev guides soon:tm:&#10;some intellij files too" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: custom frontend support&#10;dev guides soon:tm:&#10;some intellij files too" />
+    <MESSAGE value="[ci skip] remove a.out&#10;wtf is even a.out" />
+    <MESSAGE value="possible fix for ping latency always 0" />
+    <option name="LAST_COMMIT_MESSAGE" value="possible fix for ping latency always 0" />
   </component>
 </project>
