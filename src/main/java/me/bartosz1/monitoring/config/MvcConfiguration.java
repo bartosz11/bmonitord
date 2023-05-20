@@ -39,7 +39,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
         //public facing data
         registry.addMapping("/api/heartbeat/**");
         registry.addMapping("/api/incident/**");
-        registry.addMapping("/api/monitor/{id}").allowedMethods("GET");
+        registry.addMapping("/api/monitor/{id}");
         registry.addMapping("/api/monitor/{monitorId}/agent");
         registry.addMapping("/api/statuspage/{id}/public");
     }
