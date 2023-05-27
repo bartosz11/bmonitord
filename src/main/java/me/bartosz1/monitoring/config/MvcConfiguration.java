@@ -39,7 +39,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
         if (!production)
             registry.addMapping("/**").allowedOrigins("http://localhost:5173").allowCredentials(true).allowedMethods("GET", "HEAD", "POST", "OPTIONS", "DELETE", "PATCH", "PUT");
         //dashboard
-        registry.addMapping("/**").allowedOrigins(dashboardOrigin).allowCredentials(true).allowedOrigins("GET", "HEAD", "POST", "OPTIONS", "DELETE", "PATCH", "PUT");
+        //registry.addMapping("/**").allowedOrigins(dashboardOrigin).allowCredentials(true).allowedOrigins("GET", "HEAD", "POST", "OPTIONS", "DELETE", "PATCH", "PUT");
         //public facing data
         registry.addMapping("/api/heartbeat/**");
         registry.addMapping("/api/incident/**");
