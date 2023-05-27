@@ -15,8 +15,6 @@ public class MvcConfiguration implements WebMvcConfigurer {
 
     @Value("${monitoring.production}")
     private boolean production;
-    @Value("${monitoring.domain-origin}")
-    private String dashboardOrigin;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -38,12 +36,10 @@ public class MvcConfiguration implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         if (!production)
             registry.addMapping("/**").allowedOrigins("http://localhost:5173").allowCredentials(true).allowedMethods("GET", "HEAD", "POST", "OPTIONS", "DELETE", "PATCH", "PUT");
-        //dashboard
-        //registry.addMapping("/**").allowedOrigins(dashboardOrigin).allowCredentials(true).allowedOrigins("GET", "HEAD", "POST", "OPTIONS", "DELETE", "PATCH", "PUT");
         //public facing data
         registry.addMapping("/api/heartbeat/**");
         registry.addMapping("/api/incident/**");
-        registry.addMapping("/api/monitor/{id}").allowedMethods("GET");
+        registry.addMapping("/api/monitor/{id}").allowedMethods("GET", "HEAD", "OPTIONS", "DELETE");
         registry.addMapping("/api/monitor/{monitorId}/agent");
         registry.addMapping("/api/statuspage/{id}/public");
     }
