@@ -39,6 +39,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
         //public facing data
         registry.addMapping("/api/heartbeat/**");
         registry.addMapping("/api/incident/**");
+        //I have to allow DELETE too but delete endpoint is covered by security config
         registry.addMapping("/api/monitor/{id}").allowedMethods("GET", "HEAD", "OPTIONS", "DELETE");
         registry.addMapping("/api/monitor/{monitorId}/agent");
         registry.addMapping("/api/statuspage/{id}/public");

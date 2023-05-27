@@ -1,0 +1,1 @@
+ALTER TABLE heartbeats ALTER COLUMN disk_data TYPE varchar;
