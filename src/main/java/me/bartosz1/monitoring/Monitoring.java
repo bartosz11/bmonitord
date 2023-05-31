@@ -1,7 +1,6 @@
 package me.bartosz1.monitoring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -10,9 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.net.http.HttpClient;
+import java.time.Duration;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.TimeUnit;
+import java.time.temporal.ChronoUnit;
 
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -42,8 +43,8 @@ public class Monitoring {
     }
 
     @Bean
-    public OkHttpClient httpClient() {
-        return new OkHttpClient.Builder().callTimeout(5, TimeUnit.SECONDS).build();
+    public HttpClient httpClient() {
+        return HttpClient.newBuilder().connectTimeout(Duration.of(5, ChronoUnit.SECONDS)).build();
     }
 
     @Bean

@@ -4,13 +4,14 @@ import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.Monitor;
 import me.bartosz1.monitoring.models.enums.MonitorStatus;
 import me.bartosz1.monitoring.models.enums.MonitorType;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 
@@ -21,9 +22,9 @@ public class DiscordNotificationProvider extends NotificationProvider {
     private static final String DOWN_EMBED_TEMPLATE = "{ \"content\": null, \"embeds\": [ { \"title\": \"%name% is now DOWN.\", \"description\": \"Time: %timestamp%\\nHost: %host%\", \"color\": 13572377 } ], \"attachments\": [] }";
     private static final String TEST_NOTIFICATION = "{ \"content\": null, \"embeds\": [ {\"description\": \"This is a test notification.\", \"color\" :6250335 } ], \"attachments\": [] }";
     private final DateTimeFormatter dateTimeFormatter;
-    private final OkHttpClient httpClient;
+    private final HttpClient httpClient;
 
-    public DiscordNotificationProvider(DateTimeFormatter dateTimeFormatter, OkHttpClient httpClient) {
+    public DiscordNotificationProvider(DateTimeFormatter dateTimeFormatter, HttpClient httpClient) {
         this.dateTimeFormatter = dateTimeFormatter;
         this.httpClient = httpClient;
     }
@@ -31,7 +32,7 @@ public class DiscordNotificationProvider extends NotificationProvider {
     @Override
     public void sendNotification(Monitor monitor, Incident incident, String args) {
         if (args.startsWith("http://") || args.startsWith("https://")) {
-            String replacement = monitor.getType() == MonitorType.AGENT ? "Server Agent" : "[" + monitor.getHost() + "](" + monitor.getHost() + ")";
+            String replacement = monitor.getType() == MonitorType.AGENT ? "Server Agent" : monitor.getHost();
             String thisEmbed = monitor.getLastStatus() == MonitorStatus.UP
                     //if up
                     ? UP_EMBED_TEMPLATE.replaceFirst("%name%", monitor.getName())
@@ -42,16 +43,20 @@ public class DiscordNotificationProvider extends NotificationProvider {
                     : DOWN_EMBED_TEMPLATE.replaceFirst("%name%", monitor.getName())
                     .replaceFirst("%timestamp%", dateTimeFormatter.format(Instant.ofEpochSecond(incident.getStartTimestamp())))
                     .replaceFirst("%host%", replacement);
-            Request req = new Request.Builder().url(args).post(RequestBody.create(thisEmbed, MediaType.parse("application/json"))).build();
-            httpClient.newCall(req).enqueue(BLANK_CALLBACK);
+            try {
+                HttpRequest req = HttpRequest.newBuilder().uri(new URI(args)).POST(HttpRequest.BodyPublishers.ofString(thisEmbed)).header("Content-Type", "application/json").build();
+                httpClient.sendAsync(req, HttpResponse.BodyHandlers.discarding());
+            } catch (URISyntaxException ignored) {}
         }
     }
 
     @Override
     public void sendTestNotification(String args) {
         if (args.startsWith("http://") || args.startsWith("https://")) {
-            Request req = new Request.Builder().url(args).post(RequestBody.create(TEST_NOTIFICATION, MediaType.parse("application/json"))).build();
-            httpClient.newCall(req).enqueue(BLANK_CALLBACK);
+            try {
+                HttpRequest req = HttpRequest.newBuilder().uri(new URI(args)).POST(HttpRequest.BodyPublishers.ofString(TEST_NOTIFICATION)).header("Content-Type", "application/json").build();
+                httpClient.sendAsync(req, HttpResponse.BodyHandlers.discarding());
+            } catch (URISyntaxException ignored) {}
         }
     }
 }

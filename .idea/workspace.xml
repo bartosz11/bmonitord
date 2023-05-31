@@ -4,12 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32186a8-2899-42e4-8c1b-0de1c6c0e734" name="Changes" comment="possible fix for ping latency always 0">
-      <change afterPath="$PROJECT_DIR$/.idea/jpa-buddy.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="f32186a8-2899-42e4-8c1b-0de1c6c0e734" name="Changes" comment="forgot a semicolon :skull:">
+      <change beforePath="$PROJECT_DIR$/.idea/jpa-buddy.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jpa-buddy.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/lib/report/MonitorStats.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/lib/report/MonitorStats.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/check/PingCheckProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/check/PingCheckProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/Monitoring.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/Monitoring.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Monitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Monitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/check/HTTPCheckProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/check/HTTPCheckProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/DiscordNotificationProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/DiscordNotificationProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/GenericWebhookNotificationProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/GenericWebhookNotificationProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/GotifyNotificationProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/GotifyNotificationProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/NotificationProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/NotificationProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/PushbulletNotificationProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/PushbulletNotificationProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/SlackNotificationProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/SlackNotificationProvider.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,10 +58,13 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="v2-mem-optimizations" />
+        <entry key="$PROJECT_DIR$" value="v2" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="isToolWindowVisible" value="false" />
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="wc8c5pz8" />
@@ -74,9 +84,9 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;v2&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;v2-switch-http-clients&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -116,7 +126,63 @@
       <option name="project" value="LOCAL" />
       <updated>1684061206493</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="possible fix for ping latency always 0">
+      <created>1684063520897</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1684063520897</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Possible fix for &quot;Invalid CORS request&quot; while deleting monitor">
+      <created>1684627072602</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1684627072602</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Another attempt of fixing &quot;Invalid CORS request&quot;, rollback prev fix">
+      <created>1684664491821</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1684664491821</updated>
+    </task>
+    <task id="LOCAL-00008" summary="rollback cors fix&#10;I have no clue what's going on, I can't even access a proxied instance's dashboard">
+      <created>1685207505807</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1685207505807</updated>
+    </task>
+    <task id="LOCAL-00009" summary="DELETE /api/monitor/{id} is now working&#10;and dashboard works">
+      <created>1685211251611</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1685211251611</updated>
+    </task>
+    <task id="LOCAL-00010" summary="attempt of fixing agents, sort of">
+      <created>1685218114178</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1685218114178</updated>
+    </task>
+    <task id="LOCAL-00011" summary="change varchar to text">
+      <created>1685218391172</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1685218391172</updated>
+    </task>
+    <task id="LOCAL-00012" summary="forgot a semicolon :skull:">
+      <created>1685218590909</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1685218590909</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -125,6 +191,13 @@
     <MESSAGE value="feat: custom frontend support&#10;dev guides soon:tm:&#10;some intellij files too" />
     <MESSAGE value="[ci skip] remove a.out&#10;wtf is even a.out" />
     <MESSAGE value="possible fix for ping latency always 0" />
-    <option name="LAST_COMMIT_MESSAGE" value="possible fix for ping latency always 0" />
+    <MESSAGE value="Possible fix for &quot;Invalid CORS request&quot; while deleting monitor" />
+    <MESSAGE value="Another attempt of fixing &quot;Invalid CORS request&quot;, rollback prev fix" />
+    <MESSAGE value="rollback cors fix&#10;I have no clue what's going on, I can't even access a proxied instance's dashboard" />
+    <MESSAGE value="DELETE /api/monitor/{id} is now working&#10;and dashboard works" />
+    <MESSAGE value="attempt of fixing agents, sort of" />
+    <MESSAGE value="change varchar to text" />
+    <MESSAGE value="forgot a semicolon :skull:" />
+    <option name="LAST_COMMIT_MESSAGE" value="forgot a semicolon :skull:" />
   </component>
 </project>

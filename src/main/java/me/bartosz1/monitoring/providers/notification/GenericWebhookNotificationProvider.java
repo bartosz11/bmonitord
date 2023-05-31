@@ -4,22 +4,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.bartosz1.monitoring.models.Incident;
 import me.bartosz1.monitoring.models.Monitor;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.HashMap;
 
 @Component
 public class GenericWebhookNotificationProvider extends NotificationProvider {
 
     private static final String TEST_NOTIFICATION = "{\"event\": \"test-notification\"}";
-    private final OkHttpClient httpClient;
+    private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
 
-    public GenericWebhookNotificationProvider(OkHttpClient httpClient, ObjectMapper objectMapper) {
+    public GenericWebhookNotificationProvider(HttpClient httpClient, ObjectMapper objectMapper) {
         this.httpClient = httpClient;
         this.objectMapper = objectMapper;
     }
@@ -33,12 +34,10 @@ public class GenericWebhookNotificationProvider extends NotificationProvider {
             bodyContent.put("monitor", monitor);
             bodyContent.put("incident", incident);
             try {
-                RequestBody requestBody = RequestBody.create(objectMapper.writeValueAsString(bodyContent), MediaType.parse("application/json"));
-                Request req = new Request.Builder().post(requestBody).url(args).build();
-                httpClient.newCall(req).enqueue(BLANK_CALLBACK);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+                String bodyAsString = objectMapper.writeValueAsString(bodyContent);
+                HttpRequest req = HttpRequest.newBuilder().uri(new URI(args)).POST(HttpRequest.BodyPublishers.ofString(bodyAsString)).header("Content-Type", "application/json").build();
+                httpClient.sendAsync(req, HttpResponse.BodyHandlers.discarding());
+            } catch (JsonProcessingException | URISyntaxException ignored) {}
         }
     }
 
@@ -46,12 +45,10 @@ public class GenericWebhookNotificationProvider extends NotificationProvider {
     public void sendTestNotification(String args) {
         if (args.startsWith("http://") || args.startsWith("https://")) {
             try {
-                RequestBody requestBody = RequestBody.create(objectMapper.writeValueAsString(TEST_NOTIFICATION), MediaType.parse("application/json"));
-                Request req = new Request.Builder().post(requestBody).url(args).build();
-                httpClient.newCall(req).enqueue(BLANK_CALLBACK);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+                String bodyAsString = objectMapper.writeValueAsString(TEST_NOTIFICATION);
+                HttpRequest req = HttpRequest.newBuilder().uri(new URI(args)).POST(HttpRequest.BodyPublishers.ofString(bodyAsString)).header("Content-Type", "application/json").build();
+                httpClient.sendAsync(req, HttpResponse.BodyHandlers.discarding());
+            } catch (JsonProcessingException | URISyntaxException ignored) {}
         }
     }
 }
