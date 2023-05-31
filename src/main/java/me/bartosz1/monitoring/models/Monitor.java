@@ -71,6 +71,7 @@ public class Monitor {
         this.timeout = cdo.getTimeout();
         this.retries = cdo.getRetries();
         this.lastStatus = MonitorStatus.UNKNOWN;
+        this.verifyCertificate = cdo.isVerifyCertificate();
     }
 
     public Monitor(MonitorCDO cdo, User user, Instant createdOn, Agent agent) {
@@ -85,6 +86,7 @@ public class Monitor {
         this.retries = cdo.getRetries();
         this.agent = agent;
         this.lastStatus = MonitorStatus.UNKNOWN;
+        this.verifyCertificate = cdo.isVerifyCertificate();
     }
 
 
