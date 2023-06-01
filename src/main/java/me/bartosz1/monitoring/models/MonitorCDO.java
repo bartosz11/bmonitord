@@ -1,6 +1,8 @@
 package me.bartosz1.monitoring.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import me.bartosz1.monitoring.models.enums.MonitorType;
+import me.bartosz1.monitoring.models.monitor.MonitorHTTPInfoCDO;
 
 public class MonitorCDO {
 
@@ -10,9 +12,8 @@ public class MonitorCDO {
 
     private int retries;
     private int timeout;
-    private String allowedHttpCodes;
     private boolean published;
-    private boolean verifyCertificate;
+    private MonitorHTTPInfoCDO httpInfoCDO;
 
     public String getName() {
         return name;
@@ -59,15 +60,6 @@ public class MonitorCDO {
         return this;
     }
 
-    public String getAllowedHttpCodes() {
-        return allowedHttpCodes;
-    }
-
-    public MonitorCDO setAllowedHttpCodes(String allowedHttpCodes) {
-        this.allowedHttpCodes = allowedHttpCodes;
-        return this;
-    }
-
     public boolean isPublished() {
         return published;
     }
@@ -76,13 +68,13 @@ public class MonitorCDO {
         this.published = published;
         return this;
     }
-
-    public boolean isVerifyCertificate() {
-        return verifyCertificate;
+    @JsonProperty("httpInfo")
+    public MonitorHTTPInfoCDO getHttpInfoCDO() {
+        return httpInfoCDO;
     }
 
-    public MonitorCDO setVerifyCertificate(boolean verifyCertificate) {
-        this.verifyCertificate = verifyCertificate;
+    public MonitorCDO setHttpInfoCDO(MonitorHTTPInfoCDO httpInfoCDO) {
+        this.httpInfoCDO = httpInfoCDO;
         return this;
     }
 }

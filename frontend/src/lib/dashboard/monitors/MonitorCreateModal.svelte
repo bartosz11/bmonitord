@@ -30,9 +30,11 @@
         host: host ?? "",
         timeout: timeout,
         retries: retries,
-        allowedHttpCodes: allowedHttpCodes ?? "",
         published: published,
-        verifyCertificate: verifyCertificate ?? false,
+        httpInfo: {
+          allowedHttpCodes: allowedHttpCodes ?? "",
+          verifyCertificate: verifyCertificate ?? false,
+        }
       })
       .then((response) => {
         success("Successfully created a new monitor.");

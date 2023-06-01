@@ -21,6 +21,14 @@ public class MonitorHTTPInfo {
     @JsonIgnore
     private Monitor monitor;
 
+    public MonitorHTTPInfo() {}
+
+    public MonitorHTTPInfo(MonitorHTTPInfoCDO cdo, Monitor monitor) {
+        this.allowedHttpCodes = cdo.getAllowedHttpCodes();
+        this.verifyCertificate = cdo.isVerifyCertificate();
+        this.monitor = monitor;
+    }
+
     public long getId() {
         return id;
     }

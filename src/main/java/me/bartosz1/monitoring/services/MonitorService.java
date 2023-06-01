@@ -35,9 +35,10 @@ public class MonitorService {
             case AGENT -> {
                 return monitorRepository.save(new Monitor(cdo, user, Instant.now(), new Agent()));
             }
+            //subject-to-change - might simplify this later
             case HTTP -> {
                 Monitor monitor = new Monitor(cdo, user, Instant.now());
-                MonitorHTTPInfo httpInfo = new MonitorHTTPInfo().setAllowedHttpCodes(cdo.getAllowedHttpCodes()).setVerifyCertificate(cdo.isVerifyCertificate()).setMonitor(monitor);
+                MonitorHTTPInfo httpInfo = new MonitorHTTPInfo(cdo.getHttpInfoCDO(), monitor);
                 monitor.setHttpInfo(httpInfo);
                 return monitorRepository.save(monitor);
             }

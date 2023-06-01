@@ -3,6 +3,7 @@ package me.bartosz1.monitoring.controllers;
 import jakarta.transaction.Transactional;
 import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.models.enums.MonitorType;
+import me.bartosz1.monitoring.models.monitor.MonitorHTTPInfoCDO;
 import me.bartosz1.monitoring.repositories.MonitorRepository;
 import me.bartosz1.monitoring.repositories.NotificationRepository;
 import me.bartosz1.monitoring.repositories.StatuspageRepository;
@@ -58,7 +59,8 @@ public class MonitorControllerTest {
     @Test
     @Order(1)
     public void monitorCreationSucceeds() throws Exception {
-        MonitorCDO monitorCDO = new MonitorCDO().setName("Example").setHost("http://example.com").setTimeout(5).setRetries(0).setVerifyCertificate(false).setPublished(false).setAllowedHttpCodes("200").setType(MonitorType.HTTP);
+        MonitorHTTPInfoCDO httpInfoCDO = new MonitorHTTPInfoCDO().setAllowedHttpCodes("200").setVerifyCertificate(false);
+        MonitorCDO monitorCDO = new MonitorCDO().setName("Example").setHost("http://example.com").setTimeout(5).setRetries(0).setPublished(false).setType(MonitorType.HTTP).setHttpInfoCDO(httpInfoCDO);
         mockMvc.perform(post("/api/monitor").header("Authorization", "Bearer " + authToken).content(OBJECT_MAPPER.writeValueAsString(monitorCDO)).contentType("application/json"))
                 .andExpect(status().is(201)).andDo(print());
         //should be id 3
