@@ -23,10 +23,14 @@ INSERT INTO notifications (credentials, name, type, user_id)
 INSERT INTO notifications (credentials, name, type, user_id)
  VALUES ('http://127.0.0.1:3000/', 'Not used generic webhook notification', 3, 1);
 
-INSERT INTO monitors (name, host, type, last_status, retries, timeout, last_check, last_successful_check, created_on, paused, checks_up, checks_down, allowed_http_codes, published, verify_certificate, user_id, agent_id)
- VALUES ('Google', 'https://google.com', 0, 3, 0, 5, 0, 0, 1680534720, FALSE, 0, 0, '200', TRUE, FALSE, 1, NULL);
-INSERT INTO monitors (name, host, type, last_status, retries, timeout, last_check, last_successful_check, created_on, paused, checks_up, checks_down, allowed_http_codes, published, verify_certificate, user_id, agent_id)
- VALUES ('npx http-echo-server port 3000', 'http://127.0.0.1:3000/', 0, 3, 0, 5, 0, 0, 1680534720, FALSE, 0, 0, '200', TRUE, FALSE, 1, NULL);
+INSERT INTO monitors (name, host, type, last_status, retries, timeout, last_check, last_successful_check, created_on, paused, checks_up, checks_down, published, user_id, agent_id)
+ VALUES ('Google', 'https://google.com', 0, 3, 0, 5, 0, 0, 1680534720, FALSE, 0, 0, TRUE, 1, NULL);
+INSERT INTO monitor_http_info (monitor_id, verify_certificate, allowed_http_codes) VALUES (1, FALSE, '200');
+UPDATE monitors SET monitor_http_info_id = 1 WHERE id = 1;
+INSERT INTO monitors (name, host, type, last_status, retries, timeout, last_check, last_successful_check, created_on, paused, checks_up, checks_down, published, user_id, agent_id)
+ VALUES ('npx http-echo-server port 3000', 'http://127.0.0.1:3000/', 0, 3, 0, 5, 0, 0, 1680534720, FALSE, 0, 0, TRUE, 1, NULL);
+INSERT INTO monitor_http_info (monitor_id, verify_certificate, allowed_http_codes) VALUES (2, FALSE, '200');
+UPDATE monitors SET monitor_http_info_id = 2 WHERE id = 2;
 INSERT INTO incidents (start_timestamp, end_timestamp, duration, ongoing, monitor_id)
  VALUES (1680534720, 1680534780, 60, FALSE, 1);
 INSERT INTO monitors_incidents (monitor_id, incidents_id) VALUES (1, 1);

@@ -18,6 +18,7 @@ public class MonitorHTTPInfo {
     private boolean verifyCertificate;
     //private boolean followRedirects;
     @OneToOne
+    @JsonIgnore
     private Monitor monitor;
 
     public long getId() {
