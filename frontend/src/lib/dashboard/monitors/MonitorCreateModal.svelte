@@ -19,7 +19,8 @@
   let retries;
   let allowedHttpCodes;
   let published;
-  let verifyCertificate;
+  let verifyCertificate = false;
+  let followRedirects = true;
   const form = useForm();
   function onSubmit(e) {
     e.preventDefault();
@@ -34,6 +35,7 @@
         httpInfo: {
           allowedHttpCodes: allowedHttpCodes ?? "",
           verifyCertificate: verifyCertificate ?? false,
+          followRedirects: followRedirects ?? true,
         }
       })
       .then((response) => {
@@ -162,6 +164,15 @@
               class="input-primary"
               type="checkbox"
               name="verifyCertificate"
+            />
+          </div>
+          <div class="space-x-2">
+            <label for="followRedirects">Follow redirects</label>
+            <input
+              bind:checked={followRedirects}
+              class="input-primary"
+              type="checkbox"
+              name="followRedirects"
             />
           </div>
         {/if}

@@ -45,7 +45,8 @@ public class HTTPCheckProvider extends CheckProvider {
                 sslContext.init(null, new TrustManager[]{TRUST_ALL_CERTS}, new SecureRandom());
                 builder.sslContext(sslContext);
             }
-            builder.followRedirects(HttpClient.Redirect.ALWAYS);
+            if (monitor.getHttpInfo().isFollowRedirects()) builder.followRedirects(HttpClient.Redirect.ALWAYS);
+            else builder.followRedirects(HttpClient.Redirect.NEVER);
             HttpClient httpClient = builder.build();
             HttpRequest req = HttpRequest.newBuilder().GET().uri(new URI(monitor.getHost())).timeout(Duration.of(monitor.getTimeout(), TimeUnit.SECONDS.toChronoUnit())).build();
             long start = Instant.now().toEpochMilli();

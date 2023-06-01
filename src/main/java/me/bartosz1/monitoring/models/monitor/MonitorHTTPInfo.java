@@ -16,7 +16,7 @@ public class MonitorHTTPInfo {
     private long id;
     private String allowedHttpCodes;
     private boolean verifyCertificate;
-    //private boolean followRedirects;
+    private boolean followRedirects;
     @OneToOne
     @JsonIgnore
     private Monitor monitor;
@@ -26,6 +26,7 @@ public class MonitorHTTPInfo {
     public MonitorHTTPInfo(MonitorHTTPInfoCDO cdo, Monitor monitor) {
         this.allowedHttpCodes = cdo.getAllowedHttpCodes();
         this.verifyCertificate = cdo.isVerifyCertificate();
+        this.followRedirects = cdo.isFollowRedirects();
         this.monitor = monitor;
     }
 
@@ -65,4 +66,12 @@ public class MonitorHTTPInfo {
         return Arrays.stream(allowedHttpCodes.split(",")).map(Integer::parseInt).collect(Collectors.toList());
     }
 
+    public boolean isFollowRedirects() {
+        return followRedirects;
+    }
+
+    public MonitorHTTPInfo setFollowRedirects(boolean followRedirects) {
+        this.followRedirects = followRedirects;
+        return this;
+    }
 }
