@@ -5,6 +5,7 @@ import me.bartosz1.monitoring.exceptions.EntityNotFoundException;
 import me.bartosz1.monitoring.exceptions.IllegalParameterException;
 import me.bartosz1.monitoring.models.*;
 import me.bartosz1.monitoring.models.enums.MonitorType;
+import me.bartosz1.monitoring.models.monitor.MonitorHTTPInfo;
 import me.bartosz1.monitoring.repositories.MonitorRepository;
 import me.bartosz1.monitoring.repositories.NotificationRepository;
 import me.bartosz1.monitoring.repositories.StatuspageRepository;
@@ -30,10 +31,21 @@ public class MonitorService {
     }
 
     public Monitor createMonitor(MonitorCDO cdo, User user) {
-        if (cdo.getType() == MonitorType.AGENT) {
-            return monitorRepository.save(new Monitor(cdo, user, Instant.now(), new Agent()));
+        switch (cdo.getType()) {
+            case AGENT -> {
+                return monitorRepository.save(new Monitor(cdo, user, Instant.now(), new Agent()));
+            }
+            case HTTP -> {
+                Monitor monitor = new Monitor(cdo, user, Instant.now());
+                MonitorHTTPInfo httpInfo = new MonitorHTTPInfo().setAllowedHttpCodes(cdo.getAllowedHttpCodes()).setVerifyCertificate(cdo.isVerifyCertificate()).setMonitor(monitor);
+                monitor.setHttpInfo(httpInfo);
+                return monitorRepository.save(monitor);
+            }
+            //ping
+            default -> {
+                return monitorRepository.save(new Monitor(cdo, user, Instant.now()));
+            }
         }
-        return monitorRepository.save(new Monitor(cdo, user, Instant.now()));
     }
 
     public Monitor deleteMonitor(long id, User user) throws EntityNotFoundException {
