@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import me.bartosz1.monitoring.models.enums.MonitorStatus;
 import me.bartosz1.monitoring.models.enums.MonitorType;
+import me.bartosz1.monitoring.models.monitor.MonitorHTTPInfo;
 
 import java.text.DecimalFormat;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "monitors")
@@ -33,9 +31,9 @@ public class Monitor {
     private int checksUp;
     @JsonIgnore
     private int checksDown;
-    private String allowedHttpCodes;
     private boolean published;
-    private boolean verifyCertificate;
+    @OneToOne(cascade = CascadeType.ALL)
+    private MonitorHTTPInfo monitorHttpInfo;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Incident> incidents;
@@ -67,11 +65,9 @@ public class Monitor {
         this.name = cdo.getName();
         this.host = cdo.getHost();
         this.type = cdo.getType();
-        this.allowedHttpCodes = cdo.getAllowedHttpCodes();
         this.timeout = cdo.getTimeout();
         this.retries = cdo.getRetries();
         this.lastStatus = MonitorStatus.UNKNOWN;
-        this.verifyCertificate = cdo.isVerifyCertificate();
     }
 
     public Monitor(MonitorCDO cdo, User user, Instant createdOn, Agent agent) {
@@ -81,12 +77,10 @@ public class Monitor {
         this.name = cdo.getName();
         this.host = cdo.getHost();
         this.type = cdo.getType();
-        this.allowedHttpCodes = cdo.getAllowedHttpCodes();
         this.timeout = cdo.getTimeout();
         this.retries = cdo.getRetries();
         this.agent = agent;
         this.lastStatus = MonitorStatus.UNKNOWN;
-        this.verifyCertificate = cdo.isVerifyCertificate();
     }
 
 
@@ -207,30 +201,12 @@ public class Monitor {
         return this;
     }
 
-    public String getAllowedHttpCodes() {
-        return allowedHttpCodes;
-    }
-
-    public Monitor setAllowedHttpCodes(String allowedHttpCodes) {
-        this.allowedHttpCodes = allowedHttpCodes;
-        return this;
-    }
-
     public boolean isPublished() {
         return published;
     }
 
     public Monitor setPublished(boolean published) {
         this.published = published;
-        return this;
-    }
-
-    public boolean isVerifyCertificate() {
-        return verifyCertificate;
-    }
-
-    public Monitor setVerifyCertificate(boolean verifyCertificate) {
-        this.verifyCertificate = verifyCertificate;
         return this;
     }
 
@@ -287,17 +263,21 @@ public class Monitor {
         return this;
     }
 
-    @JsonIgnore
-    public List<Integer> getAllowedHttpCodesAsList() {
-        return Arrays.stream(allowedHttpCodes.split(",")).map(Integer::parseInt).collect(Collectors.toList());
-    }
-
     public Set<Heartbeat> getHeartbeats() {
         return heartbeats;
     }
 
     public Monitor setHeartbeats(Set<Heartbeat> heartbeats) {
         this.heartbeats = heartbeats;
+        return this;
+    }
+
+    public MonitorHTTPInfo getHttpInfo() {
+        return monitorHttpInfo;
+    }
+
+    public Monitor setHttpInfo(MonitorHTTPInfo httpInfo) {
+        this.monitorHttpInfo = httpInfo;
         return this;
     }
 }

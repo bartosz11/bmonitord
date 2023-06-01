@@ -40,7 +40,7 @@ public class HTTPCheckProvider extends CheckProvider {
     public Heartbeat check(Monitor monitor) {
         try {
             HttpClient.Builder builder = HttpClient.newBuilder();
-            if (!monitor.isVerifyCertificate()) {
+            if (!monitor.getHttpInfo().isVerifyCertificate()) {
                 SSLContext sslContext = SSLContext.getInstance("TLS");
                 sslContext.init(null, new TrustManager[]{TRUST_ALL_CERTS}, new SecureRandom());
                 builder.sslContext(sslContext);
@@ -53,7 +53,7 @@ public class HTTPCheckProvider extends CheckProvider {
             long latency = Instant.now().toEpochMilli() - start;
             Heartbeat heartbeat = new Heartbeat().setMonitor(monitor).setResponseTime(latency).setTimestamp(Instant.now().getEpochSecond());
             //ternary expressions are cool
-            return monitor.getAllowedHttpCodesAsList().contains(resp.statusCode())
+            return monitor.getHttpInfo().getAllowedHttpCodesAsList().contains(resp.statusCode())
                     ? heartbeat.setStatus(MonitorStatus.UP)
                     : heartbeat.setStatus(MonitorStatus.DOWN);
             //we're ignoring all exceptions that can be thrown - request will fail no matter which one is thrown,
