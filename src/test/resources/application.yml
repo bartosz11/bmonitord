@@ -13,7 +13,7 @@ spring:
   datasource:
     url: "jdbc:tc:postgresql:15:///"
   flyway:
-    locations: "migration/test,migration/postgresql"
+    locations: "migration/test,migration/postgresql,migration/common"
 #MariaDB 10.11 specific settings
 ---
 spring:
@@ -23,7 +23,7 @@ spring:
   datasource:
     url: "jdbc:tc:mariadb:10.11:///"
   flyway:
-    locations: "migration/test,migration/mysql"
+    locations: "migration/test,migration/mysql,migration/common"
 #MySQL 8 specific settings
 ---
 spring:
@@ -33,7 +33,7 @@ spring:
   datasource:
     url: "jdbc:tc:mysql:8.0:///"
   flyway:
-    locations: "migration/test,migration/mysql"
+    locations: "migration/test,migration/mysql,migration/common"
 #SQLite specific settings
 ---
 spring:
@@ -46,7 +46,7 @@ spring:
     hikari:
       maximum-pool-size: 1
   flyway:
-    locations: "migration/test,migration/sqlite"
+    locations: "migration/test,migration/sqlite,migration/common"
 
 #Shared settings
 ---
