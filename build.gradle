@@ -63,6 +63,6 @@ bootJar {
 
 dependencyManagement {
     imports {
-        mavenBom "org.testcontainers:testcontainers-bom:1.18.1"
+        mavenBom "org.testcontainers:testcontainers-bom:1.18.3"
     }
 }
