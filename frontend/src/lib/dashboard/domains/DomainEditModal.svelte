@@ -53,7 +53,7 @@
             type="text"
             name="domain"
             placeholder="Domain"
-            bind:value={domain}
+            bind:value={domainName}
             use:validators={[required]}
             class="input-primary w-full"
           />
