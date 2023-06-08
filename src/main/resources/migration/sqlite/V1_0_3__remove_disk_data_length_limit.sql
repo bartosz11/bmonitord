@@ -1,1 +1,0 @@
---Empty file: SQLite doesn't have text length limit afaik, it's here just to keep the "name consistency" or something

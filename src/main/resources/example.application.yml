@@ -7,14 +7,11 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
-  #Uncomment if you're going to use sqlite  
-  #database-platform: org.hibernate.community.dialect.SQLiteDialect
   #Your DB credentials go here
   datasource:
     #Format:
-    #Example for sqlite: jdbc:sqlite:database.db - database will be saved to a file "database.db"
     #Example for postgres: jdbc:postgresql://<postgres host>:<port>/<database name>
-    #Example for mysql/mariadb: jdbc:mysql://<mysql/mariadb host><port>/<database name>
+    #Example for mariadb: jdbc:mariadb://<mysql/mariadb host><port>/<database name>
     url: <url>
     #Username and password can be left as blank if you're using sqlite
     username: <username>
@@ -25,8 +22,8 @@ spring:
   flyway:
     #Where should flyway look for migrations. Depends on DB you're using
     # For postgres: classpath:migration/common,classpath:migration/postgresql
-    # For mysql/mariadb: classpath:migration/common,classpath:migration/mysql
-    # For sqlite: classpath:migration/common,classpath:migration/sqlite
+    # For mariadb: classpath:migration/common,classpath:migration/mysql
+    # Yes, for mariadb it's called "mysql" to not break many instances after mysql support was dropped
     locations: "<look at comments above>"
     #Set this to true if you're running bmonitord for the first time since DB migrations were introduced (April 1st 2023)
     baselineOnMigrate: false

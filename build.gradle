@@ -21,6 +21,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     //Flyway
     implementation 'org.flywaydb:flyway-core'
+    //required for MariaDB
     implementation 'org.flywaydb:flyway-mysql'
     //Springdoc
     implementation 'org.springdoc:springdoc-openapi-starter-common:2.1.0'
@@ -28,19 +29,13 @@ dependencies {
     //JWT
     implementation 'com.auth0:java-jwt:4.4.0'
     //Database clients
-    implementation 'com.mysql:mysql-connector-j'
     implementation 'org.mariadb.jdbc:mariadb-java-client'
     implementation 'org.postgresql:postgresql'
-    //Spring doesn't manage SQLite driver versions
-    implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
-    //Non-official dialects including SQLite
-    implementation 'org.hibernate.orm:hibernate-community-dialects:6.2.2.Final'
     //Commons
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     //Tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'org.testcontainers:mysql'
     testImplementation 'org.testcontainers:mariadb'
     testImplementation 'org.testcontainers:postgresql'
 }
