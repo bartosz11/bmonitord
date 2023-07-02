@@ -121,7 +121,7 @@
       key: "free",
       title: "Free space",
       value: (v) => {
-        return convertSize((v.totalBytes = v.usedBytes));
+        return convertSize((v.totalBytes - v.usedBytes));
       },
       sortable: true,
     },
