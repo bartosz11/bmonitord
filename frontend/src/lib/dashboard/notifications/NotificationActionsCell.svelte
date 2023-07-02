@@ -2,7 +2,7 @@
   import http from "@/http";
   import { error, promise, success } from "@/toastUtil";
   import { tooltip } from "@svelte-plugins/tooltips";
-  import { Activity, BellRinging, Pencil, Trash } from "phosphor-svelte";
+  import { Pulse, BellRinging, Pencil, Trash } from "phosphor-svelte";
   import { openModal } from "svelte-modals";
   import NotificationEditModal from "./NotificationEditModal.svelte";
   import NotificationMonitorsModal from "./NotificationMonitorsModal.svelte";
@@ -98,6 +98,6 @@
       position: "bottom",
     }}
   >
-    <Activity />
+    <Pulse />
   </button>
 </div>

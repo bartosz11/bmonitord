@@ -1,8 +1,8 @@
 #Always add testing-shared
-#Dependent on DB: testing-postgresql, testing-mariadb, testing-sqlite
-#spring:
-# profiles:
-#    active: testing-shared,testing-sqlite
+#Dependent on DB: testing-postgresql, testing-mariadb
+spring:
+ profiles:
+    active: testing-shared,testing-mariadb
 
 #PostgreSQL specific settings
 ---
@@ -24,30 +24,6 @@ spring:
     url: "jdbc:tc:mariadb:10.11:///"
   flyway:
     locations: "migration/test,migration/mysql,migration/common"
-#MySQL 8 specific settings
----
-spring:
-  config:
-    activate:
-      on-profile: testing-mysql
-  datasource:
-    url: "jdbc:tc:mysql:8.0:///"
-  flyway:
-    locations: "migration/test,migration/mysql,migration/common"
-#SQLite specific settings
----
-spring:
-  config:
-    activate:
-      on-profile: testing-sqlite
-  database-platform: org.hibernate.community.dialect.SQLiteDialect
-  datasource:
-    url: "jdbc:sqlite:test.db"
-    hikari:
-      maximum-pool-size: 1
-  flyway:
-    locations: "migration/test,migration/sqlite,migration/common"
-
 #Shared settings
 ---
 spring:

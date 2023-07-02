@@ -9,7 +9,7 @@
     Trash,
     Pencil,
     Megaphone,
-    Activity,
+    Pulse,
     ArrowUpRight,
     Globe,
   } from "phosphor-svelte";
@@ -122,7 +122,7 @@
       position: "bottom",
     }}
   >
-    <Activity />
+    <Pulse />
   </button>
   <!--redirect-->
   <button
