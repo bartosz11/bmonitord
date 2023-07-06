@@ -108,6 +108,12 @@ public class MonitorController {
         Agent agent = monitorService.getAgentByMonitorId(monitorId, user);
         return new Response(HttpStatus.OK).addAdditionalData(agent).toResponseEntity();
     }
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{monitorId}/agentIP", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<Response> setAgentIPVisibility(@PathVariable long monitorId, @AuthenticationPrincipal User user, @RequestParam boolean hide) throws EntityNotFoundException {
+        Monitor monitor = monitorService.toggleAgentIPVisibility(monitorId, user, hide);
+        return new Response(HttpStatus.OK).addAdditionalData(monitor).toResponseEntity();
+    }
 
 }
 

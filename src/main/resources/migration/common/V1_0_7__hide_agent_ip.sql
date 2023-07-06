@@ -1,0 +1,1 @@
+ALTER TABLE agents ADD COLUMN hideip boolean NOT NULL DEFAULT false;

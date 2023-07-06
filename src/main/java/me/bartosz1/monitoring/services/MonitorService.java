@@ -77,7 +77,17 @@ public class MonitorService {
         Optional<Monitor> optionalMonitor = monitorRepository.findById(id);
         if (optionalMonitor.isPresent()) {
             Monitor monitor = optionalMonitor.get();
-            if ((user != null && monitor.getUser().getId() == user.getId()) || monitor.isPublished()) {
+            //owner user check
+            if (user != null && monitor.getUser().getId() == user.getId())
+                return monitor;
+            //unauthorized user not allowed to see IP and ID of agent if any, for that reason we have to recreate a whole entity ig
+            // spring is kinda annoying sometimes
+             else if (monitor.isPublished()) {
+                if (monitor.getType() == MonitorType.AGENT) {
+                    Agent agent = new Agent(monitor.getAgent());
+                    agent.setId(null).setIpAddress(agent.isHideIP() ? "Hidden" : agent.getIpAddress());
+                    return new Monitor(monitor).setAgent(agent);
+                }
                 return monitor;
             }
         }
@@ -200,8 +210,24 @@ public class MonitorService {
                 Agent agent = monitor.getAgent();
                 if (user != null && monitor.getUser().getId() == user.getId()) {
                     return agent;
+                    //user is unauthorized to see IP and ID
                 } else if (monitor.isPublished()) {
-                    return new Agent().setAgentVersion(agent.getAgentVersion()).setCpuCores(agent.getCpuCores()).setCpuModel(agent.getCpuModel()).setInstalled(agent.isInstalled()).setIpAddress(agent.getIpAddress()).setLastDataReceived(agent.getLastDataReceived()).setOs(agent.getOs()).setRamTotal(agent.getRamTotal()).setSwapTotal(agent.getSwapTotal()).setUptime(agent.getUptime());
+                    return new Agent().setAgentVersion(agent.getAgentVersion()).setCpuCores(agent.getCpuCores()).setCpuModel(agent.getCpuModel()).setInstalled(agent.isInstalled()).setIpAddress(agent.isHideIP() ? "Hidden" : agent.getIpAddress()).setLastDataReceived(agent.getLastDataReceived()).setOs(agent.getOs()).setRamTotal(agent.getRamTotal()).setSwapTotal(agent.getSwapTotal()).setUptime(agent.getUptime());
+                }
+            }
+        }
+        throw new EntityNotFoundException("Agent not found for monitor with ID " + monitorId + ".");
+    }
+
+    public Monitor toggleAgentIPVisibility(long monitorId, User user, boolean hide) throws EntityNotFoundException {
+        Optional<Monitor> byId = monitorRepository.findById(monitorId);
+        if (byId.isPresent()) {
+            Monitor monitor = byId.get();
+            if (monitor.getType() == MonitorType.AGENT) {
+                if (user.getId() == monitor.getUser().getId()) {
+                    Agent agent = monitor.getAgent();
+                    agent.setHideIP(hide);
+                    return monitorRepository.save(monitor);
                 }
             }
         }

@@ -17,6 +17,7 @@
     ListChecks,
     Info,
     Heartbeat,
+    Sunglasses,
   } from "phosphor-svelte";
   import { error, promise, success } from "@/toastUtil";
   import ConfirmationModal from "@/lib/ConfirmationModal.svelte";
@@ -31,15 +32,15 @@
           error: null,
           loading: "Deleting monitor...",
         })
-          .then(() =>  location.reload())
+          .then(() => location.reload())
           .catch((err) =>
-          error(
-            err.response?.data?.errors[0]?.message ??
-              "Something went wrong while deleting monitor."
-          )
-        )
-      }
-    })    
+            error(
+              err.response?.data?.errors[0]?.message ??
+                "Something went wrong while deleting monitor."
+            )
+          );
+      },
+    });
   }
 
   function onEditClick() {
@@ -69,13 +70,30 @@
       .then((response) => {
         location.reload();
         success(
-          `Successfully changed published state for monitor with ID ${row.id}`
+          `Successfully changed published state for monitor with ID ${row.id}.`
         );
       })
       .catch((err) =>
         error(
           err.response?.data?.errors[0]?.message ??
             "Something went wrong while changing published state for monitor."
+        )
+      );
+  }
+
+  function onHideIPClick() {
+    http
+      .patch(`/api/monitor/${row.id}/agentIP?hide=${!row.agent.hideIP}`)
+      .then((response) => {
+        location.reload();
+        success(
+          `Successfully toggled IP visibility for monitor with ID ${row.id}.`
+        );
+      })
+      .catch((err) =>
+        error(
+          err.response?.data?.errors[0]?.message ??
+            "Something went wrong while toggling IP visibility for monitor."
         )
       );
   }
@@ -220,6 +238,17 @@
       }}
     >
       <Heartbeat />
+    </button>
+    <button
+      on:click={onHideIPClick}
+      class="border border-blue-500 p-1 w-fit h-fit text-blue-500 hover:bg-blue-500 hover:text-white text-xl"
+      use:tooltip={{
+        content: `${row.agent.hideIP ? "Enable" : "Disable"} Agent IP visibility for unauthorized users`,
+        autoPosition: "true",
+        position: "bottom",
+      }}
+    >
+      <Sunglasses />
     </button>
   {/if}
 </div>

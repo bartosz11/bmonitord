@@ -26,9 +26,29 @@ public class Agent {
     private long swapTotal;
     private int uptime;
     private boolean installed;
+    //hides IP to unauthorized people, default false
+    private boolean hideIP;
     @OneToOne
     @JsonIgnore
     private Monitor monitor;
+
+    public Agent() {}
+
+    public Agent(Agent a) {
+        this.id = a.getId();
+        this.agentVersion = a.getAgentVersion();
+        this.cpuCores = a.getCpuCores();
+        this.cpuModel= a.getCpuModel();
+        this.ipAddress = a.getIpAddress();
+        this.lastDataReceived = a.getLastDataReceived();
+        this.os = a.getOs();
+        this.ramTotal = a.getRamTotal();
+        this.swapTotal = a.getSwapTotal();
+        this.uptime = a.getUptime();
+        this.installed = a.isInstalled();
+        this.hideIP = a.isHideIP();
+        this.monitor = a.getMonitor();
+    }
 
     public UUID getId() {
         return id;
@@ -133,4 +153,17 @@ public class Agent {
         return this;
     }
 
+    public boolean isHideIP() {
+        return hideIP;
+    }
+
+    public Agent setHideIP(boolean hideIP) {
+        this.hideIP = hideIP;
+        return this;
+    }
+
+    public Agent setId(UUID id) {
+        this.id = id;
+        return this;
+    }
 }
