@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32186a8-2899-42e4-8c1b-0de1c6c0e734" name="Changes" comment="dependency upgrades">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/migration/common/V1_0_7__hide_agent_ip.sql" afterDir="false" />
+    <list default="true" id="f32186a8-2899-42e4-8c1b-0de1c6c0e734" name="Changes" comment="feat: hide agent IP from unauthorized users (backend)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/MonitorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/MonitorController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Agent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Monitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Monitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/services/MonitorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/services/MonitorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -302,7 +298,15 @@
       <option name="project" value="LOCAL" />
       <updated>1688333671022</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="feat: hide agent IP from unauthorized users (backend)">
+      <option name="closed" value="true" />
+      <created>1688642045999</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1688642045999</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -339,6 +343,7 @@
     <MESSAGE value="major: dropped sqlite and mysql support&#10;fixed mariadb data types that broke after upgrading spring to 3.1.0 iirc" />
     <MESSAGE value="security config rewrite to new lambda dsl" />
     <MESSAGE value="dependency upgrades" />
-    <option name="LAST_COMMIT_MESSAGE" value="dependency upgrades" />
+    <MESSAGE value="feat: hide agent IP from unauthorized users (backend)" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: hide agent IP from unauthorized users (backend)" />
   </component>
 </project>

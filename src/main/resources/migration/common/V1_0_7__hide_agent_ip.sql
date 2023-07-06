@@ -1,1 +1,1 @@
-ALTER TABLE agents ADD COLUMN hide_ip boolean NOT NULL DEFAULT false;
+ALTER TABLE agents ADD COLUMN hideip boolean NOT NULL DEFAULT false;
