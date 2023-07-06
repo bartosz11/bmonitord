@@ -6,9 +6,10 @@
     netChart,
     ramChart,
   } from "@/chartTemplates";
-  import http from "@/http";
-  import { convertSize } from "@/sizeUnitUtil";
-  import { error } from "@/toastUtil";
+  import { formatSeconds } from "@/utils/durationFormatUtil";
+  import http from "@/utils/httpUtil";
+  import { convertSize } from "@/utils/sizeUnitUtil";
+  import { error } from "@/utils/toastUtil";
   import {
     CategoryScale,
     Chart as ChartJS,
@@ -345,8 +346,8 @@
               <div>{agent.os ?? "Unknown"}</div>
             </div>
             <div class="grid-cell">
-              <div class="text-lg">Uptime (seconds)</div>
-              <div>{agent.uptime}</div>
+              <div class="text-lg">Uptime</div>
+              <div>{formatSeconds(agent.uptime)}</div>
             </div>
             <div class="grid-cell">
               <div class="text-lg">IP address</div>

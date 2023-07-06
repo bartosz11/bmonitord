@@ -1,5 +1,5 @@
 <script>
-  import http from "@/http";
+  import http from "@/utils/httpUtil";
   import { onMount } from "svelte";
   import SvelteTable from "svelte-table";
   import MonitorNotificationAssignCell from "./MonitorNotificationAssignCell.svelte";

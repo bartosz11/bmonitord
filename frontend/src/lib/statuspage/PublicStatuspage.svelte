@@ -1,7 +1,7 @@
 <script>
-  import http from "@/http";
+  import http from "@/utils/httpUtil";
   import { timeout } from "@/timeoutStore";
-  import { promise } from "@/toastUtil";
+  import { promise } from "@/utils/toastUtil";
   import DOMPurify from "dompurify";
   import { marked } from "marked";
   import { Info, Warning, WarningCircle } from "phosphor-svelte";

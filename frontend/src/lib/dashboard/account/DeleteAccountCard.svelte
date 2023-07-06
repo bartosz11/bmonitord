@@ -1,9 +1,9 @@
 <script>
-  import http from "@/http";
+  import http from "@/utils/httpUtil";
   import { deleteCookie } from "svelte-cookie";
   import { closeAllModals, openModal } from "svelte-modals";
   import { push } from "svelte-spa-router";
-  import { promise } from "@/toastUtil";
+  import { promise } from "@/utils/toastUtil";
   import ConfirmationModal from "@/lib/ConfirmationModal.svelte";
 
   function onClick() {

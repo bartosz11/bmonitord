@@ -1,6 +1,6 @@
 <script>
-  import http from "@/http";
-  import { error, promise } from "@/toastUtil";
+  import http from "@/utils/httpUtil";
+  import { error, promise } from "@/utils/toastUtil";
   import { tooltip } from "@svelte-plugins/tooltips";
   import {
     ListNumbers,

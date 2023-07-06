@@ -1,8 +1,8 @@
 <script>
-  import http from "@/http";
+  import http from "@/utils/httpUtil";
   import { closeModal } from "svelte-modals";
   import { Hint, required, useForm, validators } from "svelte-use-form";
-  import { error, success } from "@/toastUtil";
+  import { error, success } from "@/utils/toastUtil";
 
   export let isOpen;
   let name;

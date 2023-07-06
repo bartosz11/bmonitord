@@ -1,5 +1,5 @@
 <script>
-  import http from "@/http";
+  import http from "@/utils/httpUtil";
   let down = 0;
   let up = 0;
   let paused = 0;

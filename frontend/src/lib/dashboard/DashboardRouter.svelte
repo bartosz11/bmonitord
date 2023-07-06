@@ -5,7 +5,7 @@
   import { Modals, closeModal } from "svelte-modals";
   import { onMount } from "svelte";
   import { deleteCookie, getCookie } from "svelte-cookie";
-  import http from "@/http";
+  import http from "@/utils/httpUtil";
   const prefix = "/dashboard";
   const routesAsArray = [
     "/dashboard/monitors",

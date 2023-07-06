@@ -1,6 +1,6 @@
 <script>
-  import http from "@/http";
-  import { error } from "@/toastUtil";
+  import http from "@/utils/httpUtil";
+  import { error } from "@/utils/toastUtil";
   const fetchData = new Promise((resolve, reject) => {
     http.get("/api/user").then((response) => {
       resolve(response.data.data);

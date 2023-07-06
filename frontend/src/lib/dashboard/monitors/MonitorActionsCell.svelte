@@ -1,5 +1,5 @@
 <script>
-  import http from "@/http";
+  import http from "@/utils/httpUtil";
   import { openModal } from "svelte-modals";
   import { push } from "svelte-spa-router";
   import MonitorAgentSetupModal from "./MonitorAgentSetupModal.svelte";
@@ -19,7 +19,7 @@
     Heartbeat,
     Sunglasses,
   } from "phosphor-svelte";
-  import { error, promise, success } from "@/toastUtil";
+  import { error, promise, success } from "@/utils/toastUtil";
   import ConfirmationModal from "@/lib/ConfirmationModal.svelte";
   export let row;
 

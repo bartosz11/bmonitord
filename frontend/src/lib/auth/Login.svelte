@@ -3,8 +3,8 @@
   import { getCookie } from "svelte-cookie";
   import { link, push } from "svelte-spa-router";
   import { Hint, required, useForm, validators } from "svelte-use-form";
-  import { success, error } from "@/toastUtil";
-  import http from "@/http";
+  import { success, error } from "@/utils/toastUtil";
+  import http from "@/utils/httpUtil";
 
   const form = useForm();
   let username;

@@ -1,6 +1,6 @@
 <script>
-  import http from "@/http";
-  import { error, promise, success } from "@/toastUtil";
+  import http from "@/utils/httpUtil";
+  import { error, promise, success } from "@/utils/toastUtil";
   import { tooltip } from "@svelte-plugins/tooltips";
   import { Pulse, BellRinging, Pencil, Trash } from "phosphor-svelte";
   import { openModal } from "svelte-modals";

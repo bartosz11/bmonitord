@@ -1,6 +1,6 @@
 <script>
-  import http from "@/http";
-  import { error, success } from "@/toastUtil";
+  import http from "@/utils/httpUtil";
+  import { error, success } from "@/utils/toastUtil";
   import { closeModal } from "svelte-modals";
   import { useForm } from "svelte-use-form";
 

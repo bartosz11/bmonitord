@@ -1,8 +1,8 @@
 <script>
   import { useForm, validators, required, Hint } from "svelte-use-form";
-  import { error, success } from "@/toastUtil";
+  import { error, success } from "@/utils/toastUtil";
   import { push } from "svelte-spa-router";
-  import http from "@/http";
+  import http from "@/utils/httpUtil";
 
   const form = useForm();
   let oldPassword;

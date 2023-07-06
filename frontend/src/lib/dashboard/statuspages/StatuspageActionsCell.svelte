@@ -1,5 +1,5 @@
 <script>
-  import http from "@/http";
+  import http from "@/utils/httpUtil";
   import { openModal } from "svelte-modals";
   import StatuspageAnnouncementModal from "./StatuspageAnnouncementModal.svelte";
   import StatuspageEditModal from "./StatuspageEditModal.svelte";
@@ -13,7 +13,7 @@
     ArrowUpRight,
     Globe,
   } from "phosphor-svelte";
-  import { error, promise } from "@/toastUtil";
+  import { error, promise } from "@/utils/toastUtil";
   import StatuspageAssignDomainModal from "./StatuspageAssignDomainModal.svelte";
   import ConfirmationModal from "@/lib/ConfirmationModal.svelte";
   export let row;

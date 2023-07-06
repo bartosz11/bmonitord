@@ -1,12 +1,12 @@
 <script>
-  import http from "@/http";
+  import http from "@/utils/httpUtil";
   import { openModal } from "svelte-modals";
   import SvelteTable from "svelte-table";
   import MonitorActionsCell from "./MonitorActionsCell.svelte";
   import MonitorCreateModal from "./MonitorCreateModal.svelte";
   import MonitorStatusCell from "./MonitorStatusCell.svelte";
   import { Plus } from "phosphor-svelte";
-  import { error, promise } from "@/toastUtil";
+  import { error, promise } from "@/utils/toastUtil";
   import { onMount } from "svelte";
   import { timeout } from "@/timeoutStore";
 

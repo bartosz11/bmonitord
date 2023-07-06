@@ -1,5 +1,5 @@
 <script>
-  import http from "@/http";
+  import http from "@/utils/httpUtil";
   import StatuspageActionsCell from "./StatuspageActionsCell.svelte";
   import SvelteTable from "svelte-table";
   import { openModal } from "svelte-modals";
