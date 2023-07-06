@@ -82,7 +82,25 @@ public class Monitor {
         this.agent = agent;
         this.lastStatus = MonitorStatus.UNKNOWN;
     }
-
+    public Monitor(Monitor m) {
+        this.id = m.getId();
+        this.name = m.getName();
+        this.host = m.getHost();
+        this.type = m.getType();
+        this.lastStatus = m.getLastStatus();
+        this.lastSuccessfulCheck = m.getLastSuccessfulCheck();
+        this.createdOn = m.getCreatedOn();
+        this.paused = m.isPaused();
+        this.checksDown = m.getChecksDown();
+        this.checksUp = m.getChecksUp();
+        this.monitorHttpInfo = m.getHttpInfo();
+        this.incidents = m.getIncidents();
+        this.user = m.getUser();
+        this.notifications = m.getNotifications();
+        this.statuspages = m.getStatuspages();
+        this.agent = m.getAgent();
+        this.heartbeats = m.getHeartbeats();
+    }
 
     public long getId() {
         return id;
