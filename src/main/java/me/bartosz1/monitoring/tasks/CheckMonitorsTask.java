@@ -34,14 +34,12 @@ public class CheckMonitorsTask {
     private final IncidentRepository incidentRepository;
     private final ExecutorService executorService;
     private final ConcurrentHashMap<Long, Integer> retries = new ConcurrentHashMap<>();
-    private final boolean runGC;
 
-    public CheckMonitorsTask(MonitorRepository monitorRepository, NotificationSenderService notificationSenderService, IncidentRepository incidentRepository, @Value("${monitoring.check-thread-pool-size:2}") int checkThreadPoolSize, @Value("${monitoring.run-gc-after-tasks:false}") boolean runGC) {
+    public CheckMonitorsTask(MonitorRepository monitorRepository, NotificationSenderService notificationSenderService, IncidentRepository incidentRepository, @Value("${monitoring.check-thread-pool-size:2}") int checkThreadPoolSize) {
         this.monitorRepository = monitorRepository;
         this.notificationSenderService = notificationSenderService;
         this.incidentRepository = incidentRepository;
         this.executorService = Executors.newFixedThreadPool(checkThreadPoolSize, new CustomizableThreadFactory("check-pool-"));
-        this.runGC = runGC;
     }
 
     @Scheduled(fixedDelay = 60000)
@@ -90,11 +88,6 @@ public class CheckMonitorsTask {
         LOGGER.debug("All checks finished, saving");
         monitorRepository.saveAll(bulkSaveMonitors);
         LOGGER.info("Saved monitors.");
-        if (runGC) {
-            LOGGER.info("Running JVM garbage collector.");
-            System.gc();
-        }
-
     }
 
     //mostly copied from "monitoring" (v1 branch)

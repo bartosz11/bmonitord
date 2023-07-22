@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,17 +16,16 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
+@ConditionalOnProperty(value = "monitoring.prune.enabled", havingValue = "true", matchIfMissing = true)
 public class PruneHeartbeatsAndIncidentsTask {
 
     private final DataSource dataSource;
     private final int pruneDays;
-    private final boolean runGC;
     private static final Logger LOGGER = LoggerFactory.getLogger(PruneHeartbeatsAndIncidentsTask.class);
 
-    public PruneHeartbeatsAndIncidentsTask(DataSource dataSource, @Value("${monitoring.prune.age:14}") int pruneDays, @Value("${monitoring.run-gc-after-tasks:false}") boolean runGC) {
+    public PruneHeartbeatsAndIncidentsTask(DataSource dataSource, @Value("${monitoring.prune.age:14}") int pruneDays) {
         this.dataSource = dataSource;
         this.pruneDays = pruneDays;
-        this.runGC = runGC;
     }
 
     @Scheduled(fixedDelayString = "${monitoring.prune.delay:86400}", timeUnit = TimeUnit.SECONDS)
@@ -76,11 +76,6 @@ public class PruneHeartbeatsAndIncidentsTask {
             //finished
             delStmt.close();
             LOGGER.info("At least " + heartbeatIdsList.size() + " heartbeats, " + incidentIdsList.size() + " incidents affected");
-            //todo: remove this useless "feature"
-            if (runGC) {
-                LOGGER.info("Running JVM garbage collector.");
-                System.gc();
-            }
         } catch (SQLException e) {
             LOGGER.error("SQLException while pruning DB!");
             e.printStackTrace();
