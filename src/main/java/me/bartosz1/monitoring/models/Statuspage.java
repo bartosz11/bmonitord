@@ -17,6 +17,7 @@ public class Statuspage {
     @ManyToMany
     private Set<Monitor> monitors;
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
     private String logoLink;
     private String logoRedirect;

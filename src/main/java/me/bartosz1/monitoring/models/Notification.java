@@ -19,6 +19,7 @@ public class Notification {
     @ManyToMany
     private Set<Monitor> monitors;
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Notification(NotificationCDO cdo, User user) {

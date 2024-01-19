@@ -14,6 +14,7 @@ public class WhiteLabelDomain {
     private String domain;
     @ManyToOne
     @JsonIgnore
+    @JoinColumn(name = "user_id")
     private User user;
     @OneToOne
     //for now

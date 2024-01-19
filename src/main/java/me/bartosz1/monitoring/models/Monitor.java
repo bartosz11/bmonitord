@@ -35,10 +35,11 @@ public class Monitor {
     @OneToOne(cascade = CascadeType.ALL)
     private MonitorHTTPInfo monitorHttpInfo;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "monitor")
     private Set<Incident> incidents;
     @JsonIgnore
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
     @JsonIgnore
     @ManyToMany
@@ -49,7 +50,7 @@ public class Monitor {
     @OneToOne(cascade = CascadeType.ALL)
     private Agent agent;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "monitor")
     private Set<Heartbeat> heartbeats;
 
     @Transient
@@ -82,6 +83,7 @@ public class Monitor {
         this.agent = agent;
         this.lastStatus = MonitorStatus.UNKNOWN;
     }
+
     public Monitor(Monitor m) {
         this.id = m.getId();
         this.name = m.getName();

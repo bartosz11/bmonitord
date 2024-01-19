@@ -32,8 +32,6 @@ public class PruneHeartbeatsAndIncidentsTask {
     @Transactional
     public void cleanup() {
         try {
-            //NOTE: before you scream at me for not using prepared statements everywhere there's no user-input data
-            //all is generated DB-side and no result is returned to users
             //not sure about unresponsiveness
             LOGGER.info("Starting prune of old heartbeats and incidents, app might become unresponsive. NEXT MESSAGE FROM THIS TASK DOESN'T INDICATE IT'S DONE");
             long min = Instant.now().getEpochSecond() - pruneDays * 86400L;
@@ -54,31 +52,20 @@ public class PruneHeartbeatsAndIncidentsTask {
             delStmt.execute("DELETE FROM incidents WHERE monitor_id = NULL;");
             delStmt.execute("DELETE FROM heartbeats WHERE monitor_id = NULL;");
             if (!heartbeatIdsList.isEmpty()) {
-                //delete from monitors_heartbeats
-                String monitorsHbsDeleteQuery = prepareMonitorsHeartbeatsDeleteQuery(heartbeatIdsList);
-                System.out.println(monitorsHbsDeleteQuery);
-                delStmt.execute(monitorsHbsDeleteQuery);
                 //delete from heartbeats
                 String hbDeleteQuery = prepareEntityDeleteQuery(heartbeatIdsList, true);
-                System.out.println(hbDeleteQuery);
                 delStmt.execute(hbDeleteQuery);
             }
             if (!incidentIdsList.isEmpty()) {
-                //delete from monitors_incidents
-                String monitorsIncsDeleteQuery = prepareMonitorsIncidentsDeleteQuery(incidentIdsList);
-                System.out.println(monitorsIncsDeleteQuery);
-                delStmt.execute(monitorsIncsDeleteQuery);
                 //delete from incidents
                 String incDeleteQuery = prepareEntityDeleteQuery(incidentIdsList, false);
-                System.out.println(incDeleteQuery);
                 delStmt.execute(incDeleteQuery);
             }
             //finished
             delStmt.close();
             LOGGER.info("At least " + heartbeatIdsList.size() + " heartbeats, " + incidentIdsList.size() + " incidents affected");
         } catch (SQLException e) {
-            LOGGER.error("SQLException while pruning DB!");
-            e.printStackTrace();
+            LOGGER.error("SQLException while pruning DB!", e);
         }
     }
 
@@ -89,28 +76,6 @@ public class PruneHeartbeatsAndIncidentsTask {
         }
         resultSet.close();
         return ids;
-    }
-
-    private String prepareMonitorsHeartbeatsDeleteQuery(List<Long> ids) {
-        StringBuilder sb = new StringBuilder().append("DELETE FROM monitors_heartbeats WHERE heartbeats_id IN (");
-        for (int i = 0; i < ids.size(); i++) {
-            long id = ids.get(i);
-            sb.append(id);
-            if (ids.size() - 1 == i) sb.append(");");
-            else sb.append(", ");
-        }
-        return sb.toString();
-    }
-
-    private String prepareMonitorsIncidentsDeleteQuery(List<Long> ids) {
-        StringBuilder sb = new StringBuilder().append("DELETE FROM monitors_incidents WHERE incidents_id IN (");
-        for (int i = 0; i < ids.size(); i++) {
-            long id = ids.get(i);
-            sb.append(id);
-            if (ids.size() - 1 == i) sb.append(");");
-            else sb.append(", ");
-        }
-        return sb.toString();
     }
 
     private String prepareEntityDeleteQuery(List<Long> ids, boolean heartbeat) {

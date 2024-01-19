@@ -14,6 +14,7 @@ public class Heartbeat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne
+    @JoinColumn(name = "monitor_id")
     @JsonIgnore
     private Monitor monitor;
     private int cpuFrequency;

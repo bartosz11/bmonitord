@@ -19,6 +19,7 @@ public class Incident {
     @ManyToOne
     @JsonIncludeProperties({"id"})
     @JsonUnwrapped(prefix = "monitor")
+    @JoinColumn(name = "monitor_id")
     private Monitor monitor;
 
     public long getId() {
