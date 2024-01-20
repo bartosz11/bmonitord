@@ -33,19 +33,14 @@ INSERT INTO monitor_http_info (monitor_id, verify_certificate, allowed_http_code
 UPDATE monitors SET monitor_http_info_id = 2 WHERE id = 2;
 INSERT INTO incidents (start_timestamp, end_timestamp, duration, ongoing, monitor_id)
  VALUES (1680534720, 1680534780, 60, FALSE, 1);
-INSERT INTO monitors_incidents (monitor_id, incidents_id) VALUES (1, 1);
 INSERT INTO incidents (start_timestamp, end_timestamp, duration, ongoing, monitor_id)
  VALUES (1680534720, 0, 60, TRUE, 1);
-INSERT INTO monitors_incidents (monitor_id, incidents_id) VALUES (1, 2);
 INSERT INTO incidents (start_timestamp, end_timestamp, duration, ongoing, monitor_id)
  VALUES (1680862410, 1680862470, 60, FALSE, 1);
-INSERT INTO monitors_incidents (monitor_id, incidents_id) VALUES (1, 3);
 INSERT INTO heartbeats (cpu_frequency, cpu_usage, disk_data, disks_usage, iowait, ram_usage, response_time, rx, status, swap_usage, timestamp, tx, monitor_id)
  VALUES (0, 0.0, NULL, 0.0, 0.0, 0.0, 100, 0, 1, 0.0, 1680534720, 0, 1);
-INSERT INTO monitors_heartbeats (monitor_id, heartbeats_id) VALUES (1, 1);
 INSERT INTO heartbeats (cpu_frequency, cpu_usage, disk_data, disks_usage, iowait, ram_usage, response_time, rx, status, swap_usage, timestamp, tx, monitor_id)
  VALUES (0, 0.0, NULL, 0.0, 0.0, 0.0, 100, 0, 1, 0.0, 1680862410, 0, 1);
-INSERT INTO monitors_heartbeats (monitor_id, heartbeats_id) VALUES (1, 2);
 INSERT INTO monitors_statuspages (monitor_id, statuspages_id) VALUES (1, 1);
 INSERT INTO statuspages_monitors (statuspage_id, monitors_id) VALUES (1, 1);
 INSERT INTO monitors_notifications (monitor_id, notifications_id) VALUES (1, 1);
