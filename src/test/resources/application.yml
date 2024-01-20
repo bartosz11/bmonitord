@@ -11,17 +11,17 @@ spring:
     activate:
       on-profile: testing-postgresql
   datasource:
-    url: "jdbc:tc:postgresql:15:///"
+    url: "jdbc:tc:postgresql:16:///"
   flyway:
     locations: "migration/test,migration/postgresql,migration/common"
-#MariaDB 10.11 specific settings
+#MariaDB 11 specific settings
 ---
 spring:
   config:
     activate:
       on-profile: testing-mariadb
   datasource:
-    url: "jdbc:tc:mariadb:10.11:///"
+    url: "jdbc:tc:mariadb:11:///"
   flyway:
     locations: "migration/test,migration/mysql,migration/common"
 #Shared settings

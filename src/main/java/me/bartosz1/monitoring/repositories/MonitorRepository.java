@@ -18,7 +18,4 @@ public interface MonitorRepository extends JpaRepository<Monitor, Long> {
 
     @Query("select distinct m from Monitor m left join fetch m.notifications notifications where m in :monitors")
     List<Monitor> findAllMonitors(List<Monitor> monitors);
-    @Query("select distinct m from Monitor m left join fetch m.heartbeats heartbeats where m in :monitors")
-    List<Monitor> findAllMonitors2(List<Monitor> monitors);
-
 }
