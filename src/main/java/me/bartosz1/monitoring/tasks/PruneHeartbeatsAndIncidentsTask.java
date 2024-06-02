@@ -30,10 +30,9 @@ public class PruneHeartbeatsAndIncidentsTask {
 
     @Scheduled(fixedDelayString = "${monitoring.prune.delay:86400}", timeUnit = TimeUnit.SECONDS)
     public void cleanup() {
-        try {
+        try (Connection connection = dataSource.getConnection()) {
             LOGGER.info("Starting prune of old heartbeats and incidents.");
             long min = Instant.now().getEpochSecond() - pruneDays * 86400L;
-            Connection connection = dataSource.getConnection();
             LOGGER.debug("Using " + min + " as min timestamp");
             Statement deleteOrphansStmt = connection.createStatement();
             //this deletes orphans even though they shouldn't exist in the first place
