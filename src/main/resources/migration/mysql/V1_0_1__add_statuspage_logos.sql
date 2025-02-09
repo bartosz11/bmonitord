@@ -1,1 +1,0 @@
-ALTER TABLE statuspages ADD (logo_link VARCHAR(255), logo_redirect VARCHAR(255));

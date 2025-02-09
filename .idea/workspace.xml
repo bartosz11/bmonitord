@@ -4,9 +4,250 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32186a8-2899-42e4-8c1b-0de1c6c0e734" name="Changes" comment="feat: hide agent IP from unauthorized users (backend)">
+    <list default="true" id="49b963ec-8a5c-4d8b-b4aa-8e8f8394d9cf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/BroadcastTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/config/FlywayConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/config/R2DBCConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/config/WebConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/converters/DurationToIntervalConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/converters/IntervalToDurationConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/Checker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/GenericEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/Heartbeat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/Incident.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/Notification.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/NotificationType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/Orchestrator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/Setting.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/WebSocketMessageDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/alarm/Alarm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/alarm/AlarmNotification.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/alarm/AlarmType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/target/Target.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/target/TargetChecker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/target/TargetHTTPInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/target/TargetPingInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/target/TargetStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/model/target/TargetType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/AlarmNotificationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/AlarmRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/CheckerRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/HeartbeatRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/IncidentRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/NotificationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/OrchestratorRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/SettingRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/TargetCheckerRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/TargetHTTPInfoRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/TargetPingInfoRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/TargetRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/repos/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/services/LeaderElectionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/services/WebSocketService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/ws/WebSocketConnectionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/ws/WebSocketUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/resources/db/migration/V1_0_0__init_schema.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/resources/db/migration/V1_0_1__target_related_entities.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/dependabot.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jpa-buddy.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile-NS" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.example.postgres.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.example.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/jsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/postcss.config.cjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app.postcss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/chartTemplates.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/ConfirmationModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/NotFound.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/auth/AuthRouter.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/auth/Login.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/auth/Logout.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/auth/Register.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/DashboardRouter.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/Navbar.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/Overview.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/account/Account.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/account/ChangePasswordForm.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/account/ChangeUsernameForm.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/account/DeleteAccountCard.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/account/InvalidateSessionsCard.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/account/UserInfoCard.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/domains/DomainActionsCell.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/domains/DomainCreateModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/domains/DomainEditModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/domains/DomainSetupModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/domains/Domains.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/monitors/MonitorActionsCell.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/monitors/MonitorAgentSetupModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/monitors/MonitorCreateModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/monitors/MonitorNameCell.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/monitors/MonitorNotificationAssignCell.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/monitors/MonitorNotificationsModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/monitors/MonitorRenameModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/monitors/MonitorStatusCell.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/monitors/MonitorStatuspageAssignCell.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/monitors/MonitorStatuspagesModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/monitors/Monitors.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/notifications/NotificationActionsCell.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/notifications/NotificationCreateModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/notifications/NotificationEditModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/notifications/NotificationMonitorsModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/notifications/Notifications.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/statuspages/StatuspageActionsCell.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/statuspages/StatuspageAnnouncementModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/statuspages/StatuspageAssignDomainModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/statuspages/StatuspageCreateModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/statuspages/StatuspageDomainAssignCell.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/statuspages/StatuspageEditModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/statuspages/StatuspageMonitorsModal.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/dashboard/statuspages/Statuspages.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/report/MonitorStats.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/statuspage/PublicStatuspage.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/statuspage/StatuspageStatsRedirectButton.svelte" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/timeoutStore.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/utils/durationFormatUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/utils/httpUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/utils/sizeUnitUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/utils/toastUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/vite-env.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/svelte.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tailwind.config.cjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/vite.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/ActualOriginCookieFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/AppReadyEventListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/ExceptionResolver.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/LoggerInterceptor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/Monitoring.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/config/MvcConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/config/SchedulingConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/AgentController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/AuthController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/HeartbeatController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/IncidentController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/IndexController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/MonitorController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/NotificationController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/StatuspageController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/controllers/WhiteLabelDomainController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/exceptions/APIException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/exceptions/EntityNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/exceptions/IllegalParameterException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/exceptions/IllegalUsernameException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/exceptions/InvalidCredentialsException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/exceptions/InvalidOldPasswordException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/exceptions/InvalidPasswordException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/exceptions/RegistrationDisabledException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/exceptions/UserDisabledException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/exceptions/UsernameAlreadyTakenException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Agent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/AuthRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/DiskData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Heartbeat.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Incident.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Monitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/MonitorCDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Notification.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/NotificationCDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/PasswordMDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/PublicMonitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/PublicStatuspage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Response.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/Statuspage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/StatuspageAnnouncement.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/StatuspageAnnouncementCDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/StatuspageCDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/WhiteLabelDomain.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/WhiteLabelDomainCDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/enums/MonitorStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/enums/MonitorType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/enums/NotificationType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/enums/StatuspageAnnouncementType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/monitor/MonitorHTTPInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/models/monitor/MonitorHTTPInfoCDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/check/AgentCheckProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/check/CheckProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/check/HTTPCheckProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/check/PingCheckProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/DiscordNotificationProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/EmailNotificationProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/GenericWebhookNotificationProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/GotifyNotificationProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/NotificationProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/PushbulletNotificationProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/providers/notification/SlackNotificationProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/repositories/AgentRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/repositories/HeartbeatRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/repositories/IncidentRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/repositories/MonitorRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/repositories/NotificationRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/repositories/StatuspageAnnouncementRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/repositories/StatuspageRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/repositories/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/repositories/WhiteLabelDomainRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/security/JwtRequestFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/security/JwtTokenUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/security/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/services/HeartbeatService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/services/IncidentService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/services/MonitorService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/services/NotificationSenderService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/services/NotificationService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/services/StatuspageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/services/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/services/WhiteLabelDomainService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/tasks/CheckMonitorsTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bartosz1/monitoring/tasks/PruneHeartbeatsAndIncidentsTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/migration/mysql/V1_0_4__move_http_specific_fields.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/migration/postgresql/V1_0_4__move_http_specific_fields.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/example.application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/common/V1_0_5__follow_redirects.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/common/V1_0_7__hide_agent_ip.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/common/V1_0_8__drop_association_tables.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/mysql/V1_0_0__initialize_schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/mysql/V1_0_1__add_statuspage_logos.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/mysql/V1_0_2__white_label_domains.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/mysql/V1_0_3__remove_disk_data_length_limit.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/mysql/V1_0_6__fix_data_types.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/postgresql/V1_0_0__initialize_schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/postgresql/V1_0_1__add_statuspage_logos.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/postgresql/V1_0_2__white_label_domains.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/postgresql/V1_0_3__remove_disk_data_length_limit.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migration/postgresql/V1_0_6__fix_data_types.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/me/bartosz1/monitoring/MonitoringTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/me/bartosz1/monitoring/controllers/AuthControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/me/bartosz1/monitoring/controllers/HeartbeatControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/me/bartosz1/monitoring/controllers/IncidentControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/me/bartosz1/monitoring/controllers/MonitorControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/me/bartosz1/monitoring/controllers/NotificationControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/me/bartosz1/monitoring/controllers/StatuspageControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/me/bartosz1/monitoring/controllers/UserControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/me/bartosz1/monitoring/controllers/WhiteLabelDomainControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/junit-platform.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/migration/test/R__sample_data.sql" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,11 +258,20 @@
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+    <projectState path="$PROJECT_DIR$/api">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/checker">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/orchestrator">
+      <ProjectState />
+    </projectState>
   </component>
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
-        <task path="$PROJECT_DIR$">
+        <task path="$PROJECT_DIR$/orchestrator">
           <activation />
         </task>
         <projects_view>
@@ -29,18 +279,18 @@
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="MonitoringV2" type="f1a62948:ProjectNode" />
+                <item name="orchestrator" type="f1a62948:ProjectNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="MonitoringV2" type="f1a62948:ProjectNode" />
+                <item name="orchestrator" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="MonitoringV2" type="f1a62948:ProjectNode" />
+                <item name="orchestrator" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="verification" type="c8890929:TasksNode$1" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -52,65 +302,132 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Exception" />
+        <option value="Task" />
+        <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="v2" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="JpbToolWindowState">
-    <option name="isToolWindowVisible" value="false" />
-  </component>
-  <component name="MacroExpansionManager">
-    <option name="directoryName" value="wc8c5pz8" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;history&quot;: [
+    {
+      &quot;state&quot;: &quot;OPEN&quot;
+    }
+  ],
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/bartosz11/monitoring&quot;,
+    &quot;accountId&quot;: &quot;925e87ff-c85d-42ec-a505-e1d5dc083233&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
   </component>
-  <component name="ProjectId" id="2PbVjHrw9kR6BVCLLuYyw5Sf2A7" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2sfTTxXJdau91yur62xI43U56Un" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;v2-hide-agent-ips&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "Gradle.Build api.executor": "Run",
+    "Gradle.Build bmonitord.executor": "Run",
+    "Gradle.Build checker.executor": "Run",
+    "Gradle.Build orchestrator.executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.orchestrator [:one.bartosz.bmonitord.orchestrator.OrchestratorApplication.main()].executor": "Run",
+    "Gradle.orchestrator [bootJar].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.OrchestratorApplication.executor": "Profiler#1",
+    "git-widget-placeholder": "v3",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Bartosz/Projects/bmonitord/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "settings.sync",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\SSD Nextcloud Sync\Projects\MonitoringV2\src\main\resources\migration\common" />
+      <recent name="C:\Users\Bartosz\Projects\bmonitord\orchestrator\src\main\resources\db\migration" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration name="MonitoringV2 [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="KtorApplicationConfigurationType" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.OrchestratorApplication">
+    <configuration name="OrchestratorApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="one.bartosz.bmonitord.orchestrator.OrchestratorApplication" />
+      <module name="orchestrator.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="one.bartosz.bmonitord.orchestrator.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="orchestrator [bootJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/orchestrator" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--scan" />
+        <option name="scriptParameters" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value="test" />
+            <option value="bootJar" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -118,232 +435,98 @@
       <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>false</ForceTestExec>
+      <RunAsTest>false</RunAsTest>
       <method v="2" />
+    </configuration>
+    <configuration name="ApiApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="bmonitord.api.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="one.bartosz.bmonitord.api.ApiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="api.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="one.bartosz.bmonitord.api.ApiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BmonitordApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="bmonitord.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="one.bartosz.bmonitord.BmonitordApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CheckerApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="bmonitord.checker.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="one.bartosz.bmonitord.checker.CheckerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CheckerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="checker.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="one.bartosz.bmonitord.checker.CheckerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OrchestratorApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="bmonitord.orchestrator.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="one.bartosz.bmonitord.orchestrator.OrchestratorApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OrchestratorApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="orchestrator.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="one.bartosz.bmonitord.orchestrator.OrchestratorApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.MonitoringV2 [test]" />
+        <item itemvalue="Application.OrchestratorApplication" />
+        <item itemvalue="Gradle.orchestrator [bootJar]" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="f32186a8-2899-42e4-8c1b-0de1c6c0e734" name="Changes" comment="" />
-      <created>1683725905860</created>
+      <changelist id="49b963ec-8a5c-4d8b-b4aa-8e8f8394d9cf" name="Changes" comment="" />
+      <created>1738845641614</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1683725905860</updated>
+      <updated>1738845641614</updated>
+      <workItem from="1738845643100" duration="492000" />
+      <workItem from="1738846191845" duration="68000" />
+      <workItem from="1738865319090" duration="780000" />
+      <workItem from="1738866721530" duration="10728000" />
+      <workItem from="1738932152308" duration="11635000" />
+      <workItem from="1738953369517" duration="1000" />
+      <workItem from="1738954947484" duration="3134000" />
+      <workItem from="1738969085112" duration="5455000" />
+      <workItem from="1738974581453" duration="1143000" />
+      <workItem from="1739029293581" duration="4457000" />
+      <workItem from="1739046058337" duration="11864000" />
+      <workItem from="1739102935318" duration="12733000" />
+      <workItem from="1739130098638" duration="3015000" />
     </task>
-    <task id="LOCAL-00001" summary="experimental: run gc after pruning hb's/incidents">
-      <created>1683912038903</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1683912038903</updated>
-    </task>
-    <task id="LOCAL-00002" summary="feat: optionally run GC after data prune/check">
-      <created>1683914084291</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1683914084291</updated>
-    </task>
-    <task id="LOCAL-00003" summary="feat: custom frontend support&#10;dev guides soon:tm:&#10;some intellij files too">
-      <created>1684019280874</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1684019280874</updated>
-    </task>
-    <task id="LOCAL-00004" summary="[ci skip] remove a.out&#10;wtf is even a.out">
-      <created>1684061206493</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1684061206493</updated>
-    </task>
-    <task id="LOCAL-00005" summary="possible fix for ping latency always 0">
-      <created>1684063520897</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1684063520897</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Possible fix for &quot;Invalid CORS request&quot; while deleting monitor">
-      <created>1684627072602</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1684627072602</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Another attempt of fixing &quot;Invalid CORS request&quot;, rollback prev fix">
-      <created>1684664491821</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1684664491821</updated>
-    </task>
-    <task id="LOCAL-00008" summary="rollback cors fix&#10;I have no clue what's going on, I can't even access a proxied instance's dashboard">
-      <created>1685207505807</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1685207505807</updated>
-    </task>
-    <task id="LOCAL-00009" summary="DELETE /api/monitor/{id} is now working&#10;and dashboard works">
-      <created>1685211251611</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1685211251611</updated>
-    </task>
-    <task id="LOCAL-00010" summary="attempt of fixing agents, sort of">
-      <created>1685218114178</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1685218114178</updated>
-    </task>
-    <task id="LOCAL-00011" summary="change varchar to text">
-      <created>1685218391172</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1685218391172</updated>
-    </task>
-    <task id="LOCAL-00012" summary="forgot a semicolon :skull:">
-      <created>1685218590909</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1685218590909</updated>
-    </task>
-    <task id="LOCAL-00013" summary="fix: always follow HTTP redirects&#10;going to make that a customizable option soon">
-      <created>1685630925455</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1685630925455</updated>
-    </task>
-    <task id="LOCAL-00014" summary="moved monitor's HTTP specific fields to other table">
-      <created>1685638592706</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1685638592706</updated>
-    </task>
-    <task id="LOCAL-00015" summary="fix tests">
-      <created>1685640052575</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1685640052575</updated>
-    </task>
-    <task id="LOCAL-00016" summary="restructure MonitorCDO to match Monitor's new structure">
-      <created>1685645210364</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1685645210364</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Following redirects in HTTP monitors is now optional (default true)">
-      <created>1685647372269</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1685647372269</updated>
-    </task>
-    <task id="LOCAL-00018" summary="fix tests">
-      <created>1685708688122</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1685708688122</updated>
-    </task>
-    <task id="LOCAL-00019" summary="backend dependency upgrades">
-      <created>1685709550467</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1685709550467</updated>
-    </task>
-    <task id="LOCAL-00020" summary="frontend dependency upgrades">
-      <created>1685709967948</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1685709967948</updated>
-    </task>
-    <task id="LOCAL-00021" summary="major: dropped sqlite and mysql support&#10;fixed mariadb data types that broke after upgrading spring to 3.1.0 iirc">
-      <created>1686245852092</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1686245852092</updated>
-    </task>
-    <task id="LOCAL-00022" summary="security config rewrite to new lambda dsl">
-      <created>1686247710112</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1686247710112</updated>
-    </task>
-    <task id="LOCAL-00023" summary="dependency upgrades">
-      <option name="closed" value="true" />
-      <created>1688333671022</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1688333671022</updated>
-    </task>
-    <task id="LOCAL-00024" summary="feat: hide agent IP from unauthorized users (backend)">
-      <option name="closed" value="true" />
-      <created>1688642045999</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1688642045999</updated>
-    </task>
-    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="experimental: run gc after pruning hb's/incidents" />
-    <MESSAGE value="feat: optionally run GC after data prune/check" />
-    <MESSAGE value="feat: custom frontend support&#10;dev guides soon:tm:&#10;some intellij files too" />
-    <MESSAGE value="[ci skip] remove a.out&#10;wtf is even a.out" />
-    <MESSAGE value="possible fix for ping latency always 0" />
-    <MESSAGE value="Possible fix for &quot;Invalid CORS request&quot; while deleting monitor" />
-    <MESSAGE value="Another attempt of fixing &quot;Invalid CORS request&quot;, rollback prev fix" />
-    <MESSAGE value="rollback cors fix&#10;I have no clue what's going on, I can't even access a proxied instance's dashboard" />
-    <MESSAGE value="DELETE /api/monitor/{id} is now working&#10;and dashboard works" />
-    <MESSAGE value="attempt of fixing agents, sort of" />
-    <MESSAGE value="change varchar to text" />
-    <MESSAGE value="forgot a semicolon :skull:" />
-    <MESSAGE value="fix: always follow HTTP redirects&#10;going to make that a customizable option soon" />
-    <MESSAGE value="moved monitor's HTTP specific fields to other table" />
-    <MESSAGE value="restructure MonitorCDO to match Monitor's new structure" />
-    <MESSAGE value="Following redirects in HTTP monitors is now optional (default true)" />
-    <MESSAGE value="fix tests" />
-    <MESSAGE value="backend dependency upgrades" />
-    <MESSAGE value="frontend dependency upgrades" />
-    <MESSAGE value="major: dropped sqlite and mysql support&#10;fixed mariadb data types that broke after upgrading spring to 3.1.0 iirc" />
-    <MESSAGE value="security config rewrite to new lambda dsl" />
-    <MESSAGE value="dependency upgrades" />
-    <MESSAGE value="feat: hide agent IP from unauthorized users (backend)" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: hide agent IP from unauthorized users (backend)" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

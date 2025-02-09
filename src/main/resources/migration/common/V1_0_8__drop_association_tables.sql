@@ -1,1 +1,0 @@
-DROP TABLE monitors_incidents, monitors_heartbeats;

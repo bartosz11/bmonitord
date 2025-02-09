@@ -1,1 +1,0 @@
-ALTER TABLE heartbeats MODIFY COLUMN disk_data text;
