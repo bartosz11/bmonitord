@@ -1,15 +1,18 @@
 package one.bartosz.bmonitord.orchestrator.services;
 
 import jakarta.annotation.PreDestroy;
-import one.bartosz.bmonitord.orchestrator.model.Checker;
-import one.bartosz.bmonitord.orchestrator.model.Orchestrator;
-import one.bartosz.bmonitord.orchestrator.model.WebSocketMessageDTO;
-import one.bartosz.bmonitord.orchestrator.repos.CheckerRepository;
-import one.bartosz.bmonitord.orchestrator.repos.OrchestratorRepository;
+import one.bartosz.bmonitord.common.model.Checker;
+import one.bartosz.bmonitord.common.model.Heartbeat;
+import one.bartosz.bmonitord.common.model.Orchestrator;
+import one.bartosz.bmonitord.common.model.WebSocketMessageDTO;
+import one.bartosz.bmonitord.common.repos.CheckerRepository;
+import one.bartosz.bmonitord.common.repos.OrchestratorRepository;
+import one.bartosz.bmonitord.common.repos.TargetRepository;
 import one.bartosz.bmonitord.orchestrator.ws.WebSocketUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.socket.CloseStatus;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Mono;
 
@@ -18,18 +21,20 @@ import java.util.*;
 @Service
 public class WebSocketService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketService.class);
     private final LeaderElectionService leaderElectionService;
     private final OrchestratorRepository orchestratorRepository;
     private final CheckerRepository checkerRepository;
     private final HashMap<UUID, WebSocketSession> checkerSessions = new HashMap<>();
     private final WebSocketUtils webSocketUtils;
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketService.class);
+    private final StatusProcessingService statusProcessingService;
 
-    public WebSocketService(LeaderElectionService leaderElectionService, OrchestratorRepository orchestratorRepository, CheckerRepository checkerRepository, WebSocketUtils webSocketUtils) {
+    public WebSocketService(LeaderElectionService leaderElectionService, OrchestratorRepository orchestratorRepository, CheckerRepository checkerRepository, WebSocketUtils webSocketUtils, StatusProcessingService statusProcessingService) {
         this.leaderElectionService = leaderElectionService;
         this.orchestratorRepository = orchestratorRepository;
         this.checkerRepository = checkerRepository;
         this.webSocketUtils = webSocketUtils;
+        this.statusProcessingService = statusProcessingService;
     }
 
     public Mono<WebSocketMessageDTO> processWebSocketMessage(WebSocketMessageDTO wsMessage, WebSocketSession session) {
@@ -53,8 +58,8 @@ public class WebSocketService {
             case "result" -> {
                 if (!checkerSessions.containsValue(session))
                     yield Mono.just(new WebSocketMessageDTO().setType("error").setPayload("unauthorized"));
-                //TODO: actual handling of the results
-                yield Mono.empty();
+
+                yield webSocketUtils.deserialize((String) wsMessage.getPayload(), Heartbeat.class).map(Mono::just).flatMap(statusProcessingService::processStatus);
             }
             default -> Mono.just(new WebSocketMessageDTO().setType("error").setPayload("invalid message type"));
         };
@@ -87,7 +92,11 @@ public class WebSocketService {
     @PreDestroy
     //Well, not really graceful
     private void gracefulShutdown() {
-        checkerSessions.values().forEach(WebSocketSession::close);
+//          TODO: probably needs a "reactive redo"
+        checkerSessions.values().forEach(session -> {
+//            This code makes sense I guess
+            if (session.isOpen()) session.close(CloseStatus.GOING_AWAY).subscribe();
+        });
     }
 
 }

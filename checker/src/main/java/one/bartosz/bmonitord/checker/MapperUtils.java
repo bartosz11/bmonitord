@@ -1,0 +1,48 @@
+package one.bartosz.bmonitord.checker;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import one.bartosz.bmonitord.common.model.WebSocketMessageDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+
+//Yes, there's a similar class in the orchestrator module, but it's reactive and checker isn't
+@Component
+public class MapperUtils {
+
+    private final ObjectMapper objectMapper;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MapperUtils.class);
+
+    public MapperUtils(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    public Optional<WebSocketMessageDTO> deserializeMessage(String json) {
+        return deserialize(json, WebSocketMessageDTO.class);
+    }
+
+    public Optional<String> serializeMessage(WebSocketMessageDTO message) {
+        return serialize(message);
+    }
+
+    public <T> Optional<T> deserialize(String json, Class<T> type) {
+        try {
+            return Optional.of(objectMapper.readValue(json, type));
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Exception thrown while parsing JSON: ", e);
+            return Optional.empty();
+        }
+    }
+
+    public <T> Optional<String> serialize(T message) {
+        try {
+            return Optional.of(objectMapper.writeValueAsString(message));
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Exception thrown while parsing JSON: ", e);
+            return Optional.empty();
+        }
+    }
+}

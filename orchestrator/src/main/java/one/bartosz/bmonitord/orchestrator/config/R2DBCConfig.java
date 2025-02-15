@@ -1,7 +1,7 @@
 package one.bartosz.bmonitord.orchestrator.config;
 
-import one.bartosz.bmonitord.orchestrator.converters.DurationToIntervalConverter;
-import one.bartosz.bmonitord.orchestrator.converters.IntervalToDurationConverter;
+import one.bartosz.bmonitord.common.converters.DurationToIntervalConverter;
+import one.bartosz.bmonitord.common.converters.IntervalToDurationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.r2dbc.convert.R2dbcCustomConversions;

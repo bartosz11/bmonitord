@@ -18,7 +18,15 @@ repositories {
 }
 
 dependencies {
+    //Models and stuff
+    implementation(project(":common"))
+    //Spring (pretty much only for config and some basic DI)
     implementation("org.springframework.boot:spring-boot-starter")
+    //Other dependencies
+    //I know Spring has some sort of HTTP/WS client, but I just prefer okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    //Tests
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

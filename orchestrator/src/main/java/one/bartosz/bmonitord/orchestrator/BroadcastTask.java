@@ -1,11 +1,11 @@
 package one.bartosz.bmonitord.orchestrator;
 
-import one.bartosz.bmonitord.orchestrator.model.Heartbeat;
-import one.bartosz.bmonitord.orchestrator.model.WebSocketMessageDTO;
-import one.bartosz.bmonitord.orchestrator.model.target.Target;
-import one.bartosz.bmonitord.orchestrator.model.target.TargetChecker;
-import one.bartosz.bmonitord.orchestrator.model.target.TargetStatus;
-import one.bartosz.bmonitord.orchestrator.repos.*;
+import one.bartosz.bmonitord.common.model.Heartbeat;
+import one.bartosz.bmonitord.common.model.WebSocketMessageDTO;
+import one.bartosz.bmonitord.common.model.target.Target;
+import one.bartosz.bmonitord.common.model.target.TargetChecker;
+import one.bartosz.bmonitord.common.model.target.TargetStatus;
+import one.bartosz.bmonitord.common.repos.*;
 import one.bartosz.bmonitord.orchestrator.services.WebSocketService;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;

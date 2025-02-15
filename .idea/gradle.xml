@@ -5,35 +5,13 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/api" />
             <option value="$PROJECT_DIR$/checker" />
-            <option value="$PROJECT_DIR$/orchestrator" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/api" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/api" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/checker" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/checker" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/orchestrator" />
-        <option name="modules">
-          <set>
+            <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/orchestrator" />
           </set>
         </option>

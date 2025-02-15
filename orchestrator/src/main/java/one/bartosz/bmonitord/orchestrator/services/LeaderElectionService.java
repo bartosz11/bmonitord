@@ -2,8 +2,8 @@ package one.bartosz.bmonitord.orchestrator.services;
 
 import jakarta.annotation.PreDestroy;
 import one.bartosz.bmonitord.orchestrator.BroadcastTask;
-import one.bartosz.bmonitord.orchestrator.repos.OrchestratorRepository;
-import one.bartosz.bmonitord.orchestrator.repos.SettingRepository;
+import one.bartosz.bmonitord.common.repos.OrchestratorRepository;
+import one.bartosz.bmonitord.common.repos.SettingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

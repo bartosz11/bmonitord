@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"one.bartosz.bmonitord.common", "one.bartosz.bmonitord.orchestrator"})
 @EnableR2dbcRepositories
 @EnableScheduling
 public class OrchestratorApplication {
