@@ -197,4 +197,13 @@ public class Target extends GenericEntity<Target> {
         this.usedRetries++;
         return this;
     }
+
+    public Target incrementChecks(TargetStatus targetStatus) {
+        if (targetStatus == TargetStatus.UP) {
+            this.checksUp++;
+        } else {
+            this.checksDown++;
+        }
+        return this;
+    }
 }

@@ -2,18 +2,20 @@ package one.bartosz.bmonitord.orchestrator.services;
 
 import one.bartosz.bmonitord.common.model.Heartbeat;
 import one.bartosz.bmonitord.common.model.Incident;
-import one.bartosz.bmonitord.common.model.WebSocketMessageDTO;
 import one.bartosz.bmonitord.common.model.alarm.Alarm;
 import one.bartosz.bmonitord.common.model.alarm.AlarmNotification;
 import one.bartosz.bmonitord.common.model.target.Target;
 import one.bartosz.bmonitord.common.model.target.TargetStatus;
 import one.bartosz.bmonitord.common.repos.*;
+import one.bartosz.bmonitord.orchestrator.StatusProcessingTask;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -23,26 +25,54 @@ public class StatusProcessingService {
     private final AlarmRepository alarmRepository;
     private final IncidentRepository incidentRepository;
     private final AlarmNotificationRepository alarmNotificationRepository;
-    private  final NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
+    private final HeartbeatRepository heartbeatRepository;
 
-    public StatusProcessingService(TargetRepository targetRepository, AlarmRepository alarmRepository, IncidentRepository incidentRepository, AlarmNotificationRepository alarmNotificationRepository, NotificationRepository notificationRepository) {
+
+    public StatusProcessingService(TargetRepository targetRepository, AlarmRepository alarmRepository, IncidentRepository incidentRepository, AlarmNotificationRepository alarmNotificationRepository, NotificationRepository notificationRepository, HeartbeatRepository heartbeatRepository) {
         this.targetRepository = targetRepository;
         this.alarmRepository = alarmRepository;
         this.incidentRepository = incidentRepository;
         this.alarmNotificationRepository = alarmNotificationRepository;
         this.notificationRepository = notificationRepository;
+        this.heartbeatRepository = heartbeatRepository;
     }
 
-    public Mono<WebSocketMessageDTO> processStatus(Mono<Heartbeat> heartbeatMono) {
-        return getHeartbeatsTarget(heartbeatMono)
+    public Mono<Void> processStatus(List<Heartbeat> heartbeats, StatusProcessingTask statusProcessingTask) {
+        List<Heartbeat> missingHeartbeats = statusProcessingTask.getCheckers().stream()
+                //For the checkers that were reachable when the task was broadcast but haven't sent anything in time
+                .filter(checker -> !(statusProcessingTask.getCheckersDone().contains(checker) || statusProcessingTask.getUnreachableCheckers().contains(checker)))
+                .map(checker -> new Heartbeat().setCheckerId(checker).setTargetId(statusProcessingTask.getTarget().getId()).setStatus(TargetStatus.UNKNOWN).setTimestamp(Instant.now()))
+                .toList();
+
+        heartbeats.addAll(missingHeartbeats);
+
+        List<Heartbeat> knownStatuses = heartbeats.stream().filter(heartbeat -> heartbeat.getStatus() != TargetStatus.UNKNOWN).sorted((Comparator.comparing(Heartbeat::getTimestamp))).toList();
+        //We can stop the processing there since there's no data to justify changing the other data
+        if (knownStatuses.isEmpty()) return Mono.empty();
+        //find the first DOWN, use it as decisive, if not found take the first element as decisive (it's UP)
+        statusProcessingTask.setDecisiveHeartbeat(
+                knownStatuses.stream()
+                        .filter(hb -> hb.getStatus() == TargetStatus.DOWN)
+                        .findFirst()
+                        .orElse(knownStatuses.getFirst())
+        );
+
+        return getHeartbeatsTarget(Mono.just(statusProcessingTask.getDecisiveHeartbeat()))
                 .flatMap(hb -> {
                     Target target = hb.getTarget();
-                    if (hb.getStatus() == TargetStatus.UP) { // If up, just reset used retries count back to 0 and go back to the chain
-                        return targetRepository.save(target.setUsedRetries(0)).thenReturn(hb);
+                    target.setLastCheck(hb.getTimestamp());
+                    if (hb.getStatus() == TargetStatus.UP) {
+                        target.incrementChecks(TargetStatus.UP).setUsedRetries(0).setLastStatus(TargetStatus.UP);
+                        return targetRepository.save(target).thenReturn(hb);
                     }
+
                     target.incrementUsedRetries();
-                    return targetRepository.save(target) // Save the just-incremented retry amount, if it is lower or equal to max don't process this check further, otherwise continue
-                            .flatMap(savedTarget -> savedTarget.getUsedRetries() <= savedTarget.getMaxRetries() ? Mono.empty() : Mono.just(hb));
+                    if (target.getUsedRetries() > target.getMaxRetries()) {
+                        target.incrementChecks(TargetStatus.DOWN).setLastStatus(TargetStatus.DOWN);
+                    }
+                    //Save the used retries count everytime, but continue the chain only if it has been exceeded
+                    return targetRepository.save(target).flatMap(saved -> saved.getUsedRetries() <= saved.getMaxRetries() ? Mono.empty() : Mono.just(hb));
                 })
                 .flatMap(this::getTargetDetails) // Fetch alarms and incidents
                 .flatMap(heartbeat -> {
@@ -90,8 +120,7 @@ public class StatusProcessingService {
                         return alarm;
                     }).collectList().flatMapMany(alarmRepository::saveAll).then(Mono.just(heartbeat));
                 })
-
-                .map(heartbeat -> new WebSocketMessageDTO().setType("info").setPayload("check-ok"));
+                .thenMany(heartbeatRepository.saveAll(heartbeats)).then();
     }
 
     private Mono<Heartbeat> getHeartbeatsTarget(Mono<Heartbeat> heartbeatMono) {

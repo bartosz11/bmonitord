@@ -7,7 +7,7 @@ import one.bartosz.bmonitord.common.model.Orchestrator;
 import one.bartosz.bmonitord.common.model.WebSocketMessageDTO;
 import one.bartosz.bmonitord.common.repos.CheckerRepository;
 import one.bartosz.bmonitord.common.repos.OrchestratorRepository;
-import one.bartosz.bmonitord.common.repos.TargetRepository;
+import one.bartosz.bmonitord.orchestrator.StatusProcessingTask;
 import one.bartosz.bmonitord.orchestrator.ws.WebSocketUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +17,7 @@ import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class WebSocketService {
@@ -27,14 +28,15 @@ public class WebSocketService {
     private final CheckerRepository checkerRepository;
     private final HashMap<UUID, WebSocketSession> checkerSessions = new HashMap<>();
     private final WebSocketUtils webSocketUtils;
-    private final StatusProcessingService statusProcessingService;
+    private final ConcurrentHashMap<UUID, StatusProcessingTask> heartbeatQueues;
 
-    public WebSocketService(LeaderElectionService leaderElectionService, OrchestratorRepository orchestratorRepository, CheckerRepository checkerRepository, WebSocketUtils webSocketUtils, StatusProcessingService statusProcessingService) {
+
+    public WebSocketService(LeaderElectionService leaderElectionService, OrchestratorRepository orchestratorRepository, CheckerRepository checkerRepository, WebSocketUtils webSocketUtils, StatusProcessingService statusProcessingService, ConcurrentHashMap<UUID, StatusProcessingTask> heartbeatQueues) {
         this.leaderElectionService = leaderElectionService;
         this.orchestratorRepository = orchestratorRepository;
         this.checkerRepository = checkerRepository;
         this.webSocketUtils = webSocketUtils;
-        this.statusProcessingService = statusProcessingService;
+        this.heartbeatQueues = heartbeatQueues;
     }
 
     public Mono<WebSocketMessageDTO> processWebSocketMessage(WebSocketMessageDTO wsMessage, WebSocketSession session) {
@@ -59,7 +61,13 @@ public class WebSocketService {
                 if (!checkerSessions.containsValue(session))
                     yield Mono.just(new WebSocketMessageDTO().setType("error").setPayload("unauthorized"));
 
-                yield webSocketUtils.deserialize((String) wsMessage.getPayload(), Heartbeat.class).map(Mono::just).flatMap(statusProcessingService::processStatus);
+                yield webSocketUtils.deserialize((String) wsMessage.getPayload(), Heartbeat.class)
+                        .flatMap(hb -> {
+                            StatusProcessingTask statusProcessingTask = heartbeatQueues.get(hb.getTargetId());
+                            statusProcessingTask.getHeartbeats().tryEmitNext(hb);
+                            statusProcessingTask.getCheckersDone().add(hb.getCheckerId());
+                            return Mono.just(new WebSocketMessageDTO().setType("info").setPayload("check-ok"));
+                        });
             }
             default -> Mono.just(new WebSocketMessageDTO().setType("error").setPayload("invalid message type"));
         };
