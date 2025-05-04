@@ -21,6 +21,7 @@ public class Target extends GenericEntity<Target> {
     private TargetStatus lastStatus;
     private TargetType type;
     private boolean paused;
+    private int timeout;
 
     private UUID userId;
     @Transient
@@ -204,6 +205,15 @@ public class Target extends GenericEntity<Target> {
         } else {
             this.checksDown++;
         }
+        return this;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public Target setTimeout(int timeout) {
+        this.timeout = timeout;
         return this;
     }
 }

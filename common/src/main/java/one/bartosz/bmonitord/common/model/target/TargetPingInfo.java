@@ -10,7 +10,6 @@ import java.util.UUID;
 public class TargetPingInfo extends GenericEntity<TargetPingInfo> {
 
     private String host;
-    private int timeout;
     private UUID targetId;
     @Transient
     private Target target;
@@ -21,15 +20,6 @@ public class TargetPingInfo extends GenericEntity<TargetPingInfo> {
 
     public TargetPingInfo setHost(String host) {
         this.host = host;
-        return this;
-    }
-
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public TargetPingInfo setTimeout(int timeout) {
-        this.timeout = timeout;
         return this;
     }
 

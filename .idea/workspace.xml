@@ -4,18 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0b79709b-4c9a-43a1-9f6f-a8fd891f27b2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/StatusProcessingTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="0b79709b-4c9a-43a1-9f6f-a8fd891f27b2" name="Changes" comment="Some changes to orchestrator's heartbeat processing logic&#10;They're now grouped and processed in batches per-monitor because otherwise a single check could result in amount of notifications sent and incidents created being equal to the amount of checkers assigned to target&#10;Some parts use a single heartbeat that's &quot;decisive&quot;&#10;side note: i swear i'll complete the rework this year">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/checker/src/main/java/one/bartosz/bmonitord/checker/providers/HTTPCheckProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/checker/src/main/java/one/bartosz/bmonitord/checker/providers/HTTPCheckProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/checker/src/main/java/one/bartosz/bmonitord/checker/providers/PingCheckProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/checker/src/main/java/one/bartosz/bmonitord/checker/providers/PingCheckProvider.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common/src/main/java/one/bartosz/bmonitord/common/model/target/Target.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/one/bartosz/bmonitord/common/model/target/Target.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/one/bartosz/bmonitord/common/model/target/TargetHTTPInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/one/bartosz/bmonitord/common/model/target/TargetHTTPInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/one/bartosz/bmonitord/common/model/target/TargetPingInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/one/bartosz/bmonitord/common/model/target/TargetPingInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/BroadcastTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/BroadcastTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/OrchestratorApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/OrchestratorApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/services/StatusProcessingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/services/StatusProcessingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/services/WebSocketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/orchestrator/src/main/java/one/bartosz/bmonitord/orchestrator/services/WebSocketService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +46,9 @@
     &quot;accountId&quot;: &quot;925e87ff-c85d-42ec-a505-e1d5dc083233&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
   </component>
@@ -132,11 +132,28 @@
       <updated>1746113021421</updated>
       <workItem from="1746113023400" duration="3233000" />
       <workItem from="1746178260414" duration="6332000" />
-      <workItem from="1746273058027" duration="10913000" />
+      <workItem from="1746273058027" duration="12043000" />
+      <workItem from="1746305630837" duration="2244000" />
+      <workItem from="1746361986626" duration="4765000" />
     </task>
+    <task id="LOCAL-00001" summary="Some changes to orchestrator's heartbeat processing logic&#10;They're now grouped and processed in batches per-monitor because otherwise a single check could result in amount of notifications sent and incidents created being equal to the amount of checkers assigned to target&#10;Some parts use a single heartbeat that's &quot;decisive&quot;&#10;side note: i swear i'll complete the rework this year">
+      <option name="closed" value="true" />
+      <created>1746288204648</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1746288204648</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Some changes to orchestrator's heartbeat processing logic&#10;They're now grouped and processed in batches per-monitor because otherwise a single check could result in amount of notifications sent and incidents created being equal to the amount of checkers assigned to target&#10;Some parts use a single heartbeat that's &quot;decisive&quot;&#10;side note: i swear i'll complete the rework this year" />
+    <option name="LAST_COMMIT_MESSAGE" value="Some changes to orchestrator's heartbeat processing logic&#10;They're now grouped and processed in batches per-monitor because otherwise a single check could result in amount of notifications sent and incidents created being equal to the amount of checkers assigned to target&#10;Some parts use a single heartbeat that's &quot;decisive&quot;&#10;side note: i swear i'll complete the rework this year" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
 </project>

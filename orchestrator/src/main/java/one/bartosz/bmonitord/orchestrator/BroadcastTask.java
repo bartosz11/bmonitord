@@ -8,12 +8,14 @@ import one.bartosz.bmonitord.common.model.target.TargetStatus;
 import one.bartosz.bmonitord.common.repos.*;
 import one.bartosz.bmonitord.orchestrator.services.StatusProcessingService;
 import one.bartosz.bmonitord.orchestrator.services.WebSocketService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -30,9 +32,9 @@ public class BroadcastTask implements Runnable {
     private final WebSocketService webSocketService;
     private final ConcurrentHashMap<UUID, StatusProcessingTask> heartbeatQueues;
     private final StatusProcessingService statusProcessingService;
+    private final int maxNetworkOverheadMs;
 
-
-    public BroadcastTask(TargetRepository targetRepository, TargetHTTPInfoRepository targetHTTPInfoRepository, TargetPingInfoRepository targetPingInfoRepository, TargetCheckerRepository targetCheckerRepository, HeartbeatRepository heartbeatRepository, WebSocketService webSocketService, ConcurrentHashMap<UUID, StatusProcessingTask> heartbeatQueues, StatusProcessingService statusProcessingService) {
+    public BroadcastTask(TargetRepository targetRepository, TargetHTTPInfoRepository targetHTTPInfoRepository, TargetPingInfoRepository targetPingInfoRepository, TargetCheckerRepository targetCheckerRepository, HeartbeatRepository heartbeatRepository, WebSocketService webSocketService, ConcurrentHashMap<UUID, StatusProcessingTask> heartbeatQueues, StatusProcessingService statusProcessingService, @Value("${one.bartosz.bmonitord.orchestrator.max-network-overhead}") int maxNetworkOverheadMs) {
         this.targetRepository = targetRepository;
         this.targetHTTPInfoRepository = targetHTTPInfoRepository;
         this.targetPingInfoRepository = targetPingInfoRepository;
@@ -41,6 +43,7 @@ public class BroadcastTask implements Runnable {
         this.webSocketService = webSocketService;
         this.heartbeatQueues = heartbeatQueues;
         this.statusProcessingService = statusProcessingService;
+        this.maxNetworkOverheadMs = maxNetworkOverheadMs;
     }
 
     @Override
@@ -74,7 +77,7 @@ public class BroadcastTask implements Runnable {
                     heartbeatQueues.put(target.getId(), statusProcessingTask);
 
                     Mono<Void> processing = statusProcessingTask.getHeartbeats().asFlux()
-                            .bufferTimeout(checkers.size(), Duration.ofSeconds(15))
+                            .bufferTimeout(checkers.size(), Duration.of((target.getTimeout() * 1000L) + maxNetworkOverheadMs, ChronoUnit.MILLIS))
                             .take(1)
                             .flatMap(heartbeats -> statusProcessingService.processStatus(heartbeats, statusProcessingTask))
                             .doFinally(signal -> heartbeatQueues.remove(target.getId()))

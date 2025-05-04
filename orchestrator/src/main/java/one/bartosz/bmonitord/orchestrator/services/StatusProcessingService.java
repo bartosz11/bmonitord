@@ -38,6 +38,7 @@ public class StatusProcessingService {
         this.heartbeatRepository = heartbeatRepository;
     }
 
+    //This function is called by the "queue" that's created in BroadcastTask to process that "queue"
     public Mono<Void> processStatus(List<Heartbeat> heartbeats, StatusProcessingTask statusProcessingTask) {
         List<Heartbeat> missingHeartbeats = statusProcessingTask.getCheckers().stream()
                 //For the checkers that were reachable when the task was broadcast but haven't sent anything in time

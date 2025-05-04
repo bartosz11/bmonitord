@@ -14,7 +14,6 @@ public class TargetHTTPInfo extends GenericEntity<TargetHTTPInfo> {
     private String host;
     // Split by a space
     private String allowedCodes;
-    private int timeout;
     private boolean followRedirects;
     private boolean verifySSLCertificate;
     private UUID targetId;
@@ -36,15 +35,6 @@ public class TargetHTTPInfo extends GenericEntity<TargetHTTPInfo> {
 
     public TargetHTTPInfo setAllowedCodes(String allowedCodes) {
         this.allowedCodes = allowedCodes;
-        return this;
-    }
-
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public TargetHTTPInfo setTimeout(int timeout) {
-        this.timeout = timeout;
         return this;
     }
 

@@ -25,7 +25,7 @@ public class HTTPCheckProvider extends CheckProvider {
         TargetHTTPInfo httpInfo = target.getTargetHTTPInfo();
         Heartbeat baseHb = new Heartbeat().setTargetId(target.getId()).setTarget(target);
         if (httpInfo != null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder().callTimeout(httpInfo.getTimeout(), TimeUnit.SECONDS).followRedirects(httpInfo.isFollowRedirects());
+            OkHttpClient.Builder builder = new OkHttpClient.Builder().callTimeout(target.getTimeout(), TimeUnit.SECONDS).followRedirects(httpInfo.isFollowRedirects());
             //SSL mess
             if (!httpInfo.isVerifySSLCertificate()) {
                 try {

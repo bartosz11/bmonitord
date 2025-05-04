@@ -18,7 +18,7 @@ public class PingCheckProvider extends CheckProvider {
         if (targetPingInfo != null) {
             try {
                 long start = Instant.now().toEpochMilli();
-                return ping(targetPingInfo.getHost(), targetPingInfo.getTimeout())
+                return ping(targetPingInfo.getHost(), target.getTimeout())
                         ? baseHb.setTimestamp(Instant.now()).setStatus(TargetStatus.UP).setLatency(Instant.now().toEpochMilli() - start)
                         : baseHb.setTimestamp(Instant.now()).setStatus(TargetStatus.DOWN);
             } catch (IOException | InterruptedException ignored) {}
