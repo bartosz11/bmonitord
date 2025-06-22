@@ -1,0 +1,13 @@
+drop table target_http_infos;
+drop table target_ping_infos;
+drop table incidents;
+drop table targets_checkers;
+drop table heartbeats;
+drop table checkers;
+drop table alarms_notifications;
+drop table alarms;
+drop table notifications;
+drop table targets;
+drop table users;
+drop table settings;
+drop table orchestrators;

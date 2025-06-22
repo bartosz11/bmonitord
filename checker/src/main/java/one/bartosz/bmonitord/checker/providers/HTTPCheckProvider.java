@@ -3,10 +3,9 @@ package one.bartosz.bmonitord.checker.providers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import one.bartosz.bmonitord.common.model.Heartbeat;
-import one.bartosz.bmonitord.common.model.target.Target;
-import one.bartosz.bmonitord.common.model.target.TargetHTTPInfo;
-import one.bartosz.bmonitord.common.model.target.TargetStatus;
+import one.bartosz.bmonitord.checker.models.Heartbeat;
+import one.bartosz.bmonitord.checker.models.Target;
+import one.bartosz.bmonitord.checker.models.TargetHTTPInfo;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -22,12 +21,12 @@ public class HTTPCheckProvider extends CheckProvider {
 
     @Override
     public Heartbeat check(Target target) {
-        TargetHTTPInfo httpInfo = target.getTargetHTTPInfo();
-        Heartbeat baseHb = new Heartbeat().setTargetId(target.getId()).setTarget(target);
+        TargetHTTPInfo httpInfo = target.getHTTPInfo();
+        Heartbeat baseHb = new Heartbeat().setTargetID(target.getID());
         if (httpInfo != null) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder().callTimeout(target.getTimeout(), TimeUnit.SECONDS).followRedirects(httpInfo.isFollowRedirects());
             //SSL mess
-            if (!httpInfo.isVerifySSLCertificate()) {
+            if (!httpInfo.isVerifySSLCert()) {
                 try {
                     SSLContext sslContext = SSLContext.getInstance("TLS");
                     sslContext.init(null, TRUST_MANAGERS, new java.security.SecureRandom());
@@ -45,20 +44,21 @@ public class HTTPCheckProvider extends CheckProvider {
                 if (resp.body() != null) resp.body().close();
                 int code = resp.code();
                 baseHb.setLatency(resp.receivedResponseAtMillis() - resp.sentRequestAtMillis()).setTimestamp(Instant.now());
-                return httpInfo.getAllowedCodesAsList().contains(code) ? baseHb.setStatus(TargetStatus.UP) : baseHb.setStatus(TargetStatus.DOWN);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                return httpInfo.getAllowedCodesAsList().contains(code) ? baseHb.setStatus(0) : baseHb.setStatus(1);
+            } catch (IOException ignored) {
             }
         }
-        return baseHb.setTimestamp(Instant.now()).setStatus(TargetStatus.DOWN);
+        return baseHb.setTimestamp(Instant.now()).setStatus(1);
     }
 
     private static final X509TrustManager TRUST_ALL_CERTS = new X509TrustManager() {
         @Override
-        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
+        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+        }
 
         @Override
-        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
+        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+        }
 
         @Override
         public java.security.cert.X509Certificate[] getAcceptedIssuers() {

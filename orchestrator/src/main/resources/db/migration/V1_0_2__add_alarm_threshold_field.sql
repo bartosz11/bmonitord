@@ -1,1 +1,0 @@
-ALTER TABLE alarms ADD COLUMN threshold_field varchar(255);

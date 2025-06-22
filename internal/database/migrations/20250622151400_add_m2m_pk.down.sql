@@ -1,0 +1,2 @@
+alter table targets_checkers drop constraint targets_checkers_pk;
+alter table alarms_notifications drop constraint alarms_notifications_pk;

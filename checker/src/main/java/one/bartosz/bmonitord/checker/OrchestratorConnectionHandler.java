@@ -3,19 +3,17 @@ package one.bartosz.bmonitord.checker;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
+import one.bartosz.bmonitord.checker.models.Heartbeat;
+import one.bartosz.bmonitord.checker.models.Target;
+import one.bartosz.bmonitord.checker.models.WebSocketMessageDTO;
 import one.bartosz.bmonitord.checker.providers.CheckProvider;
-import one.bartosz.bmonitord.common.model.Heartbeat;
-import one.bartosz.bmonitord.common.model.WebSocketMessageDTO;
-import one.bartosz.bmonitord.common.model.target.Target;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 public class OrchestratorConnectionHandler extends WebSocketListener {
@@ -24,17 +22,17 @@ public class OrchestratorConnectionHandler extends WebSocketListener {
     private final MapperUtils mapperUtils;
     private final String checkerKey;
     private static final Logger LOGGER = LoggerFactory.getLogger(OrchestratorConnectionHandler.class);
-    private UUID selfId;
+    private int selfId;
 
-    public OrchestratorConnectionHandler(OrchestratorConnectionManager connectionManager, MapperUtils mapperUtils, @Value("${bmonitord.checker.key}") String checkerKey) {
+    public OrchestratorConnectionHandler(OrchestratorConnectionManager connectionManager, MapperUtils mapperUtils, Config config) {
         this.connectionManager = connectionManager;
         this.mapperUtils = mapperUtils;
-        this.checkerKey = checkerKey;
+        this.checkerKey = config.getKey();
     }
 
     @Override
     public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
-        selfId = null;
+        selfId = 0;
         String host = webSocket.request().url().host();
         LOGGER.info("WS connection to orchestrator {} opened - attempting authentication.", host);
 
@@ -47,13 +45,18 @@ public class OrchestratorConnectionHandler extends WebSocketListener {
     public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
         String host = webSocket.request().url().host();
         Optional<WebSocketMessageDTO> optionalMsg = mapperUtils.deserializeMessage(text);
+        LOGGER.info(text);
         optionalMsg.ifPresent(msg -> {
-            String payload = (String) msg.getPayload();
-            String[] payloadSplit = payload.split(" ");
+            String payload = "";
+            String[] payloadSplit = new String[0];
+            if (msg.getPayload() instanceof String) {
+                payload = (String) msg.getPayload();
+                payloadSplit = payload.split(" ");
+            }
             switch (msg.getType()) {
                 case "info":
                     if (payloadSplit[0].equals("auth-successful")) {
-                        UUID id = UUID.fromString(payloadSplit[1]);
+                        int id = Integer.parseInt(payloadSplit[1]);
                         LOGGER.info("Successfully authenticated! Orchestrator: {}, checker ID: {}", host, id);
                         this.selfId = id;
                     }
@@ -70,25 +73,22 @@ public class OrchestratorConnectionHandler extends WebSocketListener {
                     }
                     break;
                 case "check":
-                    if (selfId == null) {
+                    if (selfId == 0) {
                         LOGGER.warn("Check request was received from the orchestrator, but it won't be fulfilled because the checker hasn't received it's ID (most likely hasn't authenticated yet, can be caused by \"timing\")");
                         break;
                     }
                     //perform the check
-                    Optional<Target> optionalTarget = mapperUtils.deserialize(payload, Target.class);
-                    if (optionalTarget.isEmpty()) break;
-                    Target target = optionalTarget.get();
+                    Target target = mapperUtils.convertValue(msg.getPayload(), Target.class);
                     Heartbeat heartbeat = CheckProvider.getCheckProviderForType(target.getType()).check(target);
-                    heartbeat.setCheckerId(selfId);
-                    //convert the heartbeat into json string
-                    Optional<String> optionalPayload = mapperUtils.serialize(heartbeat);
-                    if (optionalPayload.isEmpty()) break;
+                    heartbeat.setCheckerID(selfId);
                     //make the message as json
-                    WebSocketMessageDTO messageDTO = new WebSocketMessageDTO().setType("result").setPayload(optionalPayload.get());
+                    WebSocketMessageDTO messageDTO = new WebSocketMessageDTO().setType("result").setPayload(heartbeat);
                     Optional<String> optionalMessage = mapperUtils.serializeMessage(messageDTO);
                     if (optionalMessage.isEmpty()) break;
                     //send it
-                    webSocket.send(optionalMessage.get());
+                    String s = optionalMessage.get();
+                    LOGGER.info(s);
+                    webSocket.send(s);
                     break;
                 case "error":
                     //These errors shouldn't even happen as we're not exceeding the "expected use case"

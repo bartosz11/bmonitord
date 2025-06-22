@@ -1,0 +1,2 @@
+alter table targets_checkers add constraint targets_checkers_pk primary key (checker_id, target_id);
+alter table alarms_notifications add constraint alarms_notifications_pk primary key (alarm_id, notification_id);

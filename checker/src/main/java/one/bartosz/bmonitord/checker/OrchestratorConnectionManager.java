@@ -2,11 +2,11 @@ package one.bartosz.bmonitord.checker;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -16,11 +16,12 @@ public class OrchestratorConnectionManager {
     private final List<String> orchestrators;
     private final OrchestratorConnectionHandler connectionHandler;
     private String nextOrchestrator;
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrchestratorConnectionManager.class);
 
-    public OrchestratorConnectionManager(OkHttpClient okHttpClient, @Lazy OrchestratorConnectionHandler connectionHandler, @Value("${bmonitord.checker.orchestrators}") String[] orchestrators) {
+    public OrchestratorConnectionManager(OkHttpClient okHttpClient, @Lazy OrchestratorConnectionHandler connectionHandler, Config config) {
         this.okHttpClient = okHttpClient;
         this.connectionHandler = connectionHandler;
-        this.orchestrators = Arrays.stream(orchestrators).map(url -> {
+        this.orchestrators = config.getOrchestrators().stream().map(url -> {
             if (url.endsWith("/")) return url.substring(0, url.length() - 1);
             else return url;
         }).toList();
