@@ -2,6 +2,8 @@
 
 A monitoring system built as a purpose-built alternative for HetrixTools and Uptime Kuma.
 
+## Warning: you're browsing a branch which is not finished and will not be finished! Switch to the v3 branch.
+
 ## Features
 
 bmonitord is a mix of both mentioned above, and is missing some of their features. Currently, you can find:
