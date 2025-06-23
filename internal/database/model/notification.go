@@ -1,7 +1,6 @@
 package model
 
 import (
-	"bmonitord/internal/orchestrator/providers"
 	"gorm.io/gorm"
 )
 
@@ -19,15 +18,8 @@ type NotificationType uint
 const (
 	Discord NotificationType = iota
 	Slack
-	PushBullet
+	Pushbullet
 	Email
 	Gotify
 	GenericWebhook
 )
-
-var NotificationProviders = map[NotificationType]func(header string, body string, credentials string){
-	Discord:    providers.SendDiscordNotification,
-	Slack:      providers.SendSlackNotification,
-	PushBullet: providers.SendPushBulletNotification,
-	//TODO all other types
-}

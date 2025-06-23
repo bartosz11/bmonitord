@@ -1,8 +1,20 @@
 package providers
 
-import "github.com/rs/zerolog/log"
+import (
+	"fmt"
+	"github.com/rs/zerolog/log"
+	"net/http"
+	"strings"
+)
 
-func SendDiscordNotification(header string, body string, credentials string) {
-	//fixme: just a mock for now
-	log.Info().Str("header", header).Str("body", body).Str("credentials", credentials).Msg("New Discord notification")
+const discordBodyTemplate = "{ \"embeds\": [ { \"color\": 15965440, \"title\": \"%s\", \"description\": \"%s\" } ]}"
+
+func SendDiscordNotification(payload NotificationPayload, credentials string) {
+	body := fmt.Sprintf(discordBodyTemplate, payload.Header, payload.Body)
+	resp, err := http.Post(credentials, "application/json", strings.NewReader(body))
+	if err != nil {
+		log.Err(err).Msg("Failed to send Discord notification")
+		return
+	}
+	defer resp.Body.Close()
 }

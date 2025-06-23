@@ -4,6 +4,7 @@ import (
 	"bmonitord/config"
 	"bmonitord/internal/database"
 	"bmonitord/internal/orchestrator"
+	"bmonitord/internal/orchestrator/helpers"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -21,6 +22,8 @@ func main() {
 	db := database.InitDatabase(cfg)
 
 	router := gin.Default()
+
+	helpers.InitEmail(&cfg)
 
 	orchestrator.StartOrchestrator(cfg, db, router)
 

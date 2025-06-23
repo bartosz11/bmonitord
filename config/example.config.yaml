@@ -1,4 +1,4 @@
-orchestrator:
+-orchestrator:
   db:
     host: "host"
     port: "5432"
@@ -9,6 +9,13 @@ orchestrator:
     timezone: "Europe/Warsaw"
   max-network-overhead: 500
   name: "replace_me"
+email:
+  host: "smtp.example.com"
+  port: 587
+  username: "replace_me"
+  password: "replace"
+  ssl: false # most providers use STARTTLS and don't want SSL connections on port 587, port 465 usually means SSL = true
+  from: "replace_me" # usually the same as username, basically the email address messages will be sent from
 
 # https://github.com/rs/zerolog?tab=readme-ov-file#leveled-logging
 # Keep it at 1 in most cases
