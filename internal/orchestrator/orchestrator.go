@@ -18,16 +18,14 @@ func StartOrchestrator(cfg config.Config, db *gorm.DB, router *gin.Engine) {
 	router.GET("/orchestrator/ws", handlers.HandleNewWSConnection(db, &leader))
 
 	c := cron.New()
-	//TODO: move the scheduling of broadcast task to leader takeover task, when we become leader we run the task once and then every 60s
-	_, err := c.AddFunc("@every 5s", tasks.LeaderTakeoverTask(db, orchestratorCfg.Name, &leader))
-	tasks.LeaderTakeoverTask(db, orchestratorCfg.Name, &leader)
+
+	//run now and every 5s
+	tasks.LeaderTakeoverTask(db, &orchestratorCfg, &leader, c)()
+	_, err := c.AddFunc("@every 5s", tasks.LeaderTakeoverTask(db, &orchestratorCfg, &leader, c))
 	if err != nil {
 		log.Fatal().Err(err).Msg("orchestrator: failed to schedule leader takeover task")
 	}
-	_, err = c.AddFunc("@every 60s", tasks.BroadcastTask(db, &leader, cfg.OrchestratorConfig.MaxNetworkOverhead))
-	if err != nil {
-		log.Fatal().Err(err).Msg("orchestrator: failed to schedule broadcast task")
-	}
+
 	c.Start()
 	log.Info().Msg("orchestrator: started")
 }

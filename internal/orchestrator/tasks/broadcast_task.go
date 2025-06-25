@@ -7,19 +7,22 @@ import (
 	"github.com/coder/websocket"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
+	"strconv"
 	"time"
 )
 
 var WSConnections = map[uint]*websocket.Conn{}
 
-func BroadcastTask(db *gorm.DB, leader *bool, maxNetworkOverhead int) func() {
+func BroadcastTask(db *gorm.DB, maxNetworkOverhead int) func() {
 	return func() {
-		if !*leader {
-			log.Debug().Msg("orchestrator: broadcast task cancelled - not leader yet")
-			return
-		}
-
 		log.Debug().Msg("orchestrator: broadcast task running")
+
+		unixTimestamp := strconv.FormatInt(time.Now().UnixMilli(), 10)
+		db.Save(&model.Setting{
+			Key:   "last-broadcast-task-started",
+			Value: &unixTimestamp,
+		})
+
 		var targets []model.Target
 		db.Joins("HTTPInfo").Joins("PingInfo").Preload("Checkers").Find(&targets, "paused = false")
 

@@ -23,7 +23,7 @@ func main() {
 
 	router := gin.Default()
 
-	helpers.InitEmail(&cfg)
+	helpers.InitEmail(&cfg.EmailConfig)
 
 	orchestrator.StartOrchestrator(cfg, db, router)
 

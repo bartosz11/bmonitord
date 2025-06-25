@@ -7,29 +7,33 @@ import (
 )
 
 type Config struct {
-	OrchestratorConfig struct {
-		Database struct {
-			Host     string `mapstructure:"host"`
-			Port     int    `mapstructure:"port"`
-			Username string `mapstructure:"username"`
-			Password string `mapstructure:"password"`
-			Database string `mapstructure:"database"`
-			SSLMode  string `mapstructure:"sslmode"`
-			Timezone string `mapstructure:"timezone"`
-		} `mapstructure:"db"`
-		MaxNetworkOverhead int    `mapstructure:"max-network-overhead"`
-		Name               string `mapstructure:"name"`
-	} `mapstructure:"orchestrator"`
-	EmailConfig struct {
+	OrchestratorConfig OrchestratorConfig `mapstructure:"orchestrator"`
+	EmailConfig        EmailConfig        `mapstructure:"email"`
+	PrettyLogging      bool               `mapstructure:"pretty-logging"`
+	LoggingLevel       int8               `mapstructure:"logging-level"`
+}
+
+type EmailConfig struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Username string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
+	SSL      bool   `mapstructure:"ssl"`
+	From     string `mapstructure:"from"`
+}
+
+type OrchestratorConfig struct {
+	Database struct {
 		Host     string `mapstructure:"host"`
 		Port     int    `mapstructure:"port"`
 		Username string `mapstructure:"username"`
 		Password string `mapstructure:"password"`
-		SSL      bool   `mapstructure:"ssl"`
-		From     string `mapstructure:"from"`
-	} `mapstructure:"email"`
-	PrettyLogging bool `mapstructure:"pretty-logging"`
-	LoggingLevel  int8 `mapstructure:"logging-level"`
+		Database string `mapstructure:"database"`
+		SSLMode  string `mapstructure:"sslmode"`
+		Timezone string `mapstructure:"timezone"`
+	} `mapstructure:"db"`
+	MaxNetworkOverhead int    `mapstructure:"max-network-overhead"`
+	Name               string `mapstructure:"name"`
 }
 
 func LoadConfig() Config {

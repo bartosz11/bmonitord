@@ -12,11 +12,10 @@ var (
 	from      string
 )
 
-func InitEmail(cfg *config.Config) {
-	if !validateEmailConfig(cfg) {
+func InitEmail(emailCfg *config.EmailConfig) {
+	if !validateEmailConfig(emailCfg) {
 		return
 	}
-	emailCfg := &cfg.EmailConfig
 	dialer := gomail.NewDialer(emailCfg.Host, emailCfg.Port, emailCfg.Username, emailCfg.Password)
 	dialer.SSL = emailCfg.SSL
 	from = emailCfg.From
@@ -40,8 +39,7 @@ func SendEmailMessage(msg *gomail.Message) {
 	}
 }
 
-func validateEmailConfig(cfg *config.Config) bool {
-	emailCfg := &cfg.EmailConfig
+func validateEmailConfig(emailCfg *config.EmailConfig) bool {
 	//We only check for 0-values,
 	if emailCfg.Host == "" || emailCfg.Username == "" || emailCfg.Password == "" || emailCfg.Port == 0 || emailCfg.From == "" {
 		log.Warn().Msg("Email configuration is invalid! Email notifications won't be sent.")
