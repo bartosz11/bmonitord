@@ -9,10 +9,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitDatabase(cfg config.Config) *gorm.DB {
-	MigrateDatabase(cfg)
+func InitDatabase(dbConfig *config.DatabaseConfig) *gorm.DB {
+	MigrateDatabase(dbConfig)
 
-	dbConfig := cfg.OrchestratorConfig.Database
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=%s TimeZone=%s", dbConfig.Host, dbConfig.Username, dbConfig.Password, dbConfig.Database, dbConfig.Port, dbConfig.SSLMode, dbConfig.Timezone)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		//Logger: logger.Default.LogMode(logger.Info),

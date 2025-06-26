@@ -14,8 +14,7 @@ import (
 //go:embed migrations/*.sql
 var migrations embed.FS
 
-func MigrateDatabase(cfg config.Config) {
-	dbConfig := cfg.OrchestratorConfig.Database
+func MigrateDatabase(dbConfig *config.DatabaseConfig) {
 
 	source, err := iofs.New(migrations, "migrations")
 	if err != nil {

@@ -12,16 +12,14 @@ import (
 
 var leader = false
 
-func StartOrchestrator(cfg config.Config, db *gorm.DB, router *gin.Engine) {
-	orchestratorCfg := cfg.OrchestratorConfig
-
+func StartOrchestrator(orchestratorCfg *config.OrchestratorConfig, db *gorm.DB, router *gin.Engine) {
 	router.GET("/orchestrator/ws", handlers.HandleNewWSConnection(db, &leader))
 
 	c := cron.New()
 
 	//run now and every 5s
-	tasks.LeaderTakeoverTask(db, &orchestratorCfg, &leader, c)()
-	_, err := c.AddFunc("@every 5s", tasks.LeaderTakeoverTask(db, &orchestratorCfg, &leader, c))
+	tasks.LeaderTakeoverTask(db, orchestratorCfg, &leader, c)()
+	_, err := c.AddFunc("@every 5s", tasks.LeaderTakeoverTask(db, orchestratorCfg, &leader, c))
 	if err != nil {
 		log.Fatal().Err(err).Msg("orchestrator: failed to schedule leader takeover task")
 	}

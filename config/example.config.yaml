@@ -1,14 +1,12 @@
--orchestrator:
-  db:
-    host: "host"
-    port: "5432"
-    username: "postgres"
-    password: ""
-    database: "bmonitord"
-    sslmode: "disable"
-    timezone: "Europe/Warsaw"
-  max-network-overhead: 500
-  name: "replace_me"
+db:
+  host: "host"
+  port: "5432"
+  username: "postgres"
+  password: ""
+  database: "bmonitord"
+  sslmode: "disable"
+  timezone: "Europe/Warsaw"
+
 email:
   host: "smtp.example.com"
   port: 587
@@ -17,7 +15,21 @@ email:
   ssl: false # most providers use STARTTLS and don't want SSL connections on port 587, port 465 usually means SSL = true
   from: "replace_me" # usually the same as username, basically the email address messages will be sent from
 
+orchestrator:
+  max-network-overhead: 500
+  name: "replace_me"
+
+# Keep these settings in sync across all API instances you're hosting if you're hosting multiple!
+api:
+  jwt-secret: replace_me
+  jwt-issuer: bmonitord
+  jwt-validity: 3600 # in minutes, 6hrs by default
+
+
 # https://github.com/rs/zerolog?tab=readme-ov-file#leveled-logging
 # Keep it at 1 in most cases
 logging-level: 1
 pretty-logging: true
+# Pretty much affects only CORS settings, setting this to false will allow localhost:5173 access the entire API, useful for frontend development
+# If true, Gin's mode will be set to Release, otherwise it will stay at Debug
+production: true

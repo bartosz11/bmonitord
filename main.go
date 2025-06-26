@@ -2,6 +2,7 @@ package main
 
 import (
 	"bmonitord/config"
+	"bmonitord/internal/api"
 	"bmonitord/internal/database"
 	"bmonitord/internal/orchestrator"
 	"bmonitord/internal/orchestrator/helpers"
@@ -19,18 +20,23 @@ func main() {
 
 	zerolog.SetGlobalLevel(zerolog.Level(cfg.LoggingLevel))
 
-	db := database.InitDatabase(cfg)
+	db := database.InitDatabase(&cfg.DatabaseConfig)
+
+	if cfg.Production {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	router := gin.Default()
 
 	helpers.InitEmail(&cfg.EmailConfig)
 
-	orchestrator.StartOrchestrator(cfg, db, router)
+	orchestrator.StartOrchestrator(&cfg.OrchestratorConfig, db, router)
+
+	api.StartAPI(db, router, cfg.Production, &cfg.APIConfig)
 
 	err := router.Run()
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed starting router!")
 	}
 
-	select {}
 }

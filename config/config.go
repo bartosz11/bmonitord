@@ -7,10 +7,23 @@ import (
 )
 
 type Config struct {
-	OrchestratorConfig OrchestratorConfig `mapstructure:"orchestrator"`
+	DatabaseConfig     DatabaseConfig     `mapstructure:"db"`
 	EmailConfig        EmailConfig        `mapstructure:"email"`
-	PrettyLogging      bool               `mapstructure:"pretty-logging"`
+	OrchestratorConfig OrchestratorConfig `mapstructure:"orchestrator"`
+	APIConfig          APIConfig          `mapstructure:"api"`
 	LoggingLevel       int8               `mapstructure:"logging-level"`
+	PrettyLogging      bool               `mapstructure:"pretty-logging"`
+	Production         bool               `mapstructure:"production"`
+}
+
+type DatabaseConfig struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Username string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
+	Database string `mapstructure:"database"`
+	SSLMode  string `mapstructure:"sslmode"`
+	Timezone string `mapstructure:"timezone"`
 }
 
 type EmailConfig struct {
@@ -23,17 +36,14 @@ type EmailConfig struct {
 }
 
 type OrchestratorConfig struct {
-	Database struct {
-		Host     string `mapstructure:"host"`
-		Port     int    `mapstructure:"port"`
-		Username string `mapstructure:"username"`
-		Password string `mapstructure:"password"`
-		Database string `mapstructure:"database"`
-		SSLMode  string `mapstructure:"sslmode"`
-		Timezone string `mapstructure:"timezone"`
-	} `mapstructure:"db"`
 	MaxNetworkOverhead int    `mapstructure:"max-network-overhead"`
 	Name               string `mapstructure:"name"`
+}
+
+type APIConfig struct {
+	JWTSecret   string `mapstructure:"jwt-secret"`
+	JWTIssuer   string `mapstructure:"jwt-issuer"`
+	JWTValidity int    `mapstructure:"jwt-validity"`
 }
 
 func LoadConfig() Config {
