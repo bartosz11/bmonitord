@@ -1,6 +1,7 @@
-package api
+package middleware
 
 import (
+	"bmonitord/internal/api/helpers"
 	"bmonitord/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -17,20 +18,20 @@ func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 		tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
-		token, ok := ParseToken(tokenStr)
+		token, ok := helpers.ParseToken(tokenStr)
 		if !ok || !token.Valid {
 			abortAuth(c)
 			return
 		}
 
-		userID, sessionID, ok := ExtractIDsFromJWT(token)
+		_, sessionID, ok := helpers.ExtractIDsFromJWT(token)
 		if !ok {
 			abortAuth(c)
 			return
 		}
 
 		var session model.Session
-		if err := db.First(&session, "id = ?", sessionID).Error; err != nil {
+		if err := db.First(&session, "id = ?", sessionID).Joins("User").Error; err != nil {
 			abortAuth(c)
 			return
 		}
@@ -42,8 +43,13 @@ func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.Set("userID", userID)
-		c.Set("sessionID", sessionID)
+		if !session.User.Enabled {
+			helpers.AccountDisabled(c)
+			return
+		}
+
+		c.Set("user", session.User)
+		c.Set("session", session)
 		c.Next()
 	}
 }

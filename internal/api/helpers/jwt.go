@@ -1,4 +1,4 @@
-package api
+package helpers
 
 import (
 	"bmonitord/config"
@@ -9,19 +9,19 @@ import (
 
 var (
 	jwtSecret   []byte
-	jwtValidity int
+	JWTValidity int
 )
 
 func InitJWTHelper(apiCfg *config.APIConfig) {
 	jwtSecret = []byte(apiCfg.JWTSecret)
-	jwtValidity = apiCfg.JWTValidity
+	JWTValidity = apiCfg.JWTValidity
 }
 
 func GenerateJWT(userID uint, sessionID uint) (string, error) {
 	claims := jwt.MapClaims{
 		"userID":    userID,
 		"sessionID": sessionID,
-		"exp":       time.Now().Add(time.Minute * time.Duration(jwtValidity)),
+		"exp":       time.Now().Add(time.Minute * time.Duration(JWTValidity)),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
 	return token.SignedString(jwtSecret)

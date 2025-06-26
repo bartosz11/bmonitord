@@ -2,6 +2,8 @@ package api
 
 import (
 	"bmonitord/config"
+	"bmonitord/internal/api/handlers/auth"
+	"bmonitord/internal/api/helpers"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -21,8 +23,12 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 		}))
 	}
 
-	InitJWTHelper(apiConfig)
+	helpers.InitJWTHelper(apiConfig)
 
-	apiGroup.Use(AuthMiddleware(db))
+	authGrp := apiGroup.Group("/auth")
+	{
+		authGrp.POST("/login", auth.HandleLogin(db))
+		authGrp.POST("/register", auth.HandleRegister(db))
+	}
 
 }
