@@ -10,4 +10,5 @@ type User struct {
 	Admin         bool   `gorm:"not null;default:false"`
 	Targets       []Target
 	Notifications []Notification
+	Sessions      []Session
 }

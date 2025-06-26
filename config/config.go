@@ -42,7 +42,6 @@ type OrchestratorConfig struct {
 
 type APIConfig struct {
 	JWTSecret   string `mapstructure:"jwt-secret"`
-	JWTIssuer   string `mapstructure:"jwt-issuer"`
 	JWTValidity int    `mapstructure:"jwt-validity"`
 }
 

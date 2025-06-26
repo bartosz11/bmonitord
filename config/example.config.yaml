@@ -22,7 +22,6 @@ orchestrator:
 # Keep these settings in sync across all API instances you're hosting if you're hosting multiple!
 api:
   jwt-secret: replace_me
-  jwt-issuer: bmonitord
   jwt-validity: 3600 # in minutes, 6hrs by default
 
 

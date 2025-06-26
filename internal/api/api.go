@@ -21,4 +21,8 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 		}))
 	}
 
+	InitJWTHelper(apiConfig)
+
+	apiGroup.Use(AuthMiddleware(db))
+
 }
