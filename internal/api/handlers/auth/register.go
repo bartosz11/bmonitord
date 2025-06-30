@@ -6,18 +6,16 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"net/http"
-	"regexp"
 	"strconv"
 )
-
-var PasswordValidationRegex = regexp.MustCompile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
 
 func HandleRegister(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var registrationEnabled model.Setting
-		db.First(&registrationEnabled, "key = registration-enabled")
+		db.First(&registrationEnabled, "key = ?", "registration-enabled")
 		if registrationEnabled.Value != nil {
 			value, err := strconv.ParseBool(*registrationEnabled.Value)
 			if err != nil {
@@ -38,17 +36,18 @@ func HandleRegister(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		if !errors.Is(db.First(&model.User{}, "username = ?", registerReq.Username).Error, gorm.ErrRecordNotFound) {
-			c.JSON(http.StatusConflict, gin.H{
-				"error": "username already taken",
-			})
+		if helpers.ContainsAnySpace(registerReq.Username) {
+			helpers.BadRequest(c)
 			return
 		}
 
-		if !PasswordValidationRegex.MatchString(registerReq.Password) {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "invalid password: password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.",
-			})
+		if !errors.Is(db.First(&model.User{}, "username = ?", registerReq.Username).Error, gorm.ErrRecordNotFound) {
+			helpers.UsernameAlreadyTaken(c)
+			return
+		}
+
+		if !helpers.IsStrongPassword(registerReq.Password) {
+			helpers.WeakPassword(c)
 			return
 		}
 		//If there's no user yet, the first user gets admin perms
@@ -59,13 +58,25 @@ func HandleRegister(db *gorm.DB) gin.HandlerFunc {
 			admin = true
 		}
 
+		hash, err := bcrypt.GenerateFromPassword([]byte(registerReq.Password), 12)
+		if err != nil {
+			log.Err(err).Msg("failed to hash password")
+			helpers.PasswordHashingFailed(c)
+			return
+		}
+
 		user := model.User{
 			Username: registerReq.Username,
-			Password: registerReq.Password,
+			Password: string(hash),
 			Enabled:  true,
 			Admin:    admin,
 		}
-		db.Create(&user)
+
+		err = db.Create(&user).Error
+		if err != nil {
+			helpers.DBInteractionFailed(c)
+			return
+		}
 
 		c.JSON(http.StatusCreated, gin.H{
 			"user": user,

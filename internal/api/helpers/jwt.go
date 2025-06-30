@@ -21,7 +21,8 @@ func GenerateJWT(userID uint, sessionID uint) (string, error) {
 	claims := jwt.MapClaims{
 		"userID":    userID,
 		"sessionID": sessionID,
-		"exp":       time.Now().Add(time.Minute * time.Duration(JWTValidity)),
+		"exp":       time.Now().Add(time.Minute * time.Duration(JWTValidity)).Unix(),
+		"iat":       time.Now().Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
 	return token.SignedString(jwtSecret)
@@ -40,7 +41,11 @@ func ExtractIDsFromJWT(token *jwt.Token) (uint, uint, bool) {
 }
 
 func ParseToken(tokenStr string) (*jwt.Token, bool) {
-	token, err := jwt.Parse(tokenStr, secret, jwt.WithValidMethods([]string{jwt.SigningMethodHS512.Alg()}), jwt.WithExpirationRequired(), jwt.WithLeeway(0))
+	token, err := jwt.ParseWithClaims(tokenStr, jwt.MapClaims{}, secret,
+		jwt.WithValidMethods([]string{jwt.SigningMethodHS512.Alg()}),
+		jwt.WithExpirationRequired(),
+		jwt.WithLeeway(0),
+	)
 	if err != nil {
 		log.Err(err).Msg("failed to parse token")
 		return nil, false

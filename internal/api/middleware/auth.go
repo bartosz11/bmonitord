@@ -31,13 +31,19 @@ func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		var session model.Session
-		if err := db.First(&session, "id = ?", sessionID).Joins("User").Error; err != nil {
+		if err := db.Joins("User").First(&session, "sessions.id = ?", sessionID).Error; err != nil {
 			abortAuth(c)
 			return
 		}
 
 		if time.Now().After(session.ExpiresAt) {
 			//Delete expired sessions "on the spot" - I kinda don't want to build a task for that
+			db.Unscoped().Delete(&session)
+			abortAuth(c)
+			return
+		}
+
+		if issuedAt, err := token.Claims.GetIssuedAt(); err != nil || issuedAt.Before(session.User.UpdatedAt) {
 			db.Unscoped().Delete(&session)
 			abortAuth(c)
 			return

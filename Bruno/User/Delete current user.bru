@@ -1,0 +1,15 @@
+meta {
+  name: Delete current user
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{API_URL}}/api/user/
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}

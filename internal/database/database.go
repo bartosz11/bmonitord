@@ -21,7 +21,7 @@ func InitDatabase(dbConfig *config.DatabaseConfig) *gorm.DB {
 	}
 
 	//May be useful to "let GORM adjust the DB to it's liking" - so adding any indexes, constraints etc. I may have skipped over
-	err = db.AutoMigrate(&model.Setting{}, &model.Orchestrator{}, &model.User{}, &model.Notification{}, &model.Target{}, model.Alarm{}, &model.Incident{}, &model.Checker{}, &model.Heartbeat{}, &model.TargetHTTPInfo{}, &model.TargetPingInfo{})
+	err = db.AutoMigrate(&model.Setting{}, &model.Orchestrator{}, &model.User{}, &model.Session{}, &model.Notification{}, &model.Target{}, model.Alarm{}, &model.Incident{}, &model.Checker{}, &model.Heartbeat{}, &model.TargetHTTPInfo{}, &model.TargetPingInfo{})
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to auto-migrate database")
 	}

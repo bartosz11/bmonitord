@@ -17,13 +17,13 @@ type Target struct {
 	Type        TargetType `gorm:"not null"`
 	Paused      bool       `gorm:"default:false"`
 	Timeout     uint
-	UserID      uint `gorm:"not null"`
-	Heartbeats  []Heartbeat
-	Alarms      []Alarm
-	Incidents   []Incident
-	Checkers    []Checker `gorm:"many2many:targets_checkers;"`
-	HTTPInfo    TargetHTTPInfo
-	PingInfo    TargetPingInfo
+	UserID      uint           `gorm:"not null"`
+	Heartbeats  []Heartbeat    `gorm:"constraint:OnDelete:CASCADE;"`
+	Alarms      []Alarm        `gorm:"constraint:OnDelete:CASCADE;"`
+	Incidents   []Incident     `gorm:"constraint:OnDelete:CASCADE;"`
+	Checkers    []Checker      `gorm:"many2many:targets_checkers;constraint:OnDelete:CASCADE;"`
+	HTTPInfo    TargetHTTPInfo `gorm:"constraint:OnDelete:CASCADE;"`
+	PingInfo    TargetPingInfo `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 type TargetType uint

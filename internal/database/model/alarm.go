@@ -11,7 +11,7 @@ type Alarm struct {
 	Threshold      float64
 	ThresholdField AlarmThresholdField
 	TargetID       uint           `gorm:"not null"`
-	Notifications  []Notification `gorm:"many2many:alarms_notifications;"`
+	Notifications  []Notification `gorm:"many2many:alarms_notifications;constraint:OnDelete:CASCADE;"`
 }
 
 type AlarmType uint

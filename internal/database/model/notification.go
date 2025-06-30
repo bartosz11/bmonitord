@@ -10,7 +10,7 @@ type Notification struct {
 	Type        NotificationType `gorm:"not null"`
 	Credentials string           `gorm:"not null"`
 	UserID      uint             `gorm:"not null"`
-	Alarms      []Alarm          `gorm:"many2many:alarms_notifications;"`
+	Alarms      []Alarm          `gorm:"many2many:alarms_notifications;constraint:OnDelete:CASCADE;"`
 }
 
 type NotificationType uint

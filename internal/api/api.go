@@ -3,7 +3,9 @@ package api
 import (
 	"bmonitord/config"
 	"bmonitord/internal/api/handlers/auth"
+	"bmonitord/internal/api/handlers/user"
 	"bmonitord/internal/api/helpers"
+	"bmonitord/internal/api/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -29,6 +31,17 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 	{
 		authGrp.POST("/login", auth.HandleLogin(db))
 		authGrp.POST("/register", auth.HandleRegister(db))
+	}
+
+	restrictedGrp := apiGroup.Group("", middleware.AuthMiddleware(db))
+	{
+		userGrp := restrictedGrp.Group("/user")
+		{
+			userGrp.GET("/", user.HandleGetCurrentUser())
+			userGrp.PATCH("/username", user.HandleChangeUsername(db))
+			userGrp.PATCH("/password", user.HandleChangePassword(db))
+			userGrp.DELETE("/", user.HandleDeleteCurrentUser(db))
+		}
 	}
 
 }

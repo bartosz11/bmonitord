@@ -12,8 +12,8 @@ import (
 )
 
 type Credentials struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 func HandleLogin(db *gorm.DB) gin.HandlerFunc {
@@ -46,8 +46,14 @@ func HandleLogin(db *gorm.DB) gin.HandlerFunc {
 			UserAgent:  c.GetHeader("User-Agent"),
 			IpAddress:  c.ClientIP(),
 			UserID:     user.ID,
+			User:       user,
 		}
-		db.Create(&session)
+
+		err := db.Create(&session).Error
+		if err != nil {
+			helpers.DBInteractionFailed(c)
+			return
+		}
 
 		jwt, err := helpers.GenerateJWT(user.ID, session.ID)
 		if err != nil {
