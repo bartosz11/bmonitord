@@ -1,0 +1,15 @@
+meta {
+  name: Get all sessions
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{API_URL}}/api/session/
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}

@@ -46,3 +46,9 @@ func DBInteractionFailed(c *gin.Context) {
 		"error": "db interaction failed",
 	})
 }
+
+func ParsingFailed(c *gin.Context, field string) {
+	c.JSON(http.StatusBadRequest, gin.H{
+		"error": "parsing " + field + "failed",
+	})
+}

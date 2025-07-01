@@ -3,6 +3,7 @@ package api
 import (
 	"bmonitord/config"
 	"bmonitord/internal/api/handlers/auth"
+	"bmonitord/internal/api/handlers/session"
 	"bmonitord/internal/api/handlers/user"
 	"bmonitord/internal/api/helpers"
 	"bmonitord/internal/api/middleware"
@@ -41,6 +42,15 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 			userGrp.PATCH("/username", user.HandleChangeUsername(db))
 			userGrp.PATCH("/password", user.HandleChangePassword(db))
 			userGrp.DELETE("/", user.HandleDeleteCurrentUser(db))
+		}
+		sessionGrp := restrictedGrp.Group("/session")
+		{
+			sessionGrp.POST("/logout", session.HandleLogout(db))
+			sessionGrp.GET("/", session.HandleGetAllSessions(db))
+			sessionGrp.GET("/:id", session.HandleGetSession(db))
+			sessionGrp.GET("/current", session.HandleGetCurrentSession())
+			sessionGrp.DELETE("/", session.HandleDeleteAllSessions(db))
+			sessionGrp.DELETE("/:id", session.HandleDeleteSession(db))
 		}
 	}
 

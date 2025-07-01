@@ -1,0 +1,15 @@
+meta {
+  name: Get current session
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{API_URL}}/api/session/current
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
