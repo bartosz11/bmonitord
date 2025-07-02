@@ -3,6 +3,7 @@ package api
 import (
 	"bmonitord/config"
 	"bmonitord/internal/api/handlers/auth"
+	"bmonitord/internal/api/handlers/orchestrator"
 	"bmonitord/internal/api/handlers/session"
 	"bmonitord/internal/api/handlers/user"
 	"bmonitord/internal/api/helpers"
@@ -54,4 +55,17 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 		}
 	}
 
+	adminGrp := restrictedGrp.Group("/admin", middleware.AdminMiddleware())
+	{
+		orchestratorGrp := adminGrp.Group("/orchestrator")
+		{
+			orchestratorGrp.POST("/", orchestrator.HandleCreateOrchestrator(db))
+			orchestratorGrp.DELETE("/:id", orchestrator.HandleDeleteOrchestrator(db))
+			orchestratorGrp.GET("/:id", orchestrator.HandleGetOrchestratorByID(db))
+			orchestratorGrp.GET("/", orchestrator.HandleGetAllOrchestrators(db))
+			//Orchestrator details aren't meant to be updated - might cause checkers to fail; I guess
+			//Might implement such an endpoint for that later on if I see it as reasonable,
+			//Ideally all updates to the whole orchestrators table should get broadcasted to all checkers, but it's kind of impossible with the current "stateless API" structure, I may be looking for a workaround in the future
+		}
+	}
 }

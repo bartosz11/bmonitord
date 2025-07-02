@@ -1,0 +1,39 @@
+package orchestrator
+
+import (
+	"bmonitord/internal/api/helpers"
+	"bmonitord/internal/database/model"
+	"errors"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+	"net/http"
+	"strconv"
+)
+
+func HandleGetOrchestratorByID(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		param := c.Param("id")
+		orchestratorId, err := strconv.ParseUint(param, 10, 64)
+		if err != nil {
+			helpers.ParsingFailed(c, "orchestrator id")
+			return
+		}
+
+		var orchestrator model.Orchestrator
+		err = db.First(&orchestrator, "id = ?", orchestratorId).Error
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			helpers.NotFound(c)
+			return
+		}
+
+		if err != nil {
+			helpers.DBInteractionFailed(c)
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"orchestrator": orchestrator,
+		})
+	}
+}
