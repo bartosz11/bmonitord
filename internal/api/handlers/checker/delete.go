@@ -15,7 +15,7 @@ func HandleDeleteCheckerByID(db *gorm.DB) gin.HandlerFunc {
 		param := c.Param("id")
 		checkerID, err := strconv.ParseUint(param, 10, 64)
 		if err != nil {
-			helpers.ParsingFailed(c, "checker id ")
+			helpers.ParsingFailed(c, "checker id")
 			return
 		}
 
@@ -38,6 +38,9 @@ func HandleDeleteCheckerByID(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusNoContent, gin.H{})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusNoContent,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

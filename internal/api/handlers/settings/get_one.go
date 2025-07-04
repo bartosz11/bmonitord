@@ -26,8 +26,10 @@ func HandleGetSettingByKey(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"setting": setting,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: setting,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

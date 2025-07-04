@@ -1,6 +1,7 @@
 package session
 
 import (
+	"bmonitord/internal/api/helpers"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -8,8 +9,10 @@ import (
 func HandleGetCurrentSession() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session, _ := c.Get("session")
-		c.JSON(http.StatusOK, gin.H{
-			"session": session,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: session,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

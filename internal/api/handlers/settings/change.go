@@ -23,16 +23,20 @@ func HandleChangeSetting(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		if !isModifiable(changeSettingReq.Key) {
-			c.JSON(http.StatusForbidden, gin.H{
-				"error": "this setting cannot be modified",
-			})
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusForbidden,
+				Error: "this setting cannot be modified",
+			}
+			resp.WriteAsJSON(c)
 			return
 		}
 
 		if !validateSetting(changeSettingReq) {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "invalid value for given setting",
-			})
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusBadRequest,
+				Error: "invalid value for given setting",
+			}
+			resp.WriteAsJSON(c)
 			return
 		}
 
@@ -46,8 +50,10 @@ func HandleChangeSetting(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"setting": setting,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: setting,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

@@ -17,8 +17,10 @@ func HandleGetAllCheckers(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"checkers": checkers,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: checkers,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

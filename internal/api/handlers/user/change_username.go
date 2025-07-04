@@ -43,8 +43,10 @@ func HandleChangeUsername(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"user": user,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: user,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

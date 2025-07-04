@@ -32,8 +32,10 @@ func HandleGetOrchestratorByID(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"orchestrator": orchestrator,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: orchestrator,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

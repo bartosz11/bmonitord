@@ -58,23 +58,31 @@ func HandleLogin(db *gorm.DB) gin.HandlerFunc {
 		jwt, err := helpers.GenerateJWT(user.ID, session.ID)
 		if err != nil {
 			log.Err(err).Msg("failed to generate token")
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "failed to generate token",
-			})
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusInternalServerError,
+				Error: "failed to generate token",
+			}
+			resp.WriteAsJSON(c)
 			return
 		}
 
 		//TODO: un-hardcode secure later
 		c.SetCookie("auth-token", jwt, helpers.JWTValidity*60, "/", "", false, false)
-		c.JSON(200, gin.H{
-			"session": session,
-			"token":   jwt,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: gin.H{
+				"session": session,
+				"token":   jwt,
+			},
+		}
+		resp.WriteAsJSON(c)
 	}
 }
 
 func invalidUsernameOrPassword(c *gin.Context) {
-	c.JSON(http.StatusUnauthorized, gin.H{
-		"error": "invalid username or password",
-	})
+	resp := helpers.HTTPResponse{
+		Code:  http.StatusUnauthorized,
+		Error: "invalid username or password",
+	}
+	resp.WriteAsJSON(c)
 }

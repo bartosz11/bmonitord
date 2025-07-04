@@ -18,8 +18,10 @@ func HandleGetAllSettings(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"settings": settings,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: settings,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

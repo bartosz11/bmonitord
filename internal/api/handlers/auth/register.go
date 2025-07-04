@@ -78,14 +78,18 @@ func HandleRegister(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{
-			"user": user,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusCreated,
+			Data: user,
+		}
+		resp.WriteAsJSON(c)
 	}
 }
 
 func registrationDisabled(c *gin.Context) {
-	c.JSON(http.StatusForbidden, gin.H{
-		"error": "registration is disabled",
-	})
+	resp := helpers.HTTPResponse{
+		Code:  http.StatusForbidden,
+		Error: "registration is disabled",
+	}
+	resp.WriteAsJSON(c)
 }

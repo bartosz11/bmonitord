@@ -20,8 +20,10 @@ func HandleGetAllSessions(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"sessions": sessions,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: sessions,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

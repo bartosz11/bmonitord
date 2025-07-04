@@ -6,49 +6,65 @@ import (
 )
 
 func NotFound(c *gin.Context) {
-	c.JSON(http.StatusNotFound, gin.H{
-		"error": "not found",
-	})
+	resp := HTTPResponse{
+		Code:  http.StatusNotFound,
+		Error: "not found",
+	}
+	resp.WriteAsJSON(c)
 }
 
 func BadRequest(c *gin.Context) {
-	c.JSON(http.StatusBadRequest, gin.H{
-		"error": "bad request",
-	})
+	resp := HTTPResponse{
+		Code:  http.StatusBadRequest,
+		Error: "bad request",
+	}
+	resp.WriteAsJSON(c)
 }
 
 func AccountDisabled(c *gin.Context) {
-	c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-		"error": "account disabled",
-	})
+	resp := HTTPResponse{
+		Code:  http.StatusForbidden,
+		Error: "account disabled",
+	}
+	resp.AbortWithJSON(c)
 }
 
 func UsernameAlreadyTaken(c *gin.Context) {
-	c.JSON(http.StatusConflict, gin.H{
-		"error": "username already taken",
-	})
+	resp := HTTPResponse{
+		Code:  http.StatusConflict,
+		Error: "username already taken",
+	}
+	resp.WriteAsJSON(c)
 }
 
 func WeakPassword(c *gin.Context) {
-	c.JSON(http.StatusBadRequest, gin.H{
-		"error": "invalid password: password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.",
-	})
+	resp := HTTPResponse{
+		Code:  http.StatusBadRequest,
+		Error: "invalid password: password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.",
+	}
+	resp.WriteAsJSON(c)
 }
 
 func PasswordHashingFailed(c *gin.Context) {
-	c.JSON(http.StatusInternalServerError, gin.H{
-		"error": "failed to hash password",
-	})
+	resp := HTTPResponse{
+		Code:  http.StatusInternalServerError,
+		Error: "failed to hash password",
+	}
+	resp.WriteAsJSON(c)
 }
 
 func DBInteractionFailed(c *gin.Context) {
-	c.JSON(http.StatusInternalServerError, gin.H{
-		"error": "db interaction failed",
-	})
+	resp := HTTPResponse{
+		Code:  http.StatusInternalServerError,
+		Error: "DB interaction failed",
+	}
+	resp.WriteAsJSON(c)
 }
 
 func ParsingFailed(c *gin.Context, field string) {
-	c.JSON(http.StatusBadRequest, gin.H{
-		"error": "parsing " + field + "failed",
-	})
+	resp := HTTPResponse{
+		Code:  http.StatusBadRequest,
+		Error: "parsing " + field + " failed",
+	}
+	resp.WriteAsJSON(c)
 }

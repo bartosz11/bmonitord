@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"bmonitord/internal/api/helpers"
 	"bmonitord/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -13,9 +14,11 @@ func AdminMiddleware() gin.HandlerFunc {
 		user := value.(model.User)
 
 		if !user.Admin {
-			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-				"error": "not admin",
-			})
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusForbidden,
+				Error: "not admin",
+			}
+			resp.AbortWithJSON(c)
 			return
 		}
 

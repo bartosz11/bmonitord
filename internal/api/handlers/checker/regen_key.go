@@ -15,7 +15,7 @@ func HandleRegenCheckerKey(db *gorm.DB) gin.HandlerFunc {
 		param := c.Param("id")
 		checkerID, err := strconv.ParseUint(param, 10, 64)
 		if err != nil {
-			helpers.ParsingFailed(c, "checker id ")
+			helpers.ParsingFailed(c, "checker id")
 			return
 		}
 
@@ -43,8 +43,10 @@ func HandleRegenCheckerKey(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"checker": checker,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: checker,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

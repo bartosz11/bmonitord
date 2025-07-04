@@ -15,7 +15,7 @@ func HandleDeleteOrchestrator(db *gorm.DB) gin.HandlerFunc {
 		param := c.Param("id")
 		orchestratorId, err := strconv.ParseUint(param, 10, 64)
 		if err != nil {
-			helpers.ParsingFailed(c, "orchestrator id ")
+			helpers.ParsingFailed(c, "orchestrator id")
 			return
 		}
 
@@ -34,9 +34,11 @@ func HandleDeleteOrchestrator(db *gorm.DB) gin.HandlerFunc {
 
 		if orchestrator.Leader {
 			// Even though orchestrators don't have any relations in the DB, it's still pretty bad to delete the one that's leader ig
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "orchestrator cannot be leader",
-			})
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusBadRequest,
+				Error: "orchestrator cannot be leader",
+			}
+			resp.WriteAsJSON(c)
 			return
 		}
 
@@ -46,6 +48,9 @@ func HandleDeleteOrchestrator(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusNoContent, gin.H{})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusNoContent,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

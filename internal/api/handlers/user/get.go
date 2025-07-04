@@ -1,6 +1,7 @@
 package user
 
 import (
+	"bmonitord/internal/api/helpers"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -8,8 +9,10 @@ import (
 func HandleGetCurrentUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user, _ := c.Get("user")
-		c.JSON(http.StatusOK, gin.H{
-			"user": user,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: user,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

@@ -43,9 +43,11 @@ func HandleCreateChecker(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{
-			"checker": checker,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusCreated,
+			Data: checker,
+		}
+		resp.WriteAsJSON(c)
 	}
 }
 

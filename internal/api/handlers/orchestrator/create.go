@@ -22,9 +22,11 @@ func HandleCreateOrchestrator(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		if !strings.HasPrefix(orchCreateReq.Host, "ws://") && !strings.HasPrefix(orchCreateReq.Host, "wss://") {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "host must start with ws:// or wss://",
-			})
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusBadRequest,
+				Error: "host must start with ws:// or wss://",
+			}
+			resp.WriteAsJSON(c)
 			return
 		}
 
@@ -40,9 +42,11 @@ func HandleCreateOrchestrator(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		if nameCount != 0 {
-			c.JSON(http.StatusConflict, gin.H{
-				"error": "name already taken",
-			})
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusConflict,
+				Error: "name already taken",
+			}
+			resp.WriteAsJSON(c)
 			return
 		}
 
@@ -54,9 +58,11 @@ func HandleCreateOrchestrator(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		if hostCount != 0 {
-			c.JSON(http.StatusConflict, gin.H{
-				"error": "host already taken",
-			})
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusConflict,
+				Error: "host already taken",
+			}
+			resp.WriteAsJSON(c)
 			return
 		}
 
@@ -71,8 +77,10 @@ func HandleCreateOrchestrator(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{
-			"orchestrator": orchestrator,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: orchestrator,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

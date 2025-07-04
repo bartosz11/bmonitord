@@ -31,9 +31,11 @@ func HandleChangePassword(db *gorm.DB) gin.HandlerFunc {
 		user := value.(model.User)
 
 		if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(changePasswordReq.OldPassword)) != nil {
-			c.JSON(http.StatusForbidden, gin.H{
-				"error": "invalid old password",
-			})
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusForbidden,
+				Error: "invalid old password",
+			}
+			resp.WriteAsJSON(c)
 			return
 		}
 
@@ -51,8 +53,10 @@ func HandleChangePassword(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"user": user,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: user,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

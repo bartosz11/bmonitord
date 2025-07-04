@@ -16,6 +16,9 @@ func HandleLogout(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusNoContent, gin.H{})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusNoContent,
+		}
+		resp.WriteAsJSON(c)
 	}
 }

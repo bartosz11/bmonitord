@@ -61,7 +61,9 @@ func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 }
 
 func abortAuth(c *gin.Context) {
-	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-		"error": "invalid auth token",
-	})
+	resp := helpers.HTTPResponse{
+		Code:  http.StatusUnauthorized,
+		Error: "invalid auth token",
+	}
+	resp.AbortWithJSON(c)
 }

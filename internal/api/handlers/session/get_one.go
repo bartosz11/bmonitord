@@ -39,8 +39,10 @@ func HandleGetSession(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"session": session,
-		})
+		resp := helpers.HTTPResponse{
+			Code: http.StatusOK,
+			Data: session,
+		}
+		resp.WriteAsJSON(c)
 	}
 }
