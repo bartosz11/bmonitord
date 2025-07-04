@@ -54,6 +54,15 @@ func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
+		session.LastActive = time.Now()
+		session.IpAddress = c.ClientIP()
+		if db.Save(&session).Error != nil {
+			// A more "honest" error, but we still should abort
+			helpers.DBInteractionFailed(c)
+			c.Abort()
+			return
+		}
+
 		c.Set("user", session.User)
 		c.Set("session", session)
 		c.Next()
