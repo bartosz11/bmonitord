@@ -1,0 +1,19 @@
+meta {
+  name: Delete checker by ID
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{API_URL}}/api/admin/checker/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 3
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}

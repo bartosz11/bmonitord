@@ -1,6 +1,9 @@
 package helpers
 
-import "unicode"
+import (
+	"strings"
+	"unicode"
+)
 
 func IsStrongPassword(password string) bool {
 	if len(password) < 8 {
@@ -29,4 +32,8 @@ func ContainsAnySpace(s string) bool {
 		}
 	}
 	return false
+}
+
+func IsBlank(s string) bool {
+	return strings.TrimSpace(s) == ""
 }

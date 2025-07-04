@@ -3,8 +3,10 @@ package api
 import (
 	"bmonitord/config"
 	"bmonitord/internal/api/handlers/auth"
+	"bmonitord/internal/api/handlers/checker"
 	"bmonitord/internal/api/handlers/orchestrator"
 	"bmonitord/internal/api/handlers/session"
+	"bmonitord/internal/api/handlers/settings"
 	"bmonitord/internal/api/handlers/user"
 	"bmonitord/internal/api/helpers"
 	"bmonitord/internal/api/middleware"
@@ -66,6 +68,23 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 			//Orchestrator details aren't meant to be updated - might cause checkers to fail; I guess
 			//Might implement such an endpoint for that later on if I see it as reasonable,
 			//Ideally all updates to the whole orchestrators table should get broadcasted to all checkers, but it's kind of impossible with the current "stateless API" structure, I may be looking for a workaround in the future
+		}
+		checkerGrp := adminGrp.Group("/checker")
+		{
+			checkerGrp.POST("/", checker.HandleCreateChecker(db))
+			checkerGrp.DELETE("/:id", checker.HandleDeleteCheckerByID(db))
+			checkerGrp.GET("/", checker.HandleGetAllCheckers(db))
+			checkerGrp.GET("/:id", checker.HandleGetCheckerByID(db))
+			checkerGrp.PATCH("/:id", checker.HandleUpdateChecker(db))
+			checkerGrp.PATCH("/:id/key", checker.HandleRegenCheckerKey(db))
+		}
+		settingsGrp := adminGrp.Group("/settings")
+		{
+			//Update endpoint also serves as create endpoint, in this case I think it makes sense
+			settingsGrp.POST("/", settings.HandleChangeSetting(db))
+			settingsGrp.GET("/", settings.HandleGetAllSettings(db))
+			settingsGrp.GET("/:key", settings.HandleGetSettingByKey(db))
+			//There will be no delete endpoint - if I ever need to delete settings, it'll be done through migrations in an "if exists" style
 		}
 	}
 }

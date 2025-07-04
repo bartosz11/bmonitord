@@ -1,0 +1,22 @@
+meta {
+  name: Create or update setting
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{API_URL}}/api/admin/settings/
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "key": "registration-enabled",
+    "value": "false"
+  }
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Get all checkers
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{API_URL}}/api/admin/checker/
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}

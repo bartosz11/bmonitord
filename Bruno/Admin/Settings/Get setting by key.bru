@@ -1,0 +1,19 @@
+meta {
+  name: Get setting by key
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{API_URL}}/api/admin/settings/:key
+  body: none
+  auth: none
+}
+
+params:path {
+  key: registration-disabled
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Update checker
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{API_URL}}/api/admin/checker/:id
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 1
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "name": "This field is optional2",
+    "location": "This field is also optional"
+  }
+}

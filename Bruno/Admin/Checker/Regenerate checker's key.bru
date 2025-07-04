@@ -1,0 +1,19 @@
+meta {
+  name: Regenerate checker's key
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{API_URL}}/api/admin/checker/:id/key
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 1
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}

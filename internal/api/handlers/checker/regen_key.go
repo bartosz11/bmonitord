@@ -1,0 +1,50 @@
+package checker
+
+import (
+	"bmonitord/internal/api/helpers"
+	"bmonitord/internal/database/model"
+	"errors"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+	"net/http"
+	"strconv"
+)
+
+func HandleRegenCheckerKey(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		param := c.Param("id")
+		checkerID, err := strconv.ParseUint(param, 10, 64)
+		if err != nil {
+			helpers.ParsingFailed(c, "checker id ")
+			return
+		}
+
+		var checker model.Checker
+		err = db.First(&checker, "id = ?", checkerID).Error
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			helpers.NotFound(c)
+			return
+		}
+
+		if err != nil {
+			helpers.DBInteractionFailed(c)
+			return
+		}
+
+		key := GenerateUniqueKey(db, c)
+		if key == "" {
+			return
+		}
+
+		checker.Key = key
+		if db.Save(&checker).Error != nil {
+			helpers.DBInteractionFailed(c)
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"checker": checker,
+		})
+	}
+}
