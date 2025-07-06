@@ -2,8 +2,8 @@ package tasks
 
 import (
 	"bmonitord/internal/database/model"
+	"bmonitord/internal/notificationproviders"
 	"bmonitord/internal/orchestrator/helpers"
-	"bmonitord/internal/orchestrator/providers"
 	"gorm.io/gorm"
 	"sort"
 	"strconv"
@@ -115,7 +115,7 @@ func processBuffer(hbs []model.Heartbeat, task *ProcessingTask, db *gorm.DB) {
 			lastIncident.End = decisiveHeartbeat.Timestamp
 			lastIncident.Duration = decisiveHeartbeat.Timestamp.Sub(lastIncident.Start) // end - start, I love Go types
 			db.Save(lastIncident)
-		} else { // change from UP to DOWN, check providers shouldn't return UNKNOWN
+		} else { // change from UP to DOWN, check notificationproviders shouldn't return UNKNOWN
 			incident := model.Incident{
 				Start:    decisiveHeartbeat.Timestamp,
 				Ongoing:  true,
@@ -173,7 +173,7 @@ func processBuffer(hbs []model.Heartbeat, task *ProcessingTask, db *gorm.DB) {
 					}
 				}
 
-				payload := providers.NotificationPayload{
+				payload := notificationproviders.NotificationPayload{
 					Header:            header,
 					Body:              bodyBuilder.String(),
 					Incident:          *lastIncident, // no "potential nil dereference" here, because we send notifications only if status changes, but then we also create/modify incidents
@@ -183,7 +183,7 @@ func processBuffer(hbs []model.Heartbeat, task *ProcessingTask, db *gorm.DB) {
 				}
 
 				for _, notification := range alarm.Notifications {
-					go providers.NotificationProviders[notification.Type](payload, notification.Credentials)
+					go notificationproviders.NotificationProviders[notification.Type](payload, notification.Credentials)
 				}
 			}
 			break
@@ -225,7 +225,7 @@ func processBuffer(hbs []model.Heartbeat, task *ProcessingTask, db *gorm.DB) {
 					}
 				}
 
-				payload := providers.NotificationPayload{
+				payload := notificationproviders.NotificationPayload{
 					Header:            header,
 					Body:              bodyBuilder.String(),
 					Incident:          *lastIncident, // no "potential nil dereference" here, because we send notifications only if status changes, but then we also create/modify incidents
@@ -234,7 +234,7 @@ func processBuffer(hbs []model.Heartbeat, task *ProcessingTask, db *gorm.DB) {
 					Heartbeats:        hbsAll,
 				}
 				for _, notification := range alarm.Notifications {
-					go providers.NotificationProviders[notification.Type](payload, notification.Credentials)
+					go notificationproviders.NotificationProviders[notification.Type](payload, notification.Credentials)
 				}
 			}
 			break

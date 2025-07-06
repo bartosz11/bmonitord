@@ -4,6 +4,7 @@ import (
 	"bmonitord/config"
 	"bmonitord/internal/api/handlers/auth"
 	"bmonitord/internal/api/handlers/checker"
+	"bmonitord/internal/api/handlers/notification"
 	"bmonitord/internal/api/handlers/orchestrator"
 	"bmonitord/internal/api/handlers/session"
 	"bmonitord/internal/api/handlers/settings"
@@ -54,6 +55,15 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 			sessionGrp.GET("/current", session.HandleGetCurrentSession())
 			sessionGrp.DELETE("/", session.HandleDeleteAllSessions(db))
 			sessionGrp.DELETE("/:id", session.HandleDeleteSession(db))
+		}
+		notificationGrp := restrictedGrp.Group("/notification")
+		{
+			notificationGrp.POST("/", notification.HandleCreateNotification(db))
+			notificationGrp.DELETE("/:id", notification.HandleDeleteNotificationById(db))
+			notificationGrp.GET("/:id", notification.HandleGetNotificationById(db))
+			notificationGrp.GET("/", notification.HandleGetUsersNotifications(db))
+			notificationGrp.PATCH("/:id", notification.HandleUpdateNotificationById(db))
+			notificationGrp.POST("/:id/test", notification.HandleSendTestNotification(db))
 		}
 
 		adminGrp := restrictedGrp.Group("/admin", middleware.AdminMiddleware())

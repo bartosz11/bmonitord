@@ -1,4 +1,4 @@
-package providers
+package notificationproviders
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ const gotifyBodyTemplate = "{\"title\":\"%s\",\"message\":\"%s\",\"priority\":8}
 
 func SendGotifyNotification(payload NotificationPayload, credentials string) {
 	body := fmt.Sprintf(gotifyBodyTemplate, payload.Header, payload.Body)
-	credentialsSplit := strings.Split(credentials, " ")
+	credentialsSplit := strings.Split(credentials, ";")
 	url := credentialsSplit[0] + "/message"
 	token := credentialsSplit[1]
 	req, err := http.NewRequest("POST", url, strings.NewReader(body))

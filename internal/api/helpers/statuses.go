@@ -21,6 +21,16 @@ func BadRequest(c *gin.Context) {
 	resp.WriteAsJSON(c)
 }
 
+// TODO: preferably move all usages of BadRequest to this
+
+func BadRequestWithSpecificError(c *gin.Context, err interface{}) {
+	resp := HTTPResponse{
+		Code:  http.StatusBadRequest,
+		Error: err,
+	}
+	resp.WriteAsJSON(c)
+}
+
 func AccountDisabled(c *gin.Context) {
 	resp := HTTPResponse{
 		Code:  http.StatusForbidden,

@@ -1,0 +1,23 @@
+meta {
+  name: Create notification
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API_URL}}/api/notification/
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "name": "Example notification",
+    "type": 4,
+    "credentials": "https://example.com/webhookURL;asd"
+  }
+}

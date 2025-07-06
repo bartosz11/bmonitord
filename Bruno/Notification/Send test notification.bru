@@ -1,0 +1,19 @@
+meta {
+  name: Send test notification
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{API_URL}}/api/notification/:id/test
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 4
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}

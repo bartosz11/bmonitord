@@ -1,0 +1,27 @@
+meta {
+  name: Update notification by ID
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{API_URL}}/api/notification/:id
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 4
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "name": "Discord test",
+    "type": 0,
+    "credentials": "https://discord.com/api/webhooks/XYZ"
+  }
+}
