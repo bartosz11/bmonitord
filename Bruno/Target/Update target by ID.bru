@@ -1,0 +1,39 @@
+meta {
+  name: Update target by ID
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{API_URL}}/api/target/:id
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 9
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "name": "Example", // optional, must not be blank if supplied
+    "maxRetries": 0, // optional, must not be negative if supplied
+    "timeout": 5, // optional, must not be negative if supplied
+    "checkerIDs": [
+      4 // optional, all checkers must exist, min. length = 1 if supplied
+    ],
+    //"pingInfo": { // optional, ignored if target's type isn't ping
+    //  "host": "127.0.0.2" // must be supplied if ping info is supplied
+    //}
+    "httpInfo": {
+      "host": "http://127.0.0.1", // optional, must start with http:// or https:// if supplied
+      "allowedCodes": "202 204", // optional, HTTP codes separated with spaces (each has to consist of 3 digits)
+      "followRedirects": true, // optional, can't be null if supplied
+      "verifySSLCert": false // optional, can't be null if supplied
+    }
+  }
+}

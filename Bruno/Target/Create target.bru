@@ -1,0 +1,38 @@
+meta {
+  name: Create target
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API_URL}}/api/target/
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "name": "Example target", // must not be blank
+    "maxRetries": 3, // must not be negative
+    "type": 1, // 0 - ping, 1 - HTTP at the moment
+    "timeout": 5, // must not be negative, in seconds
+    "checkerIDs": [ // All checkers have to exist, must consist of min. 1 ID
+      1,
+      2
+    ],
+    //"pingInfo": {
+    //  "host": "127.0.0.1" // must not be blank
+    //}
+    // OR
+    "httpInfo": {
+      "host": "http://google.com", // must start with http:// or https://
+      "allowedCodes": "200 201 204", // HTTP codes separated with spaces (each has to consist of 3 digits)
+      "followRedirects": true, // required
+      "verifySSLCert": true // required
+    }
+  }
+}

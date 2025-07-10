@@ -1,0 +1,15 @@
+meta {
+  name: Get all targets
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{API_URL}}/api/target/
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}

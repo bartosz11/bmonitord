@@ -1,0 +1,23 @@
+meta {
+  name: Pause target by ID
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{API_URL}}/api/target/:id/pause?pause=false
+  body: none
+  auth: none
+}
+
+params:query {
+  pause: false
+}
+
+params:path {
+  id: 9
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}

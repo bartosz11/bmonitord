@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"time"
 )
@@ -31,6 +32,7 @@ type TargetType uint
 const (
 	PING TargetType = iota
 	HTTP
+	targetTypeMax // "sentinel" value
 )
 
 type TargetStatus uint
@@ -51,4 +53,11 @@ func StatusToString(status TargetStatus) string {
 		return "UNKNOWN"
 	}
 	return "" // Literally impossible
+}
+
+func ValidateTargetType(tt TargetType) error {
+	if tt >= targetTypeMax {
+		return fmt.Errorf("invalid target type: %d", tt)
+	}
+	return nil
 }

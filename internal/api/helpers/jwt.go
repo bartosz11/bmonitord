@@ -3,7 +3,6 @@ package helpers
 import (
 	"bmonitord/config"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/rs/zerolog/log"
 	"time"
 )
 
@@ -47,7 +46,6 @@ func ParseToken(tokenStr string) (*jwt.Token, bool) {
 		jwt.WithLeeway(0),
 	)
 	if err != nil {
-		log.Err(err).Msg("failed to parse token")
 		return nil, false
 	}
 	return token, true

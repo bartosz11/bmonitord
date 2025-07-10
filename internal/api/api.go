@@ -8,16 +8,27 @@ import (
 	"bmonitord/internal/api/handlers/orchestrator"
 	"bmonitord/internal/api/handlers/session"
 	"bmonitord/internal/api/handlers/settings"
+	"bmonitord/internal/api/handlers/target"
 	"bmonitord/internal/api/handlers/user"
 	"bmonitord/internal/api/helpers"
 	"bmonitord/internal/api/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
+	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 	"time"
 )
 
 func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *config.APIConfig) {
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		err := v.RegisterValidation("requiredUint", helpers.ValidateRequiredUint)
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to register custom uint validator")
+		}
+	}
+
 	apiGroup := router.Group("/api")
 	if !production {
 		apiGroup.Use(cors.New(cors.Config{
@@ -65,6 +76,19 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 			notificationGrp.PATCH("/:id", notification.HandleUpdateNotificationById(db))
 			notificationGrp.POST("/:id/test", notification.HandleSendTestNotification(db))
 		}
+		targetGrp := restrictedGrp.Group("/target")
+		{
+			targetGrp.POST("/", target.HandleCreateTarget(db))
+			targetGrp.DELETE("/:id", target.HandleDeleteTargetByID(db))
+			targetGrp.GET("/", target.HandleGetAllUsersTargets(db))
+			targetGrp.GET("/:id", target.HandleGetTargetByID(db))
+			targetGrp.PATCH("/:id", target.HandleUpdateTargetById(db))
+			targetGrp.PATCH("/:id/pause", target.HandlePauseTarget(db))
+			//	TODO: alarm group under target group: CRUD, reassign notifications - alarms are more dependent on Target
+		}
+		//TODO: separate incident and heartbeat groups - read only data that might be public at some point
+		// so that's why it should be on separate group, there's no point in making things like /target/:id/heartbeat[s]/:id
+		// they're theoretically child entities, but the "publicity" makes them kind of independent
 
 		adminGrp := restrictedGrp.Group("/admin", middleware.AdminMiddleware())
 		{

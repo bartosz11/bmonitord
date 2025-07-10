@@ -1,0 +1,19 @@
+meta {
+  name: Get target by ID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{API_URL}}/api/target/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 9
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
