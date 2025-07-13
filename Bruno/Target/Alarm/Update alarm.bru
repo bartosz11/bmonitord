@@ -1,0 +1,32 @@
+meta {
+  name: Update alarm
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{API_URL}}/api/target/:targetID/alarm/:alarmID
+  body: json
+  auth: none
+}
+
+params:path {
+  alarmID: 3
+  targetID: 9
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "name": "Example new name", // must not be blank if supplied
+    "type": 0, // not required, must be 0 for unavailable, 1 for threshold if supplied
+    "thresholdField": 0, // 0 for latency, not required unless updating type to threshold
+    "threshold": 123.78, // not required unless updating type to threshold
+    "notificationIDs": [
+      4, 5 // not required, min. 1 must be supplied if provided, all must exist and belong to user
+    ]
+  }
+}

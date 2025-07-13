@@ -1,0 +1,36 @@
+meta {
+  name: Mute alarm
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{API_URL}}/api/target/:targetID/alarm/:alarmID/mute?mute=false
+  body: none
+  auth: none
+}
+
+params:query {
+  mute: false
+}
+
+params:path {
+  alarmID: 3
+  targetID: 9
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "name": "Example alarm", // required, not blank
+    "type": 0, // 0 for unavailable, 1 for threshold  
+    "thresholdField": 0, // 0 for latency, required if type is threshold
+    "threshold": 123.45, // required if type is threshold
+    "notificationIDs": [
+      1, 2, 3 // required, min. 1 
+    ]
+  }
+}

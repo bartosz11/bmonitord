@@ -1,0 +1,31 @@
+meta {
+  name: Get target's alarms
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{API_URL}}/api/target/:targetID/alarm/
+  body: none
+  auth: none
+}
+
+params:path {
+  targetID: 9
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "name": "Example alarm", // required, not blank
+    "type": 0, // 0 for unavailable, 1 for threshold  
+    "thresholdField": 0, // 0 for latency, required if type is threshold
+    "threshold": 123.45, // required if type is threshold
+    "notificationIDs": [
+      1, 2, 3 // required, min. 1 
+    ]
+  }
+}

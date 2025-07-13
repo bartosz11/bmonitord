@@ -15,7 +15,7 @@ func HandlePauseTarget(db *gorm.DB) gin.HandlerFunc {
 		value, _ := c.Get("user")
 		user := value.(model.User)
 
-		param := c.Param("id")
+		param := c.Param("targetID")
 		id, err := strconv.ParseUint(param, 10, 64)
 		if err != nil {
 			helpers.ParsingFailed(c, "target id")

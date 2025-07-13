@@ -9,6 +9,7 @@ import (
 	"bmonitord/internal/api/handlers/session"
 	"bmonitord/internal/api/handlers/settings"
 	"bmonitord/internal/api/handlers/target"
+	"bmonitord/internal/api/handlers/target/alarm"
 	"bmonitord/internal/api/handlers/user"
 	"bmonitord/internal/api/helpers"
 	"bmonitord/internal/api/middleware"
@@ -79,46 +80,58 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 		targetGrp := restrictedGrp.Group("/target")
 		{
 			targetGrp.POST("/", target.HandleCreateTarget(db))
-			targetGrp.DELETE("/:id", target.HandleDeleteTargetByID(db))
 			targetGrp.GET("/", target.HandleGetAllUsersTargets(db))
-			targetGrp.GET("/:id", target.HandleGetTargetByID(db))
-			targetGrp.PATCH("/:id", target.HandleUpdateTargetById(db))
-			targetGrp.PATCH("/:id/pause", target.HandlePauseTarget(db))
-			//	TODO: alarm group under target group: CRUD, reassign notifications - alarms are more dependent on Target
+			//if it's not done like this gin panics, there may be a better fix
+			specificTargetGrp := targetGrp.Group("/:targetID")
+			{
+				specificTargetGrp.DELETE("", target.HandleDeleteTargetByID(db))
+				specificTargetGrp.GET("", target.HandleGetTargetByID(db))
+				specificTargetGrp.PATCH("", target.HandleUpdateTargetById(db))
+				specificTargetGrp.PATCH("/pause", target.HandlePauseTarget(db))
+				alarmGrp := specificTargetGrp.Group("/alarm")
+				{
+					alarmGrp.POST("/", alarm.HandleCreateAlarm(db))
+					alarmGrp.GET("/", alarm.HandleGetAllAlarmsByTargetID(db))
+					alarmGrp.GET("/:alarmID", alarm.HandleGetAlarmByID(db))
+					alarmGrp.DELETE("/:alarmID", alarm.HandleDeleteAlarmByID(db))
+					alarmGrp.PATCH("/:alarmID", alarm.HandleUpdateAlarm(db))
+					alarmGrp.PATCH("/:alarmID/mute", alarm.HandleMuteAlarm(db))
+				}
+			}
 		}
-		//TODO: separate incident and heartbeat groups - read only data that might be public at some point
-		// so that's why it should be on separate group, there's no point in making things like /target/:id/heartbeat[s]/:id
-		// they're theoretically child entities, but the "publicity" makes them kind of independent
+	}
+	//TODO: separate incident and heartbeat groups - read only data that might be public at some point
+	// so that's why it should be on separate group, there's no point in making things like /target/:id/heartbeat[s]/:id
+	// they're theoretically child entities, but the "publicity" makes them kind of independent
 
-		adminGrp := restrictedGrp.Group("/admin", middleware.AdminMiddleware())
+	adminGrp := restrictedGrp.Group("/admin", middleware.AdminMiddleware())
+	{
+		orchestratorGrp := adminGrp.Group("/orchestrator")
 		{
-			orchestratorGrp := adminGrp.Group("/orchestrator")
-			{
-				orchestratorGrp.POST("/", orchestrator.HandleCreateOrchestrator(db))
-				orchestratorGrp.DELETE("/:id", orchestrator.HandleDeleteOrchestrator(db))
-				orchestratorGrp.GET("/:id", orchestrator.HandleGetOrchestratorByID(db))
-				orchestratorGrp.GET("/", orchestrator.HandleGetAllOrchestrators(db))
-				//Orchestrator details aren't meant to be updated - might cause checkers to fail; I guess
-				//Might implement such an endpoint for that later on if I see it as reasonable,
-				//Ideally all updates to the whole orchestrators table should get broadcasted to all checkers, but it's kind of impossible with the current "stateless API" structure, I may be looking for a workaround in the future
-			}
-			checkerGrp := adminGrp.Group("/checker")
-			{
-				checkerGrp.POST("/", checker.HandleCreateChecker(db))
-				checkerGrp.DELETE("/:id", checker.HandleDeleteCheckerByID(db))
-				checkerGrp.GET("/", checker.HandleGetAllCheckers(db))
-				checkerGrp.GET("/:id", checker.HandleGetCheckerByID(db))
-				checkerGrp.PATCH("/:id", checker.HandleUpdateChecker(db))
-				checkerGrp.PATCH("/:id/key", checker.HandleRegenCheckerKey(db))
-			}
-			settingsGrp := adminGrp.Group("/settings")
-			{
-				//Update endpoint also serves as create endpoint, in this case I think it makes sense
-				settingsGrp.POST("/", settings.HandleChangeSetting(db))
-				settingsGrp.GET("/", settings.HandleGetAllSettings(db))
-				settingsGrp.GET("/:key", settings.HandleGetSettingByKey(db))
-				//There will be no delete endpoint - if I ever need to delete settings, it'll be done through migrations in an "if exists" style
-			}
+			orchestratorGrp.POST("/", orchestrator.HandleCreateOrchestrator(db))
+			orchestratorGrp.DELETE("/:id", orchestrator.HandleDeleteOrchestrator(db))
+			orchestratorGrp.GET("/:id", orchestrator.HandleGetOrchestratorByID(db))
+			orchestratorGrp.GET("/", orchestrator.HandleGetAllOrchestrators(db))
+			//Orchestrator details aren't meant to be updated - might cause checkers to fail; I guess
+			//Might implement such an endpoint for that later on if I see it as reasonable,
+			//Ideally all updates to the whole orchestrators table should get broadcasted to all checkers, but it's kind of impossible with the current "stateless API" structure, I may be looking for a workaround in the future
+		}
+		checkerGrp := adminGrp.Group("/checker")
+		{
+			checkerGrp.POST("/", checker.HandleCreateChecker(db))
+			checkerGrp.DELETE("/:id", checker.HandleDeleteCheckerByID(db))
+			checkerGrp.GET("/", checker.HandleGetAllCheckers(db))
+			checkerGrp.GET("/:id", checker.HandleGetCheckerByID(db))
+			checkerGrp.PATCH("/:id", checker.HandleUpdateChecker(db))
+			checkerGrp.PATCH("/:id/key", checker.HandleRegenCheckerKey(db))
+		}
+		settingsGrp := adminGrp.Group("/settings")
+		{
+			//Update endpoint also serves as create endpoint, in this case I think it makes sense
+			settingsGrp.POST("/", settings.HandleChangeSetting(db))
+			settingsGrp.GET("/", settings.HandleGetAllSettings(db))
+			settingsGrp.GET("/:key", settings.HandleGetSettingByKey(db))
+			//There will be no delete endpoint - if I ever need to delete settings, it'll be done through migrations in an "if exists" style
 		}
 	}
 }

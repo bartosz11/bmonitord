@@ -1,6 +1,9 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+	"gorm.io/gorm"
+)
 
 type Alarm struct {
 	gorm.Model
@@ -19,12 +22,21 @@ type AlarmType uint
 const (
 	Unavailable AlarmType = iota
 	Threshold
+	alarmTypeMax
 )
+
+func ValidateAlarmType(at AlarmType) error {
+	if at >= alarmTypeMax {
+		return fmt.Errorf("invalid alarm type: %d", at)
+	}
+	return nil
+}
 
 type AlarmThresholdField uint
 
 const (
 	Latency AlarmThresholdField = iota
+	thresholdFieldMax
 )
 
 type AlarmThresholdFieldMeta struct {
@@ -41,4 +53,11 @@ var AlarmThresholdFieldMetas = map[AlarmThresholdField]AlarmThresholdFieldMeta{
 			return float64(hb.Latency)
 		},
 	},
+}
+
+func ValidateAlarmThresholdField(tf AlarmThresholdField) error {
+	if tf >= thresholdFieldMax {
+		return fmt.Errorf("invalid threshold field: %d", tf)
+	}
+	return nil
 }

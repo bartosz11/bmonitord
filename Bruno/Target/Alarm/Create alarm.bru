@@ -1,0 +1,31 @@
+meta {
+  name: Create alarm
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API_URL}}/api/target/:id/alarm/
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 9
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "name": "Example alarm", // required, not blank
+    "type": 0, // 0 for unavailable, 1 for threshold  
+    "thresholdField": 0, // 0 for latency, required if type is threshold
+    "threshold": 123.45, // required if type is threshold
+    "notificationIDs": [
+      4, 6 // required, min. 1, all must exist and belong to user
+    ]
+  }
+}

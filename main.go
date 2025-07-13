@@ -4,7 +4,6 @@ import (
 	"bmonitord/config"
 	"bmonitord/internal/api"
 	"bmonitord/internal/database"
-	"bmonitord/internal/orchestrator"
 	"bmonitord/internal/orchestrator/helpers"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
@@ -30,7 +29,7 @@ func main() {
 
 	helpers.InitEmail(&cfg.EmailConfig)
 
-	orchestrator.StartOrchestrator(&cfg.OrchestratorConfig, db, router)
+	//orchestrator.StartOrchestrator(&cfg.OrchestratorConfig, db, router)
 
 	api.StartAPI(db, router, cfg.Production, &cfg.APIConfig)
 
