@@ -7,15 +7,15 @@ import java.time.Instant;
 
 public class Heartbeat {
 
-    @JsonProperty("Timestamp")
+    @JsonProperty("timestamp")
     private Instant timestamp;
-    @JsonProperty("Status")
+    @JsonProperty("status")
     private int status; // 0 means UP, 1 means DOWN
-    @JsonProperty("Latency")
+    @JsonProperty("latency")
     private long latency;
-    @JsonProperty("TargetID")
+    @JsonProperty("targetId")
     private long targetID;
-    @JsonProperty("CheckerID")
+    @JsonProperty("checkerId")
     private long checkerID;
 
 

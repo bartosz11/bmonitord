@@ -9,14 +9,14 @@ import java.util.stream.Collectors;
 
 public class TargetHTTPInfo {
 
-    @JsonProperty("Host")
+    @JsonProperty("host")
     private String host;
     // Split by a space
-    @JsonProperty("AllowedCodes")
+    @JsonProperty("allowedCodes")
     private String allowedCodes;
-    @JsonProperty("FollowRedirects")
+    @JsonProperty("followRedirects")
     private boolean followRedirects;
-    @JsonProperty("VerifySSLCert")
+    @JsonProperty("verifySSLCert")
     private boolean verifySSLCert;
 
     public String getHost() {

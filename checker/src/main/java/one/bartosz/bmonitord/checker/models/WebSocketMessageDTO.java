@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class WebSocketMessageDTO {
 
-    @JsonProperty("Type")
+    @JsonProperty("type")
     private String type;
-    @JsonProperty("Payload")
+    @JsonProperty("payload")
     private Object payload;
 
     public String getType() {

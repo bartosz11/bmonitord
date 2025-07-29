@@ -1,17 +1,16 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"time"
 )
 
 type Heartbeat struct {
-	gorm.Model
-	Latency   uint64
-	Timestamp time.Time    `gorm:"not null"`
-	Status    TargetStatus `gorm:"not null"`
-	TargetID  uint         `gorm:"not null"`
-	Target    Target       `gorm:"foreignKey:TargetID"`
-	CheckerID uint         `gorm:"not null"`
-	Checker   Checker      `gorm:"foreignKey:CheckerID"`
+	BaseModel
+	Latency   uint64       `json:"latency"`
+	Timestamp time.Time    `gorm:"not null" json:"timestamp"`
+	Status    TargetStatus `gorm:"not null" json:"status"`
+	TargetID  uint         `gorm:"not null" json:"targetId"`
+	Target    Target       `gorm:"foreignKey:TargetID" json:"target"`
+	CheckerID uint         `gorm:"not null" json:"checkerId"`
+	Checker   Checker      `gorm:"foreignKey:CheckerID" json:"checker"`
 }

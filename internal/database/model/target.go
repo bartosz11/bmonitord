@@ -2,29 +2,28 @@ package model
 
 import (
 	"fmt"
-	"gorm.io/gorm"
 	"time"
 )
 
 type Target struct {
-	gorm.Model
-	Name        string `gorm:"not null"`
-	ChecksUp    uint64
-	ChecksDown  uint64
-	MaxRetries  uint `gorm:"not null"`
-	UsedRetries uint `gorm:"not null;default:0"`
-	LastCheck   time.Time
-	LastStatus  TargetStatus
-	Type        TargetType `gorm:"not null"`
-	Paused      bool       `gorm:"default:false"`
-	Timeout     uint
-	UserID      uint           `gorm:"not null"`
-	Heartbeats  []Heartbeat    `gorm:"constraint:OnDelete:CASCADE;"`
-	Alarms      []Alarm        `gorm:"constraint:OnDelete:CASCADE;"`
-	Incidents   []Incident     `gorm:"constraint:OnDelete:CASCADE;"`
-	Checkers    []Checker      `gorm:"many2many:targets_checkers;constraint:OnDelete:CASCADE;"`
-	HTTPInfo    TargetHTTPInfo `gorm:"constraint:OnDelete:CASCADE;"`
-	PingInfo    TargetPingInfo `gorm:"constraint:OnDelete:CASCADE;"`
+	BaseModel
+	Name        string         `gorm:"not null" json:"name"`
+	ChecksUp    uint64         `json:"checksUp"`
+	ChecksDown  uint64         `json:"checksDown"`
+	MaxRetries  uint           `gorm:"not null" json:"maxRetries"`
+	UsedRetries uint           `gorm:"not null;default:0" json:"usedRetries"`
+	LastCheck   time.Time      `json:"lastCheck"`
+	LastStatus  TargetStatus   `json:"lastStatus"`
+	Type        TargetType     `gorm:"not null" json:"type"`
+	Paused      bool           `gorm:"default:false" json:"paused"`
+	Timeout     uint           `json:"timeout"`
+	UserID      uint           `gorm:"not null" json:"userId"`
+	Heartbeats  []Heartbeat    `gorm:"constraint:OnDelete:CASCADE;" json:"heartbeats"`
+	Alarms      []Alarm        `gorm:"constraint:OnDelete:CASCADE;" json:"alarms"`
+	Incidents   []Incident     `gorm:"constraint:OnDelete:CASCADE;" json:"incidents"`
+	Checkers    []Checker      `gorm:"many2many:targets_checkers;constraint:OnDelete:CASCADE;" json:"checkers"`
+	HTTPInfo    TargetHTTPInfo `gorm:"constraint:OnDelete:CASCADE;" json:"httpInfo"`
+	PingInfo    TargetPingInfo `gorm:"constraint:OnDelete:CASCADE;" json:"pingInfo"`
 }
 
 type TargetType uint

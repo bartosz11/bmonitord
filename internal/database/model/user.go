@@ -1,14 +1,12 @@
 package model
 
-import "gorm.io/gorm"
-
 type User struct {
-	gorm.Model
-	Username      string         `gorm:"not null;unique"`
+	BaseModel
+	Username      string         `gorm:"not null;unique" json:"username"`
 	Password      string         `gorm:"not null" json:"-"`
-	Enabled       bool           `gorm:"not null;default:true"`
-	Admin         bool           `gorm:"not null;default:false"`
-	Targets       []Target       `gorm:"constraint:OnDelete:CASCADE;"`
-	Notifications []Notification `gorm:"constraint:OnDelete:CASCADE;"`
-	Sessions      []Session      `gorm:"constraint:OnDelete:CASCADE;"`
+	Enabled       bool           `gorm:"not null;default:true" json:"enabled"`
+	Admin         bool           `gorm:"not null;default:false" json:"admin"`
+	Targets       []Target       `gorm:"constraint:OnDelete:CASCADE;" json:"targets"`
+	Notifications []Notification `gorm:"constraint:OnDelete:CASCADE;" json:"notifications"`
+	Sessions      []Session      `gorm:"constraint:OnDelete:CASCADE;" json:"sessions"`
 }

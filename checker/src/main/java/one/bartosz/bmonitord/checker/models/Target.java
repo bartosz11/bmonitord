@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Target {
 
-    @JsonProperty("ID")
+    @JsonProperty("id")
     private long ID;
-    @JsonProperty("Timeout")
+    @JsonProperty("timeout")
     private int timeout;
-    @JsonProperty("Type")
+    @JsonProperty("type")
     private int type;
-    @JsonProperty("HTTPInfo")
+    @JsonProperty("httpInfo")
     private TargetHTTPInfo httpInfo;
-    @JsonProperty("PingInfo")
+    @JsonProperty("pingInfo")
     private TargetPingInfo pingInfo;
 
     public long getID() {

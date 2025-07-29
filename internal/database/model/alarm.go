@@ -2,19 +2,18 @@ package model
 
 import (
 	"fmt"
-	"gorm.io/gorm"
 )
 
 type Alarm struct {
-	gorm.Model
-	Name           string    `gorm:"not null"`
-	Type           AlarmType `gorm:"not null"`
-	Active         bool      `gorm:"default:false"`
-	Muted          bool      `gorm:"default:false"`
-	Threshold      float64
-	ThresholdField AlarmThresholdField
-	TargetID       uint           `gorm:"not null"`
-	Notifications  []Notification `gorm:"many2many:alarms_notifications;constraint:OnDelete:CASCADE;"`
+	BaseModel
+	Name           string              `gorm:"not null" json:"name"`
+	Type           AlarmType           `gorm:"not null" json:"type"`
+	Active         bool                `gorm:"default:false" json:"active"`
+	Muted          bool                `gorm:"default:false" json:"muted"`
+	Threshold      float64             `json:"threshold"`
+	ThresholdField AlarmThresholdField `json:"thresholdField"`
+	TargetID       uint                `gorm:"not null" json:"targetId"`
+	Notifications  []Notification      `gorm:"many2many:alarms_notifications;constraint:OnDelete:CASCADE;" json:"notifications"`
 }
 
 type AlarmType uint

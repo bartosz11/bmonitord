@@ -19,9 +19,9 @@ func SendJSON(conn *websocket.Conn, msg WebSocketMessage) {
 }
 
 type WebSocketMessage struct {
-	Type string
+	Type string `json:"type"`
 	// We parse payload further to corresponding objects when needed
-	Payload json.RawMessage
+	Payload json.RawMessage `json:"payload"`
 }
 
 func Contains[T comparable](slice []T, val T) bool {

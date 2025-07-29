@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TargetPingInfo {
 
-    @JsonProperty("Host")
+    @JsonProperty("host")
     private String host;
 
     public String getHost() {

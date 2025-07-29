@@ -1,18 +1,16 @@
 package model
 
-import "gorm.io/gorm"
-
 type TargetPingInfo struct {
-	gorm.Model
-	Host     string `gorm:"not null"`
-	TargetID uint   `gorm:"not null"`
+	BaseModel
+	Host     string `gorm:"not null" json:"host"`
+	TargetID uint   `gorm:"not null" json:"targetId"`
 }
 
 type TargetHTTPInfo struct {
-	gorm.Model
-	Host            string `gorm:"not null"`
-	AllowedCodes    string `gorm:"not null"`
-	FollowRedirects bool   `gorm:"not null;default:false"`
-	VerifySSLCert   bool   `gorm:"not null;default:false"`
-	TargetID        uint   `gorm:"not null"`
+	BaseModel
+	Host            string `gorm:"not null" json:"host"`
+	AllowedCodes    string `gorm:"not null" json:"allowedCodes"`
+	FollowRedirects bool   `gorm:"not null;default:false" json:"followRedirects"`
+	VerifySSLCert   bool   `gorm:"not null;default:false" json:"verifySSLCert"`
+	TargetID        uint   `gorm:"not null" json:"targetId"`
 }
