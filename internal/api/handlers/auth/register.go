@@ -46,12 +46,12 @@ func HandleRegister(db *gorm.DB) gin.HandlerFunc {
 
 		registerReq := Credentials{}
 		if err := c.ShouldBind(&registerReq); err != nil {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "invalid request body")
 			return
 		}
 
 		if helpers.ContainsAnySpace(registerReq.Username) {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "username cannot contain any whitespace characters")
 			return
 		}
 

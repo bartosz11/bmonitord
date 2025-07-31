@@ -65,7 +65,7 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 
 	authGrp := apiGroup.Group("/auth")
 	{
-		authGrp.POST("/login", auth.HandleLogin(db))
+		authGrp.POST("/login", auth.HandleLogin(db, &apiConfig.SecureCookies))
 		authGrp.POST("/register", auth.HandleRegister(db))
 	}
 

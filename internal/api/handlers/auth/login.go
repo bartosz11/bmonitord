@@ -32,11 +32,11 @@ type Credentials struct {
 // @Failure 403 {object} helpers.GenericErrorResponse "Returned when the user account is disabled."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction or token generation fails."
 // @Router /auth/login [post]
-func HandleLogin(db *gorm.DB) gin.HandlerFunc {
+func HandleLogin(db *gorm.DB, secureCookies *bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		loginReq := Credentials{}
 		if err := c.ShouldBind(&loginReq); err != nil {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "invalid request body")
 			return
 		}
 
@@ -82,8 +82,7 @@ func HandleLogin(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		//TODO: un-hardcode secure later
-		c.SetCookie("auth-token", jwt, helpers.JWTValidity*60, "/", "", false, false)
+		c.SetCookie("auth-token", jwt, helpers.JWTValidity*60, "/", "", *secureCookies, false)
 		resp := helpers.HTTPResponse{
 			Code: http.StatusOK,
 			Data: gin.H{

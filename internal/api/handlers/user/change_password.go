@@ -29,7 +29,7 @@ func HandleChangePassword(db *gorm.DB) gin.HandlerFunc {
 		changePasswordReq := ChangePasswordRequest{}
 
 		if err := c.ShouldBind(&changePasswordReq); err != nil {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "invalid request body")
 			return
 		}
 

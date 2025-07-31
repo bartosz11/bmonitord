@@ -24,6 +24,7 @@ api:
   jwt-secret: replace_me
   jwt-validity: 3600 # in minutes, 6hrs by default
   host-docs: true # Should this API instance also host swagger API docs? if true, they'll be available at /swagger/index.html
+  secure-cookies: false # Set to true if your instance is accessible through https. Cookies will have the "Secure" flag
 
 
 # https://github.com/rs/zerolog?tab=readme-ov-file#leveled-logging

@@ -29,7 +29,7 @@ func HandleCreateOrchestrator(db *gorm.DB) gin.HandlerFunc {
 		orchCreateReq := CreateOrchestratorRequest{}
 
 		if c.ShouldBind(&orchCreateReq) != nil {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "invalid request body")
 			return
 		}
 

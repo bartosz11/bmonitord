@@ -34,7 +34,7 @@ func HandleChangeSetting(db *gorm.DB) gin.HandlerFunc {
 		changeSettingReq := ChangeSettingRequest{}
 
 		if c.ShouldBind(&changeSettingReq) != nil {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "invalid request body")
 			return
 		}
 

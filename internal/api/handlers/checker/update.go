@@ -38,7 +38,7 @@ func HandleUpdateChecker(db *gorm.DB) gin.HandlerFunc {
 		checkerUpdateReq := UpdateCheckerRequest{}
 
 		if c.ShouldBind(&checkerUpdateReq) != nil {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "invalid request body")
 			return
 		}
 

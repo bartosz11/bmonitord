@@ -27,12 +27,12 @@ func HandleCreateChecker(db *gorm.DB) gin.HandlerFunc {
 		checkerCreateReq := CreateCheckerRequest{}
 
 		if c.ShouldBind(&checkerCreateReq) != nil {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "invalid request body")
 			return
 		}
 
 		if helpers.IsBlank(checkerCreateReq.Name) {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "checker name cannot be blank")
 			return
 		}
 

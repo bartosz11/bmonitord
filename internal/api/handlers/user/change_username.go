@@ -28,12 +28,12 @@ func HandleChangeUsername(db *gorm.DB) gin.HandlerFunc {
 		changeUsernameReq := ChangeUsernameRequest{}
 
 		if err := c.ShouldBind(&changeUsernameReq); err != nil {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "invalid request body")
 			return
 		}
 
 		if helpers.ContainsAnySpace(changeUsernameReq.NewUsername) {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "new username cannot contain any whitespace characters")
 			return
 		}
 

@@ -32,7 +32,7 @@ func HandleUpdateNotificationById(db *gorm.DB) gin.HandlerFunc {
 
 		err := c.ShouldBind(&updateReq)
 		if err != nil {
-			helpers.BadRequest(c)
+			helpers.BadRequestWithSpecificError(c, "invalid request body")
 			return
 		}
 
