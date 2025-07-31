@@ -1,10 +1,10 @@
 package notification
 
 import (
-	"bmonitord/internal/api/helpers"
-	"bmonitord/internal/database/model"
-	"bmonitord/internal/notificationproviders"
 	"errors"
+	"github.com/bartosz11/checkmate/internal/api/helpers"
+	"github.com/bartosz11/checkmate/internal/database/model"
+	"github.com/bartosz11/checkmate/internal/notificationproviders"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -13,7 +13,7 @@ import (
 
 var testNotificationPayload = notificationproviders.NotificationPayload{
 	Header: "Test notification",
-	Body:   "This is a test notification from bmonitord.",
+	Body:   "This is a test notification from checkmate.",
 }
 
 // HandleSendTestNotification docs

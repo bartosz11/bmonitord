@@ -1,7 +1,7 @@
 package notificationproviders
 
 import (
-	"bmonitord/internal/orchestrator/helpers"
+	"github.com/bartosz11/checkmate/internal/orchestrator/helpers"
 	"gopkg.in/gomail.v2"
 )
 

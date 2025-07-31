@@ -1,4 +1,4 @@
-module bmonitord
+module github.com/bartosz11/checkmate
 
 go 1.24
 

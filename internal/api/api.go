@@ -1,19 +1,19 @@
 package api
 
 import (
-	"bmonitord/config"
-	_ "bmonitord/docs"
-	"bmonitord/internal/api/handlers/auth"
-	"bmonitord/internal/api/handlers/checker"
-	"bmonitord/internal/api/handlers/notification"
-	"bmonitord/internal/api/handlers/orchestrator"
-	"bmonitord/internal/api/handlers/session"
-	"bmonitord/internal/api/handlers/settings"
-	"bmonitord/internal/api/handlers/target"
-	"bmonitord/internal/api/handlers/target/alarm"
-	"bmonitord/internal/api/handlers/user"
-	"bmonitord/internal/api/helpers"
-	"bmonitord/internal/api/middleware"
+	"github.com/bartosz11/checkmate/config"
+	_ "github.com/bartosz11/checkmate/docs"
+	"github.com/bartosz11/checkmate/internal/api/handlers/auth"
+	"github.com/bartosz11/checkmate/internal/api/handlers/checker"
+	"github.com/bartosz11/checkmate/internal/api/handlers/notification"
+	"github.com/bartosz11/checkmate/internal/api/handlers/orchestrator"
+	"github.com/bartosz11/checkmate/internal/api/handlers/session"
+	"github.com/bartosz11/checkmate/internal/api/handlers/settings"
+	"github.com/bartosz11/checkmate/internal/api/handlers/target"
+	"github.com/bartosz11/checkmate/internal/api/handlers/target/alarm"
+	"github.com/bartosz11/checkmate/internal/api/handlers/user"
+	"github.com/bartosz11/checkmate/internal/api/helpers"
+	"github.com/bartosz11/checkmate/internal/api/middleware"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -26,9 +26,9 @@ import (
 	"gorm.io/gorm"
 )
 
-//	@title			bmonitord v3 API
+//	@title			checkmate API
 //	@version		1.0
-//	@description	API docs for bmonitord v3
+//	@description	API docs for checkmate
 //	@host			localhost:8080
 //	@BasePath		/api
 //

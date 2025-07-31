@@ -808,25 +808,9 @@ definitions:
     - 1000000000
     - 60000000000
     - 3600000000000
-    - -9223372036854775808
-    - 9223372036854775807
-    - 1
-    - 1000
-    - 1000000
-    - 1000000000
-    - 60000000000
-    - 3600000000000
     format: int64
     type: integer
     x-enum-varnames:
-    - minDuration
-    - maxDuration
-    - Nanosecond
-    - Microsecond
-    - Millisecond
-    - Second
-    - Minute
-    - Hour
     - minDuration
     - maxDuration
     - Nanosecond
@@ -866,8 +850,8 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: API docs for bmonitord v3
-  title: bmonitord v3 API
+  description: API docs for checkmate
+  title: checkmate API
   version: "1.0"
 paths:
   /admin/checker/:

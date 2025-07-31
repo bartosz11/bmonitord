@@ -1,10 +1,10 @@
 package main
 
 import (
-	"bmonitord/config"
-	"bmonitord/internal/api"
-	"bmonitord/internal/database"
-	"bmonitord/internal/orchestrator/helpers"
+	"github.com/bartosz11/checkmate/config"
+	"github.com/bartosz11/checkmate/internal/api"
+	"github.com/bartosz11/checkmate/internal/database"
+	"github.com/bartosz11/checkmate/internal/orchestrator/helpers"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"

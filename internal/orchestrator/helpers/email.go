@@ -1,7 +1,7 @@
 package helpers
 
 import (
-	"bmonitord/config"
+	"github.com/bartosz11/checkmate/config"
 	"github.com/rs/zerolog/log"
 	"gopkg.in/gomail.v2"
 )

@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"bmonitord/internal/database/model"
-	"bmonitord/internal/orchestrator/helpers"
-	"bmonitord/internal/orchestrator/tasks"
 	"encoding/json"
 	"errors"
+	"github.com/bartosz11/checkmate/internal/database/model"
+	"github.com/bartosz11/checkmate/internal/orchestrator/helpers"
+	"github.com/bartosz11/checkmate/internal/orchestrator/tasks"
 	"github.com/coder/websocket"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"

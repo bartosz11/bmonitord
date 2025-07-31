@@ -1,9 +1,9 @@
 package database
 
 import (
-	"bmonitord/config"
-	"bmonitord/internal/database/model"
 	"fmt"
+	"github.com/bartosz11/checkmate/config"
+	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

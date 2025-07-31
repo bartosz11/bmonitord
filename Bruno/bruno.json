@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "bmonitord",
+  "name": "checkmate",
   "type": "collection",
   "ignore": [
     "node_modules",

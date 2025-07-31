@@ -1,6 +1,6 @@
 package notificationproviders
 
-import "bmonitord/internal/database/model"
+import "github.com/bartosz11/checkmate/internal/database/model"
 
 var NotificationProviders = map[model.NotificationType]func(payload NotificationPayload, credentials string){
 	model.Discord:        SendDiscordNotification,

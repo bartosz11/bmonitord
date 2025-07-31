@@ -1,9 +1,9 @@
 package tasks
 
 import (
-	"bmonitord/internal/database/model"
-	"bmonitord/internal/notificationproviders"
-	"bmonitord/internal/orchestrator/helpers"
+	"github.com/bartosz11/checkmate/internal/database/model"
+	"github.com/bartosz11/checkmate/internal/notificationproviders"
+	"github.com/bartosz11/checkmate/internal/orchestrator/helpers"
 	"gorm.io/gorm"
 	"sort"
 	"strconv"

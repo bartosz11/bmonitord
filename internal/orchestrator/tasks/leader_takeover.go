@@ -1,8 +1,8 @@
 package tasks
 
 import (
-	"bmonitord/config"
-	"bmonitord/internal/database/model"
+	"github.com/bartosz11/checkmate/config"
+	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"

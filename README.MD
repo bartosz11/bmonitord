@@ -1,4 +1,8 @@
-# bmonitord
+# checkmate (previously bmonitord)
+
+## ⚠️ Warning
+
+checkmate is nowhere close to being production-ready at the moment. I'm currently in the process of rewriting bmonitord v2 into a v3. This readme and wiki are out of date. I'll update them once the actual app is ready.
 
 A monitoring system built as a purpose-built alternative for HetrixTools and Uptime Kuma.
 

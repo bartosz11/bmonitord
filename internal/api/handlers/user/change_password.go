@@ -1,8 +1,8 @@
 package user
 
 import (
-	"bmonitord/internal/api/helpers"
-	"bmonitord/internal/database/model"
+	"github.com/bartosz11/checkmate/internal/api/helpers"
+	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"

@@ -1,7 +1,7 @@
 package session
 
 import (
-	"bmonitord/internal/api/helpers"
+	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

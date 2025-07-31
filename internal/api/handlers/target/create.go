@@ -1,8 +1,8 @@
 package target
 
 import (
-	"bmonitord/internal/api/helpers"
-	"bmonitord/internal/database/model"
+	"github.com/bartosz11/checkmate/internal/api/helpers"
+	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"

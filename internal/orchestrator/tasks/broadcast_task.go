@@ -1,9 +1,9 @@
 package tasks
 
 import (
-	"bmonitord/internal/database/model"
-	"bmonitord/internal/orchestrator/helpers"
 	"encoding/json"
+	"github.com/bartosz11/checkmate/internal/database/model"
+	"github.com/bartosz11/checkmate/internal/orchestrator/helpers"
 	"github.com/coder/websocket"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"

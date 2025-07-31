@@ -1,9 +1,9 @@
 package orchestrator
 
 import (
-	"bmonitord/config"
-	"bmonitord/internal/orchestrator/handlers"
-	"bmonitord/internal/orchestrator/tasks"
+	"github.com/bartosz11/checkmate/config"
+	"github.com/bartosz11/checkmate/internal/orchestrator/handlers"
+	"github.com/bartosz11/checkmate/internal/orchestrator/tasks"
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog/log"

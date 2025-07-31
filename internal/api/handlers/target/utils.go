@@ -1,8 +1,8 @@
 package target
 
 import (
-	"bmonitord/internal/database/model"
 	"errors"
+	"github.com/bartosz11/checkmate/internal/database/model"
 	"strings"
 	"unicode"
 )
