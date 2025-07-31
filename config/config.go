@@ -43,6 +43,7 @@ type OrchestratorConfig struct {
 type APIConfig struct {
 	JWTSecret   string `mapstructure:"jwt-secret"`
 	JWTValidity int    `mapstructure:"jwt-validity"`
+	HostDocs    bool   `mapstructure:"host-docs"`
 }
 
 func LoadConfig() Config {

@@ -45,7 +45,9 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 		}
 	}
 
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	if apiConfig.HostDocs {
+		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 
 	apiGroup := router.Group("/api")
 	if !production {
