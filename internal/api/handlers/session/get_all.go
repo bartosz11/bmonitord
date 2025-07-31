@@ -8,6 +8,18 @@ import (
 	"net/http"
 )
 
+// HandleGetAllSessions docs
+// @Summary Get all sessions
+// @Description Allows a user to retrieve a list of all their sessions
+// @Tags session
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Success 200 {object} listSessionsSuccessResponse
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /session/ [get]
 func HandleGetAllSessions(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		val, _ := c.Get("user")
@@ -26,4 +38,9 @@ func HandleGetAllSessions(db *gorm.DB) gin.HandlerFunc {
 		}
 		resp.WriteAsJSON(c)
 	}
+}
+
+type listSessionsSuccessResponse struct {
+	Code int             `json:"code" example:"200"`
+	Data []model.Session `json:"data"`
 }

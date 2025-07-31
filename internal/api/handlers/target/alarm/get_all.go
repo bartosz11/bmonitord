@@ -10,6 +10,21 @@ import (
 	"strconv"
 )
 
+// HandleGetAllAlarmsByTargetID docs
+// @Summary Get all alarms of a target
+// @Description Allows a user to get a list of alarms that belong to a target
+// @Tags alarm
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param targetID path uint true "ID of target"
+// @Success 200 {object} listAlarmsSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when given target ID couldn't be parsed."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
+// @Failure 404 {object} helpers.GenericErrorResponse "Returned when a target with given ID couldn't be found."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /target/:targetID/alarm/ [get]
 func HandleGetAllAlarmsByTargetID(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		val, _ := c.Get("user")
@@ -50,4 +65,9 @@ func HandleGetAllAlarmsByTargetID(db *gorm.DB) gin.HandlerFunc {
 		}
 		response.WriteAsJSON(c)
 	}
+}
+
+type listAlarmsSuccessResponse struct {
+	Code int           `json:"code" example:"200"`
+	Data []model.Alarm `json:"data"`
 }

@@ -9,6 +9,21 @@ import (
 	"strconv"
 )
 
+// HandleGetSession docs
+// @Summary Get session by ID
+// @Description Allows a user to retrieve information about specified session.
+// @Tags session
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path uint true "ID of session to retrieve"
+// @Success 200 {object} getSessionSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when provided session ID couldn't be parsed."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
+// @Failure 404 {object} helpers.GenericErrorResponse "Returned when session with given ID couldn't be found."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /session/:id [get]
 func HandleGetSession(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		val, _ := c.Get("user")
@@ -45,4 +60,9 @@ func HandleGetSession(db *gorm.DB) gin.HandlerFunc {
 		}
 		resp.WriteAsJSON(c)
 	}
+}
+
+type getSessionSuccessResponse struct {
+	Code int           `json:"code" example:"200"`
+	Data model.Session `json:"data"`
 }

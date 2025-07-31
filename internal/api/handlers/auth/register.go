@@ -12,6 +12,20 @@ import (
 	"strconv"
 )
 
+// HandleRegister docs
+// @Summary Register
+// @Description Allows a user to create a new account with the supplied credentials
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param credentials body Credentials true "Username and password for the new user account"
+// @Success 201 {object} registerSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when request body does not match the requirements."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when supplied credentials are invalid."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when registration is disabled."
+// @Failure 409 {object} helpers.GenericErrorResponse "Returned when specified username is already taken."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction or password hashing fails."
+// @Router /auth/register [post]
 func HandleRegister(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var registrationEnabled model.Setting
@@ -92,4 +106,9 @@ func registrationDisabled(c *gin.Context) {
 		Error: "registration is disabled",
 	}
 	resp.WriteAsJSON(c)
+}
+
+type registerSuccessResponse struct {
+	Code int        `json:"code" example:"201"`
+	Data model.User `json:"data"`
 }

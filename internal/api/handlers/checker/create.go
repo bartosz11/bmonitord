@@ -8,12 +8,23 @@ import (
 	"net/http"
 )
 
+// HandleCreateChecker docs
+// @Summary Create a new checker
+// @Description Allows an admin to create a checker
+// @Tags checker
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param checkerInfo body CreateCheckerRequest true "Data required to create a new checker"
+// @Success 201 {object} createCheckerSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when request body does not match the requirements."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when user sending the request is not an admin or their account is disabled."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /admin/checker/ [post]
 func HandleCreateChecker(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		checkerCreateReq := struct {
-			Name     string `json:"name" binding:"required"`
-			Location string `json:"location"`
-		}{}
+		checkerCreateReq := CreateCheckerRequest{}
 
 		if c.ShouldBind(&checkerCreateReq) != nil {
 			helpers.BadRequest(c)
@@ -69,4 +80,15 @@ func GenerateUniqueKey(db *gorm.DB, c *gin.Context) string {
 		}
 	}
 	return key
+}
+
+type CreateCheckerRequest struct {
+	// Name cannot be blank
+	Name     string `json:"name" binding:"required"`
+	Location string `json:"location"`
+}
+
+type createCheckerSuccessResponse struct {
+	Code int           `json:"code" example:"201"`
+	Data model.Checker `json:"checker"`
 }

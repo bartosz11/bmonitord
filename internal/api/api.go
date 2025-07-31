@@ -2,6 +2,7 @@ package api
 
 import (
 	"bmonitord/config"
+	_ "bmonitord/docs"
 	"bmonitord/internal/api/handlers/auth"
 	"bmonitord/internal/api/handlers/checker"
 	"bmonitord/internal/api/handlers/notification"
@@ -13,14 +14,28 @@ import (
 	"bmonitord/internal/api/handlers/user"
 	"bmonitord/internal/api/helpers"
 	"bmonitord/internal/api/middleware"
+	"time"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"github.com/rs/zerolog/log"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
-	"time"
 )
+
+//	@title			bmonitord v3 API
+//	@version		1.0
+//	@description	API docs for bmonitord v3
+//	@host			localhost:8080
+//	@BasePath		/api
+//
+//  @securityDefinitions.apikey BearerAuth
+//  @in header
+//  @name Authorization
+//  @description Header value has to start with "Bearer "
 
 func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *config.APIConfig) {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
@@ -29,6 +44,8 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 			log.Fatal().Err(err).Msg("failed to register custom uint validator")
 		}
 	}
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	apiGroup := router.Group("/api")
 	if !production {

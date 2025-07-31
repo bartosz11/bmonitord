@@ -10,6 +10,22 @@ import (
 	"strconv"
 )
 
+// HandlePauseTarget docs
+// @Summary Pause target
+// @Description Allows a user to pause/unpause a target with specified ID
+// @Tags target
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param targetID path uint true "ID of target to pause/unpause"
+// @Param pause query bool false "Pause status, can be true for paused, false for unpaused. If not supplied, target's pause status will change to the opposite of current status."
+// @Success 200 {object} getTargetSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when given ID or pause status couldn't be parsed."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
+// @Failure 404 {object} helpers.GenericErrorResponse "Returned when a target with given ID couldn't be found."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /target/:targetID/pause [patch]
 func HandlePauseTarget(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		value, _ := c.Get("user")

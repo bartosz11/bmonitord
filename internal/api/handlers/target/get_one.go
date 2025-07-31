@@ -10,6 +10,21 @@ import (
 	"strconv"
 )
 
+// HandleGetTargetByID docs
+// @Summary Get target by ID
+// @Description Allows a user to retrieve information about target with specified ID
+// @Tags target
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param targetID path uint true "ID of target to get"
+// @Success 200 {object} getTargetSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when given ID couldn't be parsed."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
+// @Failure 404 {object} helpers.GenericErrorResponse "Returned when a target with given ID couldn't be found."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /target/:targetID [get]
 func HandleGetTargetByID(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		val, _ := c.Get("user")
@@ -43,4 +58,9 @@ func HandleGetTargetByID(db *gorm.DB) gin.HandlerFunc {
 		}
 		response.WriteAsJSON(c)
 	}
+}
+
+type getTargetSuccessResponse struct {
+	Code int          `json:"code" example:"200"`
+	Data model.Target `json:"data"`
 }

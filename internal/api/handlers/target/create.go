@@ -9,12 +9,26 @@ import (
 	"strings"
 )
 
+// HandleCreateTarget docs
+// @Summary Create a target
+// @Description Allows a user to create a target
+// @Tags target
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param createReq body CreateTargetRequest true "Information about new target"
+// @Success 201 {object} createTargetSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when request body doesn't match requirements."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /target/ [post]
 func HandleCreateTarget(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		val, _ := c.Get("user")
 		user := val.(model.User)
 
-		createReq := CreateRequest{}
+		createReq := CreateTargetRequest{}
 
 		err := c.ShouldBind(&createReq)
 		if err != nil {
@@ -97,29 +111,43 @@ func HandleCreateTarget(db *gorm.DB) gin.HandlerFunc {
 
 		SanitizeTarget(&target)
 		response := helpers.HTTPResponse{
-			Code: http.StatusOK,
+			Code: http.StatusCreated,
 			Data: target,
 		}
 		response.WriteAsJSON(c)
 	}
 }
 
-type CreateRequest struct {
-	Name       string                 `json:"name" binding:"required"`
-	MaxRetries uint                   `json:"maxRetries" binding:"requiredUint"`
-	Type       model.TargetType       `json:"type" binding:"requiredUint"`
-	Timeout    uint                   `json:"timeout" binding:"requiredUint"`
-	CheckerIDs []uint                 `json:"checkerIDs" binding:"required,min=1"`
-	PingInfo   *PingInfoCreateRequest `json:"pingInfo,omitempty"`
-	HTTPInfo   *HTTPInfoCreateRequest `json:"httpInfo,omitempty"`
+type createTargetSuccessResponse struct {
+	Code int          `json:"code" example:"201"`
+	Data model.Target `json:"data"`
+}
+type CreateTargetRequest struct {
+	// Name must not be blank
+	Name string `json:"name" binding:"required"`
+	// Max retries is required
+	MaxRetries uint `json:"maxRetries" binding:"requiredUint"`
+	// Type must be 0 (PING) or 1 (HTTP)
+	Type model.TargetType `json:"type" binding:"requiredUint"`
+	// Timeout is required
+	Timeout uint `json:"timeout" binding:"requiredUint"`
+	// At least one checker must be supplied, all checkers must exist
+	CheckerIDs []uint `json:"checkerIDs" binding:"required,min=1"`
+	// Must be supplied if type is 0 (PING)
+	PingInfo *PingInfoCreateRequest `json:"pingInfo,omitempty"`
+	// Must be supplied if type is 1 (HTTP)
+	HTTPInfo *HTTPInfoCreateRequest `json:"httpInfo,omitempty"`
 }
 type HTTPInfoCreateRequest struct {
-	Host            string `json:"host" binding:"required"`
+	// Host must start with http:// or https://
+	Host string `json:"host" binding:"required"`
+	// HTTP response codes separated by a space. Must contain at least one code. All codes must be exactly 3 digits long.
 	AllowedCodes    string `json:"allowedCodes" binding:"required"`
 	FollowRedirects bool   `json:"followRedirects" binding:"required"`
 	VerifySSLCert   bool   `json:"verifySSLCert" binding:"required"`
 }
 
 type PingInfoCreateRequest struct {
+	// Host must not be blank
 	Host string `json:"host" binding:"required"`
 }

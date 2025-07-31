@@ -10,6 +10,22 @@ import (
 	"strconv"
 )
 
+// HandleCreateAlarm docs
+// @Summary Create alarm
+// @Description Allows a user to create an alarm assigned to a specified target
+// @Tags alarm
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param targetID path uint true "ID of target the alarm is supposed to belong to"
+// @Param updateReq body CreateAlarmRequest true "Information about the new alarm"
+// @Success 200 {object} createAlarmSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when given target ID couldn't be parsed or request body doesn't match the requirements."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
+// @Failure 404 {object} helpers.GenericErrorResponse "Returned when a target with given ID couldn't be found."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /target/:targetID/alarm/ [post]
 func HandleCreateAlarm(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		val, _ := c.Get("user")
@@ -33,13 +49,7 @@ func HandleCreateAlarm(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		createReq := struct {
-			Name            string                     `json:"name" binding:"required"`
-			Type            model.AlarmType            `json:"type" binding:"requiredUint"`
-			NotificationIDs []uint                     `json:"notificationIDs" binding:"required,min=1"`
-			Threshold       *float64                   `json:"threshold"`
-			ThresholdField  *model.AlarmThresholdField `json:"thresholdField"`
-		}{}
+		createReq := CreateAlarmRequest{}
 
 		if c.ShouldBind(&createReq) != nil {
 			helpers.BadRequestWithSpecificError(c, "invalid request body")
@@ -107,4 +117,22 @@ func HandleCreateAlarm(db *gorm.DB) gin.HandlerFunc {
 		}
 		response.WriteAsJSON(c)
 	}
+}
+
+type CreateAlarmRequest struct {
+	// Name must not be blank
+	Name string `json:"name" binding:"required"`
+	// Type must be 0 (unavailable) or 1 (threshold)
+	Type model.AlarmType `json:"type" binding:"requiredUint"`
+	// All notifications in this list must exist
+	NotificationIDs []uint `json:"notificationIDs" binding:"required,min=1"`
+	// Threshold must be supplied if type is 1 (threshold)
+	Threshold *float64 `json:"threshold"`
+	// Threshold field must be supplied if type is 1 (threshold). At the moment the only accepted value is 0 (latency)
+	ThresholdField *model.AlarmThresholdField `json:"thresholdField"`
+}
+
+type createAlarmSuccessResponse struct {
+	Code int         `json:"code" example:"201"`
+	Data model.Alarm `json:"data"`
 }

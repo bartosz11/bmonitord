@@ -10,6 +10,21 @@ import (
 	"strconv"
 )
 
+// HandleDeleteNotificationById docs
+// @Summary Delete a notification by ID
+// @Description Allows a user to delete a notification with specified ID
+// @Tags notification
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path uint true "ID of notification to be deleted"
+// @Success 204 {object} helpers.GenericDeleteSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when given ID couldn't be parsed."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
+// @Failure 404 {object} helpers.GenericErrorResponse "Returned when a notification with given ID couldn't be found."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /notification/:id [delete]
 func HandleDeleteNotificationById(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		param := c.Param("id")

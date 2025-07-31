@@ -1,0 +1,2673 @@
+basePath: /api
+definitions:
+  alarm.CreateAlarmRequest:
+    properties:
+      name:
+        description: Name must not be blank
+        type: string
+      notificationIDs:
+        description: All notifications in this list must exist
+        items:
+          type: integer
+        minItems: 1
+        type: array
+      threshold:
+        description: Threshold must be supplied if type is 1 (threshold)
+        type: number
+      thresholdField:
+        allOf:
+        - $ref: '#/definitions/model.AlarmThresholdField'
+        description: Threshold field must be supplied if type is 1 (threshold). At
+          the moment the only accepted value is 0 (latency)
+      type:
+        allOf:
+        - $ref: '#/definitions/model.AlarmType'
+        description: Type must be 0 (unavailable) or 1 (threshold)
+    required:
+    - name
+    - notificationIDs
+    type: object
+  alarm.UpdateAlarmRequest:
+    properties:
+      name:
+        description: Name must not be blank if supplied
+        type: string
+      notificationIDs:
+        description: min. length = 1 if supplied, all notifications must exist. This
+          is a "replace update"
+        items:
+          type: integer
+        type: array
+      threshold:
+        description: Must be supplied if type is getting changed to threshold (1)
+        type: number
+      thresholdField:
+        allOf:
+        - $ref: '#/definitions/model.AlarmThresholdField'
+        description: Must be supplied if type is getting changed to threshold (1),
+          at the moment the only accepted value is 0 (latency)
+      type:
+        allOf:
+        - $ref: '#/definitions/model.AlarmType'
+        description: Type must be 0 (unavailable) or 1 (threshold), if supplied
+    type: object
+  alarm.createAlarmSuccessResponse:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/model.Alarm'
+    type: object
+  alarm.getAlarmSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Alarm'
+    type: object
+  alarm.listAlarmsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Alarm'
+        type: array
+    type: object
+  auth.Credentials:
+    properties:
+      password:
+        description: Password must contain at least 1 uppercase letter, 1 lowercase
+          letter, 1 number and must consist of at least 8 characters.
+        type: string
+      username:
+        description: Username cannot be blank
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  auth.loginSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        properties:
+          session:
+            $ref: '#/definitions/model.Session'
+          token:
+            type: string
+        type: object
+    type: object
+  auth.registerSuccessResponse:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/model.User'
+    type: object
+  checker.CreateCheckerRequest:
+    properties:
+      location:
+        type: string
+      name:
+        description: Name cannot be blank
+        type: string
+    required:
+    - name
+    type: object
+  checker.UpdateCheckerRequest:
+    properties:
+      location:
+        description: Location can be blank
+        type: string
+      name:
+        description: Name must not be blank if supplied
+        type: string
+    type: object
+  checker.createCheckerSuccessResponse:
+    properties:
+      checker:
+        $ref: '#/definitions/model.Checker'
+      code:
+        example: 201
+        type: integer
+    type: object
+  checker.getCheckerSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Checker'
+    type: object
+  checker.listCheckersSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Checker'
+        type: array
+    type: object
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  helpers.GenericDeleteSuccessResponse:
+    properties:
+      code:
+        example: 204
+        type: integer
+    type: object
+  helpers.GenericErrorResponse:
+    properties:
+      code:
+        example: 400
+        type: integer
+      error:
+        example: parsing id failed
+        type: string
+    type: object
+  model.Alarm:
+    properties:
+      active:
+        type: boolean
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      muted:
+        type: boolean
+      name:
+        type: string
+      notifications:
+        items:
+          $ref: '#/definitions/model.Notification'
+        type: array
+      targetId:
+        type: integer
+      threshold:
+        type: number
+      thresholdField:
+        $ref: '#/definitions/model.AlarmThresholdField'
+      type:
+        $ref: '#/definitions/model.AlarmType'
+      updatedAt:
+        type: string
+    type: object
+  model.AlarmThresholdField:
+    enum:
+    - 0
+    - 1
+    type: integer
+    x-enum-varnames:
+    - Latency
+    - thresholdFieldMax
+  model.AlarmType:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-varnames:
+    - Unavailable
+    - Threshold
+    - alarmTypeMax
+  model.Checker:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      heartbeats:
+        items:
+          $ref: '#/definitions/model.Heartbeat'
+        type: array
+      id:
+        type: integer
+      key:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+      targets:
+        items:
+          $ref: '#/definitions/model.Target'
+        type: array
+      updatedAt:
+        type: string
+    type: object
+  model.Heartbeat:
+    properties:
+      checker:
+        $ref: '#/definitions/model.Checker'
+      checkerId:
+        type: integer
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      latency:
+        type: integer
+      status:
+        $ref: '#/definitions/model.TargetStatus'
+      target:
+        $ref: '#/definitions/model.Target'
+      targetId:
+        type: integer
+      timestamp:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  model.Incident:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      duration:
+        $ref: '#/definitions/time.Duration'
+      end:
+        type: string
+      id:
+        type: integer
+      ongoing:
+        type: boolean
+      start:
+        type: string
+      targetId:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  model.Notification:
+    properties:
+      alarms:
+        items:
+          $ref: '#/definitions/model.Alarm'
+        type: array
+      createdAt:
+        type: string
+      credentials:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      name:
+        type: string
+      type:
+        $ref: '#/definitions/model.NotificationType'
+      updatedAt:
+        type: string
+      userId:
+        type: integer
+    type: object
+  model.NotificationType:
+    enum:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    type: integer
+    x-enum-varnames:
+    - Discord
+    - Slack
+    - Pushbullet
+    - Email
+    - Gotify
+    - GenericWebhook
+  model.Orchestrator:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      host:
+        type: string
+      id:
+        type: integer
+      leader:
+        type: boolean
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  model.Session:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      expiresAt:
+        type: string
+      id:
+        type: integer
+      ipAddress:
+        type: string
+      lastActive:
+        type: string
+      updatedAt:
+        type: string
+      user:
+        $ref: '#/definitions/model.User'
+      userAgent:
+        type: string
+      userId:
+        type: integer
+    type: object
+  model.Setting:
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+    type: object
+  model.Target:
+    properties:
+      alarms:
+        items:
+          $ref: '#/definitions/model.Alarm'
+        type: array
+      checkers:
+        items:
+          $ref: '#/definitions/model.Checker'
+        type: array
+      checksDown:
+        type: integer
+      checksUp:
+        type: integer
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      heartbeats:
+        items:
+          $ref: '#/definitions/model.Heartbeat'
+        type: array
+      httpInfo:
+        $ref: '#/definitions/model.TargetHTTPInfo'
+      id:
+        type: integer
+      incidents:
+        items:
+          $ref: '#/definitions/model.Incident'
+        type: array
+      lastCheck:
+        type: string
+      lastStatus:
+        $ref: '#/definitions/model.TargetStatus'
+      maxRetries:
+        type: integer
+      name:
+        type: string
+      paused:
+        type: boolean
+      pingInfo:
+        $ref: '#/definitions/model.TargetPingInfo'
+      timeout:
+        type: integer
+      type:
+        $ref: '#/definitions/model.TargetType'
+      updatedAt:
+        type: string
+      usedRetries:
+        type: integer
+      userId:
+        type: integer
+    type: object
+  model.TargetHTTPInfo:
+    properties:
+      allowedCodes:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      followRedirects:
+        type: boolean
+      host:
+        type: string
+      id:
+        type: integer
+      targetId:
+        type: integer
+      updatedAt:
+        type: string
+      verifySSLCert:
+        type: boolean
+    type: object
+  model.TargetPingInfo:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      host:
+        type: string
+      id:
+        type: integer
+      targetId:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  model.TargetStatus:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-varnames:
+    - Up
+    - Down
+    - Unknown
+  model.TargetType:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-comments:
+      targetTypeMax: '"sentinel" value'
+    x-enum-descriptions:
+    - ""
+    - ""
+    - '"sentinel" value'
+    x-enum-varnames:
+    - PING
+    - HTTP
+    - targetTypeMax
+  model.User:
+    properties:
+      admin:
+        type: boolean
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      enabled:
+        type: boolean
+      id:
+        type: integer
+      notifications:
+        items:
+          $ref: '#/definitions/model.Notification'
+        type: array
+      sessions:
+        items:
+          $ref: '#/definitions/model.Session'
+        type: array
+      targets:
+        items:
+          $ref: '#/definitions/model.Target'
+        type: array
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+  notification.CreateNotificationRequest:
+    properties:
+      credentials:
+        description: Credentials must be valid for the selected type, e.g. webhook
+          URLs have to start with http:// or https://
+        type: string
+      name:
+        description: Name must not be blank
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/model.NotificationType'
+        description: Type must be a number in range 0-5, inclusive
+    required:
+    - credentials
+    - name
+    - type
+    type: object
+  notification.UpdateNotificationRequest:
+    properties:
+      credentials:
+        description: Credentials must be valid for the selected type, e.g. webhook
+          URLs have to start with http:// or https://, if supplied
+        type: string
+      name:
+        description: Name must not be blank if supplied
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/model.NotificationType'
+        description: Type must be a number in range of 0-5 (inclusive), if supplied.
+          If type is changed, credentials valid for the new type also have to be supplied.
+    type: object
+  notification.createNotificationSuccessResponse:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/model.Notification'
+    type: object
+  notification.getNotificationSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Notification'
+    type: object
+  notification.listNotificationsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Notification'
+        type: array
+    type: object
+  orchestrator.CreateOrchestratorRequest:
+    properties:
+      host:
+        description: Host must start with ws:// or wss:// and must be unique
+        type: string
+      name:
+        description: Name must not be blank and must be unique
+        type: string
+    required:
+    - host
+    - name
+    type: object
+  orchestrator.createOrchestratorSuccessResponse:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/model.Orchestrator'
+    type: object
+  orchestrator.getOrchestratorSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Orchestrator'
+    type: object
+  orchestrator.listOrchestratorsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Orchestrator'
+        type: array
+    type: object
+  session.getSessionSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Session'
+    type: object
+  session.listSessionsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Session'
+        type: array
+    type: object
+  settings.ChangeSettingRequest:
+    properties:
+      key:
+        description: Key must be updatable. Currently, the only setting that can be
+          updated is "registration-enabled".
+        type: string
+      value:
+        description: Value must match a set of valid values for given setting key
+        type: string
+    required:
+    - key
+    type: object
+  settings.getSettingSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Setting'
+    type: object
+  settings.listSettingsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Setting'
+        type: array
+    type: object
+  target.CreateTargetRequest:
+    properties:
+      checkerIDs:
+        description: At least one checker must be supplied, all checkers must exist
+        items:
+          type: integer
+        minItems: 1
+        type: array
+      httpInfo:
+        allOf:
+        - $ref: '#/definitions/target.HTTPInfoCreateRequest'
+        description: Must be supplied if type is 1 (HTTP)
+      maxRetries:
+        description: Max retries is required
+        type: integer
+      name:
+        description: Name must not be blank
+        type: string
+      pingInfo:
+        allOf:
+        - $ref: '#/definitions/target.PingInfoCreateRequest'
+        description: Must be supplied if type is 0 (PING)
+      timeout:
+        description: Timeout is required
+        type: integer
+      type:
+        allOf:
+        - $ref: '#/definitions/model.TargetType'
+        description: Type must be 0 (PING) or 1 (HTTP)
+    required:
+    - checkerIDs
+    - name
+    type: object
+  target.HTTPInfoCreateRequest:
+    properties:
+      allowedCodes:
+        description: HTTP response codes separated by a space. Must contain at least
+          one code. All codes must be exactly 3 digits long.
+        type: string
+      followRedirects:
+        type: boolean
+      host:
+        description: Host must start with http:// or https://
+        type: string
+      verifySSLCert:
+        type: boolean
+    required:
+    - allowedCodes
+    - followRedirects
+    - host
+    - verifySSLCert
+    type: object
+  target.HTTPInfoUpdateRequest:
+    properties:
+      allowedCodes:
+        description: HTTP response codes separated by a space. Must contain at least
+          one code if supplied. All codes must be exactly 3 digits long.
+        type: string
+      followRedirects:
+        type: boolean
+      host:
+        description: Host must start with http:// or https:// if supplied
+        type: string
+      verifySSLCert:
+        type: boolean
+    type: object
+  target.PingInfoCreateRequest:
+    properties:
+      host:
+        description: Host must not be blank
+        type: string
+    required:
+    - host
+    type: object
+  target.PingInfoUpdateRequest:
+    properties:
+      host:
+        description: Host must not be blank if pingInfo is supplied in UpdateTargetRequest
+        type: string
+    type: object
+  target.UpdateTargetRequest:
+    properties:
+      checkerIDs:
+        description: Must contain at least one checker ID, all checkers must exist.
+          This is a "replace update"
+        items:
+          type: integer
+        type: array
+      httpInfo:
+        $ref: '#/definitions/target.HTTPInfoUpdateRequest'
+      maxRetries:
+        type: integer
+      name:
+        description: Name must not be blank if supplied
+        type: string
+      pingInfo:
+        $ref: '#/definitions/target.PingInfoUpdateRequest'
+      timeout:
+        type: integer
+    type: object
+  target.createTargetSuccessResponse:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/model.Target'
+    type: object
+  target.getTargetSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Target'
+    type: object
+  target.listTargetsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Target'
+        type: array
+    type: object
+  time.Duration:
+    enum:
+    - -9223372036854775808
+    - 9223372036854775807
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 60000000000
+    - 3600000000000
+    - -9223372036854775808
+    - 9223372036854775807
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 60000000000
+    - 3600000000000
+    format: int64
+    type: integer
+    x-enum-varnames:
+    - minDuration
+    - maxDuration
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Minute
+    - Hour
+    - minDuration
+    - maxDuration
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Minute
+    - Hour
+  user.ChangePasswordRequest:
+    properties:
+      newPassword:
+        description: New password must contain at least 1 uppercase letter, 1 lowercase
+          letter, 1 number and must consist of at least 8 characters.
+        type: string
+      oldPassword:
+        type: string
+    required:
+    - newPassword
+    - oldPassword
+    type: object
+  user.ChangeUsernameRequest:
+    properties:
+      newUsername:
+        description: Must not be blank and must not contain any whitespace characters
+        type: string
+    required:
+    - newUsername
+    type: object
+  user.getUserSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.User'
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API docs for bmonitord v3
+  title: bmonitord v3 API
+  version: "1.0"
+paths:
+  /admin/checker/:
+    get:
+      consumes:
+      - application/json
+      description: Allows an admin to get a list of checkers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/checker.listCheckersSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all checkers
+      tags:
+      - checker
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to create a checker
+      parameters:
+      - description: Data required to create a new checker
+        in: body
+        name: checkerInfo
+        required: true
+        schema:
+          $ref: '#/definitions/checker.CreateCheckerRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/checker.createCheckerSuccessResponse'
+        "400":
+          description: Returned when request body does not match the requirements.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new checker
+      tags:
+      - checker
+  /admin/checker/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Allows an admin to delete a checker
+      parameters:
+      - description: ID of checker that should be deleted
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a checker with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a checker
+      tags:
+      - checker
+    get:
+      consumes:
+      - application/json
+      description: Allows an admin to get a checker by ID
+      parameters:
+      - description: ID of checker that should be retrieved
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/checker.getCheckerSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a checker with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a checker by ID
+      tags:
+      - checker
+    patch:
+      consumes:
+      - application/json
+      description: Allows an admin to change checker's name or location
+      parameters:
+      - description: ID of checker that should be updated
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: New checker details
+        in: body
+        name: checkerInfo
+        required: true
+        schema:
+          $ref: '#/definitions/checker.UpdateCheckerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/checker.getCheckerSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed or given new name
+            is blank.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a checker with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update checker details
+      tags:
+      - checker
+  /admin/checker/:id/key:
+    patch:
+      consumes:
+      - application/json
+      description: Allows an admin to generate a new key for a checker
+      parameters:
+      - description: ID of checker that should get a new key
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/checker.getCheckerSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a checker with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Re-generate checker's key
+      tags:
+      - checker
+  /admin/orchestrator/:
+    get:
+      consumes:
+      - application/json
+      description: Allows an admin to get a list of all orchestrators
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/orchestrator.listOrchestratorsSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all orchestrators
+      tags:
+      - orchestrator
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to create a new orchestrator
+      parameters:
+      - description: Information about new orchestrator
+        in: body
+        name: createRequest
+        required: true
+        schema:
+          $ref: '#/definitions/orchestrator.CreateOrchestratorRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/orchestrator.createOrchestratorSuccessResponse'
+        "400":
+          description: Returned when request body doesn't match requirements.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "409":
+          description: Returned when given name or host is already taken.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create orchestrator
+      tags:
+      - orchestrator
+  /admin/orchestrator/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Allows an admin to delete an orchestrator with given ID
+      parameters:
+      - description: ID of orchestrator that should get deleted
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed or specified orchestrator
+            is currently leader.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when orchestrator with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete orchestrator
+      tags:
+      - orchestrator
+    get:
+      consumes:
+      - application/json
+      description: Allows an admin to retrieve an orchestrator with given ID
+      parameters:
+      - description: ID of orchestrator to get
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/orchestrator.getOrchestratorSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when orchestrator with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get orchestrator by ID
+      tags:
+      - orchestrator
+  /admin/settings/:
+    get:
+      consumes:
+      - application/json
+      description: Allows an admin to retrieve list of all settings
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/settings.listSettingsSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all settings
+      tags:
+      - settings
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to set/update a setting
+      parameters:
+      - description: Setting to update
+        in: body
+        name: changeRequest
+        required: true
+        schema:
+          $ref: '#/definitions/settings.ChangeSettingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/settings.getSettingSuccessResponse'
+        "400":
+          description: Returned when request body is malformed or value isn't valid
+            for given setting key.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin, their
+            account is disabled or specified setting is not meant to be updated.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Set/modify setting value
+      tags:
+      - settings
+  /admin/settings/:key:
+    get:
+      consumes:
+      - application/json
+      description: Allows an admin to retrieve a setting by key
+      parameters:
+      - description: Setting to retrieve
+        in: path
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/settings.getSettingSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a setting with given key couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get setting by key
+      tags:
+      - settings
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Allows a user with valid credentials to create a new login session
+        and a token.
+      parameters:
+      - description: Valid credentials of user who wants to create a new session
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/auth.Credentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Set-Cookie:
+              description: Authentication cookie (auth-token=...)
+              type: string
+          schema:
+            $ref: '#/definitions/auth.loginSuccessResponse'
+        "400":
+          description: Returned when request body does not match the requirements.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when supplied credentials are invalid.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when the user account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction or token generation fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      summary: Log in
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Allows a user to create a new account with the supplied credentials
+      parameters:
+      - description: Username and password for the new user account
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/auth.Credentials'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/auth.registerSuccessResponse'
+        "400":
+          description: Returned when request body does not match the requirements.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when supplied credentials are invalid.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when registration is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "409":
+          description: Returned when specified username is already taken.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction or password hashing fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      summary: Register
+      tags:
+      - auth
+  /notification/:
+    get:
+      consumes:
+      - application/json
+      description: Allows a user to retrieve a list of all their notifications
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/notification.listNotificationsSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all notifications
+      tags:
+      - notification
+    post:
+      consumes:
+      - application/json
+      description: Allows a user to create a notification
+      parameters:
+      - description: Information about new notification
+        in: body
+        name: createReq
+        required: true
+        schema:
+          $ref: '#/definitions/notification.CreateNotificationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/notification.createNotificationSuccessResponse'
+        "400":
+          description: Returned when request body doesn't match requirements.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a notification
+      tags:
+      - notification
+  /notification/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Allows a user to delete a notification with specified ID
+      parameters:
+      - description: ID of notification to be deleted
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a notification with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a notification by ID
+      tags:
+      - notification
+    get:
+      consumes:
+      - application/json
+      description: Allows a user to retrieve information about notification with specified
+        ID
+      parameters:
+      - description: ID of notification to get
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/notification.getNotificationSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a notification with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a notification by ID
+      tags:
+      - notification
+    patch:
+      consumes:
+      - application/json
+      description: Allows a user to update a notification with specified ID
+      parameters:
+      - description: ID of notification to update
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Changes to make to the notification
+        in: body
+        name: updateReq
+        required: true
+        schema:
+          $ref: '#/definitions/notification.UpdateNotificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/notification.getNotificationSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed or request body doesn't
+            match requirements.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a notification with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update notification
+      tags:
+      - notification
+  /notification/:id/test:
+    post:
+      consumes:
+      - application/json
+      description: Allows a user to send a test notification to the configured destination
+      parameters:
+      - description: ID of notification to use
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a notification with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Send test notification
+      tags:
+      - notification
+  /notification/:targetID:
+    delete:
+      consumes:
+      - application/json
+      description: Allows a user to delete a target with specified ID
+      parameters:
+      - description: ID of target to delete
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete target by ID
+      tags:
+      - target
+  /session/:
+    delete:
+      consumes:
+      - application/json
+      description: Allows a user to invalidate all their login sessions
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete (invalidate) all sessions
+      tags:
+      - session
+    get:
+      consumes:
+      - application/json
+      description: Allows a user to retrieve a list of all their sessions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/session.listSessionsSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all sessions
+      tags:
+      - session
+  /session/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Allows a user to invalidate a specified session
+      parameters:
+      - description: ID of session to delete
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "400":
+          description: Returned when provided session ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when session with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete (invalidate) session by ID
+      tags:
+      - session
+    get:
+      consumes:
+      - application/json
+      description: Allows a user to retrieve information about specified session.
+      parameters:
+      - description: ID of session to retrieve
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/session.getSessionSuccessResponse'
+        "400":
+          description: Returned when provided session ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when session with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get session by ID
+      tags:
+      - session
+  /session/current:
+    get:
+      consumes:
+      - application/json
+      description: Allows a user to retrieve information about session assigned to
+        supplied auth token.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/session.getSessionSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current session
+      tags:
+      - session
+  /session/logout:
+    post:
+      consumes:
+      - application/json
+      description: Allows a user to delete (invalidate) the session assigned to supplied
+        auth token.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Log out
+      tags:
+      - session
+  /target/:
+    get:
+      consumes:
+      - application/json
+      description: Allows a user to get a list of their targets
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/target.listTargetsSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all targets
+      tags:
+      - target
+    post:
+      consumes:
+      - application/json
+      description: Allows a user to create a target
+      parameters:
+      - description: Information about new target
+        in: body
+        name: createReq
+        required: true
+        schema:
+          $ref: '#/definitions/target.CreateTargetRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/target.createTargetSuccessResponse'
+        "400":
+          description: Returned when request body doesn't match requirements.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a target
+      tags:
+      - target
+  /target/:targetID:
+    get:
+      consumes:
+      - application/json
+      description: Allows a user to retrieve information about target with specified
+        ID
+      parameters:
+      - description: ID of target to get
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/target.getTargetSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get target by ID
+      tags:
+      - target
+    patch:
+      consumes:
+      - application/json
+      description: Allows a user to change information about a target
+      parameters:
+      - description: ID of target to update
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      - description: New information about target
+        in: body
+        name: updateReq
+        required: true
+        schema:
+          $ref: '#/definitions/target.UpdateTargetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/target.getTargetSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed or request body doesn't
+            match the requirements.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update target
+      tags:
+      - target
+  /target/:targetID/alarm/:
+    get:
+      consumes:
+      - application/json
+      description: Allows a user to get a list of alarms that belong to a target
+      parameters:
+      - description: ID of target
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/alarm.listAlarmsSuccessResponse'
+        "400":
+          description: Returned when given target ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all alarms of a target
+      tags:
+      - alarm
+    post:
+      consumes:
+      - application/json
+      description: Allows a user to create an alarm assigned to a specified target
+      parameters:
+      - description: ID of target the alarm is supposed to belong to
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      - description: Information about the new alarm
+        in: body
+        name: updateReq
+        required: true
+        schema:
+          $ref: '#/definitions/alarm.CreateAlarmRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/alarm.createAlarmSuccessResponse'
+        "400":
+          description: Returned when given target ID couldn't be parsed or request
+            body doesn't match the requirements.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create alarm
+      tags:
+      - alarm
+  /target/:targetID/alarm/:alarmID:
+    delete:
+      consumes:
+      - application/json
+      description: Allows a user to delete an alarm with specified ID
+      parameters:
+      - description: ID of target the alarm belongs to
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      - description: ID of the alarm
+        in: path
+        name: alarmID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "400":
+          description: Returned when given target or alarm ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target or alarm with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete alarm by ID
+      tags:
+      - alarm
+    get:
+      consumes:
+      - application/json
+      description: Allows a user to retrieve information about an alarm with specified
+        ID
+      parameters:
+      - description: ID of target the alarm belongs to
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      - description: ID of the alarm
+        in: path
+        name: alarmID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/alarm.getAlarmSuccessResponse'
+        "400":
+          description: Returned when given target or alarm ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target or alarm with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get alarm by ID
+      tags:
+      - alarm
+    patch:
+      consumes:
+      - application/json
+      description: Allows a user to update information about an alarm with specified
+        ID
+      parameters:
+      - description: ID of target the alarm belongs to
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      - description: ID of the alarm
+        in: path
+        name: alarmID
+        required: true
+        type: integer
+      - description: New information about the alarm
+        in: body
+        name: updateReq
+        required: true
+        schema:
+          $ref: '#/definitions/alarm.UpdateAlarmRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/alarm.getAlarmSuccessResponse'
+        "400":
+          description: Returned when given target or alarm ID couldn't be parsed or
+            request body doesn't match the requirements.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target or alarm with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update alarm
+      tags:
+      - alarm
+  /target/:targetID/alarm/:alarmID/mute:
+    patch:
+      consumes:
+      - application/json
+      description: Allows a user to change mute status of an alarm
+      parameters:
+      - description: ID of target the alarm belongs to
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      - description: ID of the alarm
+        in: path
+        name: alarmID
+        required: true
+        type: integer
+      - description: Mute status. Can be true for muted, false for unmuted. If not
+          supplied, mute status of the alarm will change to the opposite of current
+          status.
+        in: query
+        name: mute
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/alarm.getAlarmSuccessResponse'
+        "400":
+          description: Returned when given target ID, alarm ID or mute status couldn't
+            be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target or alarm with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Mute alarm
+      tags:
+      - alarm
+  /target/:targetID/pause:
+    patch:
+      consumes:
+      - application/json
+      description: Allows a user to pause/unpause a target with specified ID
+      parameters:
+      - description: ID of target to pause/unpause
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      - description: Pause status, can be true for paused, false for unpaused. If
+          not supplied, target's pause status will change to the opposite of current
+          status.
+        in: query
+        name: pause
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/target.getTargetSuccessResponse'
+        "400":
+          description: Returned when given ID or pause status couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Pause target
+      tags:
+      - target
+  /user/:
+    delete:
+      consumes:
+      - application/json
+      description: Allows user to delete their own account and all resources they
+        own
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete current user
+      tags:
+      - user
+    get:
+      consumes:
+      - application/json
+      description: Allows user to get information about their own account
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.getUserSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current user
+      tags:
+      - user
+  /user/password:
+    patch:
+      consumes:
+      - application/json
+      description: Allows user to change their own password
+      parameters:
+      - description: Old and new password
+        in: body
+        name: changePasswordReq
+        required: true
+        schema:
+          $ref: '#/definitions/user.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.getUserSuccessResponse'
+        "400":
+          description: Returned when request body is malformed or new password is
+            too weak.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled
+            or provided old password doesn't match.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction or password hashing fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Change password
+      tags:
+      - user
+  /user/username:
+    patch:
+      consumes:
+      - application/json
+      description: Allows user to change their own username
+      parameters:
+      - description: New username
+        in: body
+        name: changeUsernameReq
+        required: true
+        schema:
+          $ref: '#/definitions/user.ChangeUsernameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.getUserSuccessResponse'
+        "400":
+          description: Returned when request body is malformed or new username contains
+            a whitespace character.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "409":
+          description: Returned when given new username is already taken.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Change username
+      tags:
+      - user
+securityDefinitions:
+  BearerAuth:
+    description: Header value has to start with "Bearer "
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

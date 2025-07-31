@@ -12,10 +12,26 @@ import (
 )
 
 type Credentials struct {
+	// Username cannot be blank
 	Username string `json:"username" binding:"required"`
+	// Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.
 	Password string `json:"password" binding:"required"`
 }
 
+// HandleLogin docs
+// @Summary Log in
+// @Description Allows a user with valid credentials to create a new login session and a token.
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param credentials body Credentials true "Valid credentials of user who wants to create a new session"
+// @Success 200 {object} loginSuccessResponse
+// @Header 200 {string} Set-Cookie "Authentication cookie (auth-token=...)"
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when request body does not match the requirements."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when supplied credentials are invalid."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when the user account is disabled."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction or token generation fails."
+// @Router /auth/login [post]
 func HandleLogin(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		loginReq := Credentials{}
@@ -85,4 +101,13 @@ func invalidUsernameOrPassword(c *gin.Context) {
 		Error: "invalid username or password",
 	}
 	resp.WriteAsJSON(c)
+}
+
+// loginSuccessResponse Such structs exist around the codebase only for Swagger doc purposes, they represent the structure of an API response
+type loginSuccessResponse struct {
+	Code int `json:"code" example:"200"`
+	Data struct {
+		Session model.Session `json:"session"`
+		Token   string        `json:"token"`
+	} `json:"data"`
 }

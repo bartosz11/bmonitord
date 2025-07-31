@@ -9,10 +9,26 @@ import (
 )
 
 type ChangeSettingRequest struct {
-	Key   string  `json:"key" binding:"required"`
+	// Key must be updatable. Currently, the only setting that can be updated is "registration-enabled".
+	Key string `json:"key" binding:"required"`
+	// Value must match a set of valid values for given setting key
 	Value *string `json:"value"`
 }
 
+// HandleChangeSetting docs
+// @Summary Set/modify setting value
+// @Description Allows an admin to set/update a setting
+// @Tags settings
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param changeRequest body ChangeSettingRequest true "Setting to update"
+// @Success 200 {object} getSettingSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when request body is malformed or value isn't valid for given setting key."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when user sending the request is not an admin, their account is disabled or specified setting is not meant to be updated."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /admin/settings/ [post]
 func HandleChangeSetting(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		changeSettingReq := ChangeSettingRequest{}

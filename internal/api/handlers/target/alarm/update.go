@@ -10,6 +10,23 @@ import (
 	"strconv"
 )
 
+// HandleUpdateAlarm docs
+// @Summary Update alarm
+// @Description Allows a user to update information about an alarm with specified ID
+// @Tags alarm
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param targetID path uint true "ID of target the alarm belongs to"
+// @Param alarmID path uint true "ID of the alarm"
+// @Param updateReq body UpdateAlarmRequest true "New information about the alarm"
+// @Success 200 {object} getAlarmSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when given target or alarm ID couldn't be parsed or request body doesn't match the requirements."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
+// @Failure 404 {object} helpers.GenericErrorResponse "Returned when a target or alarm with given ID couldn't be found."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /target/:targetID/alarm/:alarmID [patch]
 func HandleUpdateAlarm(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		val, _ := c.Get("user")
@@ -51,13 +68,7 @@ func HandleUpdateAlarm(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		updateReq := struct {
-			Name            *string                    `json:"name"`
-			Type            *model.AlarmType           `json:"type"`
-			NotificationIDs *[]uint                    `json:"notificationIDs"`
-			Threshold       *float64                   `json:"threshold"`
-			ThresholdField  *model.AlarmThresholdField `json:"thresholdField"`
-		}{}
+		updateReq := UpdateAlarmRequest{}
 
 		if c.ShouldBind(&updateReq) != nil {
 			helpers.BadRequestWithSpecificError(c, "invalid request body")
@@ -136,4 +147,17 @@ func HandleUpdateAlarm(db *gorm.DB) gin.HandlerFunc {
 		}
 		response.WriteAsJSON(c)
 	}
+}
+
+type UpdateAlarmRequest struct {
+	// Name must not be blank if supplied
+	Name *string `json:"name"`
+	// Type must be 0 (unavailable) or 1 (threshold), if supplied
+	Type *model.AlarmType `json:"type"`
+	// min. length = 1 if supplied, all notifications must exist. This is a "replace update"
+	NotificationIDs *[]uint `json:"notificationIDs"`
+	// Must be supplied if type is getting changed to threshold (1)
+	Threshold *float64 `json:"threshold"`
+	// Must be supplied if type is getting changed to threshold (1), at the moment the only accepted value is 0 (latency)
+	ThresholdField *model.AlarmThresholdField `json:"thresholdField"`
 }

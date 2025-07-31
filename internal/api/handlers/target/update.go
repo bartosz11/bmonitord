@@ -11,6 +11,22 @@ import (
 	"strings"
 )
 
+// HandleUpdateTargetById docs
+// @Summary Update target
+// @Description Allows a user to change information about a target
+// @Tags target
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param targetID path uint true "ID of target to update"
+// @Param updateReq body UpdateTargetRequest true "New information about target"
+// @Success 200 {object} getTargetSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when given ID couldn't be parsed or request body doesn't match the requirements."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
+// @Failure 404 {object} helpers.GenericErrorResponse "Returned when a target with given ID couldn't be found."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /target/:targetID [patch]
 func HandleUpdateTargetById(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		val, _ := c.Get("user")
@@ -36,7 +52,7 @@ func HandleUpdateTargetById(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		updateRequest := UpdateRequest{}
+		updateRequest := UpdateTargetRequest{}
 		if c.ShouldBind(&updateRequest) != nil {
 			helpers.BadRequestWithSpecificError(c, "invalid request body")
 		}
@@ -131,22 +147,27 @@ func HandleUpdateTargetById(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-type UpdateRequest struct {
-	Name       *string                `json:"name,omitempty"`
-	MaxRetries *uint                  `json:"maxRetries,omitempty"`
-	Timeout    *uint                  `json:"timeout,omitempty"`
+type UpdateTargetRequest struct {
+	// Name must not be blank if supplied
+	Name       *string `json:"name,omitempty"`
+	MaxRetries *uint   `json:"maxRetries,omitempty"`
+	Timeout    *uint   `json:"timeout,omitempty"`
+	// Must contain at least one checker ID, all checkers must exist. This is a "replace update"
 	CheckerIDs *[]uint                `json:"checkerIDs,omitempty"`
 	PingInfo   *PingInfoUpdateRequest `json:"pingInfo,omitempty"`
 	HTTPInfo   *HTTPInfoUpdateRequest `json:"httpInfo,omitempty"`
 }
 
 type HTTPInfoUpdateRequest struct {
-	Host            *string `json:"host,omitempty"`
+	// Host must start with http:// or https:// if supplied
+	Host *string `json:"host,omitempty"`
+	// HTTP response codes separated by a space. Must contain at least one code if supplied. All codes must be exactly 3 digits long.
 	AllowedCodes    *string `json:"allowedCodes,omitempty"`
 	FollowRedirects *bool   `json:"followRedirects,omitempty"`
 	VerifySSLCert   *bool   `json:"verifySSLCert,omitempty"`
 }
 
 type PingInfoUpdateRequest struct {
+	// Host must not be blank if pingInfo is supplied in UpdateTargetRequest
 	Host *string `json:"host,omitempty"`
 }

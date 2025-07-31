@@ -10,6 +10,21 @@ import (
 	"strconv"
 )
 
+// HandleGetNotificationById docs
+// @Summary Get a notification by ID
+// @Description Allows a user to retrieve information about notification with specified ID
+// @Tags notification
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path uint true "ID of notification to get"
+// @Success 200 {object} getNotificationSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when given ID couldn't be parsed."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
+// @Failure 404 {object} helpers.GenericErrorResponse "Returned when a notification with given ID couldn't be found."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /notification/:id [get]
 func HandleGetNotificationById(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		param := c.Param("id")
@@ -41,4 +56,9 @@ func HandleGetNotificationById(db *gorm.DB) gin.HandlerFunc {
 		}
 		response.WriteAsJSON(c)
 	}
+}
+
+type getNotificationSuccessResponse struct {
+	Code int                `json:"code" example:"200"`
+	Data model.Notification `json:"data"`
 }

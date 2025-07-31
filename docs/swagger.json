@@ -1,0 +1,3954 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API docs for bmonitord v3",
+        "title": "bmonitord v3 API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api",
+    "paths": {
+        "/admin/checker/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to get a list of checkers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Get all checkers",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/checker.listCheckersSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to create a checker",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Create a new checker",
+                "parameters": [
+                    {
+                        "description": "Data required to create a new checker",
+                        "name": "checkerInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/checker.CreateCheckerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/checker.createCheckerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body does not match the requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/checker/:id": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to get a checker by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Get a checker by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of checker that should be retrieved",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a checker with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to delete a checker",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Delete a checker",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of checker that should be deleted",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a checker with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to change checker's name or location",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Update checker details",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of checker that should be updated",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New checker details",
+                        "name": "checkerInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/checker.UpdateCheckerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed or given new name is blank.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a checker with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/checker/:id/key": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to generate a new key for a checker",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Re-generate checker's key",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of checker that should get a new key",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a checker with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/orchestrator/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to get a list of all orchestrators",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orchestrator"
+                ],
+                "summary": "Get all orchestrators",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/orchestrator.listOrchestratorsSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to create a new orchestrator",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orchestrator"
+                ],
+                "summary": "Create orchestrator",
+                "parameters": [
+                    {
+                        "description": "Information about new orchestrator",
+                        "name": "createRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/orchestrator.CreateOrchestratorRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/orchestrator.createOrchestratorSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Returned when given name or host is already taken.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/orchestrator/:id": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to retrieve an orchestrator with given ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orchestrator"
+                ],
+                "summary": "Get orchestrator by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of orchestrator to get",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/orchestrator.getOrchestratorSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when orchestrator with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to delete an orchestrator with given ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orchestrator"
+                ],
+                "summary": "Delete orchestrator",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of orchestrator that should get deleted",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed or specified orchestrator is currently leader.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when orchestrator with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/settings/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to retrieve list of all settings",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "settings"
+                ],
+                "summary": "Get all settings",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/settings.listSettingsSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to set/update a setting",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "settings"
+                ],
+                "summary": "Set/modify setting value",
+                "parameters": [
+                    {
+                        "description": "Setting to update",
+                        "name": "changeRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/settings.ChangeSettingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/settings.getSettingSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body is malformed or value isn't valid for given setting key.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin, their account is disabled or specified setting is not meant to be updated.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/settings/:key": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to retrieve a setting by key",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "settings"
+                ],
+                "summary": "Get setting by key",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Setting to retrieve",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/settings.getSettingSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a setting with given key couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "description": "Allows a user with valid credentials to create a new login session and a token.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Log in",
+                "parameters": [
+                    {
+                        "description": "Valid credentials of user who wants to create a new session",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.Credentials"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.loginSuccessResponse"
+                        },
+                        "headers": {
+                            "Set-Cookie": {
+                                "type": "string",
+                                "description": "Authentication cookie (auth-token=...)"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body does not match the requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when supplied credentials are invalid.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when the user account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction or token generation fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "description": "Allows a user to create a new account with the supplied credentials",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register",
+                "parameters": [
+                    {
+                        "description": "Username and password for the new user account",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.Credentials"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/auth.registerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body does not match the requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when supplied credentials are invalid.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when registration is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Returned when specified username is already taken.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction or password hashing fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/notification/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve a list of all their notifications",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notification"
+                ],
+                "summary": "Get all notifications",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/notification.listNotificationsSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to create a notification",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notification"
+                ],
+                "summary": "Create a notification",
+                "parameters": [
+                    {
+                        "description": "Information about new notification",
+                        "name": "createReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/notification.CreateNotificationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/notification.createNotificationSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/notification/:id": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve information about notification with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notification"
+                ],
+                "summary": "Get a notification by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of notification to get",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/notification.getNotificationSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a notification with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to delete a notification with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notification"
+                ],
+                "summary": "Delete a notification by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of notification to be deleted",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a notification with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to update a notification with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notification"
+                ],
+                "summary": "Update notification",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of notification to update",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Changes to make to the notification",
+                        "name": "updateReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/notification.UpdateNotificationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/notification.getNotificationSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed or request body doesn't match requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a notification with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/notification/:id/test": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to send a test notification to the configured destination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notification"
+                ],
+                "summary": "Send test notification",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of notification to use",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a notification with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/notification/:targetID": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to delete a target with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "Delete target by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to delete",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/session/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve a list of all their sessions",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Get all sessions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/session.listSessionsSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to invalidate all their login sessions",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Delete (invalidate) all sessions",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/session/:id": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve information about specified session.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Get session by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of session to retrieve",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/session.getSessionSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when provided session ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when session with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to invalidate a specified session",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Delete (invalidate) session by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of session to delete",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when provided session ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when session with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/session/current": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve information about session assigned to supplied auth token.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Get current session",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/session.getSessionSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/session/logout": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to delete (invalidate) the session assigned to supplied auth token.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Log out",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/target/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to get a list of their targets",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "Get all targets",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/target.listTargetsSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to create a target",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "Create a target",
+                "parameters": [
+                    {
+                        "description": "Information about new target",
+                        "name": "createReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/target.CreateTargetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/target.createTargetSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/target/:targetID": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve information about target with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "Get target by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to get",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/target.getTargetSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to change information about a target",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "Update target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to update",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New information about target",
+                        "name": "updateReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/target.UpdateTargetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/target.getTargetSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed or request body doesn't match the requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/target/:targetID/alarm/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to get a list of alarms that belong to a target",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "alarm"
+                ],
+                "summary": "Get all alarms of a target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/alarm.listAlarmsSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given target ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to create an alarm assigned to a specified target",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "alarm"
+                ],
+                "summary": "Create alarm",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target the alarm is supposed to belong to",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Information about the new alarm",
+                        "name": "updateReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/alarm.CreateAlarmRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/alarm.createAlarmSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given target ID couldn't be parsed or request body doesn't match the requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/target/:targetID/alarm/:alarmID": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve information about an alarm with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "alarm"
+                ],
+                "summary": "Get alarm by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target the alarm belongs to",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of the alarm",
+                        "name": "alarmID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/alarm.getAlarmSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given target or alarm ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target or alarm with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to delete an alarm with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "alarm"
+                ],
+                "summary": "Delete alarm by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target the alarm belongs to",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of the alarm",
+                        "name": "alarmID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given target or alarm ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target or alarm with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to update information about an alarm with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "alarm"
+                ],
+                "summary": "Update alarm",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target the alarm belongs to",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of the alarm",
+                        "name": "alarmID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New information about the alarm",
+                        "name": "updateReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/alarm.UpdateAlarmRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/alarm.getAlarmSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given target or alarm ID couldn't be parsed or request body doesn't match the requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target or alarm with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/target/:targetID/alarm/:alarmID/mute": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to change mute status of an alarm",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "alarm"
+                ],
+                "summary": "Mute alarm",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target the alarm belongs to",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of the alarm",
+                        "name": "alarmID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Mute status. Can be true for muted, false for unmuted. If not supplied, mute status of the alarm will change to the opposite of current status.",
+                        "name": "mute",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/alarm.getAlarmSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given target ID, alarm ID or mute status couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target or alarm with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/target/:targetID/pause": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to pause/unpause a target with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "Pause target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to pause/unpause",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Pause status, can be true for paused, false for unpaused. If not supplied, target's pause status will change to the opposite of current status.",
+                        "name": "pause",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/target.getTargetSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID or pause status couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows user to get information about their own account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user.getUserSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows user to delete their own account and all resources they own",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Delete current user",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/password": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows user to change their own password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Change password",
+                "parameters": [
+                    {
+                        "description": "Old and new password",
+                        "name": "changePasswordReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.ChangePasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user.getUserSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body is malformed or new password is too weak.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled or provided old password doesn't match.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction or password hashing fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/username": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows user to change their own username",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Change username",
+                "parameters": [
+                    {
+                        "description": "New username",
+                        "name": "changeUsernameReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.ChangeUsernameRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user.getUserSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body is malformed or new username contains a whitespace character.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Returned when given new username is already taken.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "alarm.CreateAlarmRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "notificationIDs"
+            ],
+            "properties": {
+                "name": {
+                    "description": "Name must not be blank",
+                    "type": "string"
+                },
+                "notificationIDs": {
+                    "description": "All notifications in this list must exist",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "threshold": {
+                    "description": "Threshold must be supplied if type is 1 (threshold)",
+                    "type": "number"
+                },
+                "thresholdField": {
+                    "description": "Threshold field must be supplied if type is 1 (threshold). At the moment the only accepted value is 0 (latency)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.AlarmThresholdField"
+                        }
+                    ]
+                },
+                "type": {
+                    "description": "Type must be 0 (unavailable) or 1 (threshold)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.AlarmType"
+                        }
+                    ]
+                }
+            }
+        },
+        "alarm.UpdateAlarmRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "Name must not be blank if supplied",
+                    "type": "string"
+                },
+                "notificationIDs": {
+                    "description": "min. length = 1 if supplied, all notifications must exist. This is a \"replace update\"",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "threshold": {
+                    "description": "Must be supplied if type is getting changed to threshold (1)",
+                    "type": "number"
+                },
+                "thresholdField": {
+                    "description": "Must be supplied if type is getting changed to threshold (1), at the moment the only accepted value is 0 (latency)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.AlarmThresholdField"
+                        }
+                    ]
+                },
+                "type": {
+                    "description": "Type must be 0 (unavailable) or 1 (threshold), if supplied",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.AlarmType"
+                        }
+                    ]
+                }
+            }
+        },
+        "alarm.createAlarmSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Alarm"
+                }
+            }
+        },
+        "alarm.getAlarmSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Alarm"
+                }
+            }
+        },
+        "alarm.listAlarmsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Alarm"
+                    }
+                }
+            }
+        },
+        "auth.Credentials": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "description": "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "Username cannot be blank",
+                    "type": "string"
+                }
+            }
+        },
+        "auth.loginSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "session": {
+                            "$ref": "#/definitions/model.Session"
+                        },
+                        "token": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "auth.registerSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.User"
+                }
+            }
+        },
+        "checker.CreateCheckerRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "location": {
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name cannot be blank",
+                    "type": "string"
+                }
+            }
+        },
+        "checker.UpdateCheckerRequest": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "description": "Location can be blank",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name must not be blank if supplied",
+                    "type": "string"
+                }
+            }
+        },
+        "checker.createCheckerSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "checker": {
+                    "$ref": "#/definitions/model.Checker"
+                },
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                }
+            }
+        },
+        "checker.getCheckerSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Checker"
+                }
+            }
+        },
+        "checker.listCheckersSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Checker"
+                    }
+                }
+            }
+        },
+        "gorm.DeletedAt": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        },
+        "helpers.GenericDeleteSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 204
+                }
+            }
+        },
+        "helpers.GenericErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "error": {
+                    "type": "string",
+                    "example": "parsing id failed"
+                }
+            }
+        },
+        "model.Alarm": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "muted": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "notifications": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Notification"
+                    }
+                },
+                "targetId": {
+                    "type": "integer"
+                },
+                "threshold": {
+                    "type": "number"
+                },
+                "thresholdField": {
+                    "$ref": "#/definitions/model.AlarmThresholdField"
+                },
+                "type": {
+                    "$ref": "#/definitions/model.AlarmType"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.AlarmThresholdField": {
+            "type": "integer",
+            "enum": [
+                0,
+                1
+            ],
+            "x-enum-varnames": [
+                "Latency",
+                "thresholdFieldMax"
+            ]
+        },
+        "model.AlarmType": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2
+            ],
+            "x-enum-varnames": [
+                "Unavailable",
+                "Threshold",
+                "alarmTypeMax"
+            ]
+        },
+        "model.Checker": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "heartbeats": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Heartbeat"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Target"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Heartbeat": {
+            "type": "object",
+            "properties": {
+                "checker": {
+                    "$ref": "#/definitions/model.Checker"
+                },
+                "checkerId": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "latency": {
+                    "type": "integer"
+                },
+                "status": {
+                    "$ref": "#/definitions/model.TargetStatus"
+                },
+                "target": {
+                    "$ref": "#/definitions/model.Target"
+                },
+                "targetId": {
+                    "type": "integer"
+                },
+                "timestamp": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Incident": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "duration": {
+                    "$ref": "#/definitions/time.Duration"
+                },
+                "end": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ongoing": {
+                    "type": "boolean"
+                },
+                "start": {
+                    "type": "string"
+                },
+                "targetId": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Notification": {
+            "type": "object",
+            "properties": {
+                "alarms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Alarm"
+                    }
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "credentials": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/model.NotificationType"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.NotificationType": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+            ],
+            "x-enum-varnames": [
+                "Discord",
+                "Slack",
+                "Pushbullet",
+                "Email",
+                "Gotify",
+                "GenericWebhook"
+            ]
+        },
+        "model.Orchestrator": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "leader": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Session": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "expiresAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ipAddress": {
+                    "type": "string"
+                },
+                "lastActive": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/model.User"
+                },
+                "userAgent": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Setting": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Target": {
+            "type": "object",
+            "properties": {
+                "alarms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Alarm"
+                    }
+                },
+                "checkers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Checker"
+                    }
+                },
+                "checksDown": {
+                    "type": "integer"
+                },
+                "checksUp": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "heartbeats": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Heartbeat"
+                    }
+                },
+                "httpInfo": {
+                    "$ref": "#/definitions/model.TargetHTTPInfo"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "incidents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Incident"
+                    }
+                },
+                "lastCheck": {
+                    "type": "string"
+                },
+                "lastStatus": {
+                    "$ref": "#/definitions/model.TargetStatus"
+                },
+                "maxRetries": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "paused": {
+                    "type": "boolean"
+                },
+                "pingInfo": {
+                    "$ref": "#/definitions/model.TargetPingInfo"
+                },
+                "timeout": {
+                    "type": "integer"
+                },
+                "type": {
+                    "$ref": "#/definitions/model.TargetType"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "usedRetries": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.TargetHTTPInfo": {
+            "type": "object",
+            "properties": {
+                "allowedCodes": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "followRedirects": {
+                    "type": "boolean"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "targetId": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "verifySSLCert": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "model.TargetPingInfo": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "targetId": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.TargetStatus": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2
+            ],
+            "x-enum-varnames": [
+                "Up",
+                "Down",
+                "Unknown"
+            ]
+        },
+        "model.TargetType": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2
+            ],
+            "x-enum-comments": {
+                "targetTypeMax": "\"sentinel\" value"
+            },
+            "x-enum-descriptions": [
+                "",
+                "",
+                "\"sentinel\" value"
+            ],
+            "x-enum-varnames": [
+                "PING",
+                "HTTP",
+                "targetTypeMax"
+            ]
+        },
+        "model.User": {
+            "type": "object",
+            "properties": {
+                "admin": {
+                    "type": "boolean"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "notifications": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Notification"
+                    }
+                },
+                "sessions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Session"
+                    }
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Target"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "notification.CreateNotificationRequest": {
+            "type": "object",
+            "required": [
+                "credentials",
+                "name",
+                "type"
+            ],
+            "properties": {
+                "credentials": {
+                    "description": "Credentials must be valid for the selected type, e.g. webhook URLs have to start with http:// or https://",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name must not be blank",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Type must be a number in range 0-5, inclusive",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.NotificationType"
+                        }
+                    ]
+                }
+            }
+        },
+        "notification.UpdateNotificationRequest": {
+            "type": "object",
+            "properties": {
+                "credentials": {
+                    "description": "Credentials must be valid for the selected type, e.g. webhook URLs have to start with http:// or https://, if supplied",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name must not be blank if supplied",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Type must be a number in range of 0-5 (inclusive), if supplied. If type is changed, credentials valid for the new type also have to be supplied.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.NotificationType"
+                        }
+                    ]
+                }
+            }
+        },
+        "notification.createNotificationSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Notification"
+                }
+            }
+        },
+        "notification.getNotificationSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Notification"
+                }
+            }
+        },
+        "notification.listNotificationsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Notification"
+                    }
+                }
+            }
+        },
+        "orchestrator.CreateOrchestratorRequest": {
+            "type": "object",
+            "required": [
+                "host",
+                "name"
+            ],
+            "properties": {
+                "host": {
+                    "description": "Host must start with ws:// or wss:// and must be unique",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name must not be blank and must be unique",
+                    "type": "string"
+                }
+            }
+        },
+        "orchestrator.createOrchestratorSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Orchestrator"
+                }
+            }
+        },
+        "orchestrator.getOrchestratorSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Orchestrator"
+                }
+            }
+        },
+        "orchestrator.listOrchestratorsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Orchestrator"
+                    }
+                }
+            }
+        },
+        "session.getSessionSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Session"
+                }
+            }
+        },
+        "session.listSessionsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Session"
+                    }
+                }
+            }
+        },
+        "settings.ChangeSettingRequest": {
+            "type": "object",
+            "required": [
+                "key"
+            ],
+            "properties": {
+                "key": {
+                    "description": "Key must be updatable. Currently, the only setting that can be updated is \"registration-enabled\".",
+                    "type": "string"
+                },
+                "value": {
+                    "description": "Value must match a set of valid values for given setting key",
+                    "type": "string"
+                }
+            }
+        },
+        "settings.getSettingSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Setting"
+                }
+            }
+        },
+        "settings.listSettingsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Setting"
+                    }
+                }
+            }
+        },
+        "target.CreateTargetRequest": {
+            "type": "object",
+            "required": [
+                "checkerIDs",
+                "name"
+            ],
+            "properties": {
+                "checkerIDs": {
+                    "description": "At least one checker must be supplied, all checkers must exist",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "httpInfo": {
+                    "description": "Must be supplied if type is 1 (HTTP)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/target.HTTPInfoCreateRequest"
+                        }
+                    ]
+                },
+                "maxRetries": {
+                    "description": "Max retries is required",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Name must not be blank",
+                    "type": "string"
+                },
+                "pingInfo": {
+                    "description": "Must be supplied if type is 0 (PING)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/target.PingInfoCreateRequest"
+                        }
+                    ]
+                },
+                "timeout": {
+                    "description": "Timeout is required",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "Type must be 0 (PING) or 1 (HTTP)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.TargetType"
+                        }
+                    ]
+                }
+            }
+        },
+        "target.HTTPInfoCreateRequest": {
+            "type": "object",
+            "required": [
+                "allowedCodes",
+                "followRedirects",
+                "host",
+                "verifySSLCert"
+            ],
+            "properties": {
+                "allowedCodes": {
+                    "description": "HTTP response codes separated by a space. Must contain at least one code. All codes must be exactly 3 digits long.",
+                    "type": "string"
+                },
+                "followRedirects": {
+                    "type": "boolean"
+                },
+                "host": {
+                    "description": "Host must start with http:// or https://",
+                    "type": "string"
+                },
+                "verifySSLCert": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "target.HTTPInfoUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "allowedCodes": {
+                    "description": "HTTP response codes separated by a space. Must contain at least one code if supplied. All codes must be exactly 3 digits long.",
+                    "type": "string"
+                },
+                "followRedirects": {
+                    "type": "boolean"
+                },
+                "host": {
+                    "description": "Host must start with http:// or https:// if supplied",
+                    "type": "string"
+                },
+                "verifySSLCert": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "target.PingInfoCreateRequest": {
+            "type": "object",
+            "required": [
+                "host"
+            ],
+            "properties": {
+                "host": {
+                    "description": "Host must not be blank",
+                    "type": "string"
+                }
+            }
+        },
+        "target.PingInfoUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "host": {
+                    "description": "Host must not be blank if pingInfo is supplied in UpdateTargetRequest",
+                    "type": "string"
+                }
+            }
+        },
+        "target.UpdateTargetRequest": {
+            "type": "object",
+            "properties": {
+                "checkerIDs": {
+                    "description": "Must contain at least one checker ID, all checkers must exist. This is a \"replace update\"",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "httpInfo": {
+                    "$ref": "#/definitions/target.HTTPInfoUpdateRequest"
+                },
+                "maxRetries": {
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Name must not be blank if supplied",
+                    "type": "string"
+                },
+                "pingInfo": {
+                    "$ref": "#/definitions/target.PingInfoUpdateRequest"
+                },
+                "timeout": {
+                    "type": "integer"
+                }
+            }
+        },
+        "target.createTargetSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Target"
+                }
+            }
+        },
+        "target.getTargetSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Target"
+                }
+            }
+        },
+        "target.listTargetsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Target"
+                    }
+                }
+            }
+        },
+        "time.Duration": {
+            "type": "integer",
+            "format": "int64",
+            "enum": [
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
+                3600000000000,
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
+                3600000000000
+            ],
+            "x-enum-varnames": [
+                "minDuration",
+                "maxDuration",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Minute",
+                "Hour",
+                "minDuration",
+                "maxDuration",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Minute",
+                "Hour"
+            ]
+        },
+        "user.ChangePasswordRequest": {
+            "type": "object",
+            "required": [
+                "newPassword",
+                "oldPassword"
+            ],
+            "properties": {
+                "newPassword": {
+                    "description": "New password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.",
+                    "type": "string"
+                },
+                "oldPassword": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.ChangeUsernameRequest": {
+            "type": "object",
+            "required": [
+                "newUsername"
+            ],
+            "properties": {
+                "newUsername": {
+                    "description": "Must not be blank and must not contain any whitespace characters",
+                    "type": "string"
+                }
+            }
+        },
+        "user.getUserSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.User"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Header value has to start with \"Bearer \"",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

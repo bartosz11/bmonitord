@@ -9,12 +9,24 @@ import (
 	"strings"
 )
 
+// HandleCreateOrchestrator docs
+// @Summary Create orchestrator
+// @Description Allows an admin to create a new orchestrator
+// @Tags orchestrator
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param createRequest body CreateOrchestratorRequest true "Information about new orchestrator"
+// @Success 201 {object} createOrchestratorSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when request body doesn't match requirements."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when user sending the request is not an admin or their account is disabled."
+// @Failure 409 {object} helpers.GenericErrorResponse "Returned when given name or host is already taken."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
+// @Router /admin/orchestrator/ [post]
 func HandleCreateOrchestrator(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		orchCreateReq := struct {
-			Name string `json:"name" binding:"required"`
-			Host string `json:"host" binding:"required"`
-		}{}
+		orchCreateReq := CreateOrchestratorRequest{}
 
 		if c.ShouldBind(&orchCreateReq) != nil {
 			helpers.BadRequest(c)
@@ -32,6 +44,11 @@ func HandleCreateOrchestrator(db *gorm.DB) gin.HandlerFunc {
 
 		if strings.HasSuffix(orchCreateReq.Host, "/") {
 			orchCreateReq.Host = strings.TrimSuffix(orchCreateReq.Host, "/")
+		}
+
+		if helpers.IsBlank(orchCreateReq.Name) {
+			helpers.BadRequestWithSpecificError(c, "name must not be blank")
+			return
 		}
 
 		var nameCount int64
@@ -78,9 +95,21 @@ func HandleCreateOrchestrator(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		resp := helpers.HTTPResponse{
-			Code: http.StatusOK,
+			Code: http.StatusCreated,
 			Data: orchestrator,
 		}
 		resp.WriteAsJSON(c)
 	}
+}
+
+type CreateOrchestratorRequest struct {
+	// Name must not be blank and must be unique
+	Name string `json:"name" binding:"required"`
+	// Host must start with ws:// or wss:// and must be unique
+	Host string `json:"host" binding:"required"`
+}
+
+type createOrchestratorSuccessResponse struct {
+	Code int                `json:"code" example:"201"`
+	Data model.Orchestrator `json:"data"`
 }

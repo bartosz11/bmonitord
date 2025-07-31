@@ -10,12 +10,23 @@ import (
 	"net/http"
 )
 
+// HandleChangePassword docs
+// @Summary Change password
+// @Description Allows user to change their own password
+// @Tags user
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param changePasswordReq body ChangePasswordRequest true "Old and new password"
+// @Success 200 {object} getUserSuccessResponse
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when request body is malformed or new password is too weak."
+// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
+// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled or provided old password doesn't match."
+// @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction or password hashing fails."
+// @Router /user/password [patch]
 func HandleChangePassword(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		changePasswordReq := struct {
-			OldPassword string `json:"oldPassword" binding:"required"`
-			NewPassword string `json:"newPassword" binding:"required"`
-		}{}
+		changePasswordReq := ChangePasswordRequest{}
 
 		if err := c.ShouldBind(&changePasswordReq); err != nil {
 			helpers.BadRequest(c)
@@ -59,4 +70,10 @@ func HandleChangePassword(db *gorm.DB) gin.HandlerFunc {
 		}
 		resp.WriteAsJSON(c)
 	}
+}
+
+type ChangePasswordRequest struct {
+	OldPassword string `json:"oldPassword" binding:"required"`
+	// New password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.
+	NewPassword string `json:"newPassword" binding:"required"`
 }
