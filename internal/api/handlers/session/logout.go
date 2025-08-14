@@ -14,7 +14,7 @@ import (
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Success 200 {object} helpers.GenericDeleteSuccessResponse
+// @Success 204 {object} helpers.GenericDeleteSuccessResponse
 // @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
 // @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."

@@ -1,14 +1,17 @@
 package auth
 
 import (
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
+	"github.com/ua-parser/uap-go/uaparser"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"net/http"
-	"time"
 )
 
 type Credentials struct {
@@ -32,7 +35,7 @@ type Credentials struct {
 // @Failure 403 {object} helpers.GenericErrorResponse "Returned when the user account is disabled."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction or token generation fails."
 // @Router /auth/login [post]
-func HandleLogin(db *gorm.DB, secureCookies *bool) gin.HandlerFunc {
+func HandleLogin(db *gorm.DB, secureCookies *bool, parser *uaparser.Parser) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		loginReq := Credentials{}
 		if err := c.ShouldBind(&loginReq); err != nil {
@@ -56,14 +59,18 @@ func HandleLogin(db *gorm.DB, secureCookies *bool) gin.HandlerFunc {
 			return
 		}
 
+		ua := c.GetHeader("User-Agent")
+
 		session := model.Session{
 			ExpiresAt:  time.Now().Add(time.Minute * time.Duration(helpers.JWTValidity)),
 			LastActive: time.Now(),
-			UserAgent:  c.GetHeader("User-Agent"),
+			UserAgent:  ua,
 			IpAddress:  c.ClientIP(),
 			UserID:     user.ID,
 			User:       user,
 		}
+
+		ParseUAInfoIntoSession(&session, parser, &ua)
 
 		err := db.Create(&session).Error
 		if err != nil {
@@ -92,6 +99,13 @@ func HandleLogin(db *gorm.DB, secureCookies *bool) gin.HandlerFunc {
 		}
 		resp.WriteAsJSON(c)
 	}
+}
+
+func ParseUAInfoIntoSession(session *model.Session, parser *uaparser.Parser, ua *string) {
+	client := parser.Parse(*ua)
+	session.Os = strings.TrimSpace(client.Os.Family + " " + client.Os.Major)
+	session.Device = strings.TrimSpace(client.Device.Brand + " " + client.Device.Family + " " + client.Device.Model)
+	session.Browser = strings.TrimSpace(client.UserAgent.Family + " " + client.UserAgent.Major)
 }
 
 func invalidUsernameOrPassword(c *gin.Context) {

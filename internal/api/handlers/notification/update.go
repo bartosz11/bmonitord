@@ -2,12 +2,13 @@ package notification
 
 import (
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"net/http"
-	"strconv"
 )
 
 // HandleUpdateNotificationById docs
@@ -25,7 +26,7 @@ import (
 // @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
 // @Failure 404 {object} helpers.GenericErrorResponse "Returned when a notification with given ID couldn't be found."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
-// @Router /notification/:id [patch]
+// @Router /notification/{id} [patch]
 func HandleUpdateNotificationById(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		updateReq := UpdateNotificationRequest{}

@@ -12,12 +12,23 @@ import (
 
 func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenStr := c.GetHeader("Authorization")
-		if len(tokenStr) < 7 || !strings.HasPrefix(tokenStr, "Bearer ") {
+		var tokenStr string
+
+		authHeader := c.GetHeader("Authorization")
+		if strings.HasPrefix(authHeader, "Bearer ") {
+			tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
+		}
+
+		cookie, err := c.Cookie("auth-token")
+		if err == nil {
+			tokenStr = cookie
+		}
+
+		if tokenStr == "" {
 			abortAuth(c)
 			return
 		}
-		tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
+
 		token, ok := helpers.ParseToken(tokenStr)
 		if !ok || !token.Valid {
 			abortAuth(c)

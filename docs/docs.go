@@ -122,7 +122,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/checker/:id": {
+        "/admin/checker/{id}": {
             "get": {
                 "security": [
                     {
@@ -328,7 +328,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/checker/:id/key": {
+        "/admin/checker/{id}/key": {
             "patch": {
                 "security": [
                     {
@@ -508,7 +508,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/orchestrator/:id": {
+        "/admin/orchestrator/{id}": {
             "get": {
                 "security": [
                     {
@@ -747,7 +747,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/settings/:key": {
+        "/admin/settings/{key}": {
             "get": {
                 "security": [
                     {
@@ -1043,7 +1043,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/notification/:id": {
+        "/notification/{id}": {
             "get": {
                 "security": [
                     {
@@ -1249,7 +1249,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/notification/:id/test": {
+        "/notification/{id}/test": {
             "post": {
                 "security": [
                     {
@@ -1303,73 +1303,6 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Returned when a notification with given ID couldn't be found.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Returned when a DB interaction fails.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/notification/:targetID": {
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Allows a user to delete a target with specified ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "target"
-                ],
-                "summary": "Delete target by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID of target to delete",
-                        "name": "targetID",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Returned when given ID couldn't be parsed.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Returned when user sending the request supplies an invalid auth token.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Returned when account of user sending the request is disabled.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Returned when a target with given ID couldn't be found.",
                         "schema": {
                             "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
@@ -1473,7 +1406,99 @@ const docTemplate = `{
                 }
             }
         },
-        "/session/:id": {
+        "/session/current": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve information about session assigned to supplied auth token.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Get current session",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/session.getSessionSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/session/logout": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to delete (invalidate) the session assigned to supplied auth token.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Log out",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/session/{id}": {
             "get": {
                 "security": [
                     {
@@ -1605,98 +1630,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/session/current": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Allows a user to retrieve information about session assigned to supplied auth token.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "session"
-                ],
-                "summary": "Get current session",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/session.getSessionSuccessResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Returned when user sending the request supplies an invalid auth token.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Returned when account of user sending the request is disabled.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Returned when a DB interaction fails.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/session/logout": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Allows a user to delete (invalidate) the session assigned to supplied auth token.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "session"
-                ],
-                "summary": "Log out",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Returned when user sending the request supplies an invalid auth token.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Returned when account of user sending the request is disabled.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Returned when a DB interaction fails.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/target/": {
             "get": {
                 "security": [
@@ -1804,7 +1737,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/target/:targetID": {
+        "/target/{targetID}": {
             "get": {
                 "security": [
                     {
@@ -1836,6 +1769,71 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/target.getTargetSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to delete a target with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "Delete target by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to delete",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
                         }
                     },
                     "400": {
@@ -1945,7 +1943,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/target/:targetID/alarm/": {
+        "/target/{targetID}/alarm/": {
             "get": {
                 "security": [
                     {
@@ -2086,7 +2084,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/target/:targetID/alarm/:alarmID": {
+        "/target/{targetID}/alarm/{alarmID}": {
             "get": {
                 "security": [
                     {
@@ -2313,7 +2311,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/target/:targetID/alarm/:alarmID/mute": {
+        "/target/{targetID}/alarm/{alarmID}/mute": {
             "patch": {
                 "security": [
                     {
@@ -2393,7 +2391,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/target/:targetID/pause": {
+        "/target/{targetID}/pause": {
             "patch": {
                 "security": [
                     {
@@ -3215,11 +3213,17 @@ const docTemplate = `{
         "model.Session": {
             "type": "object",
             "properties": {
+                "browser": {
+                    "type": "string"
+                },
                 "createdAt": {
                     "type": "string"
                 },
                 "deletedAt": {
                     "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "device": {
+                    "type": "string"
                 },
                 "expiresAt": {
                     "type": "string"
@@ -3231,6 +3235,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "lastActive": {
+                    "type": "string"
+                },
+                "os": {
                     "type": "string"
                 },
                 "updatedAt": {
@@ -3879,9 +3886,41 @@ const docTemplate = `{
                 1000000,
                 1000000000,
                 60000000000,
+                3600000000000,
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
+                3600000000000,
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
                 3600000000000
             ],
             "x-enum-varnames": [
+                "minDuration",
+                "maxDuration",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Minute",
+                "Hour",
+                "minDuration",
+                "maxDuration",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Minute",
+                "Hour",
                 "minDuration",
                 "maxDuration",
                 "Nanosecond",

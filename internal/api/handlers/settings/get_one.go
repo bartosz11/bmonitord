@@ -2,11 +2,12 @@ package settings
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 // HandleGetSettingByKey docs
@@ -22,7 +23,7 @@ import (
 // @Failure 403 {object} helpers.GenericErrorResponse "Returned when user sending the request is not an admin or their account is disabled."
 // @Failure 404 {object} helpers.GenericErrorResponse "Returned when a setting with given key couldn't be found."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
-// @Router /admin/settings/:key [get]
+// @Router /admin/settings/{key} [get]
 func HandleGetSettingByKey(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		key := c.Param("key")

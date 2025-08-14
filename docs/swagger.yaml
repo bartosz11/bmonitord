@@ -355,10 +355,14 @@ definitions:
     type: object
   model.Session:
     properties:
+      browser:
+        type: string
       createdAt:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
+      device:
+        type: string
       expiresAt:
         type: string
       id:
@@ -366,6 +370,8 @@ definitions:
       ipAddress:
         type: string
       lastActive:
+        type: string
+      os:
         type: string
       updatedAt:
         type: string
@@ -808,9 +814,41 @@ definitions:
     - 1000000000
     - 60000000000
     - 3600000000000
+    - -9223372036854775808
+    - 9223372036854775807
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 60000000000
+    - 3600000000000
+    - -9223372036854775808
+    - 9223372036854775807
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 60000000000
+    - 3600000000000
     format: int64
     type: integer
     x-enum-varnames:
+    - minDuration
+    - maxDuration
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Minute
+    - Hour
+    - minDuration
+    - maxDuration
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Minute
+    - Hour
     - minDuration
     - maxDuration
     - Nanosecond
@@ -926,7 +964,7 @@ paths:
       summary: Create a new checker
       tags:
       - checker
-  /admin/checker/:id:
+  /admin/checker/{id}:
     delete:
       consumes:
       - application/json
@@ -1066,7 +1104,7 @@ paths:
       summary: Update checker details
       tags:
       - checker
-  /admin/checker/:id/key:
+  /admin/checker/{id}/key:
     patch:
       consumes:
       - application/json
@@ -1187,7 +1225,7 @@ paths:
       summary: Create orchestrator
       tags:
       - orchestrator
-  /admin/orchestrator/:id:
+  /admin/orchestrator/{id}:
     delete:
       consumes:
       - application/json
@@ -1350,7 +1388,7 @@ paths:
       summary: Set/modify setting value
       tags:
       - settings
-  /admin/settings/:key:
+  /admin/settings/{key}:
     get:
       consumes:
       - application/json
@@ -1546,7 +1584,7 @@ paths:
       summary: Create a notification
       tags:
       - notification
-  /notification/:id:
+  /notification/{id}:
     delete:
       consumes:
       - application/json
@@ -1684,7 +1722,7 @@ paths:
       summary: Update notification
       tags:
       - notification
-  /notification/:id/test:
+  /notification/{id}/test:
     post:
       consumes:
       - application/json
@@ -1728,50 +1766,6 @@ paths:
       summary: Send test notification
       tags:
       - notification
-  /notification/:targetID:
-    delete:
-      consumes:
-      - application/json
-      description: Allows a user to delete a target with specified ID
-      parameters:
-      - description: ID of target to delete
-        in: path
-        name: targetID
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-          schema:
-            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
-        "400":
-          description: Returned when given ID couldn't be parsed.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "401":
-          description: Returned when user sending the request supplies an invalid
-            auth token.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "403":
-          description: Returned when account of user sending the request is disabled.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "404":
-          description: Returned when a target with given ID couldn't be found.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "500":
-          description: Returned when a DB interaction fails.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Delete target by ID
-      tags:
-      - target
   /session/:
     delete:
       consumes:
@@ -1831,7 +1825,7 @@ paths:
       summary: Get all sessions
       tags:
       - session
-  /session/:id:
+  /session/{id}:
     delete:
       consumes:
       - application/json
@@ -1958,8 +1952,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
           schema:
             $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
         "401":
@@ -2050,7 +2044,50 @@ paths:
       summary: Create a target
       tags:
       - target
-  /target/:targetID:
+  /target/{targetID}:
+    delete:
+      consumes:
+      - application/json
+      description: Allows a user to delete a target with specified ID
+      parameters:
+      - description: ID of target to delete
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete target by ID
+      tags:
+      - target
     get:
       consumes:
       - application/json
@@ -2145,7 +2182,7 @@ paths:
       summary: Update target
       tags:
       - target
-  /target/:targetID/alarm/:
+  /target/{targetID}/alarm/:
     get:
       consumes:
       - application/json
@@ -2239,7 +2276,7 @@ paths:
       summary: Create alarm
       tags:
       - alarm
-  /target/:targetID/alarm/:alarmID:
+  /target/{targetID}/alarm/{alarmID}:
     delete:
       consumes:
       - application/json
@@ -2393,7 +2430,7 @@ paths:
       summary: Update alarm
       tags:
       - alarm
-  /target/:targetID/alarm/:alarmID/mute:
+  /target/{targetID}/alarm/{alarmID}/mute:
     patch:
       consumes:
       - application/json
@@ -2449,7 +2486,7 @@ paths:
       summary: Mute alarm
       tags:
       - alarm
-  /target/:targetID/pause:
+  /target/{targetID}/pause:
     patch:
       consumes:
       - application/json

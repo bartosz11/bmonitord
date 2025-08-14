@@ -2,13 +2,14 @@ package notification
 
 import (
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/bartosz11/checkmate/internal/notificationproviders"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"net/http"
-	"strconv"
 )
 
 var testNotificationPayload = notificationproviders.NotificationPayload{
@@ -30,7 +31,7 @@ var testNotificationPayload = notificationproviders.NotificationPayload{
 // @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
 // @Failure 404 {object} helpers.GenericErrorResponse "Returned when a notification with given ID couldn't be found."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
-// @Router /notification/:id/test [post]
+// @Router /notification/{id}/test [post]
 func HandleSendTestNotification(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		param := c.Param("id")

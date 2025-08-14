@@ -1,6 +1,9 @@
 package api
 
 import (
+	_ "embed"
+	"time"
+
 	"github.com/bartosz11/checkmate/config"
 	_ "github.com/bartosz11/checkmate/docs"
 	"github.com/bartosz11/checkmate/internal/api/handlers/auth"
@@ -14,9 +17,9 @@ import (
 	"github.com/bartosz11/checkmate/internal/api/handlers/user"
 	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/bartosz11/checkmate/internal/api/middleware"
-	"time"
-
 	"github.com/gin-contrib/cors"
+	"github.com/ua-parser/uap-go/uaparser"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -37,6 +40,9 @@ import (
 //  @name Authorization
 //  @description Header value has to start with "Bearer "
 
+//go:embed regexes.yaml
+var regexes []byte
+
 func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *config.APIConfig) {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		err := v.RegisterValidation("requiredUint", helpers.ValidateRequiredUint)
@@ -45,27 +51,33 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 		}
 	}
 
+	parser, err := uaparser.NewFromBytes(regexes)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to create UA parser")
+	}
+
 	if apiConfig.HostDocs {
 		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 
-	apiGroup := router.Group("/api")
 	if !production {
-		apiGroup.Use(cors.New(cors.Config{
-			AllowOrigins:     []string{"http://localhost:5173"},
+		router.Use(cors.New(cors.Config{
+			AllowOrigins:     []string{"http://localhost:5173", "http://127.0.0.1:5173"},
 			AllowMethods:     []string{"PUT", "PATCH", "GET", "OPTIONS", "HEAD", "POST", "DELETE"},
-			AllowHeaders:     []string{"Origin"},
+			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 			ExposeHeaders:    []string{"Content-Length"},
 			AllowCredentials: true,
 			MaxAge:           12 * time.Hour,
 		}))
 	}
 
+	apiGroup := router.Group("/api")
+
 	helpers.InitJWTHelper(apiConfig)
 
 	authGrp := apiGroup.Group("/auth")
 	{
-		authGrp.POST("/login", auth.HandleLogin(db, &apiConfig.SecureCookies))
+		authGrp.POST("/login", auth.HandleLogin(db, &apiConfig.SecureCookies, parser))
 		authGrp.POST("/register", auth.HandleRegister(db))
 	}
 

@@ -2,12 +2,13 @@ package checker
 
 import (
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"net/http"
-	"strconv"
 )
 
 // HandleRegenCheckerKey docs
@@ -24,7 +25,7 @@ import (
 // @Failure 403 {object} helpers.GenericErrorResponse "Returned when user sending the request is not an admin or their account is disabled."
 // @Failure 404 {object} helpers.GenericErrorResponse "Returned when a checker with given ID couldn't be found."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
-// @Router /admin/checker/:id/key [patch]
+// @Router /admin/checker/{id}/key [patch]
 func HandleRegenCheckerKey(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		param := c.Param("id")
