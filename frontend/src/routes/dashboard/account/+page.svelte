@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dashboardHeader } from '$lib/states';
+	import { additionalButtons, dashboardHeader } from '$lib/states';
 	import UserInfoCard from '$lib/components/dashboard/account/UserInfoCard.svelte';
 	import ChangeUsernameCard from '$lib/components/dashboard/account/ChangeUsernameCard.svelte';
 	import ChangePasswordCard from '$lib/components/dashboard/account/ChangePasswordCard.svelte';
@@ -10,7 +10,7 @@
 	const user = data.user!;
 
 	dashboardHeader.set('Account details');
-
+	additionalButtons.set(null);
 </script>
 
 <div class="flex flex-col gap-4 lg:flex-row">

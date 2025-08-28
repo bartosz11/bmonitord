@@ -2,14 +2,15 @@ package auth
 
 import (
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"net/http"
-	"strconv"
 )
 
 // HandleRegister docs
@@ -38,7 +39,7 @@ func HandleRegister(db *gorm.DB) gin.HandlerFunc {
 				registrationDisabled(c)
 				return
 			}
-			if value {
+			if !value {
 				registrationDisabled(c)
 				return
 			}

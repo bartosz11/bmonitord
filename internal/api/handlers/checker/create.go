@@ -1,11 +1,12 @@
 package checker
 
 import (
+	"net/http"
+
 	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 // HandleCreateChecker docs
@@ -90,5 +91,5 @@ type CreateCheckerRequest struct {
 
 type createCheckerSuccessResponse struct {
 	Code int           `json:"code" example:"201"`
-	Data model.Checker `json:"checker"`
+	Data model.Checker `json:"data"`
 }

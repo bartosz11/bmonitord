@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dashboardHeader } from '$lib/states';
+	import { additionalButtons, dashboardHeader } from '$lib/states';
 	import SessionCard from '$lib/components/dashboard/sessions/SessionCard.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { LogOutIcon } from '@lucide/svelte';
@@ -10,6 +10,7 @@
 	import type { ModelSession } from '$lib/api-client-axios/index.js';
 
 	dashboardHeader.set('Your login sessions');
+	additionalButtons.set(null);
 
 	let { data } = $props();
 

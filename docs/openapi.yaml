@@ -3133,7 +3133,7 @@ components:
     checker.createCheckerSuccessResponse:
       example:
         code: 201
-        checker:
+        data:
           createdAt: createdAt
           deletedAt:
             valid: true
@@ -3764,11 +3764,11 @@ components:
           key: key
           updatedAt: updatedAt
       properties:
-        checker:
-          $ref: "#/components/schemas/model.Checker"
         code:
           example: 201
           type: integer
+        data:
+          $ref: "#/components/schemas/model.Checker"
       type: object
     checker.getCheckerSuccessResponse:
       example:
@@ -9862,41 +9862,9 @@ components:
       - 1000000000
       - 60000000000
       - 3600000000000
-      - -9223372036854775808
-      - 9223372036854775807
-      - 1
-      - 1000
-      - 1000000
-      - 1000000000
-      - 60000000000
-      - 3600000000000
-      - -9223372036854775808
-      - 9223372036854775807
-      - 1
-      - 1000
-      - 1000000
-      - 1000000000
-      - 60000000000
-      - 3600000000000
       format: int64
       type: integer
       x-enum-varnames:
-      - minDuration
-      - maxDuration
-      - Nanosecond
-      - Microsecond
-      - Millisecond
-      - Second
-      - Minute
-      - Hour
-      - minDuration
-      - maxDuration
-      - Nanosecond
-      - Microsecond
-      - Millisecond
-      - Second
-      - Minute
-      - Hour
       - minDuration
       - maxDuration
       - Nanosecond

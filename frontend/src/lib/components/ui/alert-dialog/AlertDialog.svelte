@@ -2,19 +2,22 @@
 	import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
 	import type { Snippet } from 'svelte';
 
-	let { trigger, title, description, cancelText, continueText, continueOnClick }: AlertDialogProps = $props();
+	let { trigger, title, description, cancelText, continueText, continueOnClick, open = $bindable(false), triggerContainerClass }: AlertDialogProps = $props();
+
 	type AlertDialogProps = {
 		trigger: Snippet,
 		title: string,
 		description?: string,
 		cancelText?: string,
 		continueText?: string,
-		continueOnClick:() => void
+		continueOnClick:() => void,
+		open?: boolean
+		triggerContainerClass?: string,
 	}
 </script>
 
-<AlertDialog.Root>
-	<AlertDialog.Trigger>{@render trigger()}</AlertDialog.Trigger>
+<AlertDialog.Root bind:open>
+	<AlertDialog.Trigger class={triggerContainerClass}>{@render trigger()}</AlertDialog.Trigger>
 	<AlertDialog.Content>
 		<AlertDialog.Header>
 			<AlertDialog.Title>{title}</AlertDialog.Title>
