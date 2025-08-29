@@ -39,7 +39,6 @@
 					));
 			}
 		}).catch((err) => {
-			console.log(err)
 			toast.error('Failed to update checker: ' + (err.response?.data?.error ?? 'something went wrong'))
 		})
 			.finally(() => open = false);

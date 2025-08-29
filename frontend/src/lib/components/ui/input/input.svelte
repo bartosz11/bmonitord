@@ -19,11 +19,20 @@
 		ref = $bindable(null),
 		value = $bindable(),
 		type,
-		validators = [],
+		validators = undefined,
 		files = $bindable(),
 		class: className,
 		...restProps
 	}: Props = $props();
+
+	// this is needed to prevent "input doesn't have ancestral form element" error since this input component is sometime used outside svelte-use-form
+	function maybeAction(enabled: boolean, action: Action, params?: unknown) {
+		return (node: HTMLElement) => {
+			if (!enabled) return {};
+			return action(node, params);
+		};
+	}
+
 </script>
 
 {#if type === "file"}
@@ -39,7 +48,7 @@
 		type="file"
 		bind:files
 		bind:value
-		use:formValidators={validators}
+		use:maybeAction={[validators, formValidators, validators]}
 		{...restProps}
 	/>
 {:else}
@@ -54,7 +63,7 @@
 		)}
 		{type}
 		bind:value
-		use:formValidators={validators}
+		use:maybeAction={[validators, formValidators, validators]}
 		{...restProps}
 	/>
 {/if}
