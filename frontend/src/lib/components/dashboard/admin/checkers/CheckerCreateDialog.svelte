@@ -54,6 +54,7 @@
 			</div>
 
 			<Dialog.Footer>
+				<Button type="button" variant="outline" class="mt-4" onclick={() => open = false}>Close</Button>
 				<Button type="submit" class="mt-4" disabled={!$form.valid}>Create</Button>
 			</Dialog.Footer>
 		</form>

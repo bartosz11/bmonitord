@@ -14,8 +14,8 @@
 	}
 	let { key, initialValue, info }: SettingRowProps = $props();
 
-	let value = info.valueConverter(initialValue);
-	let checked = info.valueConverter(initialValue) === 'true';
+	let value = $state(info.valueConverter(initialValue));
+	let checked = $state(info.valueConverter(initialValue) === 'true');
 
 	function onSave() {
 		const val = info.inputType === 'checkbox' ? checked.toString() : value.toString();

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { additionalButtons, dashboardHeader } from '$lib/states';
 	import DataTable from '$lib/components/dashboard/DataTable.svelte';
-	import { columns } from '$lib/components/dashboard/admin/checkers/columns';
-	import CreateDialog from '$lib/components/dashboard/admin/checkers/CreateDialog.svelte';
+	import { checkerColumns } from '$lib/components/dashboard/admin/checkers/checkerColumns';
+	import CheckerCreateDialog from '$lib/components/dashboard/admin/checkers/CheckerCreateDialog.svelte';
 	import { writable } from 'svelte/store';
 
 	let { data } = $props();
@@ -13,10 +13,8 @@
 </script>
 
 {#snippet createButton()}
-	<CreateDialog {checkers}/>
+	<CheckerCreateDialog {checkers} />
 {/snippet}
 
-<div class="flex flex-col gap-4">
-	<DataTable data={$checkers} columns={columns} meta={checkers}/>
-</div>
+<DataTable data={$checkers} columns={checkerColumns} meta={checkers} />
 

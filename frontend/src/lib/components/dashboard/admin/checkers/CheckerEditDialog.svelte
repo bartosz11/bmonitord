@@ -40,8 +40,7 @@
 			}
 		}).catch((err) => {
 			toast.error('Failed to update checker: ' + (err.response?.data?.error ?? 'something went wrong'))
-		})
-			.finally(() => open = false);
+		});
 	}
 </script>
 

@@ -3,6 +3,8 @@
 	import { cn, type WithElementRef } from '$lib/utils.js';
 	import type { Validator } from 'svelte-use-form';
 	import { validators as formValidators } from 'svelte-use-form';
+	import type { Action } from 'svelte/action';
+	import type { FormControlElement } from 'svelte-use-form/models/formControlElement';
 
 	type InputType = Exclude<HTMLInputTypeAttribute, 'file'>;
 
@@ -19,18 +21,16 @@
 		ref = $bindable(null),
 		value = $bindable(),
 		type,
-		validators = undefined,
+		validators = [],
 		files = $bindable(),
 		class: className,
 		...restProps
 	}: Props = $props();
 
 	// this is needed to prevent "input doesn't have ancestral form element" error since this input component is sometime used outside svelte-use-form
-	function maybeAction(enabled: boolean, action: Action, params?: unknown) {
-		return (node: HTMLElement) => {
-			if (!enabled) return {};
-			return action(node, params);
-		};
+	const maybeValidate: Action<FormControlElement, {fwdValidators: Validator[]}> = (node, fwdValidators) => {
+		if (validators.length === 0) return;
+		return formValidators(node, fwdValidators);
 	}
 
 </script>
@@ -48,7 +48,7 @@
 		type="file"
 		bind:files
 		bind:value
-		use:maybeAction={[validators, formValidators, validators]}
+		use:maybeValidate={validators}
 		{...restProps}
 	/>
 {:else}
@@ -63,7 +63,7 @@
 		)}
 		{type}
 		bind:value
-		use:maybeAction={[validators, formValidators, validators]}
+		use:maybeValidate={validators}
 		{...restProps}
 	/>
 {/if}
