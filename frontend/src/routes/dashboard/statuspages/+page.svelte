@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { dashboardHeader } from '$lib/states';
+	import { additionalButtons, dashboardHeader } from '$lib/states';
 
 	let { data } = $props();
 
 	dashboardHeader.set("Your statuspages")
+	additionalButtons.set(null)
 </script>

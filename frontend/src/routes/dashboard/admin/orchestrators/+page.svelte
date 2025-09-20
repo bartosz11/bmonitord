@@ -2,7 +2,7 @@
 	import { additionalButtons, dashboardHeader } from '$lib/states';
 	import { writable } from 'svelte/store';
 	import DataTable from '$lib/components/dashboard/DataTable.svelte';
-	import CreateDialog from '$lib/components/dashboard/admin/orchestrators/CreateDialog.svelte';
+	import OrchestratorCreateDialog from '$lib/components/dashboard/admin/orchestrators/OrchestratorCreateDialog.svelte';
 	import { orchestratorColumns } from '$lib/components/dashboard/admin/orchestrators/orchestratorColumns';
 
 	let { data } = $props();
@@ -15,7 +15,7 @@
 </script>
 
 {#snippet createButton()}
-	<CreateDialog {orchestrators}/>
+	<OrchestratorCreateDialog {orchestrators}/>
 {/snippet}
 
 <DataTable columns={orchestratorColumns} data={$orchestrators} meta={orchestrators} />

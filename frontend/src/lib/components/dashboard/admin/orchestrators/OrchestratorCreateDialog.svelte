@@ -1,13 +1,14 @@
 <script lang="ts">
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Button } from '$lib/components/ui/button';
-	import { Hint, pattern, required, useForm } from 'svelte-use-form';
+	import { Hint, required, useForm } from 'svelte-use-form';
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
 	import { orchestratorApi } from '$lib/api';
 	import { toast } from 'svelte-sonner';
 	import type { ModelOrchestrator } from '$lib/api-client-axios';
 	import type { Writable } from 'svelte/store';
+	import { prefixes } from '$lib/validators';
 
 	let open = $state(false);
 
@@ -22,7 +23,7 @@
 		e.preventDefault();
 		orchestratorApi.adminOrchestratorPost({
 			name: $form.name.value,
-			host: $form.host.value,
+			host: $form.host.value
 		}).then((resp) => {
 			if (resp.status === 201) {
 				toast.success('Successfully created a new orchestrator.');
@@ -51,10 +52,11 @@
 				<Input type="text" placeholder="PL-WAW-1" name="name" validators={[required]}></Input>
 				<Hint for="name" on="required">Name is required.</Hint>
 				<Label>Host</Label>
-				<Input type="text" placeholder="wss://example.com" name="host" validators={[required, pattern("^ws:\\/\\/|wss:\\/\\/")]}></Input>
+				<Input type="text" placeholder="wss://example.com" name="host"
+							 validators={[required, prefixes(["ws://", "wss://"])]}></Input>
 				<div>
 					<Hint for="host" on="required">Host is required.</Hint>
-					<Hint for="host" on="pattern">Host must start with ws:// or wss://</Hint>
+					<Hint for="host" on="prefixes">Host must start with ws:// or wss://</Hint>
 				</div>
 			</div>
 

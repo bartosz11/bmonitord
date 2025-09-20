@@ -14,7 +14,8 @@
 	>;
 
 	type CustomProps = {
-		validators?: Validator[]
+		validators?: Validator[],
+		sufIgnore?: boolean,
 	}
 
 	let {
@@ -24,6 +25,7 @@
 		validators = [],
 		files = $bindable(),
 		class: className,
+		sufIgnore = false,
 		...restProps
 	}: Props = $props();
 
@@ -49,6 +51,7 @@
 		bind:files
 		bind:value
 		use:maybeValidate={validators}
+		data-suf-ignore={sufIgnore}
 		{...restProps}
 	/>
 {:else}
@@ -64,6 +67,7 @@
 		{type}
 		bind:value
 		use:maybeValidate={validators}
+		data-suf-ignore={sufIgnore}
 		{...restProps}
 	/>
 {/if}

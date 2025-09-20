@@ -1,11 +1,12 @@
 package notification
 
 import (
+	"net/http"
+
 	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 // HandleCreateNotification docs
@@ -69,7 +70,7 @@ type CreateNotificationRequest struct {
 	// Name must not be blank
 	Name string `json:"name" binding:"required"`
 	// Type must be a number in range 0-5, inclusive
-	Type model.NotificationType `json:"type" binding:"required"`
+	Type model.NotificationType `json:"type" binding:"requiredUint"`
 	// Credentials must be valid for the selected type, e.g. webhook URLs have to start with http:// or https://
 	Credentials string `json:"credentials" binding:"required"`
 }

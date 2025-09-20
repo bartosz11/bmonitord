@@ -6,6 +6,7 @@
 	import { Save } from '@lucide/svelte';
 	import { settingsApi } from '$lib/api';
 	import { toast } from 'svelte-sonner';
+	import { Checkbox } from '$lib/components/ui/checkbox';
 
 	type SettingRowProps = {
 		key: string,
@@ -35,10 +36,7 @@
 	{#if info.inputType !== "checkbox"}
 		<Input class="col-span-3" type={info.inputType} readonly={info.readonly} bind:value />
 	{:else}
-<!--		TODO: maybe find a solution later-->
-<!--		For whatever shadcn's checkbox doesn't work when there's a binding to checked????-->
-<!--		<Checkbox class="col-span-3" disabled={info.readonly} bind:checked={checked}></Checkbox>-->
-		<input class="col-span-3 justify-self-start" type="checkbox" disabled={info.readonly} bind:checked={checked}>
+		<Checkbox class="col-span-3" disabled={info.readonly} bind:checked={checked}></Checkbox>
 	{/if}
 	<Button class="w-fit col-span-1 justify-self-center" variant="outline" disabled={info.readonly} onclick={onSave}>
 		<Save />
