@@ -1,17 +1,17 @@
 meta {
-  name: Get checker by ID
+  name: Delete checker by ID
   type: http
-  seq: 3
+  seq: 2
 }
 
-get {
-  url: {{API_URL}}/api/admin/checker/:id
+delete {
+  url: {{API_URL}}/api/checker/:id
   body: none
   auth: none
 }
 
 params:path {
-  id: 1
+  id: 3
 }
 
 headers {

@@ -26,7 +26,7 @@
 	function onSubmit(e: SubmitEvent) {
 		e.preventDefault();
 		// I know I have partial edits in the API but I cba playing around with it, esp in this case where there are only 2 editable props
-		checkerApi.adminCheckerIdPatch(row.id!, {
+		checkerApi.checkerIdPatch(row.id!, {
 			name: $form.name.value,
 			location: $form.location.value
 		}).then((resp) => {

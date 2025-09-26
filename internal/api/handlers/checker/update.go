@@ -26,7 +26,7 @@ import (
 // @Failure 403 {object} helpers.GenericErrorResponse "Returned when user sending the request is not an admin or their account is disabled."
 // @Failure 404 {object} helpers.GenericErrorResponse "Returned when a checker with given ID couldn't be found."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
-// @Router /admin/checker/{id} [patch]
+// @Router /checker/{id} [patch]
 func HandleUpdateChecker(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		param := c.Param("id")

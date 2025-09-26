@@ -22,7 +22,7 @@ import (
 // @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
 // @Failure 403 {object} helpers.GenericErrorResponse "Returned when user sending the request is not an admin or their account is disabled."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
-// @Router /admin/checker/ [post]
+// @Router /checker/ [post]
 func HandleCreateChecker(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		checkerCreateReq := CreateCheckerRequest{}

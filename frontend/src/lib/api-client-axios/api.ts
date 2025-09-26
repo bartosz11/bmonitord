@@ -1291,7 +1291,7 @@ export interface NotificationCreateNotificationRequest {
      * @type {ModelNotificationType}
      * @memberof NotificationCreateNotificationRequest
      */
-    'type': ModelNotificationType;
+    'type'?: ModelNotificationType;
 }
 
 
@@ -1796,6 +1796,14 @@ export interface TargetUpdateTargetRequest {
  */
 
 export const TimeDuration = {
+    minDuration: -9223372036854775808,
+    maxDuration: 9223372036854775807,
+    Nanosecond: 1,
+    Microsecond: 1000,
+    Millisecond: 1000000,
+    Second: 1000000000,
+    Minute: 60000000000,
+    Hour: 3600000000000,
     minDuration: -9223372036854775808,
     maxDuration: 9223372036854775807,
     Nanosecond: 1,
@@ -2574,13 +2582,13 @@ export class AuthApi extends BaseAPI {
 export const CheckerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Allows an admin to get a list of checkers
+         * Allows a user to get list of all checkers, includes keys if requesting user has admin privileges
          * @summary Get all checkers
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/admin/checker/`;
+        checkerGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/checker/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2613,10 +2621,10 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerIdDelete: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        checkerIdDelete: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('adminCheckerIdDelete', 'id', id)
-            const localVarPath = `/admin/checker/{id}`
+            assertParamExists('checkerIdDelete', 'id', id)
+            const localVarPath = `/checker/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2644,16 +2652,16 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * Allows an admin to get a checker by ID
+         * Allows a user to get a checker by its ID, includes key if user has admin privileges
          * @summary Get a checker by ID
          * @param {number} id ID of checker that should be retrieved
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerIdGet: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        checkerIdGet: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('adminCheckerIdGet', 'id', id)
-            const localVarPath = `/admin/checker/{id}`
+            assertParamExists('checkerIdGet', 'id', id)
+            const localVarPath = `/checker/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2687,10 +2695,10 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerIdKeyPatch: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        checkerIdKeyPatch: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('adminCheckerIdKeyPatch', 'id', id)
-            const localVarPath = `/admin/checker/{id}/key`
+            assertParamExists('checkerIdKeyPatch', 'id', id)
+            const localVarPath = `/checker/{id}/key`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2725,12 +2733,12 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerIdPatch: async (id: number, checkerInfo: CheckerUpdateCheckerRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        checkerIdPatch: async (id: number, checkerInfo: CheckerUpdateCheckerRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('adminCheckerIdPatch', 'id', id)
+            assertParamExists('checkerIdPatch', 'id', id)
             // verify required parameter 'checkerInfo' is not null or undefined
-            assertParamExists('adminCheckerIdPatch', 'checkerInfo', checkerInfo)
-            const localVarPath = `/admin/checker/{id}`
+            assertParamExists('checkerIdPatch', 'checkerInfo', checkerInfo)
+            const localVarPath = `/checker/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2767,10 +2775,10 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerPost: async (checkerInfo: CheckerCreateCheckerRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        checkerPost: async (checkerInfo: CheckerCreateCheckerRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'checkerInfo' is not null or undefined
-            assertParamExists('adminCheckerPost', 'checkerInfo', checkerInfo)
-            const localVarPath = `/admin/checker/`;
+            assertParamExists('checkerPost', 'checkerInfo', checkerInfo)
+            const localVarPath = `/checker/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2810,15 +2818,15 @@ export const CheckerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = CheckerApiAxiosParamCreator(configuration)
     return {
         /**
-         * Allows an admin to get a list of checkers
+         * Allows a user to get list of all checkers, includes keys if requesting user has admin privileges
          * @summary Get all checkers
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async adminCheckerGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckerListCheckersSuccessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCheckerGet(options);
+        async checkerGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckerListCheckersSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkerGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CheckerApi.adminCheckerGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['CheckerApi.checkerGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2828,23 +2836,23 @@ export const CheckerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async adminCheckerIdDelete(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HelpersGenericDeleteSuccessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCheckerIdDelete(id, options);
+        async checkerIdDelete(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HelpersGenericDeleteSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkerIdDelete(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CheckerApi.adminCheckerIdDelete']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['CheckerApi.checkerIdDelete']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Allows an admin to get a checker by ID
+         * Allows a user to get a checker by its ID, includes key if user has admin privileges
          * @summary Get a checker by ID
          * @param {number} id ID of checker that should be retrieved
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async adminCheckerIdGet(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckerGetCheckerSuccessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCheckerIdGet(id, options);
+        async checkerIdGet(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckerGetCheckerSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkerIdGet(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CheckerApi.adminCheckerIdGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['CheckerApi.checkerIdGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2854,10 +2862,10 @@ export const CheckerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async adminCheckerIdKeyPatch(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckerGetCheckerSuccessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCheckerIdKeyPatch(id, options);
+        async checkerIdKeyPatch(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckerGetCheckerSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkerIdKeyPatch(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CheckerApi.adminCheckerIdKeyPatch']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['CheckerApi.checkerIdKeyPatch']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2868,10 +2876,10 @@ export const CheckerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async adminCheckerIdPatch(id: number, checkerInfo: CheckerUpdateCheckerRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckerGetCheckerSuccessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCheckerIdPatch(id, checkerInfo, options);
+        async checkerIdPatch(id: number, checkerInfo: CheckerUpdateCheckerRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckerGetCheckerSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkerIdPatch(id, checkerInfo, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CheckerApi.adminCheckerIdPatch']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['CheckerApi.checkerIdPatch']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2881,10 +2889,10 @@ export const CheckerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async adminCheckerPost(checkerInfo: CheckerCreateCheckerRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckerCreateCheckerSuccessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.adminCheckerPost(checkerInfo, options);
+        async checkerPost(checkerInfo: CheckerCreateCheckerRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CheckerCreateCheckerSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkerPost(checkerInfo, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CheckerApi.adminCheckerPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['CheckerApi.checkerPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -2898,13 +2906,13 @@ export const CheckerApiFactory = function (configuration?: Configuration, basePa
     const localVarFp = CheckerApiFp(configuration)
     return {
         /**
-         * Allows an admin to get a list of checkers
+         * Allows a user to get list of all checkers, includes keys if requesting user has admin privileges
          * @summary Get all checkers
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerGet(options?: RawAxiosRequestConfig): AxiosPromise<CheckerListCheckersSuccessResponse> {
-            return localVarFp.adminCheckerGet(options).then((request) => request(axios, basePath));
+        checkerGet(options?: RawAxiosRequestConfig): AxiosPromise<CheckerListCheckersSuccessResponse> {
+            return localVarFp.checkerGet(options).then((request) => request(axios, basePath));
         },
         /**
          * Allows an admin to delete a checker
@@ -2913,18 +2921,18 @@ export const CheckerApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerIdDelete(id: number, options?: RawAxiosRequestConfig): AxiosPromise<HelpersGenericDeleteSuccessResponse> {
-            return localVarFp.adminCheckerIdDelete(id, options).then((request) => request(axios, basePath));
+        checkerIdDelete(id: number, options?: RawAxiosRequestConfig): AxiosPromise<HelpersGenericDeleteSuccessResponse> {
+            return localVarFp.checkerIdDelete(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * Allows an admin to get a checker by ID
+         * Allows a user to get a checker by its ID, includes key if user has admin privileges
          * @summary Get a checker by ID
          * @param {number} id ID of checker that should be retrieved
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerIdGet(id: number, options?: RawAxiosRequestConfig): AxiosPromise<CheckerGetCheckerSuccessResponse> {
-            return localVarFp.adminCheckerIdGet(id, options).then((request) => request(axios, basePath));
+        checkerIdGet(id: number, options?: RawAxiosRequestConfig): AxiosPromise<CheckerGetCheckerSuccessResponse> {
+            return localVarFp.checkerIdGet(id, options).then((request) => request(axios, basePath));
         },
         /**
          * Allows an admin to generate a new key for a checker
@@ -2933,8 +2941,8 @@ export const CheckerApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerIdKeyPatch(id: number, options?: RawAxiosRequestConfig): AxiosPromise<CheckerGetCheckerSuccessResponse> {
-            return localVarFp.adminCheckerIdKeyPatch(id, options).then((request) => request(axios, basePath));
+        checkerIdKeyPatch(id: number, options?: RawAxiosRequestConfig): AxiosPromise<CheckerGetCheckerSuccessResponse> {
+            return localVarFp.checkerIdKeyPatch(id, options).then((request) => request(axios, basePath));
         },
         /**
          * Allows an admin to change checker\'s name or location
@@ -2944,8 +2952,8 @@ export const CheckerApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerIdPatch(id: number, checkerInfo: CheckerUpdateCheckerRequest, options?: RawAxiosRequestConfig): AxiosPromise<CheckerGetCheckerSuccessResponse> {
-            return localVarFp.adminCheckerIdPatch(id, checkerInfo, options).then((request) => request(axios, basePath));
+        checkerIdPatch(id: number, checkerInfo: CheckerUpdateCheckerRequest, options?: RawAxiosRequestConfig): AxiosPromise<CheckerGetCheckerSuccessResponse> {
+            return localVarFp.checkerIdPatch(id, checkerInfo, options).then((request) => request(axios, basePath));
         },
         /**
          * Allows an admin to create a checker
@@ -2954,8 +2962,8 @@ export const CheckerApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminCheckerPost(checkerInfo: CheckerCreateCheckerRequest, options?: RawAxiosRequestConfig): AxiosPromise<CheckerCreateCheckerSuccessResponse> {
-            return localVarFp.adminCheckerPost(checkerInfo, options).then((request) => request(axios, basePath));
+        checkerPost(checkerInfo: CheckerCreateCheckerRequest, options?: RawAxiosRequestConfig): AxiosPromise<CheckerCreateCheckerSuccessResponse> {
+            return localVarFp.checkerPost(checkerInfo, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2968,14 +2976,14 @@ export const CheckerApiFactory = function (configuration?: Configuration, basePa
  */
 export class CheckerApi extends BaseAPI {
     /**
-     * Allows an admin to get a list of checkers
+     * Allows a user to get list of all checkers, includes keys if requesting user has admin privileges
      * @summary Get all checkers
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CheckerApi
      */
-    public adminCheckerGet(options?: RawAxiosRequestConfig) {
-        return CheckerApiFp(this.configuration).adminCheckerGet(options).then((request) => request(this.axios, this.basePath));
+    public checkerGet(options?: RawAxiosRequestConfig) {
+        return CheckerApiFp(this.configuration).checkerGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2986,20 +2994,20 @@ export class CheckerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof CheckerApi
      */
-    public adminCheckerIdDelete(id: number, options?: RawAxiosRequestConfig) {
-        return CheckerApiFp(this.configuration).adminCheckerIdDelete(id, options).then((request) => request(this.axios, this.basePath));
+    public checkerIdDelete(id: number, options?: RawAxiosRequestConfig) {
+        return CheckerApiFp(this.configuration).checkerIdDelete(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Allows an admin to get a checker by ID
+     * Allows a user to get a checker by its ID, includes key if user has admin privileges
      * @summary Get a checker by ID
      * @param {number} id ID of checker that should be retrieved
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CheckerApi
      */
-    public adminCheckerIdGet(id: number, options?: RawAxiosRequestConfig) {
-        return CheckerApiFp(this.configuration).adminCheckerIdGet(id, options).then((request) => request(this.axios, this.basePath));
+    public checkerIdGet(id: number, options?: RawAxiosRequestConfig) {
+        return CheckerApiFp(this.configuration).checkerIdGet(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3010,8 +3018,8 @@ export class CheckerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof CheckerApi
      */
-    public adminCheckerIdKeyPatch(id: number, options?: RawAxiosRequestConfig) {
-        return CheckerApiFp(this.configuration).adminCheckerIdKeyPatch(id, options).then((request) => request(this.axios, this.basePath));
+    public checkerIdKeyPatch(id: number, options?: RawAxiosRequestConfig) {
+        return CheckerApiFp(this.configuration).checkerIdKeyPatch(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3023,8 +3031,8 @@ export class CheckerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof CheckerApi
      */
-    public adminCheckerIdPatch(id: number, checkerInfo: CheckerUpdateCheckerRequest, options?: RawAxiosRequestConfig) {
-        return CheckerApiFp(this.configuration).adminCheckerIdPatch(id, checkerInfo, options).then((request) => request(this.axios, this.basePath));
+    public checkerIdPatch(id: number, checkerInfo: CheckerUpdateCheckerRequest, options?: RawAxiosRequestConfig) {
+        return CheckerApiFp(this.configuration).checkerIdPatch(id, checkerInfo, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3035,8 +3043,8 @@ export class CheckerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof CheckerApi
      */
-    public adminCheckerPost(checkerInfo: CheckerCreateCheckerRequest, options?: RawAxiosRequestConfig) {
-        return CheckerApiFp(this.configuration).adminCheckerPost(checkerInfo, options).then((request) => request(this.axios, this.basePath));
+    public checkerPost(checkerInfo: CheckerCreateCheckerRequest, options?: RawAxiosRequestConfig) {
+        return CheckerApiFp(this.configuration).checkerPost(checkerInfo, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

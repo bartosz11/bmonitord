@@ -20,7 +20,7 @@
 
 	function onSubmit(e: SubmitEvent) {
 		e.preventDefault();
-		checkerApi.adminCheckerPost({
+		checkerApi.checkerPost({
 			name: $form.name.value,
 			location: $form.location.value
 		}).then((resp) => {

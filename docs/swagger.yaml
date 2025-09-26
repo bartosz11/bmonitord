@@ -549,7 +549,6 @@ definitions:
     required:
     - credentials
     - name
-    - type
     type: object
   notification.UpdateNotificationRequest:
     properties:
@@ -814,9 +813,25 @@ definitions:
     - 1000000000
     - 60000000000
     - 3600000000000
+    - -9223372036854775808
+    - 9223372036854775807
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 60000000000
+    - 3600000000000
     format: int64
     type: integer
     x-enum-varnames:
+    - minDuration
+    - maxDuration
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Minute
+    - Hour
     - minDuration
     - maxDuration
     - Nanosecond
@@ -860,263 +875,6 @@ info:
   title: checkmate API
   version: "1.0"
 paths:
-  /admin/checker/:
-    get:
-      consumes:
-      - application/json
-      description: Allows an admin to get a list of checkers
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/checker.listCheckersSuccessResponse'
-        "401":
-          description: Returned when user sending the request supplies an invalid
-            auth token.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "403":
-          description: Returned when user sending the request is not an admin or their
-            account is disabled.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "500":
-          description: Returned when a DB interaction fails.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Get all checkers
-      tags:
-      - checker
-    post:
-      consumes:
-      - application/json
-      description: Allows an admin to create a checker
-      parameters:
-      - description: Data required to create a new checker
-        in: body
-        name: checkerInfo
-        required: true
-        schema:
-          $ref: '#/definitions/checker.CreateCheckerRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/checker.createCheckerSuccessResponse'
-        "400":
-          description: Returned when request body does not match the requirements.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "401":
-          description: Returned when user sending the request supplies an invalid
-            auth token.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "403":
-          description: Returned when user sending the request is not an admin or their
-            account is disabled.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "500":
-          description: Returned when a DB interaction fails.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Create a new checker
-      tags:
-      - checker
-  /admin/checker/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Allows an admin to delete a checker
-      parameters:
-      - description: ID of checker that should be deleted
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-          schema:
-            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
-        "400":
-          description: Returned when given ID couldn't be parsed.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "401":
-          description: Returned when user sending the request supplies an invalid
-            auth token.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "403":
-          description: Returned when user sending the request is not an admin or their
-            account is disabled.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "404":
-          description: Returned when a checker with given ID couldn't be found.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "500":
-          description: Returned when a DB interaction fails.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Delete a checker
-      tags:
-      - checker
-    get:
-      consumes:
-      - application/json
-      description: Allows an admin to get a checker by ID
-      parameters:
-      - description: ID of checker that should be retrieved
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/checker.getCheckerSuccessResponse'
-        "400":
-          description: Returned when given ID couldn't be parsed.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "401":
-          description: Returned when user sending the request supplies an invalid
-            auth token.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "403":
-          description: Returned when user sending the request is not an admin or their
-            account is disabled.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "404":
-          description: Returned when a checker with given ID couldn't be found.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "500":
-          description: Returned when a DB interaction fails.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Get a checker by ID
-      tags:
-      - checker
-    patch:
-      consumes:
-      - application/json
-      description: Allows an admin to change checker's name or location
-      parameters:
-      - description: ID of checker that should be updated
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: New checker details
-        in: body
-        name: checkerInfo
-        required: true
-        schema:
-          $ref: '#/definitions/checker.UpdateCheckerRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/checker.getCheckerSuccessResponse'
-        "400":
-          description: Returned when given ID couldn't be parsed or given new name
-            is blank.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "401":
-          description: Returned when user sending the request supplies an invalid
-            auth token.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "403":
-          description: Returned when user sending the request is not an admin or their
-            account is disabled.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "404":
-          description: Returned when a checker with given ID couldn't be found.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "500":
-          description: Returned when a DB interaction fails.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Update checker details
-      tags:
-      - checker
-  /admin/checker/{id}/key:
-    patch:
-      consumes:
-      - application/json
-      description: Allows an admin to generate a new key for a checker
-      parameters:
-      - description: ID of checker that should get a new key
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/checker.getCheckerSuccessResponse'
-        "400":
-          description: Returned when given ID couldn't be parsed.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "401":
-          description: Returned when user sending the request supplies an invalid
-            auth token.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "403":
-          description: Returned when user sending the request is not an admin or their
-            account is disabled.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "404":
-          description: Returned when a checker with given ID couldn't be found.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "500":
-          description: Returned when a DB interaction fails.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Re-generate checker's key
-      tags:
-      - checker
   /admin/orchestrator/:
     get:
       consumes:
@@ -1482,6 +1240,263 @@ paths:
       summary: Register
       tags:
       - auth
+  /checker/:
+    get:
+      consumes:
+      - application/json
+      description: Allows a user to get list of all checkers, includes keys if requesting
+        user has admin privileges
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/checker.listCheckersSuccessResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all checkers
+      tags:
+      - checker
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to create a checker
+      parameters:
+      - description: Data required to create a new checker
+        in: body
+        name: checkerInfo
+        required: true
+        schema:
+          $ref: '#/definitions/checker.CreateCheckerRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/checker.createCheckerSuccessResponse'
+        "400":
+          description: Returned when request body does not match the requirements.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new checker
+      tags:
+      - checker
+  /checker/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Allows an admin to delete a checker
+      parameters:
+      - description: ID of checker that should be deleted
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a checker with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a checker
+      tags:
+      - checker
+    get:
+      consumes:
+      - application/json
+      description: Allows a user to get a checker by its ID, includes key if user
+        has admin privileges
+      parameters:
+      - description: ID of checker that should be retrieved
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/checker.getCheckerSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a checker with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a checker by ID
+      tags:
+      - checker
+    patch:
+      consumes:
+      - application/json
+      description: Allows an admin to change checker's name or location
+      parameters:
+      - description: ID of checker that should be updated
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: New checker details
+        in: body
+        name: checkerInfo
+        required: true
+        schema:
+          $ref: '#/definitions/checker.UpdateCheckerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/checker.getCheckerSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed or given new name
+            is blank.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a checker with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update checker details
+      tags:
+      - checker
+  /checker/{id}/key:
+    patch:
+      consumes:
+      - application/json
+      description: Allows an admin to generate a new key for a checker
+      parameters:
+      - description: ID of checker that should get a new key
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/checker.getCheckerSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when user sending the request is not an admin or their
+            account is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a checker with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Re-generate checker's key
+      tags:
+      - checker
   /notification/:
     get:
       consumes:

@@ -11,7 +11,7 @@
 	let open = $state(false);
 
 	function onContinueClick() {
-		checkerApi.adminCheckerIdDelete(row.id!).then((resp) => {
+		checkerApi.checkerIdDelete(row.id!).then((resp) => {
 			if (resp.status === 204) {
 				toast.success('Successfully deleted checker.');
 				rows.update((arr) => arr.filter((chk) => chk.id !== row.id!));

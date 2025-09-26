@@ -10,7 +10,7 @@
 	let open = $state(false);
 
 	function regenerate() {
-		checkerApi.adminCheckerIdKeyPatch(row.id!).then((resp) => {
+		checkerApi.checkerIdKeyPatch(row.id!).then((resp) => {
 			if (resp.status === 200) {
 				row.key = resp.data.data!.key!;
 				toast.success('Successfully regenerated key.');

@@ -15,386 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/admin/checker/": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Allows an admin to get a list of checkers",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "checker"
-                ],
-                "summary": "Get all checkers",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/checker.listCheckersSuccessResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Returned when user sending the request supplies an invalid auth token.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Returned when a DB interaction fails.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Allows an admin to create a checker",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "checker"
-                ],
-                "summary": "Create a new checker",
-                "parameters": [
-                    {
-                        "description": "Data required to create a new checker",
-                        "name": "checkerInfo",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/checker.CreateCheckerRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/checker.createCheckerSuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Returned when request body does not match the requirements.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Returned when user sending the request supplies an invalid auth token.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Returned when a DB interaction fails.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/checker/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Allows an admin to get a checker by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "checker"
-                ],
-                "summary": "Get a checker by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID of checker that should be retrieved",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Returned when given ID couldn't be parsed.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Returned when user sending the request supplies an invalid auth token.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Returned when a checker with given ID couldn't be found.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Returned when a DB interaction fails.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Allows an admin to delete a checker",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "checker"
-                ],
-                "summary": "Delete a checker",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID of checker that should be deleted",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Returned when given ID couldn't be parsed.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Returned when user sending the request supplies an invalid auth token.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Returned when a checker with given ID couldn't be found.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Returned when a DB interaction fails.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Allows an admin to change checker's name or location",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "checker"
-                ],
-                "summary": "Update checker details",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID of checker that should be updated",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "New checker details",
-                        "name": "checkerInfo",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/checker.UpdateCheckerRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Returned when given ID couldn't be parsed or given new name is blank.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Returned when user sending the request supplies an invalid auth token.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Returned when a checker with given ID couldn't be found.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Returned when a DB interaction fails.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/checker/{id}/key": {
-            "patch": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Allows an admin to generate a new key for a checker",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "checker"
-                ],
-                "summary": "Re-generate checker's key",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID of checker that should get a new key",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Returned when given ID couldn't be parsed.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Returned when user sending the request supplies an invalid auth token.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Returned when a checker with given ID couldn't be found.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Returned when a DB interaction fails.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/admin/orchestrator/": {
             "get": {
                 "security": [
@@ -929,6 +549,386 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Returned when a DB interaction or password hashing fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/checker/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to get list of all checkers, includes keys if requesting user has admin privileges",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Get all checkers",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/checker.listCheckersSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to create a checker",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Create a new checker",
+                "parameters": [
+                    {
+                        "description": "Data required to create a new checker",
+                        "name": "checkerInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/checker.CreateCheckerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/checker.createCheckerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body does not match the requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/checker/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to get a checker by its ID, includes key if user has admin privileges",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Get a checker by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of checker that should be retrieved",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a checker with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to delete a checker",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Delete a checker",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of checker that should be deleted",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a checker with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to change checker's name or location",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Update checker details",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of checker that should be updated",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New checker details",
+                        "name": "checkerInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/checker.UpdateCheckerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed or given new name is blank.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a checker with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/checker/{id}/key": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to generate a new key for a checker",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "checker"
+                ],
+                "summary": "Re-generate checker's key",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of checker that should get a new key",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when user sending the request is not an admin or their account is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a checker with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
                         "schema": {
                             "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
@@ -3482,8 +3482,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "credentials",
-                "name",
-                "type"
+                "name"
             ],
             "properties": {
                 "credentials": {
@@ -3886,9 +3885,25 @@ const docTemplate = `{
                 1000000,
                 1000000000,
                 60000000000,
+                3600000000000,
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
                 3600000000000
             ],
             "x-enum-varnames": [
+                "minDuration",
+                "maxDuration",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Minute",
+                "Hour",
                 "minDuration",
                 "maxDuration",
                 "Nanosecond",

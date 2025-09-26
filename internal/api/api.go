@@ -130,6 +130,18 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 				}
 			}
 		}
+		checkerGrp := restrictedGrp.Group("/checker")
+		{
+			checkerGrp.GET("/", checker.HandleGetAllCheckers(db))
+			checkerGrp.GET("/:id", checker.HandleGetCheckerByID(db))
+			restrictedCheckerGrp := checkerGrp.Group("", middleware.AdminMiddleware())
+			{
+				restrictedCheckerGrp.POST("/", checker.HandleCreateChecker(db))
+				restrictedCheckerGrp.DELETE("/:id", checker.HandleDeleteCheckerByID(db))
+				restrictedCheckerGrp.PATCH("/:id", checker.HandleUpdateChecker(db))
+				restrictedCheckerGrp.PATCH("/:id/key", checker.HandleRegenCheckerKey(db))
+			}
+		}
 	}
 	//TODO: separate incident and heartbeat groups - read only data that might be public at some point
 	// so that's why it should be on separate group, there's no point in making things like /target/:id/heartbeat[s]/:id
@@ -146,15 +158,6 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 			//Orchestrator details aren't meant to be updated - might cause checkers to fail; I guess
 			//Might implement such an endpoint for that later on if I see it as reasonable,
 			//Ideally all updates to the whole orchestrators table should get broadcasted to all checkers, but it's kind of impossible with the current "stateless API" structure, I may be looking for a workaround in the future
-		}
-		checkerGrp := adminGrp.Group("/checker")
-		{
-			checkerGrp.POST("/", checker.HandleCreateChecker(db))
-			checkerGrp.DELETE("/:id", checker.HandleDeleteCheckerByID(db))
-			checkerGrp.GET("/", checker.HandleGetAllCheckers(db))
-			checkerGrp.GET("/:id", checker.HandleGetCheckerByID(db))
-			checkerGrp.PATCH("/:id", checker.HandleUpdateChecker(db))
-			checkerGrp.PATCH("/:id/key", checker.HandleRegenCheckerKey(db))
 		}
 		settingsGrp := adminGrp.Group("/settings")
 		{

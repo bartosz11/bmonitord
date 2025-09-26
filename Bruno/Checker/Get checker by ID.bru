@@ -1,11 +1,11 @@
 meta {
-  name: Regenerate checker's key
+  name: Get checker by ID
   type: http
-  seq: 6
+  seq: 3
 }
 
-patch {
-  url: {{API_URL}}/api/admin/checker/:id/key
+get {
+  url: {{API_URL}}/api/checker/:id
   body: none
   auth: none
 }
