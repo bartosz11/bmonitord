@@ -1804,14 +1804,6 @@ export const TimeDuration = {
     Second: 1000000000,
     Minute: 60000000000,
     Hour: 3600000000000,
-    minDuration: -9223372036854775808,
-    maxDuration: 9223372036854775807,
-    Nanosecond: 1,
-    Microsecond: 1000,
-    Millisecond: 1000000,
-    Second: 1000000000,
-    Minute: 60000000000,
-    Hour: 3600000000000
 } as const;
 
 export type TimeDuration = typeof TimeDuration[keyof typeof TimeDuration];

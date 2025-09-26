@@ -1,12 +1,13 @@
 package target
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"net/http"
-	"strings"
 )
 
 // HandleCreateTarget docs
@@ -52,6 +53,7 @@ func HandleCreateTarget(db *gorm.DB) gin.HandlerFunc {
 			Type:       createReq.Type,
 			Timeout:    createReq.Timeout,
 			UserID:     user.ID,
+			LastStatus: model.Unknown,
 		}
 
 		if createReq.Type == model.HTTP {
@@ -71,8 +73,8 @@ func HandleCreateTarget(db *gorm.DB) gin.HandlerFunc {
 			target.HTTPInfo = model.TargetHTTPInfo{
 				Host:            createReq.HTTPInfo.Host,
 				AllowedCodes:    createReq.HTTPInfo.AllowedCodes,
-				FollowRedirects: createReq.HTTPInfo.FollowRedirects,
-				VerifySSLCert:   createReq.HTTPInfo.VerifySSLCert,
+				FollowRedirects: *createReq.HTTPInfo.FollowRedirects,
+				VerifySSLCert:   *createReq.HTTPInfo.VerifySSLCert,
 			}
 		}
 
@@ -143,8 +145,8 @@ type HTTPInfoCreateRequest struct {
 	Host string `json:"host" binding:"required"`
 	// HTTP response codes separated by a space. Must contain at least one code. All codes must be exactly 3 digits long.
 	AllowedCodes    string `json:"allowedCodes" binding:"required"`
-	FollowRedirects bool   `json:"followRedirects" binding:"required"`
-	VerifySSLCert   bool   `json:"verifySSLCert" binding:"required"`
+	FollowRedirects *bool  `json:"followRedirects" binding:"required"`
+	VerifySSLCert   *bool  `json:"verifySSLCert" binding:"required"`
 }
 
 type PingInfoCreateRequest struct {

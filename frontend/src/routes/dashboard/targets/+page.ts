@@ -1,8 +1,8 @@
 import type { PageLoad } from './$types';
-import { checkerApi } from '$lib/api';
+import { targetApi } from '$lib/api';
 
 export const load: PageLoad = async () => {
 	return {
-		checkers: (await checkerApi.checkerGet()).data.data!
+		targets: (await targetApi.targetGet()).data.data!
 	};
 };
