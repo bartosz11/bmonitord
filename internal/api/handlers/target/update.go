@@ -41,7 +41,7 @@ func HandleUpdateTargetById(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		var target model.Target
-		err = db.Joins("HTTPInfo", "PingInfo").First(&target, "targets.id = ? and user_id = ?", id, user.ID).Error
+		err = db.Joins("HTTPInfo").Joins("PingInfo").First(&target, "targets.id = ? and user_id = ?", id, user.ID).Error
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			helpers.NotFound(c)
@@ -134,7 +134,7 @@ func HandleUpdateTargetById(db *gorm.DB) gin.HandlerFunc {
 			}
 		}
 
-		if db.Save(&target).Error != nil {
+		if db.Session(&gorm.Session{FullSaveAssociations: true}).Save(&target).Error != nil {
 			helpers.DBInteractionFailed(c)
 			return
 		}

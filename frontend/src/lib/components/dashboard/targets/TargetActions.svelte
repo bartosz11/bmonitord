@@ -11,6 +11,7 @@
 	import TargetDeleteDialog from '$lib/components/dashboard/targets/TargetDeleteDialog.svelte';
 	import { targetApi } from '$lib/api';
 	import { toast } from 'svelte-sonner';
+	import { goto } from '$app/navigation';
 
 	let { row, rows }: { row: ModelTarget, rows: Writable<ModelTarget[]> } = $props();
 
@@ -27,14 +28,12 @@
 	}
 </script>
 
-<!-- TODO: separate page for details/edit: add a query param like ?edit=true to automatically enable edit mode so we can have a "shortcut" to editing -->
 <ActionsBase>
 	{#snippet content()}
 		<DropdownMenuGroup>
 			<DropdownMenuLabel>Actions</DropdownMenuLabel>
 			<DropdownMenuItem onclick={onPauseClick}>{row.paused ? "Unpause" : "Pause"} monitoring</DropdownMenuItem>
-			<DropdownMenuItem>Details</DropdownMenuItem>
-			<DropdownMenuItem>Edit</DropdownMenuItem>
+			<DropdownMenuItem onclick={() => goto(`/dashboard/targets/${row.id}/edit`)}>Edit</DropdownMenuItem>
 			<DropdownMenuSeparator />
 			<TargetDeleteDialog {row} {rows} />
 		</DropdownMenuGroup>

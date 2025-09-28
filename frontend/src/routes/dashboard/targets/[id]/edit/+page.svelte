@@ -4,9 +4,8 @@
 
 	let { data } = $props();
 
-	dashboardHeader.set('Create a new target');
+	dashboardHeader.set(`Edit ${data.target.name}`);
 	additionalButtons.set(null);
-
 </script>
 
-<TargetDataForm locations={data.checkers}/>
+<TargetDataForm target={data.target} locations={data.checkers}/>

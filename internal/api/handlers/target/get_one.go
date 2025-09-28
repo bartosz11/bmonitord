@@ -39,7 +39,7 @@ func HandleGetTargetByID(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		var target model.Target
-		err = db.Joins("HTTPInfo", "PingInfo").Preload("Checkers").Preload("Alarms").
+		err = db.Joins("HTTPInfo").Joins("PingInfo").Preload("Checkers").Preload("Alarms").
 			First(&target, "targets.id = ? and user_id = ?", id, user.ID).Error
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {

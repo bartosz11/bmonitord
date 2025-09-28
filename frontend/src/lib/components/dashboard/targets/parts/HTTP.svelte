@@ -2,14 +2,16 @@
 	import { Hint, required, useForm } from 'svelte-use-form';
 	import {
 		httpCodes,
-		targetCreateSubFormOutput,
-		targetCreateSubFormValidity
+		targetSubFormOutput,
+		targetSubFormValidity
 	} from '$lib/components/dashboard/targets/utils';
 	import * as Select from "$lib/components/ui/select/index.js";
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { prefixes } from '$lib/validators';
+	import { onMount } from 'svelte';
+	import type { ModelTargetHTTPInfo } from '$lib/api-client-axios';
 
 	const form = useForm({}, "httpSubForm");
 
@@ -26,12 +28,25 @@
 	let verifySSLCert = $state(false);
 	let host = $state();
 
-	$effect(() => {
-		targetCreateSubFormOutput.set({httpInfo: {followRedirects, verifySSLCert, host, allowedCodes: selectedHTTPCodes.join(" ")}})
+	onMount(() => {
+		const output = $targetSubFormOutput;
+		if (typeof output === 'object' && "httpInfo" in output) {
+			const httpInfo = output.httpInfo as ModelTargetHTTPInfo;
+			selectedHTTPCodes = httpInfo.allowedCodes!.split(" ");
+			// Just so when in edit mode the user doesn't have to click around to be able to save changes
+			selectTouched = true;
+			followRedirects = httpInfo.followRedirects!;
+			verifySSLCert = httpInfo.verifySSLCert!;
+			host = httpInfo.host!;
+		}
 	})
 
 	$effect(() => {
-		targetCreateSubFormValidity.set($form.valid && selectedCodesAmt >= 1);
+		targetSubFormOutput.set({httpInfo: {followRedirects, verifySSLCert, host, allowedCodes: selectedHTTPCodes.join(" ")}})
+	})
+
+	$effect(() => {
+		targetSubFormValidity.set($form.valid && selectedCodesAmt >= 1);
 	})
 </script>
 

@@ -1,22 +1,31 @@
 <script lang="ts">
 	import { Hint, required, useForm } from 'svelte-use-form';
 	import {
-		targetCreateSubFormOutput,
-		targetCreateSubFormValidity
+		targetSubFormOutput,
+		targetSubFormValidity
 	} from '$lib/components/dashboard/targets/utils';
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
+	import { onMount } from 'svelte';
+	import type { ModelTargetPingInfo } from '$lib/api-client-axios';
 
 	const form = useForm({}, 'pingSubForm');
 
 	let host = $state();
+	onMount(() => {
+		let output = $targetSubFormOutput;
+		if (typeof output === 'object' && "pingInfo" in output) {
+			const pingInfo = output.pingInfo! as ModelTargetPingInfo;
+			host = pingInfo.host!;
+		}
+	})
 
 	$effect(() => {
-		targetCreateSubFormOutput.set({pingInfo: { host }});
+		targetSubFormOutput.set({pingInfo: { host }});
 	});
 
 	$effect(() => {
-		targetCreateSubFormValidity.set($form.valid);
+		targetSubFormValidity.set($form.valid);
 	});
 </script>
 

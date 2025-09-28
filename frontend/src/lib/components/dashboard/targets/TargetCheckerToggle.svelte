@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { ModelChecker, ModelTarget } from '$lib/api-client-axios';
+	import type { ModelChecker } from '$lib/api-client-axios';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
 	import type { Writable } from 'svelte/store';
 
-	let { checker, target, checkers }: { checker: ModelChecker, target?: ModelTarget, checkers: Writable<number[]> } = $props();
+	let { checker, checkers, initialState = false }: { checker: ModelChecker, checkers: Writable<number[]>, initialState?: boolean } = $props();
 
-	const id = `checker-${checker.id}-target-${target ? target.id! : "0"}`
-	let checked = $state(false);
+	const id = `checker-${checker.id}`
+	let checked = $state(initialState);
 
 	$effect(() => {
 		if (checked) {

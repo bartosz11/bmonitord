@@ -19,5 +19,4 @@
 	<Button href="/dashboard/targets/create">Create target</Button>
 {/snippet}
 
-<!--TODO: edit/details actions -->
 <DataTable columns={targetColumns} data={$rows} meta={rows} />

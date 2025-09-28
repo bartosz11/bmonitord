@@ -1,11 +1,12 @@
 package target
 
 import (
+	"net/http"
+
 	"github.com/bartosz11/checkmate/internal/api/helpers"
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 // HandleGetAllUsersTargets docs
@@ -26,7 +27,7 @@ func HandleGetAllUsersTargets(db *gorm.DB) gin.HandlerFunc {
 		user := val.(model.User)
 
 		var targets []model.Target
-		db.Joins("HTTPInfo", "PingInfo").Preload("Checkers").Preload("Alarms").
+		db.Joins("HTTPInfo").Joins("PingInfo").Preload("Checkers").Preload("Alarms").
 			Find(&targets, "user_id = ?", user.ID)
 
 		SanitizeTargets(&targets)
