@@ -136,7 +136,7 @@ func HandleUpdateAlarm(db *gorm.DB) gin.HandlerFunc {
 			}
 		}
 
-		err = db.Save(&alarm).Error
+		err = db.Session(&gorm.Session{FullSaveAssociations: true}).Save(&alarm).Error
 		if err != nil {
 			helpers.DBInteractionFailed(c)
 			return

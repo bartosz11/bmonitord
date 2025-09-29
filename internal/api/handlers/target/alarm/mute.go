@@ -59,7 +59,7 @@ func HandleMuteAlarm(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		var alarm model.Alarm
-		err = db.First(&alarm, "target_id = ? and id = ?", target.ID, alarmID).Error
+		err = db.Preload("Notifications").First(&alarm, "target_id = ? and id = ?", target.ID, alarmID).Error
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			helpers.NotFound(c)
 			return

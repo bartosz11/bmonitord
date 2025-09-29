@@ -34,6 +34,7 @@
 			<DropdownMenuLabel>Actions</DropdownMenuLabel>
 			<DropdownMenuItem onclick={onPauseClick}>{row.paused ? "Unpause" : "Pause"} monitoring</DropdownMenuItem>
 			<DropdownMenuItem onclick={() => goto(`/dashboard/targets/${row.id}/edit`)}>Edit</DropdownMenuItem>
+			<DropdownMenuItem onclick={() => goto(`/dashboard/targets/${row.id}/alarms`)}>Manage alarms</DropdownMenuItem>
 			<DropdownMenuSeparator />
 			<TargetDeleteDialog {row} {rows} />
 		</DropdownMenuGroup>
