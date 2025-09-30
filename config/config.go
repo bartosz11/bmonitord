@@ -1,9 +1,10 @@
 package config
 
 import (
+	"strings"
+
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
-	"strings"
 )
 
 type Config struct {
@@ -44,6 +45,7 @@ type APIConfig struct {
 	JWTSecret     string `mapstructure:"jwt-secret"`
 	JWTValidity   int    `mapstructure:"jwt-validity"`
 	HostDocs      bool   `mapstructure:"host-docs"`
+	HostFrontend  bool   `mapstructure:"host-frontend"`
 	SecureCookies bool   `mapstructure:"secure-cookies"`
 }
 

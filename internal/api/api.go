@@ -6,6 +6,8 @@ import (
 
 	"github.com/bartosz11/checkmate/config"
 	_ "github.com/bartosz11/checkmate/docs"
+	"github.com/bartosz11/checkmate/frontend"
+	"github.com/bartosz11/checkmate/internal/api/handlers"
 	"github.com/bartosz11/checkmate/internal/api/handlers/auth"
 	"github.com/bartosz11/checkmate/internal/api/handlers/checker"
 	"github.com/bartosz11/checkmate/internal/api/handlers/notification"
@@ -168,4 +170,11 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 			//There will be no delete endpoint - if I ever need to delete settings, it'll be done through migrations in an "if exists" style
 		}
 	}
+
+	if apiConfig.HostFrontend {
+		router.NoRoute(func(c *gin.Context) {
+			handlers.StaticFileHandler(c, frontend.FS)
+		})
+	}
+
 }

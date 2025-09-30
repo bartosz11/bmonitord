@@ -1,13 +1,14 @@
 package tasks
 
 import (
+	"strconv"
+	"time"
+
 	"github.com/bartosz11/checkmate/config"
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
-	"strconv"
-	"time"
 )
 
 // Just a random number
@@ -18,7 +19,7 @@ func LeaderTakeoverTask(db *gorm.DB, orchestratorCfg *config.OrchestratorConfig,
 		log.Trace().Msg("orchestrator: leader takeover attempt")
 
 		if *leader {
-			log.Debug().Msg("orchestrator: stopping leader takeover attempt early: already leader")
+			log.Trace().Msg("orchestrator: stopping leader takeover attempt early: already leader")
 			return
 		}
 

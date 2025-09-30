@@ -1,7 +1,7 @@
 import { AlarmApi, AuthApi, CheckerApi, Configuration, NotificationApi, OrchestratorApi, SessionApi, SettingsApi, TargetApi, UserApi } from "./api-client-axios";
 
 const config = new Configuration({
-	basePath: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080',
+	basePath: import.meta.env.VITE_API_BASE_URL ?? '/api',
 	baseOptions: { 
 		withCredentials: true,
 	}

@@ -1,14 +1,16 @@
 package main
 
 import (
+	"os"
+
 	"github.com/bartosz11/checkmate/config"
 	"github.com/bartosz11/checkmate/internal/api"
 	"github.com/bartosz11/checkmate/internal/database"
+	"github.com/bartosz11/checkmate/internal/orchestrator"
 	"github.com/bartosz11/checkmate/internal/orchestrator/helpers"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"os"
 )
 
 func main() {
@@ -29,7 +31,7 @@ func main() {
 
 	helpers.InitEmail(&cfg.EmailConfig)
 
-	//orchestrator.StartOrchestrator(&cfg.OrchestratorConfig, db, router)
+	orchestrator.StartOrchestrator(&cfg.OrchestratorConfig, db, router)
 
 	api.StartAPI(db, router, cfg.Production, &cfg.APIConfig)
 
