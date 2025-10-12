@@ -32,10 +32,9 @@ func RunHTTPCheck(target model.Target) model.Heartbeat {
 	duration := time.Since(start)
 
 	// We got a response
-	if err != nil && resp != nil {
+	if err == nil && resp != nil {
 		defer resp.Body.Close()
 		hb.Latency = uint64(duration.Milliseconds())
-
 		codes := strings.Split(target.HTTPInfo.AllowedCodes, " ")
 		for _, code := range codes {
 			if code == strconv.Itoa(resp.StatusCode) {

@@ -6,7 +6,6 @@ import (
 	"errors"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/bartosz11/checkmate/checker-go/checkproviders"
 	"github.com/bartosz11/checkmate/internal/database/model"
@@ -24,8 +23,7 @@ func Connect(host string, key string) {
 }
 
 func attemptConnecting(host string, key string) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(15)*time.Second)
-	defer cancel()
+	ctx := context.Background() // We don't want timeouts or anything
 
 	conn, _, err := websocket.Dial(ctx, host, nil)
 	if err != nil {
@@ -104,8 +102,9 @@ func attemptConnecting(host string, key string) {
 			}
 			switch msg.Type {
 			case "info":
-				if payload == `"auth-successful"` {
-					checkerId, err := strconv.ParseUint(strings.Split(payload, " ")[1], 10, 64)
+				payloadSplit := strings.Split(payload, " ")
+				if payloadSplit[0] == "auth-successful" {
+					checkerId, err := strconv.ParseUint(payloadSplit[1], 10, 64)
 					if err != nil {
 						log.Error().Err(err).Str("orchestrator", host).Msg("failed to parse checker id from orchestrator")
 						// we can close the connection and re-authenticate but this shouldn't happen
@@ -116,7 +115,7 @@ func attemptConnecting(host string, key string) {
 				}
 				break
 			case "end":
-				if payload == `"invalid auth key"` {
+				if payload == "invalid auth key" {
 					log.Error().Str("orchestrator", host).Msg("failed to authenticate with orchestrator")
 					// Restart here because we don't know if the key is invalid or something else happened that could be a one-time thing
 					// I don't know what codes to use, couldn't they just reuse the HTTP codes for websockets
