@@ -8,6 +8,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+//TODO: extract this to some common/ws package because it's shared with checker
 //Had to create this due to "cyclic imports" ffs
 
 func SendJSON(conn *websocket.Conn, msg WebSocketMessage) {

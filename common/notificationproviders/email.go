@@ -1,7 +1,7 @@
 package notificationproviders
 
 import (
-	"github.com/bartosz11/checkmate/orchestrator/helpers"
+	"github.com/bartosz11/checkmate/common/helpers"
 	"gopkg.in/gomail.v2"
 )
 

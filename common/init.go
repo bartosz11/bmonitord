@@ -1,43 +1,35 @@
-package main
+package common
 
 import (
 	"os"
 
-	"github.com/bartosz11/checkmate/checker"
 	"github.com/bartosz11/checkmate/common/config"
-	"github.com/bartosz11/checkmate/orchestrator/helpers"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
-func main() {
-	cfg := config.LoadConfig()
+// This file's purpose is to de-dupe some code fragments shared across entrypoints
+// It can significantly simplify changing some behaviors of Gin/GORM/zerolog/...
+
+func SetupLogging(cfg *config.Config) {
 	if cfg.PrettyLogging {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
-
 	zerolog.SetGlobalLevel(zerolog.Level(cfg.LoggingLevel))
+}
 
-	//db := database.InitDatabase(&cfg.DatabaseConfig)
-
+func SetupRouter(cfg *config.Config) *gin.Engine {
 	if cfg.Production {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	router := gin.Default()
+	return gin.Default()
+}
 
-	helpers.InitEmail(&cfg.EmailConfig)
-
-	//orchestrator.StartOrchestrator(&cfg.OrchestratorConfig, db, router)
-
-	//api.StartAPI(db, router, cfg.Production, &cfg.APIConfig)
-
-	checker.InitializeChecker(&cfg.CheckerConfig)
-
+func StartRouter(router *gin.Engine) {
 	err := router.Run()
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed starting router!")
 	}
-
 }
