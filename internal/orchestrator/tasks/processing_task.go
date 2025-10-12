@@ -1,17 +1,19 @@
 package tasks
 
 import (
+	"sort"
+	"strconv"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/bartosz11/checkmate/internal/notificationproviders"
 	"github.com/bartosz11/checkmate/internal/orchestrator/helpers"
 	"gorm.io/gorm"
-	"sort"
-	"strconv"
-	"strings"
-	"time"
 )
 
-var ProcessingTasks = make(map[uint]*ProcessingTask)
+var ProcessingTasks sync.Map
 
 type ProcessingTask struct {
 	Target              model.Target
@@ -25,7 +27,7 @@ type ProcessingTask struct {
 }
 
 func StartProcessingTask(db *gorm.DB, task *ProcessingTask) {
-	defer delete(ProcessingTasks, task.Target.ID)
+	defer ProcessingTasks.Delete(task.Target.ID)
 
 	timer := time.NewTimer(task.Timeout)
 	buffer := make([]model.Heartbeat, 0, task.ExpectedHeartbeats)

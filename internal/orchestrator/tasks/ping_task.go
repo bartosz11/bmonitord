@@ -2,6 +2,7 @@ package tasks
 
 import (
 	"github.com/bartosz11/checkmate/internal/orchestrator/helpers"
+	"github.com/coder/websocket"
 	"github.com/rs/zerolog/log"
 )
 
@@ -11,9 +12,11 @@ func BroadcastPingTask() func() {
 			Type: "ping",
 		}
 
-		for u, conn := range WSConnections {
-			log.Trace().Uint("checker", u).Msg("sending ping msg")
+		WSConnections.Range(func(k any, v any) bool {
+			conn := v.(*websocket.Conn)
+			log.Trace().Any("checker", k).Msg("sending ping msg")
 			helpers.SendJSON(conn, pingMsg)
-		}
+			return true
+		})
 	}
 }

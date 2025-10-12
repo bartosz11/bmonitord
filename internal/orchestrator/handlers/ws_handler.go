@@ -30,12 +30,13 @@ func HandleNewWSConnection(db *gorm.DB) func(ctx *gin.Context) {
 			_, bytes, err := conn.Read(ctx)
 			if err != nil {
 				//Most likely means the connection is gone, so remove it
-				for id, wsConn := range tasks.WSConnections {
-					if conn == wsConn {
-						delete(tasks.WSConnections, id)
-						break
+				tasks.WSConnections.Range(func(k any, v any) bool {
+					if conn == v {
+						tasks.WSConnections.Delete(k)
+						return false
 					}
-				}
+					return true
+				})
 				log.Err(err).Msg("websocket read error")
 				break // If we break out of this for loop, deferred Close is called so the connection is also closed
 			}
@@ -66,7 +67,7 @@ func HandleNewWSConnection(db *gorm.DB) func(ctx *gin.Context) {
 				}
 
 				checkerId := checker.ID
-				tasks.WSConnections[checker.ID] = conn
+				tasks.WSConnections.Store(checker.ID, conn)
 				idString := strconv.Itoa(int(checkerId))
 				helpers.SendJSON(conn, helpers.WebSocketMessage{Type: "info", Payload: json.RawMessage(`"auth-successful ` + idString + `"`)})
 				log.Info().Msg(ip + ": connected - auth successful - checker id: " + idString)
@@ -85,11 +86,13 @@ func HandleNewWSConnection(db *gorm.DB) func(ctx *gin.Context) {
 					break
 				}
 
-				task := tasks.ProcessingTasks[hb.TargetID]
-				if task == nil {
+				load, _ := tasks.ProcessingTasks.Load(hb.TargetID)
+				// Theoretically there's the "ok" returned but checking for nil does the same thing
+				if load == nil {
 					helpers.SendJSON(conn, helpers.WebSocketMessage{Type: "error", Payload: json.RawMessage(`"target not queued"`)})
 					break
 				}
+				task := load.(*tasks.ProcessingTask)
 				task.Heartbeats <- hb
 				task.CompleteCheckers = append(task.CompleteCheckers, hb.CheckerID)
 				helpers.SendJSON(conn, helpers.WebSocketMessage{Type: "info", Payload: json.RawMessage(`"check-ok"`)})
@@ -107,10 +110,13 @@ func HandleNewWSConnection(db *gorm.DB) func(ctx *gin.Context) {
 }
 
 func isAuthorized(conn *websocket.Conn) bool {
-	for _, v := range tasks.WSConnections {
+	authorized := false
+	tasks.WSConnections.Range(func(_ any, v any) bool {
 		if v == conn {
-			return true
+			authorized = true
+			return false
 		}
-	}
-	return false
+		return true
+	})
+	return authorized
 }

@@ -2,16 +2,19 @@ package tasks
 
 import (
 	"encoding/json"
+	"strconv"
+	"sync"
+	"time"
+
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/bartosz11/checkmate/internal/orchestrator/helpers"
 	"github.com/coder/websocket"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
-	"strconv"
-	"time"
 )
 
-var WSConnections = map[uint]*websocket.Conn{}
+// var WSConnections = map[uint]*websocket.Conn{}
+var WSConnections sync.Map
 
 func BroadcastTask(db *gorm.DB, maxNetworkOverhead int) func() {
 	return func() {
@@ -38,8 +41,8 @@ func BroadcastTask(db *gorm.DB, maxNetworkOverhead int) func() {
 				Timeout:             time.Duration(target.Timeout)*time.Second + time.Duration(maxNetworkOverhead)*time.Millisecond,
 			}
 			for _, checker := range target.Checkers {
-				conn := WSConnections[checker.ID]
-				if conn == nil {
+				load, ok := WSConnections.Load(checker.ID)
+				if !ok {
 					log.Debug().Int("checker", int(checker.ID)).Msg("orchestrator: checker unreachable")
 					unknownHbs = append(unknownHbs, model.Heartbeat{
 						Timestamp: time.Now(),
@@ -50,6 +53,7 @@ func BroadcastTask(db *gorm.DB, maxNetworkOverhead int) func() {
 					processingTask.UnreachableCheckers = append(processingTask.UnreachableCheckers, checker.ID)
 					continue
 				}
+				conn := load.(*websocket.Conn)
 
 				targetJSON, err := json.Marshal(target)
 				if err != nil {
@@ -62,7 +66,7 @@ func BroadcastTask(db *gorm.DB, maxNetworkOverhead int) func() {
 				log.Debug().Int("checker", int(checker.ID)).Msg("orchestrator: checker reached")
 			}
 			processingTask.ExpectedHeartbeats = reachedCheckers
-			ProcessingTasks[target.ID] = &processingTask
+			ProcessingTasks.Store(target.ID, &processingTask)
 			go StartProcessingTask(db, &processingTask)
 		}
 	}
