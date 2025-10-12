@@ -13,7 +13,7 @@ import (
 var leader = false
 
 func StartOrchestrator(orchestratorCfg *config.OrchestratorConfig, db *gorm.DB, router *gin.Engine) {
-	router.GET("/orchestrator/ws", handlers.HandleNewWSConnection(db, &leader))
+	router.GET("/orchestrator/ws", handlers.HandleNewWSConnection(db))
 
 	c := cron.New()
 
@@ -22,6 +22,12 @@ func StartOrchestrator(orchestratorCfg *config.OrchestratorConfig, db *gorm.DB, 
 	_, err := c.AddFunc("@every 5s", tasks.LeaderTakeoverTask(db, orchestratorCfg, &leader, c))
 	if err != nil {
 		log.Fatal().Err(err).Msg("orchestrator: failed to schedule leader takeover task")
+	}
+	//run now and every 10s
+	tasks.BroadcastPingTask()()
+	_, err = c.AddFunc("@every 10s", tasks.BroadcastPingTask())
+	if err != nil {
+		log.Fatal().Err(err).Msg("orchestrator: failed to schedule ping broadcast task")
 	}
 
 	c.Start()

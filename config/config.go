@@ -12,9 +12,11 @@ type Config struct {
 	EmailConfig        EmailConfig        `mapstructure:"email"`
 	OrchestratorConfig OrchestratorConfig `mapstructure:"orchestrator"`
 	APIConfig          APIConfig          `mapstructure:"api"`
-	LoggingLevel       int8               `mapstructure:"logging-level"`
-	PrettyLogging      bool               `mapstructure:"pretty-logging"`
-	Production         bool               `mapstructure:"production"`
+	// TODO: consider moving checker config out of the main config
+	CheckerConfig CheckerConfig `mapstructure:"checker"`
+	LoggingLevel  int8          `mapstructure:"logging-level"`
+	PrettyLogging bool          `mapstructure:"pretty-logging"`
+	Production    bool          `mapstructure:"production"`
 }
 
 type DatabaseConfig struct {
@@ -47,6 +49,11 @@ type APIConfig struct {
 	HostDocs      bool   `mapstructure:"host-docs"`
 	HostFrontend  bool   `mapstructure:"host-frontend"`
 	SecureCookies bool   `mapstructure:"secure-cookies"`
+}
+
+type CheckerConfig struct {
+	Orchestrators []string `mapstructure:"orchestrators"`
+	Key           string   `mapstructure:"key"`
 }
 
 func LoadConfig() Config {

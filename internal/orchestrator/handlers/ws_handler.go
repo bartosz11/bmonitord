@@ -3,6 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"strconv"
+
 	"github.com/bartosz11/checkmate/internal/database/model"
 	"github.com/bartosz11/checkmate/internal/orchestrator/helpers"
 	"github.com/bartosz11/checkmate/internal/orchestrator/tasks"
@@ -10,10 +12,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
-	"strconv"
 )
 
-func HandleNewWSConnection(db *gorm.DB, leader *bool) func(ctx *gin.Context) {
+func HandleNewWSConnection(db *gorm.DB) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 		ip := ctx.ClientIP()
 		conn, err := websocket.Accept(ctx.Writer, ctx.Request, &websocket.AcceptOptions{})
@@ -23,18 +24,6 @@ func HandleNewWSConnection(db *gorm.DB, leader *bool) func(ctx *gin.Context) {
 		}
 		//this makes a "return" inside this function close the connection, very epic ergonomics
 		defer conn.Close(websocket.StatusNormalClosure, "")
-
-		//If we're not the boss rn, tell them who's the boss
-		if !*leader {
-			var leadOrchestrator model.Orchestrator
-			db.First(&leadOrchestrator, "leader = true")
-			helpers.SendJSON(conn, helpers.WebSocketMessage{
-				Type:    "end",
-				Payload: json.RawMessage(`"not-leader ` + leadOrchestrator.Host + `"`),
-			})
-			log.Info().Msg(ip + ": connection denied - not leader")
-			return
-		}
 
 		for {
 			//Read a single message, we don't need the type
@@ -104,6 +93,9 @@ func HandleNewWSConnection(db *gorm.DB, leader *bool) func(ctx *gin.Context) {
 				task.Heartbeats <- hb
 				task.CompleteCheckers = append(task.CompleteCheckers, hb.CheckerID)
 				helpers.SendJSON(conn, helpers.WebSocketMessage{Type: "info", Payload: json.RawMessage(`"check-ok"`)})
+				break
+			case "pong":
+				// Do nothing, I guess?
 				break
 			default:
 				message := helpers.WebSocketMessage{Type: "error", Payload: json.RawMessage(`"invalid message type"`)}

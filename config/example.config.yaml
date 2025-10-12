@@ -27,6 +27,12 @@ api:
   secure-cookies: false # Set to true if your instance is accessible through https. Cookies will have the "Secure" flag
   host-frontend: true # Should this API instance also host the web dashboard? note that it's  bundled in the binary and disabling this won't make the binary/docker image lighter
 
+checker:
+  key: replace_me
+  orchestrators: # URL's of orchestrators the checker should connect to
+    - ws://example.com/orchestrator/ws
+    - wss://example2.com/orchestrator/ws
+
 
 # https://github.com/rs/zerolog?tab=readme-ov-file#leveled-logging
 # Keep it at 1 in most cases
