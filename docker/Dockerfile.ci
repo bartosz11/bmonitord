@@ -1,0 +1,22 @@
+# This Dockerfile is meant for CI usage and expects a pre-built frontend for the modules that need it 
+ ARG GO_ENTRYPOINT="cmd/aio.go"
+ 
+ FROM golang:1.24-alpine AS build_go
+ ARG GO_ENTRYPOINT
+ WORKDIR /home/root
+ COPY .. .
+ RUN go build -o app ${GO_ENTRYPOINT}
+ FROM alpine:latest AS run
+ RUN addgroup -S container && adduser -S container -G container
+ RUN mkdir -p /home/container && chown container:container /home/container
+ #This is necessary for the TZ env var to apply correctly, I think
+ RUN apk add --no-cache tzdata
+ # Set the working directory
+ WORKDIR /home/container
+ # Copy the Go application and frontend assets from the previous stages
+ COPY --from=build_go /home/root/app /bin/app
+ # Change ownership of the application files
+ RUN chown container:container /bin/app
+ # Switch to the new user
+ USER container
+ ENTRYPOINT [ "/bin/app" ]
