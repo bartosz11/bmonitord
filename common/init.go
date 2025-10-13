@@ -27,8 +27,8 @@ func SetupRouter(cfg *config.Config) *gin.Engine {
 	return gin.Default()
 }
 
-func StartRouter(router *gin.Engine) {
-	err := router.Run()
+func StartRouter(router *gin.Engine, bind string) {
+	err := router.Run(bind)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed starting router!")
 	}

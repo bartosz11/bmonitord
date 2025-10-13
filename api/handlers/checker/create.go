@@ -37,9 +37,10 @@ func HandleCreateChecker(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		key := GenerateUniqueKey(db, c)
+		key := GenerateUniqueKey(db)
 		if key == "" {
-			//If this happened, a DB error has occurred and the client has been informed already, so return only
+			//If this happened, a DB error has occurred
+			helpers.DBInteractionFailed(c)
 			return
 		}
 
@@ -63,7 +64,7 @@ func HandleCreateChecker(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func GenerateUniqueKey(db *gorm.DB, c *gin.Context) string {
+func GenerateUniqueKey(db *gorm.DB) string {
 	var key string
 	//Always generate a unique key
 	for {
@@ -72,7 +73,6 @@ func GenerateUniqueKey(db *gorm.DB, c *gin.Context) string {
 
 		err := db.Model(&model.Checker{}).Where("key = ?", key).Count(&count).Error
 		if err != nil {
-			helpers.DBInteractionFailed(c)
 			return ""
 		}
 

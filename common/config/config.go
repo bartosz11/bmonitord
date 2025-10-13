@@ -17,6 +17,7 @@ type Config struct {
 	LoggingLevel  int8          `mapstructure:"logging-level"`
 	PrettyLogging bool          `mapstructure:"pretty-logging"`
 	Production    bool          `mapstructure:"production"`
+	Bind          string        `mapstructure:"bind"`
 }
 
 type DatabaseConfig struct {

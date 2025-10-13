@@ -48,6 +48,15 @@ func HandleDeleteCheckerByID(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
+		if checker.System {
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusBadRequest,
+				Error: "system checker cannot be deleted",
+			}
+			resp.WriteAsJSON(c)
+			return
+		}
+
 		//Soft deletion here is not an accident
 		if db.Delete(&checker).Error != nil {
 			helpers.DBInteractionFailed(c)

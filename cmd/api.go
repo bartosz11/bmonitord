@@ -22,5 +22,5 @@ func main() {
 
 	api.StartAPI(db, router, cfg.Production, &cfg.APIConfig)
 
-	common.StartRouter(router)
+	common.StartRouter(router, cfg.Bind)
 }

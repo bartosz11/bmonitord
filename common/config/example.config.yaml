@@ -17,7 +17,7 @@ email:
 
 orchestrator:
   max-network-overhead: 500
-  name: "replace_me"
+  name: "replace_me" # This is ignored by the AIO binary/image
 
 # Keep these settings in sync across all API instances you're hosting if you're hosting multiple!
 api:
@@ -28,10 +28,12 @@ api:
   host-frontend: true # Should this API instance also host the web dashboard? note that it's  bundled in the binary and disabling this won't make the binary/docker image lighter
 
 checker:
-  key: replace_me
-  orchestrators: # URL's of orchestrators the checker should connect to
-    - ws://example.com/orchestrator/ws
-    - wss://example2.com/orchestrator/ws
+  key: replace_me # This is ignored by the AIO binary/image
+  # URL's of orchestrators the checker should connect to
+  # If you're using the AIO image/binary, don't add the built-in orchestrator's host here, only other orchestrators in the cluster (if you have any)
+  orchestrators:
+#    - ws://example.com/orchestrator/ws
+#    - wss://example2.com/orchestrator/ws
 
 
 # https://github.com/rs/zerolog?tab=readme-ov-file#leveled-logging
@@ -41,3 +43,7 @@ pretty-logging: true
 # Pretty much affects only CORS settings, setting this to false will allow localhost:5173 access the entire API, useful for frontend development
 # If true, Gin's mode will be set to Release, otherwise it will stay at Debug
 production: true
+# You can change the IP address the API/orchestrator listens on here. If you're running checkmate inside Docker, please change the host-side port instead
+# :8080 means "bind to port 8080 on all interfaces", more info here: https://gin-gonic.com/en/docs/deployment/#configuration-options
+# In AIO binary/image, this address will also be used by the built-in checker to access the built-in orchestrator
+bind: ":8080"

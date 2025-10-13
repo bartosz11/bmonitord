@@ -20,7 +20,7 @@ import (
 // @Produce json
 // @Param id path uint true "ID of orchestrator that should get deleted"
 // @Success 204 {object} helpers.GenericDeleteSuccessResponse
-// @Failure 400 {object} helpers.GenericErrorResponse "Returned when given ID couldn't be parsed or specified orchestrator is currently leader."
+// @Failure 400 {object} helpers.GenericErrorResponse "Returned when given ID couldn't be parsed, specified orchestrator is currently leader or is a system orchestrator."
 // @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
 // @Failure 403 {object} helpers.GenericErrorResponse "Returned when user sending the request is not an admin or their account is disabled."
 // @Failure 404 {object} helpers.GenericErrorResponse "Returned when orchestrator with given ID couldn't be found."
@@ -45,6 +45,15 @@ func HandleDeleteOrchestrator(db *gorm.DB) gin.HandlerFunc {
 
 		if err != nil {
 			helpers.DBInteractionFailed(c)
+			return
+		}
+
+		if orchestrator.System {
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusBadRequest,
+				Error: "system orchestrator cannot be deleted",
+			}
+			resp.WriteAsJSON(c)
 			return
 		}
 

@@ -22,5 +22,5 @@ func main() {
 
 	orchestrator.StartOrchestrator(&cfg.OrchestratorConfig, db, router)
 
-	common.StartRouter(router)
+	common.StartRouter(router, cfg.Bind)
 }
