@@ -1,355 +1,6 @@
 basePath: /api
 definitions:
-  api_handlers_auth.Credentials:
-    properties:
-      password:
-        description: Password must contain at least 1 uppercase letter, 1 lowercase
-          letter, 1 number and must consist of at least 8 characters.
-        type: string
-      username:
-        description: Username cannot be blank
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  api_handlers_auth.loginSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        properties:
-          session:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Session'
-          token:
-            type: string
-        type: object
-    type: object
-  api_handlers_auth.registerSuccessResponse:
-    properties:
-      code:
-        example: 201
-        type: integer
-      data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.User'
-    type: object
-  api_handlers_checker.CreateCheckerRequest:
-    properties:
-      location:
-        type: string
-      name:
-        description: Name cannot be blank
-        type: string
-    required:
-    - name
-    type: object
-  api_handlers_checker.UpdateCheckerRequest:
-    properties:
-      location:
-        description: Location can be blank
-        type: string
-      name:
-        description: Name must not be blank if supplied
-        type: string
-    type: object
-  api_handlers_checker.createCheckerSuccessResponse:
-    properties:
-      code:
-        example: 201
-        type: integer
-      data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Checker'
-    type: object
-  api_handlers_checker.getCheckerSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Checker'
-    type: object
-  api_handlers_checker.listCheckersSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Checker'
-        type: array
-    type: object
-  api_handlers_notification.CreateNotificationRequest:
-    properties:
-      credentials:
-        description: Credentials must be valid for the selected type, e.g. webhook
-          URLs have to start with http:// or https://
-        type: string
-      name:
-        description: Name must not be blank
-        type: string
-      type:
-        allOf:
-        - $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.NotificationType'
-        description: Type must be a number in range 0-5, inclusive
-    required:
-    - credentials
-    - name
-    type: object
-  api_handlers_notification.UpdateNotificationRequest:
-    properties:
-      credentials:
-        description: Credentials must be valid for the selected type, e.g. webhook
-          URLs have to start with http:// or https://, if supplied
-        type: string
-      name:
-        description: Name must not be blank if supplied
-        type: string
-      type:
-        allOf:
-        - $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.NotificationType'
-        description: Type must be a number in range of 0-5 (inclusive), if supplied.
-          If type is changed, credentials valid for the new type also have to be supplied.
-    type: object
-  api_handlers_notification.createNotificationSuccessResponse:
-    properties:
-      code:
-        example: 201
-        type: integer
-      data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Notification'
-    type: object
-  api_handlers_notification.getNotificationSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Notification'
-    type: object
-  api_handlers_notification.listNotificationsSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Notification'
-        type: array
-    type: object
-  api_handlers_orchestrator.CreateOrchestratorRequest:
-    properties:
-      host:
-        description: Host must start with ws:// or wss:// and must be unique
-        type: string
-      name:
-        description: Name must not be blank and must be unique
-        type: string
-    required:
-    - host
-    - name
-    type: object
-  api_handlers_orchestrator.createOrchestratorSuccessResponse:
-    properties:
-      code:
-        example: 201
-        type: integer
-      data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Orchestrator'
-    type: object
-  api_handlers_orchestrator.getOrchestratorSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Orchestrator'
-    type: object
-  api_handlers_orchestrator.listOrchestratorsSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Orchestrator'
-        type: array
-    type: object
-  api_handlers_session.getSessionSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Session'
-    type: object
-  api_handlers_session.listSessionsSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Session'
-        type: array
-    type: object
-  api_handlers_settings.ChangeSettingRequest:
-    properties:
-      key:
-        description: Key must be updatable. Currently, the only setting that can be
-          updated is "registration-enabled".
-        type: string
-      value:
-        description: Value must match a set of valid values for given setting key
-        type: string
-    required:
-    - key
-    type: object
-  api_handlers_settings.getSettingSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Setting'
-    type: object
-  api_handlers_settings.listSettingsSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Setting'
-        type: array
-    type: object
-  api_handlers_target.CreateTargetRequest:
-    properties:
-      checkerIDs:
-        description: At least one checker must be supplied, all checkers must exist
-        items:
-          type: integer
-        minItems: 1
-        type: array
-      httpInfo:
-        allOf:
-        - $ref: '#/definitions/api_handlers_target.HTTPInfoCreateRequest'
-        description: Must be supplied if type is 1 (HTTP)
-      maxRetries:
-        description: Max retries is required
-        type: integer
-      name:
-        description: Name must not be blank
-        type: string
-      pingInfo:
-        allOf:
-        - $ref: '#/definitions/api_handlers_target.PingInfoCreateRequest'
-        description: Must be supplied if type is 0 (PING)
-      timeout:
-        description: Timeout is required
-        type: integer
-      type:
-        allOf:
-        - $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetType'
-        description: Type must be 0 (PING) or 1 (HTTP)
-    required:
-    - checkerIDs
-    - name
-    type: object
-  api_handlers_target.HTTPInfoCreateRequest:
-    properties:
-      allowedCodes:
-        description: HTTP response codes separated by a space. Must contain at least
-          one code. All codes must be exactly 3 digits long.
-        type: string
-      followRedirects:
-        type: boolean
-      host:
-        description: Host must start with http:// or https://
-        type: string
-      verifySSLCert:
-        type: boolean
-    required:
-    - allowedCodes
-    - followRedirects
-    - host
-    - verifySSLCert
-    type: object
-  api_handlers_target.HTTPInfoUpdateRequest:
-    properties:
-      allowedCodes:
-        description: HTTP response codes separated by a space. Must contain at least
-          one code if supplied. All codes must be exactly 3 digits long.
-        type: string
-      followRedirects:
-        type: boolean
-      host:
-        description: Host must start with http:// or https:// if supplied
-        type: string
-      verifySSLCert:
-        type: boolean
-    type: object
-  api_handlers_target.PingInfoCreateRequest:
-    properties:
-      host:
-        description: Host must not be blank
-        type: string
-    required:
-    - host
-    type: object
-  api_handlers_target.PingInfoUpdateRequest:
-    properties:
-      host:
-        description: Host must not be blank if pingInfo is supplied in UpdateTargetRequest
-        type: string
-    type: object
-  api_handlers_target.UpdateTargetRequest:
-    properties:
-      checkerIDs:
-        description: Must contain at least one checker ID, all checkers must exist.
-          This is a "replace update"
-        items:
-          type: integer
-        type: array
-      httpInfo:
-        $ref: '#/definitions/api_handlers_target.HTTPInfoUpdateRequest'
-      maxRetries:
-        type: integer
-      name:
-        description: Name must not be blank if supplied
-        type: string
-      pingInfo:
-        $ref: '#/definitions/api_handlers_target.PingInfoUpdateRequest'
-      timeout:
-        type: integer
-    type: object
-  api_handlers_target.createTargetSuccessResponse:
-    properties:
-      code:
-        example: 201
-        type: integer
-      data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Target'
-    type: object
-  api_handlers_target.getTargetSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Target'
-    type: object
-  api_handlers_target.listTargetsSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Target'
-        type: array
-    type: object
-  api_handlers_target_alarm.CreateAlarmRequest:
+  alarm.CreateAlarmRequest:
     properties:
       name:
         description: Name must not be blank
@@ -365,18 +16,18 @@ definitions:
         type: number
       thresholdField:
         allOf:
-        - $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmThresholdField'
+        - $ref: '#/definitions/model.AlarmThresholdField'
         description: Threshold field must be supplied if type is 1 (threshold). At
           the moment the only accepted value is 0 (latency)
       type:
         allOf:
-        - $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmType'
+        - $ref: '#/definitions/model.AlarmType'
         description: Type must be 0 (unavailable) or 1 (threshold)
     required:
     - name
     - notificationIDs
     type: object
-  api_handlers_target_alarm.UpdateAlarmRequest:
+  alarm.UpdateAlarmRequest:
     properties:
       name:
         description: Name must not be blank if supplied
@@ -392,75 +43,134 @@ definitions:
         type: number
       thresholdField:
         allOf:
-        - $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmThresholdField'
+        - $ref: '#/definitions/model.AlarmThresholdField'
         description: Must be supplied if type is getting changed to threshold (1),
           at the moment the only accepted value is 0 (latency)
       type:
         allOf:
-        - $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmType'
+        - $ref: '#/definitions/model.AlarmType'
         description: Type must be 0 (unavailable) or 1 (threshold), if supplied
     type: object
-  api_handlers_target_alarm.createAlarmSuccessResponse:
+  alarm.createAlarmSuccessResponse:
     properties:
       code:
         example: 201
         type: integer
       data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Alarm'
+        $ref: '#/definitions/model.Alarm'
     type: object
-  api_handlers_target_alarm.getAlarmSuccessResponse:
+  alarm.getAlarmSuccessResponse:
     properties:
       code:
         example: 200
         type: integer
       data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Alarm'
+        $ref: '#/definitions/model.Alarm'
     type: object
-  api_handlers_target_alarm.listAlarmsSuccessResponse:
+  alarm.listAlarmsSuccessResponse:
     properties:
       code:
         example: 200
         type: integer
       data:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Alarm'
+          $ref: '#/definitions/model.Alarm'
         type: array
     type: object
-  api_handlers_user.ChangePasswordRequest:
+  auth.Credentials:
     properties:
-      newPassword:
-        description: New password must contain at least 1 uppercase letter, 1 lowercase
+      password:
+        description: Password must contain at least 1 uppercase letter, 1 lowercase
           letter, 1 number and must consist of at least 8 characters.
         type: string
-      oldPassword:
+      username:
+        description: Username cannot be blank
         type: string
     required:
-    - newPassword
-    - oldPassword
+    - password
+    - username
     type: object
-  api_handlers_user.ChangeUsernameRequest:
-    properties:
-      newUsername:
-        description: Must not be blank and must not contain any whitespace characters
-        type: string
-    required:
-    - newUsername
-    type: object
-  api_handlers_user.getUserSuccessResponse:
+  auth.loginSuccessResponse:
     properties:
       code:
         example: 200
         type: integer
       data:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.User'
+        properties:
+          session:
+            $ref: '#/definitions/model.Session'
+          token:
+            type: string
+        type: object
     type: object
-  github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse:
+  auth.registerSuccessResponse:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/model.User'
+    type: object
+  checker.CreateCheckerRequest:
+    properties:
+      location:
+        type: string
+      name:
+        description: Name cannot be blank
+        type: string
+    required:
+    - name
+    type: object
+  checker.UpdateCheckerRequest:
+    properties:
+      location:
+        description: Location can be blank
+        type: string
+      name:
+        description: Name must not be blank if supplied
+        type: string
+    type: object
+  checker.createCheckerSuccessResponse:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/model.Checker'
+    type: object
+  checker.getCheckerSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Checker'
+    type: object
+  checker.listCheckersSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Checker'
+        type: array
+    type: object
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  helpers.GenericDeleteSuccessResponse:
     properties:
       code:
         example: 204
         type: integer
     type: object
-  github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse:
+  helpers.GenericErrorResponse:
     properties:
       code:
         example: 400
@@ -469,7 +179,7 @@ definitions:
         example: parsing id failed
         type: string
     type: object
-  github_com_bartosz11_checkmate_common_database_model.Alarm:
+  model.Alarm:
     properties:
       active:
         type: boolean
@@ -485,20 +195,20 @@ definitions:
         type: string
       notifications:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Notification'
+          $ref: '#/definitions/model.Notification'
         type: array
       targetId:
         type: integer
       threshold:
         type: number
       thresholdField:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmThresholdField'
+        $ref: '#/definitions/model.AlarmThresholdField'
       type:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmType'
+        $ref: '#/definitions/model.AlarmType'
       updatedAt:
         type: string
     type: object
-  github_com_bartosz11_checkmate_common_database_model.AlarmThresholdField:
+  model.AlarmThresholdField:
     enum:
     - 0
     - 1
@@ -506,7 +216,7 @@ definitions:
     x-enum-varnames:
     - Latency
     - thresholdFieldMax
-  github_com_bartosz11_checkmate_common_database_model.AlarmType:
+  model.AlarmType:
     enum:
     - 0
     - 1
@@ -516,7 +226,7 @@ definitions:
     - Unavailable
     - Threshold
     - alarmTypeMax
-  github_com_bartosz11_checkmate_common_database_model.Checker:
+  model.Checker:
     properties:
       createdAt:
         type: string
@@ -524,7 +234,7 @@ definitions:
         $ref: '#/definitions/gorm.DeletedAt'
       heartbeats:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Heartbeat'
+          $ref: '#/definitions/model.Heartbeat'
         type: array
       id:
         type: integer
@@ -538,15 +248,15 @@ definitions:
         type: boolean
       targets:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Target'
+          $ref: '#/definitions/model.Target'
         type: array
       updatedAt:
         type: string
     type: object
-  github_com_bartosz11_checkmate_common_database_model.Heartbeat:
+  model.Heartbeat:
     properties:
       checker:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Checker'
+        $ref: '#/definitions/model.Checker'
       checkerId:
         type: integer
       createdAt:
@@ -558,9 +268,9 @@ definitions:
       latency:
         type: integer
       status:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetStatus'
+        $ref: '#/definitions/model.TargetStatus'
       target:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Target'
+        $ref: '#/definitions/model.Target'
       targetId:
         type: integer
       timestamp:
@@ -568,7 +278,7 @@ definitions:
       updatedAt:
         type: string
     type: object
-  github_com_bartosz11_checkmate_common_database_model.Incident:
+  model.Incident:
     properties:
       createdAt:
         type: string
@@ -589,11 +299,11 @@ definitions:
       updatedAt:
         type: string
     type: object
-  github_com_bartosz11_checkmate_common_database_model.Notification:
+  model.Notification:
     properties:
       alarms:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Alarm'
+          $ref: '#/definitions/model.Alarm'
         type: array
       createdAt:
         type: string
@@ -606,13 +316,13 @@ definitions:
       name:
         type: string
       type:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.NotificationType'
+        $ref: '#/definitions/model.NotificationType'
       updatedAt:
         type: string
       userId:
         type: integer
     type: object
-  github_com_bartosz11_checkmate_common_database_model.NotificationType:
+  model.NotificationType:
     enum:
     - 0
     - 1
@@ -628,7 +338,7 @@ definitions:
     - Email
     - Gotify
     - GenericWebhook
-  github_com_bartosz11_checkmate_common_database_model.Orchestrator:
+  model.Orchestrator:
     properties:
       createdAt:
         type: string
@@ -647,7 +357,7 @@ definitions:
       updatedAt:
         type: string
     type: object
-  github_com_bartosz11_checkmate_common_database_model.Session:
+  model.Session:
     properties:
       browser:
         type: string
@@ -670,28 +380,28 @@ definitions:
       updatedAt:
         type: string
       user:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.User'
+        $ref: '#/definitions/model.User'
       userAgent:
         type: string
       userId:
         type: integer
     type: object
-  github_com_bartosz11_checkmate_common_database_model.Setting:
+  model.Setting:
     properties:
       key:
         type: string
       value:
         type: string
     type: object
-  github_com_bartosz11_checkmate_common_database_model.Target:
+  model.Target:
     properties:
       alarms:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Alarm'
+          $ref: '#/definitions/model.Alarm'
         type: array
       checkers:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Checker'
+          $ref: '#/definitions/model.Checker'
         type: array
       checksDown:
         type: integer
@@ -703,20 +413,20 @@ definitions:
         $ref: '#/definitions/gorm.DeletedAt'
       heartbeats:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Heartbeat'
+          $ref: '#/definitions/model.Heartbeat'
         type: array
       httpInfo:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetHTTPInfo'
+        $ref: '#/definitions/model.TargetHTTPInfo'
       id:
         type: integer
       incidents:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Incident'
+          $ref: '#/definitions/model.Incident'
         type: array
       lastCheck:
         type: string
       lastStatus:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetStatus'
+        $ref: '#/definitions/model.TargetStatus'
       maxRetries:
         type: integer
       name:
@@ -724,11 +434,11 @@ definitions:
       paused:
         type: boolean
       pingInfo:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetPingInfo'
+        $ref: '#/definitions/model.TargetPingInfo'
       timeout:
         type: integer
       type:
-        $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetType'
+        $ref: '#/definitions/model.TargetType'
       updatedAt:
         type: string
       usedRetries:
@@ -736,7 +446,7 @@ definitions:
       userId:
         type: integer
     type: object
-  github_com_bartosz11_checkmate_common_database_model.TargetHTTPInfo:
+  model.TargetHTTPInfo:
     properties:
       allowedCodes:
         type: string
@@ -757,7 +467,7 @@ definitions:
       verifySSLCert:
         type: boolean
     type: object
-  github_com_bartosz11_checkmate_common_database_model.TargetPingInfo:
+  model.TargetPingInfo:
     properties:
       createdAt:
         type: string
@@ -772,7 +482,7 @@ definitions:
       updatedAt:
         type: string
     type: object
-  github_com_bartosz11_checkmate_common_database_model.TargetStatus:
+  model.TargetStatus:
     enum:
     - 0
     - 1
@@ -782,7 +492,7 @@ definitions:
     - Up
     - Down
     - Unknown
-  github_com_bartosz11_checkmate_common_database_model.TargetType:
+  model.TargetType:
     enum:
     - 0
     - 1
@@ -798,7 +508,7 @@ definitions:
     - PING
     - HTTP
     - targetTypeMax
-  github_com_bartosz11_checkmate_common_database_model.User:
+  model.User:
     properties:
       admin:
         type: boolean
@@ -812,28 +522,290 @@ definitions:
         type: integer
       notifications:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Notification'
+          $ref: '#/definitions/model.Notification'
         type: array
       sessions:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Session'
+          $ref: '#/definitions/model.Session'
         type: array
       targets:
         items:
-          $ref: '#/definitions/github_com_bartosz11_checkmate_common_database_model.Target'
+          $ref: '#/definitions/model.Target'
         type: array
       updatedAt:
         type: string
       username:
         type: string
     type: object
-  gorm.DeletedAt:
+  notification.CreateNotificationRequest:
     properties:
-      time:
+      credentials:
+        description: Credentials must be valid for the selected type, e.g. webhook
+          URLs have to start with http:// or https://
         type: string
-      valid:
-        description: Valid is true if Time is not NULL
+      name:
+        description: Name must not be blank
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/model.NotificationType'
+        description: Type must be a number in range 0-5, inclusive
+    required:
+    - credentials
+    - name
+    type: object
+  notification.UpdateNotificationRequest:
+    properties:
+      credentials:
+        description: Credentials must be valid for the selected type, e.g. webhook
+          URLs have to start with http:// or https://, if supplied
+        type: string
+      name:
+        description: Name must not be blank if supplied
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/model.NotificationType'
+        description: Type must be a number in range of 0-5 (inclusive), if supplied.
+          If type is changed, credentials valid for the new type also have to be supplied.
+    type: object
+  notification.createNotificationSuccessResponse:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/model.Notification'
+    type: object
+  notification.getNotificationSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Notification'
+    type: object
+  notification.listNotificationsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Notification'
+        type: array
+    type: object
+  orchestrator.CreateOrchestratorRequest:
+    properties:
+      host:
+        description: Host must start with ws:// or wss:// and must be unique
+        type: string
+      name:
+        description: Name must not be blank and must be unique
+        type: string
+    required:
+    - host
+    - name
+    type: object
+  orchestrator.createOrchestratorSuccessResponse:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/model.Orchestrator'
+    type: object
+  orchestrator.getOrchestratorSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Orchestrator'
+    type: object
+  orchestrator.listOrchestratorsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Orchestrator'
+        type: array
+    type: object
+  session.getSessionSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Session'
+    type: object
+  session.listSessionsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Session'
+        type: array
+    type: object
+  settings.ChangeSettingRequest:
+    properties:
+      key:
+        description: Key must be updatable. Currently, the only setting that can be
+          updated is "registration-enabled".
+        type: string
+      value:
+        description: Value must match a set of valid values for given setting key
+        type: string
+    required:
+    - key
+    type: object
+  settings.getSettingSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Setting'
+    type: object
+  settings.listSettingsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Setting'
+        type: array
+    type: object
+  target.CreateTargetRequest:
+    properties:
+      checkerIDs:
+        description: At least one checker must be supplied, all checkers must exist
+        items:
+          type: integer
+        minItems: 1
+        type: array
+      httpInfo:
+        allOf:
+        - $ref: '#/definitions/target.HTTPInfoCreateRequest'
+        description: Must be supplied if type is 1 (HTTP)
+      maxRetries:
+        description: Max retries is required
+        type: integer
+      name:
+        description: Name must not be blank
+        type: string
+      pingInfo:
+        allOf:
+        - $ref: '#/definitions/target.PingInfoCreateRequest'
+        description: Must be supplied if type is 0 (PING)
+      timeout:
+        description: Timeout is required
+        type: integer
+      type:
+        allOf:
+        - $ref: '#/definitions/model.TargetType'
+        description: Type must be 0 (PING) or 1 (HTTP)
+    required:
+    - checkerIDs
+    - name
+    type: object
+  target.HTTPInfoCreateRequest:
+    properties:
+      allowedCodes:
+        description: HTTP response codes separated by a space. Must contain at least
+          one code. All codes must be exactly 3 digits long.
+        type: string
+      followRedirects:
         type: boolean
+      host:
+        description: Host must start with http:// or https://
+        type: string
+      verifySSLCert:
+        type: boolean
+    required:
+    - allowedCodes
+    - followRedirects
+    - host
+    - verifySSLCert
+    type: object
+  target.HTTPInfoUpdateRequest:
+    properties:
+      allowedCodes:
+        description: HTTP response codes separated by a space. Must contain at least
+          one code if supplied. All codes must be exactly 3 digits long.
+        type: string
+      followRedirects:
+        type: boolean
+      host:
+        description: Host must start with http:// or https:// if supplied
+        type: string
+      verifySSLCert:
+        type: boolean
+    type: object
+  target.PingInfoCreateRequest:
+    properties:
+      host:
+        description: Host must not be blank
+        type: string
+    required:
+    - host
+    type: object
+  target.PingInfoUpdateRequest:
+    properties:
+      host:
+        description: Host must not be blank if pingInfo is supplied in UpdateTargetRequest
+        type: string
+    type: object
+  target.UpdateTargetRequest:
+    properties:
+      checkerIDs:
+        description: Must contain at least one checker ID, all checkers must exist.
+          This is a "replace update"
+        items:
+          type: integer
+        type: array
+      httpInfo:
+        $ref: '#/definitions/target.HTTPInfoUpdateRequest'
+      maxRetries:
+        type: integer
+      name:
+        description: Name must not be blank if supplied
+        type: string
+      pingInfo:
+        $ref: '#/definitions/target.PingInfoUpdateRequest'
+      timeout:
+        type: integer
+    type: object
+  target.createTargetSuccessResponse:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/model.Target'
+    type: object
+  target.getTargetSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.Target'
+    type: object
+  target.listTargetsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Target'
+        type: array
     type: object
   time.Duration:
     enum:
@@ -845,8 +817,6 @@ definitions:
     - 1000000000
     - 60000000000
     - 3600000000000
-    - -9223372036854775808
-    - 9223372036854775807
     - 1
     - 1000
     - 1000000
@@ -864,14 +834,40 @@ definitions:
     - Second
     - Minute
     - Hour
-    - minDuration
-    - maxDuration
     - Nanosecond
     - Microsecond
     - Millisecond
     - Second
     - Minute
     - Hour
+  user.ChangePasswordRequest:
+    properties:
+      newPassword:
+        description: New password must contain at least 1 uppercase letter, 1 lowercase
+          letter, 1 number and must consist of at least 8 characters.
+        type: string
+      oldPassword:
+        type: string
+    required:
+    - newPassword
+    - oldPassword
+    type: object
+  user.ChangeUsernameRequest:
+    properties:
+      newUsername:
+        description: Must not be blank and must not contain any whitespace characters
+        type: string
+    required:
+    - newUsername
+    type: object
+  user.getUserSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/model.User'
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -890,21 +886,21 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_orchestrator.listOrchestratorsSuccessResponse'
+            $ref: '#/definitions/orchestrator.listOrchestratorsSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when user sending the request is not an admin or their
             account is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get all orchestrators
@@ -920,36 +916,36 @@ paths:
         name: createRequest
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_orchestrator.CreateOrchestratorRequest'
+          $ref: '#/definitions/orchestrator.CreateOrchestratorRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/api_handlers_orchestrator.createOrchestratorSuccessResponse'
+            $ref: '#/definitions/orchestrator.createOrchestratorSuccessResponse'
         "400":
           description: Returned when request body doesn't match requirements.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when user sending the request is not an admin or their
             account is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "409":
           description: Returned when given name or host is already taken.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Create orchestrator
@@ -972,30 +968,30 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse'
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed, specified orchestrator
             is currently leader or is a system orchestrator.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when user sending the request is not an admin or their
             account is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when orchestrator with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete orchestrator
@@ -1017,29 +1013,29 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_orchestrator.getOrchestratorSuccessResponse'
+            $ref: '#/definitions/orchestrator.getOrchestratorSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when user sending the request is not an admin or their
             account is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when orchestrator with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get orchestrator by ID
@@ -1056,21 +1052,21 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_settings.listSettingsSuccessResponse'
+            $ref: '#/definitions/settings.listSettingsSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when user sending the request is not an admin or their
             account is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get all settings
@@ -1086,33 +1082,33 @@ paths:
         name: changeRequest
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_settings.ChangeSettingRequest'
+          $ref: '#/definitions/settings.ChangeSettingRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_settings.getSettingSuccessResponse'
+            $ref: '#/definitions/settings.getSettingSuccessResponse'
         "400":
           description: Returned when request body is malformed or value isn't valid
             for given setting key.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when user sending the request is not an admin, their
             account is disabled or specified setting is not meant to be updated.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Set/modify setting value
@@ -1135,25 +1131,25 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_settings.getSettingSuccessResponse'
+            $ref: '#/definitions/settings.getSettingSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when user sending the request is not an admin or their
             account is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a setting with given key couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get setting by key
@@ -1171,7 +1167,7 @@ paths:
         name: credentials
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_auth.Credentials'
+          $ref: '#/definitions/auth.Credentials'
       produces:
       - application/json
       responses:
@@ -1182,23 +1178,23 @@ paths:
               description: Authentication cookie (auth-token=...)
               type: string
           schema:
-            $ref: '#/definitions/api_handlers_auth.loginSuccessResponse'
+            $ref: '#/definitions/auth.loginSuccessResponse'
         "400":
           description: Returned when request body does not match the requirements.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when supplied credentials are invalid.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when the user account is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction or token generation fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       summary: Log in
       tags:
       - auth
@@ -1213,34 +1209,34 @@ paths:
         name: credentials
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_auth.Credentials'
+          $ref: '#/definitions/auth.Credentials'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/api_handlers_auth.registerSuccessResponse'
+            $ref: '#/definitions/auth.registerSuccessResponse'
         "400":
           description: Returned when request body does not match the requirements.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when supplied credentials are invalid.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when registration is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "409":
           description: Returned when specified username is already taken.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction or password hashing fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       summary: Register
       tags:
       - auth
@@ -1256,20 +1252,20 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_checker.listCheckersSuccessResponse'
+            $ref: '#/definitions/checker.listCheckersSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get all checkers
@@ -1285,32 +1281,32 @@ paths:
         name: checkerInfo
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_checker.CreateCheckerRequest'
+          $ref: '#/definitions/checker.CreateCheckerRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/api_handlers_checker.createCheckerSuccessResponse'
+            $ref: '#/definitions/checker.createCheckerSuccessResponse'
         "400":
           description: Returned when request body does not match the requirements.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when user sending the request is not an admin or their
             account is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Create a new checker
@@ -1333,29 +1329,29 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse'
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when user sending the request is not an admin or their
             account is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a checker with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete a checker
@@ -1378,28 +1374,28 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_checker.getCheckerSuccessResponse'
+            $ref: '#/definitions/checker.getCheckerSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a checker with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get a checker by ID
@@ -1420,37 +1416,37 @@ paths:
         name: checkerInfo
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_checker.UpdateCheckerRequest'
+          $ref: '#/definitions/checker.UpdateCheckerRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_checker.getCheckerSuccessResponse'
+            $ref: '#/definitions/checker.getCheckerSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed or given new name
             is blank.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when user sending the request is not an admin or their
             account is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a checker with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Update checker details
@@ -1473,30 +1469,30 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_checker.getCheckerSuccessResponse'
+            $ref: '#/definitions/checker.getCheckerSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed or when given checker
             is a system checker.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when user sending the request is not an admin or their
             account is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a checker with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Re-generate checker's key
@@ -1513,20 +1509,20 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_notification.listNotificationsSuccessResponse'
+            $ref: '#/definitions/notification.listNotificationsSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get all notifications
@@ -1542,31 +1538,31 @@ paths:
         name: createReq
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_notification.CreateNotificationRequest'
+          $ref: '#/definitions/notification.CreateNotificationRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/api_handlers_notification.createNotificationSuccessResponse'
+            $ref: '#/definitions/notification.createNotificationSuccessResponse'
         "400":
           description: Returned when request body doesn't match requirements.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Create a notification
@@ -1589,28 +1585,28 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse'
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a notification with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete a notification by ID
@@ -1633,28 +1629,28 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_notification.getNotificationSuccessResponse'
+            $ref: '#/definitions/notification.getNotificationSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a notification with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get a notification by ID
@@ -1675,36 +1671,36 @@ paths:
         name: updateReq
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_notification.UpdateNotificationRequest'
+          $ref: '#/definitions/notification.UpdateNotificationRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_notification.getNotificationSuccessResponse'
+            $ref: '#/definitions/notification.getNotificationSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed or request body doesn't
             match requirements.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a notification with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Update notification
@@ -1727,28 +1723,28 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse'
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a notification with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Send test notification
@@ -1765,20 +1761,20 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse'
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete (invalidate) all sessions
@@ -1794,20 +1790,20 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_session.listSessionsSuccessResponse'
+            $ref: '#/definitions/session.listSessionsSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get all sessions
@@ -1830,28 +1826,28 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse'
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
         "400":
           description: Returned when provided session ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when session with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete (invalidate) session by ID
@@ -1873,28 +1869,28 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_session.getSessionSuccessResponse'
+            $ref: '#/definitions/session.getSessionSuccessResponse'
         "400":
           description: Returned when provided session ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when session with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get session by ID
@@ -1912,20 +1908,20 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_session.getSessionSuccessResponse'
+            $ref: '#/definitions/session.getSessionSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get current session
@@ -1943,20 +1939,20 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse'
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Log out
@@ -1973,20 +1969,20 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_target.listTargetsSuccessResponse'
+            $ref: '#/definitions/target.listTargetsSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get all targets
@@ -2002,31 +1998,31 @@ paths:
         name: createReq
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_target.CreateTargetRequest'
+          $ref: '#/definitions/target.CreateTargetRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/api_handlers_target.createTargetSuccessResponse'
+            $ref: '#/definitions/target.createTargetSuccessResponse'
         "400":
           description: Returned when request body doesn't match requirements.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Create a target
@@ -2049,28 +2045,28 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse'
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a target with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete target by ID
@@ -2093,28 +2089,28 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_target.getTargetSuccessResponse'
+            $ref: '#/definitions/target.getTargetSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a target with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get target by ID
@@ -2135,36 +2131,36 @@ paths:
         name: updateReq
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_target.UpdateTargetRequest'
+          $ref: '#/definitions/target.UpdateTargetRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_target.getTargetSuccessResponse'
+            $ref: '#/definitions/target.getTargetSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed or request body doesn't
             match the requirements.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a target with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Update target
@@ -2187,28 +2183,28 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_target_alarm.listAlarmsSuccessResponse'
+            $ref: '#/definitions/alarm.listAlarmsSuccessResponse'
         "400":
           description: Returned when given target ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a target with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get all alarms of a target
@@ -2229,36 +2225,36 @@ paths:
         name: updateReq
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_target_alarm.CreateAlarmRequest'
+          $ref: '#/definitions/alarm.CreateAlarmRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_target_alarm.createAlarmSuccessResponse'
+            $ref: '#/definitions/alarm.createAlarmSuccessResponse'
         "400":
           description: Returned when given target ID couldn't be parsed or request
             body doesn't match the requirements.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a target with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Create alarm
@@ -2286,28 +2282,28 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse'
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
         "400":
           description: Returned when given target or alarm ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a target or alarm with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete alarm by ID
@@ -2335,28 +2331,28 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_target_alarm.getAlarmSuccessResponse'
+            $ref: '#/definitions/alarm.getAlarmSuccessResponse'
         "400":
           description: Returned when given target or alarm ID couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a target or alarm with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get alarm by ID
@@ -2383,36 +2379,36 @@ paths:
         name: updateReq
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_target_alarm.UpdateAlarmRequest'
+          $ref: '#/definitions/alarm.UpdateAlarmRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_target_alarm.getAlarmSuccessResponse'
+            $ref: '#/definitions/alarm.getAlarmSuccessResponse'
         "400":
           description: Returned when given target or alarm ID couldn't be parsed or
             request body doesn't match the requirements.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a target or alarm with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Update alarm
@@ -2446,29 +2442,29 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_target_alarm.getAlarmSuccessResponse'
+            $ref: '#/definitions/alarm.getAlarmSuccessResponse'
         "400":
           description: Returned when given target ID, alarm ID or mute status couldn't
             be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a target or alarm with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Mute alarm
@@ -2497,28 +2493,28 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_target.getTargetSuccessResponse'
+            $ref: '#/definitions/target.getTargetSuccessResponse'
         "400":
           description: Returned when given ID or pause status couldn't be parsed.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
           description: Returned when a target with given ID couldn't be found.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Pause target
@@ -2536,20 +2532,20 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse'
+            $ref: '#/definitions/helpers.GenericDeleteSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete current user
@@ -2565,20 +2561,20 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_user.getUserSuccessResponse'
+            $ref: '#/definitions/user.getUserSuccessResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Get current user
@@ -2595,33 +2591,33 @@ paths:
         name: changePasswordReq
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_user.ChangePasswordRequest'
+          $ref: '#/definitions/user.ChangePasswordRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_user.getUserSuccessResponse'
+            $ref: '#/definitions/user.getUserSuccessResponse'
         "400":
           description: Returned when request body is malformed or new password is
             too weak.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled
             or provided old password doesn't match.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction or password hashing fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Change password
@@ -2638,36 +2634,36 @@ paths:
         name: changeUsernameReq
         required: true
         schema:
-          $ref: '#/definitions/api_handlers_user.ChangeUsernameRequest'
+          $ref: '#/definitions/user.ChangeUsernameRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api_handlers_user.getUserSuccessResponse'
+            $ref: '#/definitions/user.getUserSuccessResponse'
         "400":
           description: Returned when request body is malformed or new username contains
             a whitespace character.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "401":
           description: Returned when user sending the request supplies an invalid
             auth token.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "403":
           description: Returned when account of user sending the request is disabled.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "409":
           description: Returned when given new username is already taken.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
-            $ref: '#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse'
+            $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
       summary: Change username

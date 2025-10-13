@@ -1,6 +1,7 @@
 package orchestrator
 
 import (
+	"github.com/bartosz11/checkmate/common"
 	"github.com/bartosz11/checkmate/common/config"
 	"github.com/bartosz11/checkmate/orchestrator/handlers"
 	"github.com/bartosz11/checkmate/orchestrator/tasks"
@@ -13,6 +14,7 @@ import (
 var leader = false
 
 func StartOrchestrator(orchestratorCfg *config.OrchestratorConfig, db *gorm.DB, router *gin.Engine) {
+	router.GET("/orchestrator/health", common.HandleHealthcheck(db))
 	router.GET("/orchestrator/ws", handlers.HandleNewWSConnection(db))
 
 	c := cron.New()

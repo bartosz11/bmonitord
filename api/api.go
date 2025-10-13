@@ -16,6 +16,7 @@ import (
 	"github.com/bartosz11/checkmate/api/handlers/user"
 	"github.com/bartosz11/checkmate/api/helpers"
 	"github.com/bartosz11/checkmate/api/middleware"
+	"github.com/bartosz11/checkmate/common"
 	"github.com/bartosz11/checkmate/common/config"
 	_ "github.com/bartosz11/checkmate/docs"
 	"github.com/bartosz11/checkmate/frontend"
@@ -74,6 +75,7 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 	}
 
 	apiGroup := router.Group("/api")
+	apiGroup.GET("/health", common.HandleHealthcheck(db))
 
 	helpers.InitJWTHelper(apiConfig)
 

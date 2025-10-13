@@ -37,25 +37,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_orchestrator.listOrchestratorsSuccessResponse"
+                            "$ref": "#/definitions/orchestrator.listOrchestratorsSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when user sending the request is not an admin or their account is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -84,7 +84,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_orchestrator.CreateOrchestratorRequest"
+                            "$ref": "#/definitions/orchestrator.CreateOrchestratorRequest"
                         }
                     }
                 ],
@@ -92,37 +92,37 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_orchestrator.createOrchestratorSuccessResponse"
+                            "$ref": "#/definitions/orchestrator.createOrchestratorSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when request body doesn't match requirements.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when user sending the request is not an admin or their account is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Returned when given name or host is already taken.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -159,37 +159,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_orchestrator.getOrchestratorSuccessResponse"
+                            "$ref": "#/definitions/orchestrator.getOrchestratorSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when user sending the request is not an admin or their account is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when orchestrator with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -224,37 +224,37 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse"
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed, specified orchestrator is currently leader or is a system orchestrator.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when user sending the request is not an admin or their account is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when orchestrator with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -282,25 +282,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_settings.listSettingsSuccessResponse"
+                            "$ref": "#/definitions/settings.listSettingsSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when user sending the request is not an admin or their account is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -329,7 +329,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_settings.ChangeSettingRequest"
+                            "$ref": "#/definitions/settings.ChangeSettingRequest"
                         }
                     }
                 ],
@@ -337,31 +337,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_settings.getSettingSuccessResponse"
+                            "$ref": "#/definitions/settings.getSettingSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when request body is malformed or value isn't valid for given setting key.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when user sending the request is not an admin, their account is disabled or specified setting is not meant to be updated.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -398,31 +398,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_settings.getSettingSuccessResponse"
+                            "$ref": "#/definitions/settings.getSettingSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when user sending the request is not an admin or their account is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a setting with given key couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -448,7 +448,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_auth.Credentials"
+                            "$ref": "#/definitions/auth.Credentials"
                         }
                     }
                 ],
@@ -456,7 +456,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_auth.loginSuccessResponse"
+                            "$ref": "#/definitions/auth.loginSuccessResponse"
                         },
                         "headers": {
                             "Set-Cookie": {
@@ -468,25 +468,25 @@ const docTemplate = `{
                     "400": {
                         "description": "Returned when request body does not match the requirements.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when supplied credentials are invalid.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when the user account is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction or token generation fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -512,7 +512,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_auth.Credentials"
+                            "$ref": "#/definitions/auth.Credentials"
                         }
                     }
                 ],
@@ -520,37 +520,37 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_auth.registerSuccessResponse"
+                            "$ref": "#/definitions/auth.registerSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when request body does not match the requirements.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when supplied credentials are invalid.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when registration is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Returned when specified username is already taken.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction or password hashing fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -578,25 +578,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_checker.listCheckersSuccessResponse"
+                            "$ref": "#/definitions/checker.listCheckersSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -625,7 +625,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_checker.CreateCheckerRequest"
+                            "$ref": "#/definitions/checker.CreateCheckerRequest"
                         }
                     }
                 ],
@@ -633,31 +633,31 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_checker.createCheckerSuccessResponse"
+                            "$ref": "#/definitions/checker.createCheckerSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when request body does not match the requirements.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when user sending the request is not an admin or their account is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -694,37 +694,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_checker.getCheckerSuccessResponse"
+                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a checker with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -759,37 +759,37 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse"
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when user sending the request is not an admin or their account is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a checker with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -825,7 +825,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_checker.UpdateCheckerRequest"
+                            "$ref": "#/definitions/checker.UpdateCheckerRequest"
                         }
                     }
                 ],
@@ -833,37 +833,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_checker.getCheckerSuccessResponse"
+                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed or given new name is blank.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when user sending the request is not an admin or their account is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a checker with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -900,37 +900,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_checker.getCheckerSuccessResponse"
+                            "$ref": "#/definitions/checker.getCheckerSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed or when given checker is a system checker.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when user sending the request is not an admin or their account is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a checker with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -958,25 +958,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_notification.listNotificationsSuccessResponse"
+                            "$ref": "#/definitions/notification.listNotificationsSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1005,7 +1005,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_notification.CreateNotificationRequest"
+                            "$ref": "#/definitions/notification.CreateNotificationRequest"
                         }
                     }
                 ],
@@ -1013,31 +1013,31 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_notification.createNotificationSuccessResponse"
+                            "$ref": "#/definitions/notification.createNotificationSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when request body doesn't match requirements.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1074,37 +1074,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_notification.getNotificationSuccessResponse"
+                            "$ref": "#/definitions/notification.getNotificationSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a notification with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1139,37 +1139,37 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse"
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a notification with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1205,7 +1205,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_notification.UpdateNotificationRequest"
+                            "$ref": "#/definitions/notification.UpdateNotificationRequest"
                         }
                     }
                 ],
@@ -1213,37 +1213,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_notification.getNotificationSuccessResponse"
+                            "$ref": "#/definitions/notification.getNotificationSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed or request body doesn't match requirements.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a notification with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1280,37 +1280,37 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse"
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a notification with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1338,25 +1338,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_session.listSessionsSuccessResponse"
+                            "$ref": "#/definitions/session.listSessionsSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1382,25 +1382,25 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse"
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1428,25 +1428,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_session.getSessionSuccessResponse"
+                            "$ref": "#/definitions/session.getSessionSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1474,25 +1474,25 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse"
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1529,37 +1529,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_session.getSessionSuccessResponse"
+                            "$ref": "#/definitions/session.getSessionSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when provided session ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when session with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1594,37 +1594,37 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse"
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when provided session ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when session with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1652,25 +1652,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target.listTargetsSuccessResponse"
+                            "$ref": "#/definitions/target.listTargetsSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1699,7 +1699,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target.CreateTargetRequest"
+                            "$ref": "#/definitions/target.CreateTargetRequest"
                         }
                     }
                 ],
@@ -1707,31 +1707,31 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target.createTargetSuccessResponse"
+                            "$ref": "#/definitions/target.createTargetSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when request body doesn't match requirements.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1768,37 +1768,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target.getTargetSuccessResponse"
+                            "$ref": "#/definitions/target.getTargetSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a target with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1833,37 +1833,37 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse"
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a target with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1899,7 +1899,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target.UpdateTargetRequest"
+                            "$ref": "#/definitions/target.UpdateTargetRequest"
                         }
                     }
                 ],
@@ -1907,37 +1907,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target.getTargetSuccessResponse"
+                            "$ref": "#/definitions/target.getTargetSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID couldn't be parsed or request body doesn't match the requirements.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a target with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -1974,37 +1974,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target_alarm.listAlarmsSuccessResponse"
+                            "$ref": "#/definitions/alarm.listAlarmsSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given target ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a target with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -2040,7 +2040,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target_alarm.CreateAlarmRequest"
+                            "$ref": "#/definitions/alarm.CreateAlarmRequest"
                         }
                     }
                 ],
@@ -2048,37 +2048,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target_alarm.createAlarmSuccessResponse"
+                            "$ref": "#/definitions/alarm.createAlarmSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given target ID couldn't be parsed or request body doesn't match the requirements.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a target with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -2122,37 +2122,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target_alarm.getAlarmSuccessResponse"
+                            "$ref": "#/definitions/alarm.getAlarmSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given target or alarm ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a target or alarm with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -2194,37 +2194,37 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse"
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given target or alarm ID couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a target or alarm with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -2267,7 +2267,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target_alarm.UpdateAlarmRequest"
+                            "$ref": "#/definitions/alarm.UpdateAlarmRequest"
                         }
                     }
                 ],
@@ -2275,37 +2275,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target_alarm.getAlarmSuccessResponse"
+                            "$ref": "#/definitions/alarm.getAlarmSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given target or alarm ID couldn't be parsed or request body doesn't match the requirements.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a target or alarm with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -2355,37 +2355,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target_alarm.getAlarmSuccessResponse"
+                            "$ref": "#/definitions/alarm.getAlarmSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given target ID, alarm ID or mute status couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a target or alarm with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -2428,37 +2428,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_target.getTargetSuccessResponse"
+                            "$ref": "#/definitions/target.getTargetSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when given ID or pause status couldn't be parsed.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Returned when a target with given ID couldn't be found.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -2486,25 +2486,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_user.getUserSuccessResponse"
+                            "$ref": "#/definitions/user.getUserSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -2530,25 +2530,25 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse"
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -2579,7 +2579,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_user.ChangePasswordRequest"
+                            "$ref": "#/definitions/user.ChangePasswordRequest"
                         }
                     }
                 ],
@@ -2587,31 +2587,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_user.getUserSuccessResponse"
+                            "$ref": "#/definitions/user.getUserSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when request body is malformed or new password is too weak.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled or provided old password doesn't match.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction or password hashing fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -2642,7 +2642,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_user.ChangeUsernameRequest"
+                            "$ref": "#/definitions/user.ChangeUsernameRequest"
                         }
                     }
                 ],
@@ -2650,37 +2650,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api_handlers_user.getUserSuccessResponse"
+                            "$ref": "#/definitions/user.getUserSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when request body is malformed or new username contains a whitespace character.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Returned when user sending the request supplies an invalid auth token.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Returned when account of user sending the request is disabled.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Returned when given new username is already taken.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Returned when a DB interaction fails.",
                         "schema": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse"
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     }
                 }
@@ -2688,519 +2688,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "api_handlers_auth.Credentials": {
-            "type": "object",
-            "required": [
-                "password",
-                "username"
-            ],
-            "properties": {
-                "password": {
-                    "description": "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.",
-                    "type": "string"
-                },
-                "username": {
-                    "description": "Username cannot be blank",
-                    "type": "string"
-                }
-            }
-        },
-        "api_handlers_auth.loginSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "type": "object",
-                    "properties": {
-                        "session": {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Session"
-                        },
-                        "token": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "api_handlers_auth.registerSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 201
-                },
-                "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.User"
-                }
-            }
-        },
-        "api_handlers_checker.CreateCheckerRequest": {
-            "type": "object",
-            "required": [
-                "name"
-            ],
-            "properties": {
-                "location": {
-                    "type": "string"
-                },
-                "name": {
-                    "description": "Name cannot be blank",
-                    "type": "string"
-                }
-            }
-        },
-        "api_handlers_checker.UpdateCheckerRequest": {
-            "type": "object",
-            "properties": {
-                "location": {
-                    "description": "Location can be blank",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "Name must not be blank if supplied",
-                    "type": "string"
-                }
-            }
-        },
-        "api_handlers_checker.createCheckerSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 201
-                },
-                "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Checker"
-                }
-            }
-        },
-        "api_handlers_checker.getCheckerSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Checker"
-                }
-            }
-        },
-        "api_handlers_checker.listCheckersSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Checker"
-                    }
-                }
-            }
-        },
-        "api_handlers_notification.CreateNotificationRequest": {
-            "type": "object",
-            "required": [
-                "credentials",
-                "name"
-            ],
-            "properties": {
-                "credentials": {
-                    "description": "Credentials must be valid for the selected type, e.g. webhook URLs have to start with http:// or https://",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "Name must not be blank",
-                    "type": "string"
-                },
-                "type": {
-                    "description": "Type must be a number in range 0-5, inclusive",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.NotificationType"
-                        }
-                    ]
-                }
-            }
-        },
-        "api_handlers_notification.UpdateNotificationRequest": {
-            "type": "object",
-            "properties": {
-                "credentials": {
-                    "description": "Credentials must be valid for the selected type, e.g. webhook URLs have to start with http:// or https://, if supplied",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "Name must not be blank if supplied",
-                    "type": "string"
-                },
-                "type": {
-                    "description": "Type must be a number in range of 0-5 (inclusive), if supplied. If type is changed, credentials valid for the new type also have to be supplied.",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.NotificationType"
-                        }
-                    ]
-                }
-            }
-        },
-        "api_handlers_notification.createNotificationSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 201
-                },
-                "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Notification"
-                }
-            }
-        },
-        "api_handlers_notification.getNotificationSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Notification"
-                }
-            }
-        },
-        "api_handlers_notification.listNotificationsSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Notification"
-                    }
-                }
-            }
-        },
-        "api_handlers_orchestrator.CreateOrchestratorRequest": {
-            "type": "object",
-            "required": [
-                "host",
-                "name"
-            ],
-            "properties": {
-                "host": {
-                    "description": "Host must start with ws:// or wss:// and must be unique",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "Name must not be blank and must be unique",
-                    "type": "string"
-                }
-            }
-        },
-        "api_handlers_orchestrator.createOrchestratorSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 201
-                },
-                "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Orchestrator"
-                }
-            }
-        },
-        "api_handlers_orchestrator.getOrchestratorSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Orchestrator"
-                }
-            }
-        },
-        "api_handlers_orchestrator.listOrchestratorsSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Orchestrator"
-                    }
-                }
-            }
-        },
-        "api_handlers_session.getSessionSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Session"
-                }
-            }
-        },
-        "api_handlers_session.listSessionsSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Session"
-                    }
-                }
-            }
-        },
-        "api_handlers_settings.ChangeSettingRequest": {
-            "type": "object",
-            "required": [
-                "key"
-            ],
-            "properties": {
-                "key": {
-                    "description": "Key must be updatable. Currently, the only setting that can be updated is \"registration-enabled\".",
-                    "type": "string"
-                },
-                "value": {
-                    "description": "Value must match a set of valid values for given setting key",
-                    "type": "string"
-                }
-            }
-        },
-        "api_handlers_settings.getSettingSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Setting"
-                }
-            }
-        },
-        "api_handlers_settings.listSettingsSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Setting"
-                    }
-                }
-            }
-        },
-        "api_handlers_target.CreateTargetRequest": {
-            "type": "object",
-            "required": [
-                "checkerIDs",
-                "name"
-            ],
-            "properties": {
-                "checkerIDs": {
-                    "description": "At least one checker must be supplied, all checkers must exist",
-                    "type": "array",
-                    "minItems": 1,
-                    "items": {
-                        "type": "integer"
-                    }
-                },
-                "httpInfo": {
-                    "description": "Must be supplied if type is 1 (HTTP)",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/api_handlers_target.HTTPInfoCreateRequest"
-                        }
-                    ]
-                },
-                "maxRetries": {
-                    "description": "Max retries is required",
-                    "type": "integer"
-                },
-                "name": {
-                    "description": "Name must not be blank",
-                    "type": "string"
-                },
-                "pingInfo": {
-                    "description": "Must be supplied if type is 0 (PING)",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/api_handlers_target.PingInfoCreateRequest"
-                        }
-                    ]
-                },
-                "timeout": {
-                    "description": "Timeout is required",
-                    "type": "integer"
-                },
-                "type": {
-                    "description": "Type must be 0 (PING) or 1 (HTTP)",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetType"
-                        }
-                    ]
-                }
-            }
-        },
-        "api_handlers_target.HTTPInfoCreateRequest": {
-            "type": "object",
-            "required": [
-                "allowedCodes",
-                "followRedirects",
-                "host",
-                "verifySSLCert"
-            ],
-            "properties": {
-                "allowedCodes": {
-                    "description": "HTTP response codes separated by a space. Must contain at least one code. All codes must be exactly 3 digits long.",
-                    "type": "string"
-                },
-                "followRedirects": {
-                    "type": "boolean"
-                },
-                "host": {
-                    "description": "Host must start with http:// or https://",
-                    "type": "string"
-                },
-                "verifySSLCert": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "api_handlers_target.HTTPInfoUpdateRequest": {
-            "type": "object",
-            "properties": {
-                "allowedCodes": {
-                    "description": "HTTP response codes separated by a space. Must contain at least one code if supplied. All codes must be exactly 3 digits long.",
-                    "type": "string"
-                },
-                "followRedirects": {
-                    "type": "boolean"
-                },
-                "host": {
-                    "description": "Host must start with http:// or https:// if supplied",
-                    "type": "string"
-                },
-                "verifySSLCert": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "api_handlers_target.PingInfoCreateRequest": {
-            "type": "object",
-            "required": [
-                "host"
-            ],
-            "properties": {
-                "host": {
-                    "description": "Host must not be blank",
-                    "type": "string"
-                }
-            }
-        },
-        "api_handlers_target.PingInfoUpdateRequest": {
-            "type": "object",
-            "properties": {
-                "host": {
-                    "description": "Host must not be blank if pingInfo is supplied in UpdateTargetRequest",
-                    "type": "string"
-                }
-            }
-        },
-        "api_handlers_target.UpdateTargetRequest": {
-            "type": "object",
-            "properties": {
-                "checkerIDs": {
-                    "description": "Must contain at least one checker ID, all checkers must exist. This is a \"replace update\"",
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
-                "httpInfo": {
-                    "$ref": "#/definitions/api_handlers_target.HTTPInfoUpdateRequest"
-                },
-                "maxRetries": {
-                    "type": "integer"
-                },
-                "name": {
-                    "description": "Name must not be blank if supplied",
-                    "type": "string"
-                },
-                "pingInfo": {
-                    "$ref": "#/definitions/api_handlers_target.PingInfoUpdateRequest"
-                },
-                "timeout": {
-                    "type": "integer"
-                }
-            }
-        },
-        "api_handlers_target.createTargetSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 201
-                },
-                "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Target"
-                }
-            }
-        },
-        "api_handlers_target.getTargetSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Target"
-                }
-            }
-        },
-        "api_handlers_target.listTargetsSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Target"
-                    }
-                }
-            }
-        },
-        "api_handlers_target_alarm.CreateAlarmRequest": {
+        "alarm.CreateAlarmRequest": {
             "type": "object",
             "required": [
                 "name",
@@ -3227,7 +2715,7 @@ const docTemplate = `{
                     "description": "Threshold field must be supplied if type is 1 (threshold). At the moment the only accepted value is 0 (latency)",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmThresholdField"
+                            "$ref": "#/definitions/model.AlarmThresholdField"
                         }
                     ]
                 },
@@ -3235,13 +2723,13 @@ const docTemplate = `{
                     "description": "Type must be 0 (unavailable) or 1 (threshold)",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmType"
+                            "$ref": "#/definitions/model.AlarmType"
                         }
                     ]
                 }
             }
         },
-        "api_handlers_target_alarm.UpdateAlarmRequest": {
+        "alarm.UpdateAlarmRequest": {
             "type": "object",
             "properties": {
                 "name": {
@@ -3263,7 +2751,7 @@ const docTemplate = `{
                     "description": "Must be supplied if type is getting changed to threshold (1), at the moment the only accepted value is 0 (latency)",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmThresholdField"
+                            "$ref": "#/definitions/model.AlarmThresholdField"
                         }
                     ]
                 },
@@ -3271,13 +2759,13 @@ const docTemplate = `{
                     "description": "Type must be 0 (unavailable) or 1 (threshold), if supplied",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmType"
+                            "$ref": "#/definitions/model.AlarmType"
                         }
                     ]
                 }
             }
         },
-        "api_handlers_target_alarm.createAlarmSuccessResponse": {
+        "alarm.createAlarmSuccessResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -3285,11 +2773,11 @@ const docTemplate = `{
                     "example": 201
                 },
                 "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Alarm"
+                    "$ref": "#/definitions/model.Alarm"
                 }
             }
         },
-        "api_handlers_target_alarm.getAlarmSuccessResponse": {
+        "alarm.getAlarmSuccessResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -3297,11 +2785,11 @@ const docTemplate = `{
                     "example": 200
                 },
                 "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Alarm"
+                    "$ref": "#/definitions/model.Alarm"
                 }
             }
         },
-        "api_handlers_target_alarm.listAlarmsSuccessResponse": {
+        "alarm.listAlarmsSuccessResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -3311,40 +2799,29 @@ const docTemplate = `{
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Alarm"
+                        "$ref": "#/definitions/model.Alarm"
                     }
                 }
             }
         },
-        "api_handlers_user.ChangePasswordRequest": {
+        "auth.Credentials": {
             "type": "object",
             "required": [
-                "newPassword",
-                "oldPassword"
+                "password",
+                "username"
             ],
             "properties": {
-                "newPassword": {
-                    "description": "New password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.",
+                "password": {
+                    "description": "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.",
                     "type": "string"
                 },
-                "oldPassword": {
+                "username": {
+                    "description": "Username cannot be blank",
                     "type": "string"
                 }
             }
         },
-        "api_handlers_user.ChangeUsernameRequest": {
-            "type": "object",
-            "required": [
-                "newUsername"
-            ],
-            "properties": {
-                "newUsername": {
-                    "description": "Must not be blank and must not contain any whitespace characters",
-                    "type": "string"
-                }
-            }
-        },
-        "api_handlers_user.getUserSuccessResponse": {
+        "auth.loginSuccessResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -3352,11 +2829,110 @@ const docTemplate = `{
                     "example": 200
                 },
                 "data": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.User"
+                    "type": "object",
+                    "properties": {
+                        "session": {
+                            "$ref": "#/definitions/model.Session"
+                        },
+                        "token": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         },
-        "github_com_bartosz11_checkmate_api_helpers.GenericDeleteSuccessResponse": {
+        "auth.registerSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.User"
+                }
+            }
+        },
+        "checker.CreateCheckerRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "location": {
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name cannot be blank",
+                    "type": "string"
+                }
+            }
+        },
+        "checker.UpdateCheckerRequest": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "description": "Location can be blank",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name must not be blank if supplied",
+                    "type": "string"
+                }
+            }
+        },
+        "checker.createCheckerSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Checker"
+                }
+            }
+        },
+        "checker.getCheckerSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Checker"
+                }
+            }
+        },
+        "checker.listCheckersSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Checker"
+                    }
+                }
+            }
+        },
+        "gorm.DeletedAt": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        },
+        "helpers.GenericDeleteSuccessResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -3365,7 +2941,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_api_helpers.GenericErrorResponse": {
+        "helpers.GenericErrorResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -3378,7 +2954,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.Alarm": {
+        "model.Alarm": {
             "type": "object",
             "properties": {
                 "active": {
@@ -3402,7 +2978,7 @@ const docTemplate = `{
                 "notifications": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Notification"
+                        "$ref": "#/definitions/model.Notification"
                     }
                 },
                 "targetId": {
@@ -3412,17 +2988,17 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "thresholdField": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmThresholdField"
+                    "$ref": "#/definitions/model.AlarmThresholdField"
                 },
                 "type": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.AlarmType"
+                    "$ref": "#/definitions/model.AlarmType"
                 },
                 "updatedAt": {
                     "type": "string"
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.AlarmThresholdField": {
+        "model.AlarmThresholdField": {
             "type": "integer",
             "enum": [
                 0,
@@ -3433,7 +3009,7 @@ const docTemplate = `{
                 "thresholdFieldMax"
             ]
         },
-        "github_com_bartosz11_checkmate_common_database_model.AlarmType": {
+        "model.AlarmType": {
             "type": "integer",
             "enum": [
                 0,
@@ -3446,7 +3022,7 @@ const docTemplate = `{
                 "alarmTypeMax"
             ]
         },
-        "github_com_bartosz11_checkmate_common_database_model.Checker": {
+        "model.Checker": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -3458,7 +3034,7 @@ const docTemplate = `{
                 "heartbeats": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Heartbeat"
+                        "$ref": "#/definitions/model.Heartbeat"
                     }
                 },
                 "id": {
@@ -3479,7 +3055,7 @@ const docTemplate = `{
                 "targets": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Target"
+                        "$ref": "#/definitions/model.Target"
                     }
                 },
                 "updatedAt": {
@@ -3487,11 +3063,11 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.Heartbeat": {
+        "model.Heartbeat": {
             "type": "object",
             "properties": {
                 "checker": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Checker"
+                    "$ref": "#/definitions/model.Checker"
                 },
                 "checkerId": {
                     "type": "integer"
@@ -3509,10 +3085,10 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "status": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetStatus"
+                    "$ref": "#/definitions/model.TargetStatus"
                 },
                 "target": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Target"
+                    "$ref": "#/definitions/model.Target"
                 },
                 "targetId": {
                     "type": "integer"
@@ -3525,7 +3101,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.Incident": {
+        "model.Incident": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -3557,13 +3133,13 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.Notification": {
+        "model.Notification": {
             "type": "object",
             "properties": {
                 "alarms": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Alarm"
+                        "$ref": "#/definitions/model.Alarm"
                     }
                 },
                 "createdAt": {
@@ -3582,7 +3158,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.NotificationType"
+                    "$ref": "#/definitions/model.NotificationType"
                 },
                 "updatedAt": {
                     "type": "string"
@@ -3592,7 +3168,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.NotificationType": {
+        "model.NotificationType": {
             "type": "integer",
             "enum": [
                 0,
@@ -3611,7 +3187,7 @@ const docTemplate = `{
                 "GenericWebhook"
             ]
         },
-        "github_com_bartosz11_checkmate_common_database_model.Orchestrator": {
+        "model.Orchestrator": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -3640,7 +3216,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.Session": {
+        "model.Session": {
             "type": "object",
             "properties": {
                 "browser": {
@@ -3674,7 +3250,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.User"
+                    "$ref": "#/definitions/model.User"
                 },
                 "userAgent": {
                     "type": "string"
@@ -3684,7 +3260,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.Setting": {
+        "model.Setting": {
             "type": "object",
             "properties": {
                 "key": {
@@ -3695,19 +3271,19 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.Target": {
+        "model.Target": {
             "type": "object",
             "properties": {
                 "alarms": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Alarm"
+                        "$ref": "#/definitions/model.Alarm"
                     }
                 },
                 "checkers": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Checker"
+                        "$ref": "#/definitions/model.Checker"
                     }
                 },
                 "checksDown": {
@@ -3725,11 +3301,11 @@ const docTemplate = `{
                 "heartbeats": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Heartbeat"
+                        "$ref": "#/definitions/model.Heartbeat"
                     }
                 },
                 "httpInfo": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetHTTPInfo"
+                    "$ref": "#/definitions/model.TargetHTTPInfo"
                 },
                 "id": {
                     "type": "integer"
@@ -3737,14 +3313,14 @@ const docTemplate = `{
                 "incidents": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Incident"
+                        "$ref": "#/definitions/model.Incident"
                     }
                 },
                 "lastCheck": {
                     "type": "string"
                 },
                 "lastStatus": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetStatus"
+                    "$ref": "#/definitions/model.TargetStatus"
                 },
                 "maxRetries": {
                     "type": "integer"
@@ -3756,13 +3332,13 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "pingInfo": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetPingInfo"
+                    "$ref": "#/definitions/model.TargetPingInfo"
                 },
                 "timeout": {
                     "type": "integer"
                 },
                 "type": {
-                    "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.TargetType"
+                    "$ref": "#/definitions/model.TargetType"
                 },
                 "updatedAt": {
                     "type": "string"
@@ -3775,7 +3351,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.TargetHTTPInfo": {
+        "model.TargetHTTPInfo": {
             "type": "object",
             "properties": {
                 "allowedCodes": {
@@ -3807,7 +3383,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.TargetPingInfo": {
+        "model.TargetPingInfo": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -3830,7 +3406,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_bartosz11_checkmate_common_database_model.TargetStatus": {
+        "model.TargetStatus": {
             "type": "integer",
             "enum": [
                 0,
@@ -3843,7 +3419,7 @@ const docTemplate = `{
                 "Unknown"
             ]
         },
-        "github_com_bartosz11_checkmate_common_database_model.TargetType": {
+        "model.TargetType": {
             "type": "integer",
             "enum": [
                 0,
@@ -3864,7 +3440,7 @@ const docTemplate = `{
                 "targetTypeMax"
             ]
         },
-        "github_com_bartosz11_checkmate_common_database_model.User": {
+        "model.User": {
             "type": "object",
             "properties": {
                 "admin": {
@@ -3885,19 +3461,19 @@ const docTemplate = `{
                 "notifications": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Notification"
+                        "$ref": "#/definitions/model.Notification"
                     }
                 },
                 "sessions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Session"
+                        "$ref": "#/definitions/model.Session"
                     }
                 },
                 "targets": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_bartosz11_checkmate_common_database_model.Target"
+                        "$ref": "#/definitions/model.Target"
                     }
                 },
                 "updatedAt": {
@@ -3908,15 +3484,399 @@ const docTemplate = `{
                 }
             }
         },
-        "gorm.DeletedAt": {
+        "notification.CreateNotificationRequest": {
             "type": "object",
+            "required": [
+                "credentials",
+                "name"
+            ],
             "properties": {
-                "time": {
+                "credentials": {
+                    "description": "Credentials must be valid for the selected type, e.g. webhook URLs have to start with http:// or https://",
                     "type": "string"
                 },
-                "valid": {
-                    "description": "Valid is true if Time is not NULL",
+                "name": {
+                    "description": "Name must not be blank",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Type must be a number in range 0-5, inclusive",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.NotificationType"
+                        }
+                    ]
+                }
+            }
+        },
+        "notification.UpdateNotificationRequest": {
+            "type": "object",
+            "properties": {
+                "credentials": {
+                    "description": "Credentials must be valid for the selected type, e.g. webhook URLs have to start with http:// or https://, if supplied",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name must not be blank if supplied",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Type must be a number in range of 0-5 (inclusive), if supplied. If type is changed, credentials valid for the new type also have to be supplied.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.NotificationType"
+                        }
+                    ]
+                }
+            }
+        },
+        "notification.createNotificationSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Notification"
+                }
+            }
+        },
+        "notification.getNotificationSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Notification"
+                }
+            }
+        },
+        "notification.listNotificationsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Notification"
+                    }
+                }
+            }
+        },
+        "orchestrator.CreateOrchestratorRequest": {
+            "type": "object",
+            "required": [
+                "host",
+                "name"
+            ],
+            "properties": {
+                "host": {
+                    "description": "Host must start with ws:// or wss:// and must be unique",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name must not be blank and must be unique",
+                    "type": "string"
+                }
+            }
+        },
+        "orchestrator.createOrchestratorSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Orchestrator"
+                }
+            }
+        },
+        "orchestrator.getOrchestratorSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Orchestrator"
+                }
+            }
+        },
+        "orchestrator.listOrchestratorsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Orchestrator"
+                    }
+                }
+            }
+        },
+        "session.getSessionSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Session"
+                }
+            }
+        },
+        "session.listSessionsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Session"
+                    }
+                }
+            }
+        },
+        "settings.ChangeSettingRequest": {
+            "type": "object",
+            "required": [
+                "key"
+            ],
+            "properties": {
+                "key": {
+                    "description": "Key must be updatable. Currently, the only setting that can be updated is \"registration-enabled\".",
+                    "type": "string"
+                },
+                "value": {
+                    "description": "Value must match a set of valid values for given setting key",
+                    "type": "string"
+                }
+            }
+        },
+        "settings.getSettingSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Setting"
+                }
+            }
+        },
+        "settings.listSettingsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Setting"
+                    }
+                }
+            }
+        },
+        "target.CreateTargetRequest": {
+            "type": "object",
+            "required": [
+                "checkerIDs",
+                "name"
+            ],
+            "properties": {
+                "checkerIDs": {
+                    "description": "At least one checker must be supplied, all checkers must exist",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "httpInfo": {
+                    "description": "Must be supplied if type is 1 (HTTP)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/target.HTTPInfoCreateRequest"
+                        }
+                    ]
+                },
+                "maxRetries": {
+                    "description": "Max retries is required",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Name must not be blank",
+                    "type": "string"
+                },
+                "pingInfo": {
+                    "description": "Must be supplied if type is 0 (PING)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/target.PingInfoCreateRequest"
+                        }
+                    ]
+                },
+                "timeout": {
+                    "description": "Timeout is required",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "Type must be 0 (PING) or 1 (HTTP)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.TargetType"
+                        }
+                    ]
+                }
+            }
+        },
+        "target.HTTPInfoCreateRequest": {
+            "type": "object",
+            "required": [
+                "allowedCodes",
+                "followRedirects",
+                "host",
+                "verifySSLCert"
+            ],
+            "properties": {
+                "allowedCodes": {
+                    "description": "HTTP response codes separated by a space. Must contain at least one code. All codes must be exactly 3 digits long.",
+                    "type": "string"
+                },
+                "followRedirects": {
                     "type": "boolean"
+                },
+                "host": {
+                    "description": "Host must start with http:// or https://",
+                    "type": "string"
+                },
+                "verifySSLCert": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "target.HTTPInfoUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "allowedCodes": {
+                    "description": "HTTP response codes separated by a space. Must contain at least one code if supplied. All codes must be exactly 3 digits long.",
+                    "type": "string"
+                },
+                "followRedirects": {
+                    "type": "boolean"
+                },
+                "host": {
+                    "description": "Host must start with http:// or https:// if supplied",
+                    "type": "string"
+                },
+                "verifySSLCert": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "target.PingInfoCreateRequest": {
+            "type": "object",
+            "required": [
+                "host"
+            ],
+            "properties": {
+                "host": {
+                    "description": "Host must not be blank",
+                    "type": "string"
+                }
+            }
+        },
+        "target.PingInfoUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "host": {
+                    "description": "Host must not be blank if pingInfo is supplied in UpdateTargetRequest",
+                    "type": "string"
+                }
+            }
+        },
+        "target.UpdateTargetRequest": {
+            "type": "object",
+            "properties": {
+                "checkerIDs": {
+                    "description": "Must contain at least one checker ID, all checkers must exist. This is a \"replace update\"",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "httpInfo": {
+                    "$ref": "#/definitions/target.HTTPInfoUpdateRequest"
+                },
+                "maxRetries": {
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Name must not be blank if supplied",
+                    "type": "string"
+                },
+                "pingInfo": {
+                    "$ref": "#/definitions/target.PingInfoUpdateRequest"
+                },
+                "timeout": {
+                    "type": "integer"
+                }
+            }
+        },
+        "target.createTargetSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Target"
+                }
+            }
+        },
+        "target.getTargetSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Target"
+                }
+            }
+        },
+        "target.listTargetsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Target"
+                    }
                 }
             }
         },
@@ -3932,8 +3892,6 @@ const docTemplate = `{
                 1000000000,
                 60000000000,
                 3600000000000,
-                -9223372036854775808,
-                9223372036854775807,
                 1,
                 1000,
                 1000000,
@@ -3950,8 +3908,6 @@ const docTemplate = `{
                 "Second",
                 "Minute",
                 "Hour",
-                "minDuration",
-                "maxDuration",
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",
@@ -3959,6 +3915,46 @@ const docTemplate = `{
                 "Minute",
                 "Hour"
             ]
+        },
+        "user.ChangePasswordRequest": {
+            "type": "object",
+            "required": [
+                "newPassword",
+                "oldPassword"
+            ],
+            "properties": {
+                "newPassword": {
+                    "description": "New password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.",
+                    "type": "string"
+                },
+                "oldPassword": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.ChangeUsernameRequest": {
+            "type": "object",
+            "required": [
+                "newUsername"
+            ],
+            "properties": {
+                "newUsername": {
+                    "description": "Must not be blank and must not contain any whitespace characters",
+                    "type": "string"
+                }
+            }
+        },
+        "user.getUserSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.User"
+                }
+            }
         }
     },
     "securityDefinitions": {

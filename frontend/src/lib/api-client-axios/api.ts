@@ -540,6 +540,12 @@ export interface ModelChecker {
     'name'?: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof ModelChecker
+     */
+    'system'?: boolean;
+    /**
+     * 
      * @type {Array<ModelTarget>}
      * @memberof ModelChecker
      */
@@ -812,6 +818,12 @@ export interface ModelOrchestrator {
      * @memberof ModelOrchestrator
      */
     'name'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ModelOrchestrator
+     */
+    'system'?: boolean;
     /**
      * 
      * @type {string}
@@ -1804,6 +1816,12 @@ export const TimeDuration = {
     Second: 1000000000,
     Minute: 60000000000,
     Hour: 3600000000000,
+    Nanosecond: 1,
+    Microsecond: 1000,
+    Millisecond: 1000000,
+    Second: 1000000000,
+    Minute: 60000000000,
+    Hour: 3600000000000
 } as const;
 
 export type TimeDuration = typeof TimeDuration[keyof typeof TimeDuration];
