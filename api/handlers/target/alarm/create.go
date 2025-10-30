@@ -91,6 +91,12 @@ func HandleCreateAlarm(db *gorm.DB) gin.HandlerFunc {
 				return
 			}
 			alarm.ThresholdField = *createReq.ThresholdField
+
+			if createReq.ThresholdFieldParams == nil {
+				helpers.BadRequestWithSpecificError(c, "threshold field params not supplied for threshold type alarm")
+				return
+			}
+			alarm.ThresholdFieldParams = *createReq.ThresholdFieldParams
 		}
 
 		var notifications []model.Notification
@@ -131,6 +137,8 @@ type CreateAlarmRequest struct {
 	Threshold *float64 `json:"threshold"`
 	// Threshold field must be supplied if type is 1 (threshold). At the moment the only accepted value is 0 (latency)
 	ThresholdField *model.AlarmThresholdField `json:"thresholdField"`
+	// Threshold field params must be supplied if type is 1 (threshold). Used to specify when to trigger alarms in some cases, can be left blank though
+	ThresholdFieldParams *string `json:"thresholdFieldParams"`
 }
 
 type createAlarmSuccessResponse struct {

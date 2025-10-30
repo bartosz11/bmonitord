@@ -1,3 +1,5 @@
+.venv
+
 config.yml
 
 # This project gets re-imported so often that re-commiting this dir makes no sense at all, I think it shouldn't have been committed in the first place

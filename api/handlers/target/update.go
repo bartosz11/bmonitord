@@ -75,7 +75,7 @@ func HandleUpdateTargetById(db *gorm.DB) gin.HandlerFunc {
 			target.Timeout = *updateRequest.Timeout
 		}
 
-		if updateRequest.CheckerIDs != nil {
+		if updateRequest.CheckerIDs != nil && !target.Type.IsPush() {
 			if len(*updateRequest.CheckerIDs) < 1 {
 				helpers.BadRequestWithSpecificError(c, "target must be associated with at least one checker")
 				return
@@ -150,10 +150,11 @@ func HandleUpdateTargetById(db *gorm.DB) gin.HandlerFunc {
 
 type UpdateTargetRequest struct {
 	// Name must not be blank if supplied
-	Name       *string `json:"name,omitempty"`
-	MaxRetries *uint   `json:"maxRetries,omitempty"`
-	Timeout    *uint   `json:"timeout,omitempty"`
-	// Must contain at least one checker ID, all checkers must exist. This is a "replace update"
+	Name *string `json:"name,omitempty"`
+	// Value of maxRetries can be updated even if target's type is 2 (agent), but it's ignored in the checking behavior
+	MaxRetries *uint `json:"maxRetries,omitempty"`
+	Timeout    *uint `json:"timeout,omitempty"`
+	// Must contain at least one checker ID, all checkers must exist. This is a "replace update". This is ignored if Target's type is 2 (AGENT)
 	CheckerIDs *[]uint                `json:"checkerIDs,omitempty"`
 	PingInfo   *PingInfoUpdateRequest `json:"pingInfo,omitempty"`
 	HTTPInfo   *HTTPInfoUpdateRequest `json:"httpInfo,omitempty"`

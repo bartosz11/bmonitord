@@ -12,7 +12,7 @@ import (
 // @Tags health
 // @Produce json
 // @Success 200 {object} healthcheckSuccessResponse
-// @Failure 500 {object} helpers.GenericErrorResponse
+// @Failure 500 {object} healthcheckFailResponse
 // @Router /api/health [get]
 // @Router /orchestrator/health [get]
 func HandleHealthcheck(db *gorm.DB) gin.HandlerFunc {

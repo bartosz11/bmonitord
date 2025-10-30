@@ -16,6 +16,7 @@ var leader = false
 func StartOrchestrator(orchestratorCfg *config.OrchestratorConfig, db *gorm.DB, router *gin.Engine) {
 	router.GET("/orchestrator/health", common.HandleHealthcheck(db))
 	router.GET("/orchestrator/ws", handlers.HandleNewWSConnection(db))
+	router.POST("/orchestrator/agent/:key", handlers.HandleAgentPost(db))
 
 	c := cron.New()
 

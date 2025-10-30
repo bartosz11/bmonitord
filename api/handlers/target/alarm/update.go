@@ -111,6 +111,13 @@ func HandleUpdateAlarm(db *gorm.DB) gin.HandlerFunc {
 				helpers.BadRequestWithSpecificError(c, "threshold field not supplied for threshold type alarm")
 				return
 			}
+
+			if updateReq.ThresholdFieldParams != nil {
+				alarm.ThresholdFieldParams = *updateReq.ThresholdFieldParams
+			} else if updateReq.Type != nil {
+				helpers.BadRequestWithSpecificError(c, "threshold field params not supplied for threshold type alarm")
+				return
+			}
 		}
 
 		if updateReq.NotificationIDs != nil {
@@ -161,4 +168,6 @@ type UpdateAlarmRequest struct {
 	Threshold *float64 `json:"threshold"`
 	// Must be supplied if type is getting changed to threshold (1), at the moment the only accepted value is 0 (latency)
 	ThresholdField *model.AlarmThresholdField `json:"thresholdField"`
+	// Threshold field params must be supplied if type is getting changed to 1 (threshold). Used to specify when to trigger alarms in some cases, can be left blank though
+	ThresholdFieldParams *string `json:"thresholdFieldParams"`
 }

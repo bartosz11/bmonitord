@@ -36,22 +36,23 @@ func StartProcessingTask(db *gorm.DB, task *ProcessingTask) {
 		select {
 		case hb, ok := <-task.Heartbeats:
 			if !ok {
-				processBuffer(buffer, task, db)
+				ProcessHeartbeats(buffer, task, db)
 				return
 			}
 			buffer = append(buffer, hb)
 			if len(buffer) >= task.ExpectedHeartbeats {
-				processBuffer(buffer, task, db)
+				ProcessHeartbeats(buffer, task, db)
 				return
 			}
 		case <-timer.C:
-			processBuffer(buffer, task, db)
+			ProcessHeartbeats(buffer, task, db)
 			return
 		}
 	}
 }
 
-func processBuffer(hbs []model.Heartbeat, task *ProcessingTask, db *gorm.DB) {
+// todo: i defo need to refactor this fn especially considering that now it's also used for single-hb cases too
+func ProcessHeartbeats(hbs []model.Heartbeat, task *ProcessingTask, db *gorm.DB) {
 	var missingHbs []model.Heartbeat
 	target := &task.Target
 	for _, checker := range task.Checkers {
@@ -142,9 +143,9 @@ func processBuffer(hbs []model.Heartbeat, task *ProcessingTask, db *gorm.DB) {
 	var checkers []model.Checker
 	db.Where("id IN ?", ids).Find(&checkers) // batch fetch
 
-	checkerMap := make(map[uint]model.Checker, len(checkers)) // id:checker map for fast lookup
+	checkerMap := make(map[uint]*model.Checker, len(checkers)) // id:checker map for fast lookup
 	for _, checker := range checkers {
-		checkerMap[checker.ID] = checker
+		checkerMap[checker.ID] = &checker
 	}
 
 	for i := range hbsAll { // finally assign the checkers to heartbeats
@@ -167,6 +168,9 @@ func processBuffer(hbs []model.Heartbeat, task *ProcessingTask, db *gorm.DB) {
 				header := target.Name + " is now " + model.StatusToString(decisiveHeartbeat.Status) + "."
 				var bodyBuilder strings.Builder
 				for i, heartbeat := range hbsAll {
+					if heartbeat.Checker == nil {
+						// exit early in case the target is an agent
+					}
 					bodyBuilder.WriteString(heartbeat.Checker.Name)
 					bodyBuilder.WriteString(": ")
 					bodyBuilder.WriteString(model.StatusToString(heartbeat.Status))
@@ -193,7 +197,7 @@ func processBuffer(hbs []model.Heartbeat, task *ProcessingTask, db *gorm.DB) {
 			meta := model.AlarmThresholdFieldMetas[alarm.ThresholdField]
 			thresholdExceeded := false
 			for _, hb := range hbs { // Check on all non-0 hbs for threshold exceeding, if it's exceeded anywhere, trigger the alarm
-				value := meta.GetValueFunc(&hb)
+				value := meta.GetValueFunc(&hb, &alarm)
 				if value > alarm.Threshold {
 					thresholdExceeded = true
 					break // No need to check further since at least one still exceeds the threshold
@@ -219,9 +223,12 @@ func processBuffer(hbs []model.Heartbeat, task *ProcessingTask, db *gorm.DB) {
 				}
 				var bodyBuilder strings.Builder
 				for i, heartbeat := range hbsAll {
+					if heartbeat.Checker == nil {
+						// exit early in case the target is an agent
+					}
 					bodyBuilder.WriteString(heartbeat.Checker.Name)
 					bodyBuilder.WriteString(": ")
-					bodyBuilder.WriteString(strconv.FormatFloat(meta.GetValueFunc(&hbs[i]), 'f', -1, 64))
+					bodyBuilder.WriteString(strconv.FormatFloat(meta.GetValueFunc(&hbs[i], &alarm), 'f', -1, 64))
 					if i != len(hbsAll)-1 {
 						bodyBuilder.WriteString("\n")
 					}

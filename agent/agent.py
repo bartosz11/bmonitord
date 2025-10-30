@@ -1,65 +1,120 @@
-# shipped with python3
-import base64
+URL = "http://localhost:8080/orchestrator/agent/key"
+
+import gzip
+import io
+import json
 import platform
 import time
 
-# 3rd party
 import cpuinfo
 import psutil
 import requests
-# included in requests
 import urllib3
 
-# Don't change the version
-VERSION = "1.0"
-# API URL
-URL = "http://example.com/api/agent/id/post"
 
-
-def get_data():
+def collect_system_data():
+    # Align the reports to next-minute mark
     sec = int(time.strftime("%S"))
     sleep = 60 - sec
+
     if platform.system() == "Linux":
         import distro
-        operating_system = base64.b64encode(f"{distro.name()} {distro.version()}".encode("utf-8")).decode("utf-8")
-        iowait = psutil.cpu_times_percent(1).iowait
+        os_name = f"{distro.name()} {distro.version()}"
     else:
-        operating_system = base64.b64encode(f"{platform.system()} {platform.release()}".encode("utf-8")).decode("utf-8")
-        # IOWait is not supported on Windows
-        iowait = 0
-    uptime = int(time.time() - psutil.boot_time())
-    cpu_cores = int(psutil.cpu_count(False))
-    cpu_freq = int(psutil.cpu_freq(False).current)
-    cpu_model = base64.b64encode(cpuinfo.get_cpu_info()['brand_raw'].encode("utf-8")).decode("utf-8")
-    netstats = psutil.net_io_counters()
-    cpu_usage = psutil.cpu_percent(sleep)
-    netstats2 = psutil.net_io_counters()
-    ram_total = psutil.virtual_memory().total
-    ram_usage = psutil.virtual_memory().percent
-    swap_total = psutil.swap_memory().total
-    swap_usage = psutil.swap_memory().percent
-    rx = int((netstats2.bytes_recv - netstats.bytes_recv) / sleep)
-    tx = int((netstats2.bytes_sent - netstats.bytes_sent) / sleep)
+        os_name = f"{platform.system()} {platform.release()}"
+
+    # Unless we collect the metrics twice and sleep in between they're completely inaccurate
+    cpu_start = psutil.cpu_times_percent(interval=None)
+    net_start = psutil.net_io_counters(pernic=True)
+    time.sleep(sleep)
+    cpu_end = psutil.cpu_times_percent(interval=None)
+    net_end = psutil.net_io_counters(pernic=True)
+
+    iowait = getattr(cpu_end, "iowait", 0.0)
+    loadavg = psutil.getloadavg()
+    cpu_info = {
+        "model": cpuinfo.get_cpu_info()['brand_raw'],
+        "cores": psutil.cpu_count(logical=False) or 0,
+        "threads": psutil.cpu_count(logical=True) or 0,
+        "frequency": getattr(psutil.cpu_freq(False), "current", 0.0),
+        "usage": round(100 - cpu_end.idle, 2),
+        "iowait": round(iowait, 2),
+        "loadavg": loadavg,
+    }
+
+    nics = []
+    for name, stats in net_end.items():
+        prev = net_start.get(name)
+        if prev:
+            nics.append({
+                "iface": name,
+                "rx": stats.bytes_recv - prev.bytes_recv,
+                "tx": stats.bytes_sent - prev.bytes_sent,
+            })
+
+    mem = psutil.virtual_memory()
+    swap = psutil.swap_memory()
+    memory_info = {
+        "total": mem.total,
+        "used": mem.used,
+    }
+    swap_info = {
+        "total": swap.total,
+        "used": swap.used,
+    }
+
     disks = []
-    disks_total_bytes = 0
-    disks_used_bytes = 0
-    for disk in psutil.disk_partitions():
-        # Prevents checking for CD-ROMs and other similar devices
-        if disk.fstype:
-            disk_usage = psutil.disk_usage(disk.mountpoint).percent
-            disk_total = psutil.disk_usage(disk.mountpoint).total
-            disk_used = psutil.disk_usage(disk.mountpoint).used
-            disk_data = f"{disk.mountpoint},{disk_usage},{disk_total},{disk_used}"
-            disks.append(disk_data)
-            disks_total_bytes += psutil.disk_usage(disk.mountpoint).total
-            disks_used_bytes += psutil.disk_usage(disk.mountpoint).used
-    # Decode at the end prevents the b prefix
-    disks_encoded = base64.b64encode(';'.join(disks).encode("utf-8")).decode("utf-8")
-    disks_total_percent = (disks_used_bytes / disks_total_bytes) * 100
-    return f"{VERSION}|{operating_system}|{uptime}|{cpu_cores}|{cpu_freq}|{cpu_model}|{cpu_usage}|{ram_total}|{ram_usage}|{swap_total}|{swap_usage}|{iowait}|{rx}|{tx}|{disks_encoded}|{disks_total_percent}"
+    for part in psutil.disk_partitions(all=False):
+        try:
+            usage = psutil.disk_usage(part.mountpoint)
+            disks.append({
+                "mount": part.mountpoint,
+                "fs": part.fstype,
+                "total": usage.total,
+                "used": usage.used,
+            })
+        except PermissionError:
+            continue
+
+    agent_data = {
+        "version": "1.0.0",
+        "hostname": platform.node(),
+        "os": os_name,
+        "kernel": platform.release(),
+        "uptime": int(time.time() - psutil.boot_time()),
+        "cpu": cpu_info,
+        "memory": memory_info,
+        "swap": swap_info,
+        "disks": disks,
+        "network": nics,
+    }
+
+    return {
+        # 2 means type AGENT
+        "type": 2,
+        # v1 schema, the agent's version above can mean some minor updates
+        "version": 1,
+        "data": agent_data,
+    }
+
+
+def send_data(data):
+    json_bytes = json.dumps(data).encode('utf-8')
+
+    buf = io.BytesIO()
+    with gzip.GzipFile(fileobj=buf, mode="wb") as gz:
+        gz.write(json_bytes)
+
+    compressed_data = buf.getvalue()
+
+    # Send with appropriate headers
+    headers = {
+        "Content-Encoding": "gzip",
+        "Content-Type": "application/json",
+    }
+    requests.post(URL, data=compressed_data, headers=headers, timeout=10, verify=False)
 
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-data = get_data()
-print(data)
-requests.post(URL, data=data, timeout=15, verify=False)
+collected_data = collect_system_data()
+send_data(collected_data)

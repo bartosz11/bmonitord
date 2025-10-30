@@ -56,7 +56,8 @@ func HandleCreateTarget(db *gorm.DB) gin.HandlerFunc {
 			LastStatus: model.Unknown,
 		}
 
-		if createReq.Type == model.HTTP {
+		switch createReq.Type {
+		case model.HTTP:
 			if createReq.HTTPInfo == nil {
 				helpers.BadRequestWithSpecificError(c, "provided type was HTTP but no HTTP info was supplied")
 				return
@@ -76,9 +77,7 @@ func HandleCreateTarget(db *gorm.DB) gin.HandlerFunc {
 				FollowRedirects: *createReq.HTTPInfo.FollowRedirects,
 				VerifySSLCert:   *createReq.HTTPInfo.VerifySSLCert,
 			}
-		}
-
-		if createReq.Type == model.PING {
+		case model.PING:
 			if createReq.PingInfo == nil {
 				helpers.BadRequestWithSpecificError(c, "provided type was ping but no ping info was specified")
 				return
@@ -90,20 +89,32 @@ func HandleCreateTarget(db *gorm.DB) gin.HandlerFunc {
 			target.PingInfo = model.TargetPingInfo{
 				Host: createReq.PingInfo.Host,
 			}
+		case model.AGENT:
+			key := GenerateUniqueAgentKey(db)
+			if key == "" {
+				helpers.DBInteractionFailed(c)
+				return
+			}
+
+			target.Agent = model.Agent{
+				Key: key,
+			}
 		}
 
-		var checkers []model.Checker
-		err = db.Find(&checkers, createReq.CheckerIDs).Error
-		if err != nil {
-			helpers.DBInteractionFailed(c)
-			return
-		}
+		if !createReq.Type.IsPush() {
+			var checkers []model.Checker
+			err = db.Find(&checkers, createReq.CheckerIDs).Error
+			if err != nil {
+				helpers.DBInteractionFailed(c)
+				return
+			}
 
-		if len(checkers) != len(createReq.CheckerIDs) {
-			helpers.BadRequestWithSpecificError(c, "at least one of specified checkers hasn't been found")
-			return
+			if len(checkers) != len(createReq.CheckerIDs) {
+				helpers.BadRequestWithSpecificError(c, "at least one of specified checkers hasn't been found")
+				return
+			}
+			target.Checkers = checkers
 		}
-		target.Checkers = checkers
 
 		err = db.Save(&target).Error
 		if err != nil {
@@ -127,14 +138,14 @@ type createTargetSuccessResponse struct {
 type CreateTargetRequest struct {
 	// Name must not be blank
 	Name string `json:"name" binding:"required"`
-	// Max retries is required
+	// Max retries is required, ignored in case of agents
 	MaxRetries uint `json:"maxRetries" binding:"requiredUint"`
-	// Type must be 0 (PING) or 1 (HTTP)
+	// Type must be 0 (PING), 1 (HTTP) or 2 (AGENT)
 	Type model.TargetType `json:"type" binding:"requiredUint"`
 	// Timeout is required
 	Timeout uint `json:"timeout" binding:"requiredUint"`
-	// At least one checker must be supplied, all checkers must exist
-	CheckerIDs []uint `json:"checkerIDs" binding:"required,min=1"`
+	// At least one checker must be supplied if type is 0 or 1, all checkers must exist, if given type is 2 this is ignored
+	CheckerIDs []uint `json:"checkerIDs" binding:"required"`
 	// Must be supplied if type is 0 (PING)
 	PingInfo *PingInfoCreateRequest `json:"pingInfo,omitempty"`
 	// Must be supplied if type is 1 (HTTP)
