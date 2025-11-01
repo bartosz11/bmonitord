@@ -54,6 +54,12 @@ export interface AlarmCreateAlarmRequest {
      */
     'thresholdField'?: ModelAlarmThresholdField;
     /**
+     * Threshold field params must be supplied if type is 1 (threshold). Used to specify when to trigger alarms in some cases, can be left blank though
+     * @type {string}
+     * @memberof AlarmCreateAlarmRequest
+     */
+    'thresholdFieldParams'?: string;
+    /**
      * Type must be 0 (unavailable) or 1 (threshold)
      * @type {ModelAlarmType}
      * @memberof AlarmCreateAlarmRequest
@@ -149,6 +155,12 @@ export interface AlarmUpdateAlarmRequest {
      * @memberof AlarmUpdateAlarmRequest
      */
     'thresholdField'?: ModelAlarmThresholdField;
+    /**
+     * Threshold field params must be supplied if type is getting changed to 1 (threshold). Used to specify when to trigger alarms in some cases, can be left blank though
+     * @type {string}
+     * @memberof AlarmUpdateAlarmRequest
+     */
+    'thresholdFieldParams'?: string;
     /**
      * Type must be 0 (unavailable) or 1 (threshold), if supplied
      * @type {ModelAlarmType}
@@ -383,6 +395,67 @@ export interface HelpersGenericErrorResponse {
 /**
  * 
  * @export
+ * @interface ModelAgent
+ */
+export interface ModelAgent {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ModelAgent
+     */
+    'HideIp'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelAgent
+     */
+    'createdAt'?: string;
+    /**
+     * 
+     * @type {GormDeletedAt}
+     * @memberof ModelAgent
+     */
+    'deletedAt'?: GormDeletedAt;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelAgent
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ModelAgent
+     */
+    'installed'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelAgent
+     */
+    'key'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelAgent
+     */
+    'lastDataReceived'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelAgent
+     */
+    'targetId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelAgent
+     */
+    'updatedAt'?: string;
+}
+/**
+ * 
+ * @export
  * @interface ModelAlarm
  */
 export interface ModelAlarm {
@@ -447,6 +520,12 @@ export interface ModelAlarm {
      */
     'thresholdField'?: ModelAlarmThresholdField;
     /**
+     * For example what NIC should the threshold apply to
+     * @type {string}
+     * @memberof ModelAlarm
+     */
+    'thresholdFieldParams'?: string;
+    /**
      * 
      * @type {ModelAlarmType}
      * @memberof ModelAlarm
@@ -469,7 +548,15 @@ export interface ModelAlarm {
 
 export const ModelAlarmThresholdField = {
     Latency: 0,
-    thresholdFieldMax: 1
+    CPUFrequency: 1,
+    CPUUsage: 2,
+    IOWait: 3,
+    MemoryUsagePercent: 4,
+    SwapUsagePercent: 5,
+    DiskUsagePercent: 6,
+    NICInbound: 7,
+    NICOutbound: 8,
+    thresholdFieldMax: 9
 } as const;
 
 export type ModelAlarmThresholdField = typeof ModelAlarmThresholdField[keyof typeof ModelAlarmThresholdField];
@@ -594,11 +681,17 @@ export interface ModelHeartbeat {
      */
     'id'?: number;
     /**
-     * 
+     * Latency is a \"generic\" field, payload can provide further information in non-push targets (http, ping etc.)
      * @type {number}
      * @memberof ModelHeartbeat
      */
     'latency'?: number;
+    /**
+     * Payload is stored as gzipped json in a bytea column, but sent in JSON normally
+     * @type {ModelHeartbeatPayload}
+     * @memberof ModelHeartbeat
+     */
+    'payload'?: ModelHeartbeatPayload;
     /**
      * 
      * @type {ModelTargetStatus}
@@ -629,6 +722,33 @@ export interface ModelHeartbeat {
      * @memberof ModelHeartbeat
      */
     'updatedAt'?: string;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface ModelHeartbeatPayload
+ */
+export interface ModelHeartbeatPayload {
+    /**
+     * 
+     * @type {{ [key: string]: object; }}
+     * @memberof ModelHeartbeatPayload
+     */
+    'data'?: { [key: string]: object; };
+    /**
+     * All TargetTypes are allowed to submit further details
+     * @type {ModelTargetType}
+     * @memberof ModelHeartbeatPayload
+     */
+    'type'?: ModelTargetType;
+    /**
+     * Each Type of payload can have their own versioning
+     * @type {number}
+     * @memberof ModelHeartbeatPayload
+     */
+    'version'?: number;
 }
 
 
@@ -943,6 +1063,12 @@ export interface ModelSetting {
 export interface ModelTarget {
     /**
      * 
+     * @type {ModelAgent}
+     * @memberof ModelTarget
+     */
+    'agent'?: ModelAgent;
+    /**
+     * 
      * @type {Array<ModelAlarm>}
      * @memberof ModelTarget
      */
@@ -1205,9 +1331,13 @@ export const ModelTargetType = {
     */
     HTTP: 1,
     /**
+    * 
+    */
+    AGENT: 2,
+    /**
     * &quot;sentinel&quot; value
     */
-    targetTypeMax: 2
+    targetTypeMax: 3
 } as const;
 
 export type ModelTargetType = typeof ModelTargetType[keyof typeof ModelTargetType];
@@ -1569,7 +1699,7 @@ export interface SettingsListSettingsSuccessResponse {
  */
 export interface TargetCreateTargetRequest {
     /**
-     * At least one checker must be supplied, all checkers must exist
+     * At least one checker must be supplied if type is 0 or 1, all checkers must exist, if given type is 2 this is ignored
      * @type {Array<number>}
      * @memberof TargetCreateTargetRequest
      */
@@ -1581,7 +1711,7 @@ export interface TargetCreateTargetRequest {
      */
     'httpInfo'?: TargetHTTPInfoCreateRequest;
     /**
-     * Max retries is required
+     * Max retries is required, ignored in case of agents
      * @type {number}
      * @memberof TargetCreateTargetRequest
      */
@@ -1605,7 +1735,7 @@ export interface TargetCreateTargetRequest {
      */
     'timeout'?: number;
     /**
-     * Type must be 0 (PING) or 1 (HTTP)
+     * Type must be 0 (PING), 1 (HTTP) or 2 (AGENT)
      * @type {ModelTargetType}
      * @memberof TargetCreateTargetRequest
      */
@@ -1765,7 +1895,7 @@ export interface TargetPingInfoUpdateRequest {
  */
 export interface TargetUpdateTargetRequest {
     /**
-     * Must contain at least one checker ID, all checkers must exist. This is a \"replace update\"
+     * Must contain at least one checker ID, all checkers must exist. This is a \"replace update\". This is ignored if Target\'s type is 2 (AGENT)
      * @type {Array<number>}
      * @memberof TargetUpdateTargetRequest
      */
@@ -1777,7 +1907,7 @@ export interface TargetUpdateTargetRequest {
      */
     'httpInfo'?: TargetHTTPInfoUpdateRequest;
     /**
-     * 
+     * Value of maxRetries can be updated even if target\'s type is 2 (agent), but it\'s ignored in the checking behavior
      * @type {number}
      * @memberof TargetUpdateTargetRequest
      */
@@ -1816,6 +1946,16 @@ export const TimeDuration = {
     Second: 1000000000,
     Minute: 60000000000,
     Hour: 3600000000000,
+    minDuration: -9223372036854775808,
+    maxDuration: 9223372036854775807,
+    Nanosecond: 1,
+    Microsecond: 1000,
+    Millisecond: 1000000,
+    Second: 1000000000,
+    Minute: 60000000000,
+    Hour: 3600000000000,
+    minDuration: -9223372036854775808,
+    maxDuration: 9223372036854775807,
     Nanosecond: 1,
     Microsecond: 1000,
     Millisecond: 1000000,
@@ -4746,14 +4886,13 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
-         * Allows a user to pause/unpause a target with specified ID
-         * @summary Pause target
-         * @param {number} targetID ID of target to pause/unpause
-         * @param {boolean} [pause] Pause status, can be true for paused, false for unpaused. If not supplied, target\&#39;s pause status will change to the opposite of current status.
+         * Allows a user to regenerate the key of agent of target with specified ID
+         * @summary Regenerate target\'s agent\'s key
+         * @param {number} targetID ID of target to regenerate agent\&#39;s key
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        targetTargetIDPausePatch: async (targetID: number, pause?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        targetTargetIDPausePatch: async (targetID: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'targetID' is not null or undefined
             assertParamExists('targetTargetIDPausePatch', 'targetID', targetID)
             const localVarPath = `/target/{targetID}/pause`
@@ -4771,10 +4910,6 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
 
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
-            if (pause !== undefined) {
-                localVarQueryParameter['pause'] = pause;
-            }
 
 
     
@@ -4863,15 +4998,14 @@ export const TargetApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Allows a user to pause/unpause a target with specified ID
-         * @summary Pause target
-         * @param {number} targetID ID of target to pause/unpause
-         * @param {boolean} [pause] Pause status, can be true for paused, false for unpaused. If not supplied, target\&#39;s pause status will change to the opposite of current status.
+         * Allows a user to regenerate the key of agent of target with specified ID
+         * @summary Regenerate target\'s agent\'s key
+         * @param {number} targetID ID of target to regenerate agent\&#39;s key
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async targetTargetIDPausePatch(targetID: number, pause?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TargetGetTargetSuccessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.targetTargetIDPausePatch(targetID, pause, options);
+        async targetTargetIDPausePatch(targetID: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TargetGetTargetSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.targetTargetIDPausePatch(targetID, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TargetApi.targetTargetIDPausePatch']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -4937,15 +5071,14 @@ export const TargetApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.targetTargetIDPatch(targetID, updateReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Allows a user to pause/unpause a target with specified ID
-         * @summary Pause target
-         * @param {number} targetID ID of target to pause/unpause
-         * @param {boolean} [pause] Pause status, can be true for paused, false for unpaused. If not supplied, target\&#39;s pause status will change to the opposite of current status.
+         * Allows a user to regenerate the key of agent of target with specified ID
+         * @summary Regenerate target\'s agent\'s key
+         * @param {number} targetID ID of target to regenerate agent\&#39;s key
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        targetTargetIDPausePatch(targetID: number, pause?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<TargetGetTargetSuccessResponse> {
-            return localVarFp.targetTargetIDPausePatch(targetID, pause, options).then((request) => request(axios, basePath));
+        targetTargetIDPausePatch(targetID: number, options?: RawAxiosRequestConfig): AxiosPromise<TargetGetTargetSuccessResponse> {
+            return localVarFp.targetTargetIDPausePatch(targetID, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -5018,16 +5151,15 @@ export class TargetApi extends BaseAPI {
     }
 
     /**
-     * Allows a user to pause/unpause a target with specified ID
-     * @summary Pause target
-     * @param {number} targetID ID of target to pause/unpause
-     * @param {boolean} [pause] Pause status, can be true for paused, false for unpaused. If not supplied, target\&#39;s pause status will change to the opposite of current status.
+     * Allows a user to regenerate the key of agent of target with specified ID
+     * @summary Regenerate target\'s agent\'s key
+     * @param {number} targetID ID of target to regenerate agent\&#39;s key
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TargetApi
      */
-    public targetTargetIDPausePatch(targetID: number, pause?: boolean, options?: RawAxiosRequestConfig) {
-        return TargetApiFp(this.configuration).targetTargetIDPausePatch(targetID, pause, options).then((request) => request(this.axios, this.basePath));
+    public targetTargetIDPausePatch(targetID: number, options?: RawAxiosRequestConfig) {
+        return TargetApiFp(this.configuration).targetTargetIDPausePatch(targetID, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
