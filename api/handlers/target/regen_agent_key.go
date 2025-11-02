@@ -25,7 +25,7 @@ import (
 // @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
 // @Failure 404 {object} helpers.GenericErrorResponse "Returned when a target with given ID couldn't be found or it's type isn't 2 (agent)."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
-// @Router /target/{targetID}/pause [patch]
+// @Router /target/{targetID}/agent/key [patch]
 func HandleAgentKeyReset(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		value, _ := c.Get("user")
@@ -39,7 +39,7 @@ func HandleAgentKeyReset(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		var target model.Target
-		err = db.Joins("Agent").First(&target, "user_id = ? and id = ?", user.ID, id).Error
+		err = db.Joins("Agent").First(&target, "targets.user_id = ? and targets.id = ?", user.ID, id).Error
 
 		if errors.Is(err, gorm.ErrRecordNotFound) || target.Type != model.AGENT {
 			helpers.NotFound(c)
@@ -58,7 +58,7 @@ func HandleAgentKeyReset(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		target.Agent.Key = newKey
-		if db.Save(&target).Error != nil {
+		if db.Session(&gorm.Session{FullSaveAssociations: true}).Save(&target).Error != nil {
 			helpers.DBInteractionFailed(c)
 			return
 		}

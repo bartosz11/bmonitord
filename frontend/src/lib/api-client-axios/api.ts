@@ -1938,24 +1938,12 @@ export interface TargetUpdateTargetRequest {
  */
 
 export const TimeDuration = {
-    minDuration: -9223372036854775808,
-    maxDuration: 9223372036854775807,
     Nanosecond: 1,
     Microsecond: 1000,
     Millisecond: 1000000,
     Second: 1000000000,
     Minute: 60000000000,
     Hour: 3600000000000,
-    minDuration: -9223372036854775808,
-    maxDuration: 9223372036854775807,
-    Nanosecond: 1,
-    Microsecond: 1000,
-    Millisecond: 1000000,
-    Second: 1000000000,
-    Minute: 60000000000,
-    Hour: 3600000000000,
-    minDuration: -9223372036854775808,
-    maxDuration: 9223372036854775807,
     Nanosecond: 1,
     Microsecond: 1000,
     Millisecond: 1000000,
@@ -4769,6 +4757,43 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
+         * Allows a user to regenerate the key of agent of target with specified ID
+         * @summary Regenerate target\'s agent\'s key
+         * @param {number} targetID ID of target to regenerate agent\&#39;s key
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        targetTargetIDAgentKeyPatch: async (targetID: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'targetID' is not null or undefined
+            assertParamExists('targetTargetIDAgentKeyPatch', 'targetID', targetID)
+            const localVarPath = `/target/{targetID}/agent/key`
+                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Allows a user to delete a target with specified ID
          * @summary Delete target by ID
          * @param {number} targetID ID of target to delete
@@ -4886,13 +4911,14 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
-         * Allows a user to regenerate the key of agent of target with specified ID
-         * @summary Regenerate target\'s agent\'s key
-         * @param {number} targetID ID of target to regenerate agent\&#39;s key
+         * Allows a user to pause/unpause a target with specified ID
+         * @summary Pause target
+         * @param {number} targetID ID of target to pause/unpause
+         * @param {boolean} [pause] Pause status, can be true for paused, false for unpaused. If not supplied, target\&#39;s pause status will change to the opposite of current status.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        targetTargetIDPausePatch: async (targetID: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        targetTargetIDPausePatch: async (targetID: number, pause?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'targetID' is not null or undefined
             assertParamExists('targetTargetIDPausePatch', 'targetID', targetID)
             const localVarPath = `/target/{targetID}/pause`
@@ -4910,6 +4936,10 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
 
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (pause !== undefined) {
+                localVarQueryParameter['pause'] = pause;
+            }
 
 
     
@@ -4958,6 +4988,19 @@ export const TargetApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * Allows a user to regenerate the key of agent of target with specified ID
+         * @summary Regenerate target\'s agent\'s key
+         * @param {number} targetID ID of target to regenerate agent\&#39;s key
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async targetTargetIDAgentKeyPatch(targetID: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TargetGetTargetSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.targetTargetIDAgentKeyPatch(targetID, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TargetApi.targetTargetIDAgentKeyPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Allows a user to delete a target with specified ID
          * @summary Delete target by ID
          * @param {number} targetID ID of target to delete
@@ -4998,14 +5041,15 @@ export const TargetApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Allows a user to regenerate the key of agent of target with specified ID
-         * @summary Regenerate target\'s agent\'s key
-         * @param {number} targetID ID of target to regenerate agent\&#39;s key
+         * Allows a user to pause/unpause a target with specified ID
+         * @summary Pause target
+         * @param {number} targetID ID of target to pause/unpause
+         * @param {boolean} [pause] Pause status, can be true for paused, false for unpaused. If not supplied, target\&#39;s pause status will change to the opposite of current status.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async targetTargetIDPausePatch(targetID: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TargetGetTargetSuccessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.targetTargetIDPausePatch(targetID, options);
+        async targetTargetIDPausePatch(targetID: number, pause?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TargetGetTargetSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.targetTargetIDPausePatch(targetID, pause, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TargetApi.targetTargetIDPausePatch']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -5040,6 +5084,16 @@ export const TargetApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.targetPost(createReq, options).then((request) => request(axios, basePath));
         },
         /**
+         * Allows a user to regenerate the key of agent of target with specified ID
+         * @summary Regenerate target\'s agent\'s key
+         * @param {number} targetID ID of target to regenerate agent\&#39;s key
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        targetTargetIDAgentKeyPatch(targetID: number, options?: RawAxiosRequestConfig): AxiosPromise<TargetGetTargetSuccessResponse> {
+            return localVarFp.targetTargetIDAgentKeyPatch(targetID, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Allows a user to delete a target with specified ID
          * @summary Delete target by ID
          * @param {number} targetID ID of target to delete
@@ -5071,14 +5125,15 @@ export const TargetApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.targetTargetIDPatch(targetID, updateReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Allows a user to regenerate the key of agent of target with specified ID
-         * @summary Regenerate target\'s agent\'s key
-         * @param {number} targetID ID of target to regenerate agent\&#39;s key
+         * Allows a user to pause/unpause a target with specified ID
+         * @summary Pause target
+         * @param {number} targetID ID of target to pause/unpause
+         * @param {boolean} [pause] Pause status, can be true for paused, false for unpaused. If not supplied, target\&#39;s pause status will change to the opposite of current status.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        targetTargetIDPausePatch(targetID: number, options?: RawAxiosRequestConfig): AxiosPromise<TargetGetTargetSuccessResponse> {
-            return localVarFp.targetTargetIDPausePatch(targetID, options).then((request) => request(axios, basePath));
+        targetTargetIDPausePatch(targetID: number, pause?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<TargetGetTargetSuccessResponse> {
+            return localVarFp.targetTargetIDPausePatch(targetID, pause, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -5111,6 +5166,18 @@ export class TargetApi extends BaseAPI {
      */
     public targetPost(createReq: TargetCreateTargetRequest, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetPost(createReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to regenerate the key of agent of target with specified ID
+     * @summary Regenerate target\'s agent\'s key
+     * @param {number} targetID ID of target to regenerate agent\&#39;s key
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TargetApi
+     */
+    public targetTargetIDAgentKeyPatch(targetID: number, options?: RawAxiosRequestConfig) {
+        return TargetApiFp(this.configuration).targetTargetIDAgentKeyPatch(targetID, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5151,15 +5218,16 @@ export class TargetApi extends BaseAPI {
     }
 
     /**
-     * Allows a user to regenerate the key of agent of target with specified ID
-     * @summary Regenerate target\'s agent\'s key
-     * @param {number} targetID ID of target to regenerate agent\&#39;s key
+     * Allows a user to pause/unpause a target with specified ID
+     * @summary Pause target
+     * @param {number} targetID ID of target to pause/unpause
+     * @param {boolean} [pause] Pause status, can be true for paused, false for unpaused. If not supplied, target\&#39;s pause status will change to the opposite of current status.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TargetApi
      */
-    public targetTargetIDPausePatch(targetID: number, options?: RawAxiosRequestConfig) {
-        return TargetApiFp(this.configuration).targetTargetIDPausePatch(targetID, options).then((request) => request(this.axios, this.basePath));
+    public targetTargetIDPausePatch(targetID: number, pause?: boolean, options?: RawAxiosRequestConfig) {
+        return TargetApiFp(this.configuration).targetTargetIDPausePatch(targetID, pause, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

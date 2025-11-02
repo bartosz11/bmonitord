@@ -886,24 +886,12 @@ definitions:
     type: object
   time.Duration:
     enum:
-    - -9223372036854775808
-    - 9223372036854775807
     - 1
     - 1000
     - 1000000
     - 1000000000
     - 60000000000
     - 3600000000000
-    - -9223372036854775808
-    - 9223372036854775807
-    - 1
-    - 1000
-    - 1000000
-    - 1000000000
-    - 60000000000
-    - 3600000000000
-    - -9223372036854775808
-    - 9223372036854775807
     - 1
     - 1000
     - 1000000
@@ -913,24 +901,12 @@ definitions:
     format: int64
     type: integer
     x-enum-varnames:
-    - minDuration
-    - maxDuration
     - Nanosecond
     - Microsecond
     - Millisecond
     - Second
     - Minute
     - Hour
-    - minDuration
-    - maxDuration
-    - Nanosecond
-    - Microsecond
-    - Millisecond
-    - Second
-    - Minute
-    - Hour
-    - minDuration
-    - maxDuration
     - Nanosecond
     - Microsecond
     - Millisecond
@@ -2263,6 +2239,52 @@ paths:
       summary: Update target
       tags:
       - target
+  /target/{targetID}/agent/key:
+    patch:
+      consumes:
+      - application/json
+      description: Allows a user to regenerate the key of agent of target with specified
+        ID
+      parameters:
+      - description: ID of target to regenerate agent's key
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/target.getTargetSuccessResponse'
+        "400":
+          description: Returned when given ID or pause status couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target with given ID couldn't be found or it's
+            type isn't 2 (agent).
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Regenerate target's agent's key
+      tags:
+      - target
   /target/{targetID}/alarm/:
     get:
       consumes:
@@ -2571,14 +2593,19 @@ paths:
     patch:
       consumes:
       - application/json
-      description: Allows a user to regenerate the key of agent of target with specified
-        ID
+      description: Allows a user to pause/unpause a target with specified ID
       parameters:
-      - description: ID of target to regenerate agent's key
+      - description: ID of target to pause/unpause
         in: path
         name: targetID
         required: true
         type: integer
+      - description: Pause status, can be true for paused, false for unpaused. If
+          not supplied, target's pause status will change to the opposite of current
+          status.
+        in: query
+        name: pause
+        type: boolean
       produces:
       - application/json
       responses:
@@ -2600,8 +2627,7 @@ paths:
           schema:
             $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
-          description: Returned when a target with given ID couldn't be found or it's
-            type isn't 2 (agent).
+          description: Returned when a target with given ID couldn't be found.
           schema:
             $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
@@ -2610,7 +2636,7 @@ paths:
             $ref: '#/definitions/helpers.GenericErrorResponse'
       security:
       - BearerAuth: []
-      summary: Regenerate target's agent's key
+      summary: Pause target
       tags:
       - target
   /user/:

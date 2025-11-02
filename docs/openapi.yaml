@@ -1536,6 +1536,61 @@ paths:
       tags:
       - target
       x-codegen-request-body-name: updateReq
+  /target/{targetID}/agent/key:
+    patch:
+      description: Allows a user to regenerate the key of agent of target with specified
+        ID
+      parameters:
+      - description: ID of target to regenerate agent's key
+        in: path
+        name: targetID
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/target.getTargetSuccessResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/helpers.GenericErrorResponse"
+          description: Returned when given ID or pause status couldn't be parsed.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/helpers.GenericErrorResponse"
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/helpers.GenericErrorResponse"
+          description: Returned when account of user sending the request is disabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/helpers.GenericErrorResponse"
+          description: Returned when a target with given ID couldn't be found or it's
+            type isn't 2 (agent).
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/helpers.GenericErrorResponse"
+          description: Returned when a DB interaction fails.
+      security:
+      - BearerAuth: []
+      summary: Regenerate target's agent's key
+      tags:
+      - target
   /target/{targetID}/alarm/:
     get:
       description: Allows a user to get a list of alarms that belong to a target
@@ -1905,15 +1960,21 @@ paths:
       - alarm
   /target/{targetID}/pause:
     patch:
-      description: Allows a user to regenerate the key of agent of target with specified
-        ID
+      description: Allows a user to pause/unpause a target with specified ID
       parameters:
-      - description: ID of target to regenerate agent's key
+      - description: ID of target to pause/unpause
         in: path
         name: targetID
         required: true
         schema:
           type: integer
+      - description: "Pause status, can be true for paused, false for unpaused. If\
+          \ not supplied, target's pause status will change to the opposite of current\
+          \ status."
+        in: query
+        name: pause
+        schema:
+          type: boolean
       responses:
         "200":
           content:
@@ -1945,8 +2006,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/helpers.GenericErrorResponse"
-          description: Returned when a target with given ID couldn't be found or it's
-            type isn't 2 (agent).
+          description: Returned when a target with given ID couldn't be found.
         "500":
           content:
             application/json:
@@ -1955,7 +2015,7 @@ paths:
           description: Returned when a DB interaction fails.
       security:
       - BearerAuth: []
-      summary: Regenerate target's agent's key
+      summary: Pause target
       tags:
       - target
   /user/:
@@ -8768,24 +8828,12 @@ components:
       type: object
     time.Duration:
       enum:
-      - -9223372036854775808
-      - 9223372036854775807
       - 1
       - 1000
       - 1000000
       - 1000000000
       - 60000000000
       - 3600000000000
-      - -9223372036854775808
-      - 9223372036854775807
-      - 1
-      - 1000
-      - 1000000
-      - 1000000000
-      - 60000000000
-      - 3600000000000
-      - -9223372036854775808
-      - 9223372036854775807
       - 1
       - 1000
       - 1000000
@@ -8795,24 +8843,12 @@ components:
       format: int64
       type: integer
       x-enum-varnames:
-      - minDuration
-      - maxDuration
       - Nanosecond
       - Microsecond
       - Millisecond
       - Second
       - Minute
       - Hour
-      - minDuration
-      - maxDuration
-      - Nanosecond
-      - Microsecond
-      - Millisecond
-      - Second
-      - Minute
-      - Hour
-      - minDuration
-      - maxDuration
       - Nanosecond
       - Microsecond
       - Millisecond

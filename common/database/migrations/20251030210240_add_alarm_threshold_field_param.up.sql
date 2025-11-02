@@ -1,1 +1,1 @@
-alter table alarms add column threshold_field_params;
+alter table alarms add column threshold_field_params text;

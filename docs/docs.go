@@ -1943,6 +1943,73 @@ const docTemplate = `{
                 }
             }
         },
+        "/target/{targetID}/agent/key": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to regenerate the key of agent of target with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "Regenerate target's agent's key",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to regenerate agent's key",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/target.getTargetSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID or pause status couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found or it's type isn't 2 (agent).",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/target/{targetID}/alarm/": {
             "get": {
                 "security": [
@@ -2398,7 +2465,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Allows a user to regenerate the key of agent of target with specified ID",
+                "description": "Allows a user to pause/unpause a target with specified ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -2408,14 +2475,20 @@ const docTemplate = `{
                 "tags": [
                     "target"
                 ],
-                "summary": "Regenerate target's agent's key",
+                "summary": "Pause target",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ID of target to regenerate agent's key",
+                        "description": "ID of target to pause/unpause",
                         "name": "targetID",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Pause status, can be true for paused, false for unpaused. If not supplied, target's pause status will change to the opposite of current status.",
+                        "name": "pause",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -2444,7 +2517,7 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Returned when a target with given ID couldn't be found or it's type isn't 2 (agent).",
+                        "description": "Returned when a target with given ID couldn't be found.",
                         "schema": {
                             "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
@@ -3974,24 +4047,12 @@ const docTemplate = `{
             "type": "integer",
             "format": "int64",
             "enum": [
-                -9223372036854775808,
-                9223372036854775807,
                 1,
                 1000,
                 1000000,
                 1000000000,
                 60000000000,
                 3600000000000,
-                -9223372036854775808,
-                9223372036854775807,
-                1,
-                1000,
-                1000000,
-                1000000000,
-                60000000000,
-                3600000000000,
-                -9223372036854775808,
-                9223372036854775807,
                 1,
                 1000,
                 1000000,
@@ -4000,24 +4061,12 @@ const docTemplate = `{
                 3600000000000
             ],
             "x-enum-varnames": [
-                "minDuration",
-                "maxDuration",
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",
                 "Second",
                 "Minute",
                 "Hour",
-                "minDuration",
-                "maxDuration",
-                "Nanosecond",
-                "Microsecond",
-                "Millisecond",
-                "Second",
-                "Minute",
-                "Hour",
-                "minDuration",
-                "maxDuration",
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",

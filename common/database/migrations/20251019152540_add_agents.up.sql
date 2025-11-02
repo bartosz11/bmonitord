@@ -8,7 +8,7 @@ create table agents
     key                text not null,
     installed          bool not null default false,
     last_data_received timestamptz,
-    hide_ip            bool not null default true,
+    hide_ip            bool not null default true
 );
 
 alter table heartbeats add column payload bytea;
