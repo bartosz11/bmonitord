@@ -18,4 +18,4 @@
 	<OrchestratorCreateDialog {orchestrators}/>
 {/snippet}
 
-<DataTable columns={orchestratorColumns} data={$orchestrators} meta={orchestrators} />
+<DataTable columns={orchestratorColumns} data={$orchestrators} meta={orchestrators} defaultSorting={{id: "id", desc: false}} />

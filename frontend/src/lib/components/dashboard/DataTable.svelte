@@ -1,11 +1,11 @@
 <script lang="ts" generics="TData, TValue">
-	import {
-		type ColumnDef,
-		getCoreRowModel,
-		getSortedRowModel,
-		type SortingState,
-		type TableMeta
-	} from '@tanstack/table-core';
+    import {
+        type ColumnDef, type ColumnSort,
+        getCoreRowModel,
+        getSortedRowModel,
+        type SortingState,
+        type TableMeta
+    } from '@tanstack/table-core';
 	import {
 		createSvelteTable,
 		FlexRender
@@ -16,10 +16,11 @@
 		columns: ColumnDef<TData, TValue>[];
 		data: TData[];
 		meta?: TableMeta<TData>,
+        defaultSorting?: ColumnSort
 	};
 
-	let { data, columns, meta }: DataTableProps<TData, TValue> = $props();
-	let sorting = $state<SortingState>([]);
+	let { data, columns, meta, defaultSorting }: DataTableProps<TData, TValue> = $props();
+	let sorting = $state<SortingState>(defaultSorting ? [defaultSorting] : []);
 
 	const table = createSvelteTable({
 		get data() {
@@ -40,7 +41,7 @@
 			get sorting() {
 				return sorting;
 			}
-		}
+		},
 	});
 </script>
 

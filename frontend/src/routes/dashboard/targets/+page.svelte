@@ -19,4 +19,4 @@
 	<Button href="/dashboard/targets/create">Create target</Button>
 {/snippet}
 
-<DataTable columns={targetColumns} data={$rows} meta={rows} />
+<DataTable columns={targetColumns} data={$rows} meta={rows} defaultSorting={{id: "id", desc: false}}/>
