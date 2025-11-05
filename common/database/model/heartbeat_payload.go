@@ -11,9 +11,9 @@ import (
 
 type HeartbeatPayload struct {
 	// All TargetTypes are allowed to submit further details
-	Type TargetType `json:"type"`
+	Type TargetType `json:"type" binding:"required"`
 	// Each Type of payload can have their own versioning
-	Version uint           `json:"version"`
+	Version uint           `json:"version"  binding:"required"`
 	Data    map[string]any `json:"data,omitempty"`
 }
 

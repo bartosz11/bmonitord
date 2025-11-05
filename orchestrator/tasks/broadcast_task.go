@@ -8,6 +8,7 @@ import (
 
 	"github.com/bartosz11/checkmate/common/database/model"
 	"github.com/bartosz11/checkmate/orchestrator/helpers"
+	"github.com/bartosz11/checkmate/orchestrator/tasks/processing"
 	"github.com/coder/websocket"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
@@ -21,17 +22,17 @@ func BroadcastTask(db *gorm.DB, maxNetworkOverhead int) func() {
 
 		unixTimestamp := strconv.FormatInt(time.Now().UnixMilli(), 10)
 		db.Save(&model.Setting{
-			Key:   "last-broadcast-task-started",
+			Key:   "last-check-tasks-run",
 			Value: &unixTimestamp,
 		})
 
 		var targets []model.Target
-		db.Joins("HTTPInfo").Joins("PingInfo").Preload("Checkers").Find(&targets, "paused = false")
+		db.Joins("HTTPInfo").Joins("PingInfo").Preload("Checkers").Find(&targets, "paused = false and type != 2")
 
 		var unknownHbs []model.Heartbeat
 		for _, target := range targets {
 			reachedCheckers := 0
-			processingTask := ProcessingTask{
+			processingTask := processing.Task{
 				Target:              target,
 				Checkers:            target.Checkers,
 				UnreachableCheckers: []uint{},
@@ -65,8 +66,8 @@ func BroadcastTask(db *gorm.DB, maxNetworkOverhead int) func() {
 				log.Debug().Int("checker", int(checker.ID)).Msg("orchestrator: checker reached")
 			}
 			processingTask.ExpectedHeartbeats = reachedCheckers
-			ProcessingTasks.Store(target.ID, &processingTask)
-			go StartProcessingTask(db, &processingTask)
+			processing.Tasks.Store(target.ID, &processingTask)
+			go processing.StartProcessingTask(db, &processingTask)
 		}
 	}
 }

@@ -23,11 +23,11 @@ export const settingsInfo = new Map<string, SettingInfo>([
 		}
 	],
 	[
-		'last-broadcast-task-started',
+		'last-check-tasks-run',
 		{
 			readonly: true,
 			inputType: 'datetime-local',
-			displayKey: "Last broadcast task started (adjusted to your timezone)",
+			displayKey: "Last check tasks run (adjusted to your timezone)",
 			valueConverter: (value) => {
 				if (value === undefined) return "";
 				const date = new Date(parseInt(value));

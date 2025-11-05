@@ -41,6 +41,7 @@ type EmailConfig struct {
 
 type OrchestratorConfig struct {
 	MaxNetworkOverhead int    `mapstructure:"max-network-overhead"`
+	GracePeriod        int    `mapstructure:"grace-period"`
 	Name               string `mapstructure:"name"`
 }
 

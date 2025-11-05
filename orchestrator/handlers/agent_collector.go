@@ -5,7 +5,7 @@ import (
 
 	"github.com/bartosz11/checkmate/api/helpers"
 	"github.com/bartosz11/checkmate/common/database/model"
-	"github.com/bartosz11/checkmate/orchestrator/tasks"
+	"github.com/bartosz11/checkmate/orchestrator/tasks/processing"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -36,15 +36,9 @@ func HandleAgentPost(db *gorm.DB) gin.HandlerFunc {
 
 		target.Agent.Installed = true
 		target.Agent.LastDataReceived = hb.Timestamp
-		task := tasks.ProcessingTask{
-			Target:              target,
-			Checkers:            []model.Checker{},
-			UnreachableCheckers: []uint{},
-			CompleteCheckers:    []uint{},
-		}
 		// handles all alarm processing and incidents, the same code that orchestrator's check task uses but adjusted for 1-hb, no checker usage
 		// this function also saves the heartbeat
-		tasks.ProcessHeartbeats([]model.Heartbeat{hb}, &task, db)
+		processing.ProcessPushHeartbeat(&target, &hb, db, true)
 		db.Save(&(target.Agent))
 	}
 }

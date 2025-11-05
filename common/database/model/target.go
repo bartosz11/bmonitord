@@ -66,3 +66,16 @@ func ValidateTargetType(tt TargetType) error {
 func (t TargetType) IsPush() bool {
 	return t == AGENT
 }
+
+func (target *Target) GetHost() string {
+	switch target.Type {
+	case PING:
+		return target.PingInfo.Host
+	case HTTP:
+		return target.HTTPInfo.Host
+	case AGENT:
+		return "Server Agent"
+	default:
+		return ""
+	}
+}

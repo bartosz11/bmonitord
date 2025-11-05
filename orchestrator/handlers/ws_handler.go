@@ -8,6 +8,7 @@ import (
 	"github.com/bartosz11/checkmate/common/database/model"
 	"github.com/bartosz11/checkmate/orchestrator/helpers"
 	"github.com/bartosz11/checkmate/orchestrator/tasks"
+	"github.com/bartosz11/checkmate/orchestrator/tasks/processing"
 	"github.com/coder/websocket"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
@@ -86,13 +87,13 @@ func HandleNewWSConnection(db *gorm.DB) func(ctx *gin.Context) {
 					break
 				}
 
-				load, _ := tasks.ProcessingTasks.Load(hb.TargetID)
+				load, _ := processing.Tasks.Load(hb.TargetID)
 				// Theoretically there's the "ok" returned but checking for nil does the same thing
 				if load == nil {
 					helpers.SendJSON(conn, helpers.WebSocketMessage{Type: "error", Payload: json.RawMessage(`"target not queued"`)})
 					break
 				}
-				task := load.(*tasks.ProcessingTask)
+				task := load.(*processing.Task)
 				task.Heartbeats <- hb
 				task.CompleteCheckers = append(task.CompleteCheckers, hb.CheckerID)
 				helpers.SendJSON(conn, helpers.WebSocketMessage{Type: "info", Payload: json.RawMessage(`"check-ok"`)})
