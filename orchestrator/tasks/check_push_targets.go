@@ -23,7 +23,7 @@ func CheckPushTargetsTask(db *gorm.DB, gracePeriod int) func() {
 		}
 
 		var pushTargets []model.Target
-		db.Joins("Agent").Find(&pushTargets, "type = 2")
+		db.Joins("Agent").Find(&pushTargets, "paused = false and type = 2")
 
 		for _, target := range pushTargets {
 			agent := &(target.Agent)
