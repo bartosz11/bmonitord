@@ -13,24 +13,18 @@ import (
 
 // HandleGetTargetByID docs
 // @Summary Get target by ID
-// @Description Allows a user to retrieve information about target with specified ID
+// @Description Allows to retrieve information about target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
 // @Tags target
-// @Security BearerAuth
 // @Accept json
 // @Produce json
 // @Param targetID path uint true "ID of target to get"
 // @Success 200 {object} getTargetSuccessResponse
 // @Failure 400 {object} helpers.GenericErrorResponse "Returned when given ID couldn't be parsed."
-// @Failure 401 {object} helpers.GenericErrorResponse "Returned when user sending the request supplies an invalid auth token."
-// @Failure 403 {object} helpers.GenericErrorResponse "Returned when account of user sending the request is disabled."
-// @Failure 404 {object} helpers.GenericErrorResponse "Returned when a target with given ID couldn't be found."
+// @Failure 404 {object} helpers.GenericErrorResponse "Returned when a target with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public)."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
 // @Router /target/{targetID} [get]
 func HandleGetTargetByID(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		val, _ := c.Get("user")
-		user := val.(model.User)
-
 		param := c.Param("targetID")
 		id, err := strconv.ParseUint(param, 10, 64)
 		if err != nil {
@@ -38,11 +32,18 @@ func HandleGetTargetByID(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
+		val, authenticatedUser := c.Get("user")
+		var user model.User
+		if authenticatedUser {
+			user = val.(model.User)
+		}
+
 		var target model.Target
 		err = db.Joins("HTTPInfo").Joins("PingInfo").Joins("Agent").Preload("Checkers").Preload("Alarms").
-			First(&target, "targets.id = ? and user_id = ?", id, user.ID).Error
+			First(&target, "targets.id = ?", id).Error
 
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+		// !authenticatedUser prevents a case where targets of a user with id 0 (shouldn't exist) can be retrieved by anyone, because user.ID default value is 0
+		if errors.Is(err, gorm.ErrRecordNotFound) || (!target.Public && (!authenticatedUser || user.ID != target.UserID)) {
 			helpers.NotFound(c)
 			return
 		}
@@ -53,6 +54,9 @@ func HandleGetTargetByID(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		SanitizeTarget(&target)
+		if !authenticatedUser || user.ID != target.UserID {
+			target.Agent.Key = ""
+		}
 		response := helpers.HTTPResponse{
 			Code: http.StatusOK,
 			Data: target,

@@ -1,0 +1,23 @@
+meta {
+  name: Make target public or private
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{API_URL}}/api/target/:id/public?public=true
+  body: none
+  auth: none
+}
+
+params:query {
+  public: true
+}
+
+params:path {
+  id: 19
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}

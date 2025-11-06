@@ -347,6 +347,9 @@ definitions:
       version:
         description: Each Type of payload can have their own versioning
         type: integer
+    required:
+    - type
+    - version
     type: object
   model.Incident:
     properties:
@@ -507,6 +510,8 @@ definitions:
         type: boolean
       pingInfo:
         $ref: '#/definitions/model.TargetPingInfo'
+      public:
+        type: boolean
       timeout:
         type: integer
       type:
@@ -890,8 +895,6 @@ definitions:
     - 1000
     - 1000000
     - 1000000000
-    - 60000000000
-    - 3600000000000
     - 1
     - 1000
     - 1000000
@@ -905,8 +908,6 @@ definitions:
     - Microsecond
     - Millisecond
     - Second
-    - Minute
-    - Hour
     - Nanosecond
     - Microsecond
     - Millisecond
@@ -2148,8 +2149,9 @@ paths:
     get:
       consumes:
       - application/json
-      description: Allows a user to retrieve information about target with specified
-        ID
+      description: Allows to retrieve information about target with specified ID,
+        if target is public then the info can be retrieved by anyone, even without
+        an auth token
       parameters:
       - description: ID of target to get
         in: path
@@ -2167,25 +2169,15 @@ paths:
           description: Returned when given ID couldn't be parsed.
           schema:
             $ref: '#/definitions/helpers.GenericErrorResponse'
-        "401":
-          description: Returned when user sending the request supplies an invalid
-            auth token.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
-        "403":
-          description: Returned when account of user sending the request is disabled.
-          schema:
-            $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
-          description: Returned when a target with given ID couldn't be found.
+          description: Returned when a target with given ID couldn't be found or user
+            sending the request isn't allowed to access it (target isn't public).
           schema:
             $ref: '#/definitions/helpers.GenericErrorResponse'
         "500":
           description: Returned when a DB interaction fails.
           schema:
             $ref: '#/definitions/helpers.GenericErrorResponse'
-      security:
-      - BearerAuth: []
       summary: Get target by ID
       tags:
       - target
@@ -2637,6 +2629,57 @@ paths:
       security:
       - BearerAuth: []
       summary: Pause target
+      tags:
+      - target
+  /target/{targetID}/public:
+    patch:
+      consumes:
+      - application/json
+      description: Allows a user to make Target and it's incidents and heartbeats
+        public or private
+      parameters:
+      - description: ID of target to publish/unpublish
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      - description: Public status, can be true for public, false for private. If
+          not supplied, target's public status will change to the opposite of current
+          status.
+        in: query
+        name: public
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/target.getTargetSuccessResponse'
+        "400":
+          description: Returned when given ID or public status couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Make target public/private
       tags:
       - target
   /user/:

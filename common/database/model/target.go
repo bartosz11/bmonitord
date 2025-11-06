@@ -16,6 +16,7 @@ type Target struct {
 	LastStatus  TargetStatus   `json:"lastStatus"`
 	Type        TargetType     `gorm:"not null" json:"type"`
 	Paused      bool           `gorm:"default:false" json:"paused"`
+	Public      bool           `gorm:"not null;default:false" json:"public"`
 	Timeout     uint           `json:"timeout"`
 	UserID      uint           `gorm:"not null" json:"userId"`
 	Heartbeats  []Heartbeat    `gorm:"constraint:OnDelete:CASCADE;" json:"heartbeats"`

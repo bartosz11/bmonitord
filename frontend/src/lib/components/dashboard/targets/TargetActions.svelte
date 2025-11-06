@@ -28,6 +28,18 @@
 			}
 		}).catch((err) => toast.error('Failed to toggle pause status: ' + (err.response?.data?.error ?? 'something went wrong')));
 	}
+
+	function onPublicClick() {
+		targetApi.targetTargetIDPublicPatch(row.id!).then((resp) => {
+			if (resp.status === 200) {
+				toast.success(`Successfully made target ${row.public ? 'private' : 'public'}.`);
+				rows.update((arr) =>
+					arr.map(n =>
+						n.id! === row!.id! ? { ...n, ...resp.data.data! } : n
+					));
+			}
+		}).catch((err) => toast.error('Failed to toggle public status: ' + (err.response?.data?.error ?? 'something went wrong')));
+	}
 </script>
 
 <ActionsBase>
@@ -35,6 +47,7 @@
 		<DropdownMenuGroup>
 			<DropdownMenuLabel>Actions</DropdownMenuLabel>
 			<DropdownMenuItem onclick={onPauseClick}>{row.paused ? "Unpause" : "Pause"} monitoring</DropdownMenuItem>
+			<DropdownMenuItem onclick={onPublicClick}>Make {row.public ? "private" : "public"}</DropdownMenuItem>
 			<DropdownMenuItem onclick={() => goto(`/dashboard/targets/${row.id}/edit`)}>Edit</DropdownMenuItem>
 			<DropdownMenuItem onclick={() => goto(`/dashboard/targets/${row.id}/alarms`)}>Manage alarms</DropdownMenuItem>
 			{#if row.type === 2}

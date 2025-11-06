@@ -1423,8 +1423,9 @@ paths:
       tags:
       - target
     get:
-      description: Allows a user to retrieve information about target with specified
-        ID
+      description: "Allows to retrieve information about target with specified ID,\
+        \ if target is public then the info can be retrieved by anyone, even without\
+        \ an auth token"
       parameters:
       - description: ID of target to get
         in: path
@@ -1445,33 +1446,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/helpers.GenericErrorResponse"
           description: Returned when given ID couldn't be parsed.
-        "401":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/helpers.GenericErrorResponse"
-          description: Returned when user sending the request supplies an invalid
-            auth token.
-        "403":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/helpers.GenericErrorResponse"
-          description: Returned when account of user sending the request is disabled.
         "404":
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/helpers.GenericErrorResponse"
-          description: Returned when a target with given ID couldn't be found.
+          description: Returned when a target with given ID couldn't be found or user
+            sending the request isn't allowed to access it (target isn't public).
         "500":
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/helpers.GenericErrorResponse"
           description: Returned when a DB interaction fails.
-      security:
-      - BearerAuth: []
       summary: Get target by ID
       tags:
       - target
@@ -2016,6 +2003,67 @@ paths:
       security:
       - BearerAuth: []
       summary: Pause target
+      tags:
+      - target
+  /target/{targetID}/public:
+    patch:
+      description: Allows a user to make Target and it's incidents and heartbeats
+        public or private
+      parameters:
+      - description: ID of target to publish/unpublish
+        in: path
+        name: targetID
+        required: true
+        schema:
+          type: integer
+      - description: "Public status, can be true for public, false for private. If\
+          \ not supplied, target's public status will change to the opposite of current\
+          \ status."
+        in: query
+        name: public
+        schema:
+          type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/target.getTargetSuccessResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/helpers.GenericErrorResponse"
+          description: Returned when given ID or public status couldn't be parsed.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/helpers.GenericErrorResponse"
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/helpers.GenericErrorResponse"
+          description: Returned when account of user sending the request is disabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/helpers.GenericErrorResponse"
+          description: Returned when a target with given ID couldn't be found.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/helpers.GenericErrorResponse"
+          description: Returned when a DB interaction fails.
+      security:
+      - BearerAuth: []
+      summary: Make target public/private
       tags:
       - target
   /user/:
@@ -2576,6 +2624,7 @@ components:
                   valid: true
                   time: time
                 maxRetries: 3
+                public: true
                 pingInfo:
                   createdAt: createdAt
                   deletedAt:
@@ -2798,6 +2847,7 @@ components:
                   valid: true
                   time: time
                 maxRetries: 3
+                public: true
                 pingInfo:
                   createdAt: createdAt
                   deletedAt:
@@ -3137,6 +3187,7 @@ components:
               valid: true
               time: time
             maxRetries: 3
+            public: true
             pingInfo:
               createdAt: createdAt
               deletedAt:
@@ -3359,6 +3410,7 @@ components:
               valid: true
               time: time
             maxRetries: 3
+            public: true
             pingInfo:
               createdAt: createdAt
               deletedAt:
@@ -4011,6 +4063,9 @@ components:
         version:
           description: Each Type of payload can have their own versioning
           type: integer
+      required:
+      - type
+      - version
       type: object
     model.Incident:
       example:
@@ -4359,6 +4414,7 @@ components:
               valid: true
               time: time
             maxRetries: 3
+            public: true
             pingInfo:
               createdAt: createdAt
               deletedAt:
@@ -4581,6 +4637,7 @@ components:
               valid: true
               time: time
             maxRetries: 3
+            public: true
             pingInfo:
               createdAt: createdAt
               deletedAt:
@@ -4938,6 +4995,7 @@ components:
           valid: true
           time: time
         maxRetries: 3
+        public: true
         pingInfo:
           createdAt: createdAt
           deletedAt:
@@ -5030,6 +5088,8 @@ components:
           type: boolean
         pingInfo:
           $ref: "#/components/schemas/model.TargetPingInfo"
+        public:
+          type: boolean
         timeout:
           type: integer
         type:
@@ -5312,6 +5372,7 @@ components:
             valid: true
             time: time
           maxRetries: 3
+          public: true
           pingInfo:
             createdAt: createdAt
             deletedAt:
@@ -5534,6 +5595,7 @@ components:
             valid: true
             time: time
           maxRetries: 3
+          public: true
           pingInfo:
             createdAt: createdAt
             deletedAt:
@@ -6243,6 +6305,7 @@ components:
                 valid: true
                 time: time
               maxRetries: 3
+              public: true
               pingInfo:
                 createdAt: createdAt
                 deletedAt:
@@ -6465,6 +6528,7 @@ components:
                 valid: true
                 time: time
               maxRetries: 3
+              public: true
               pingInfo:
                 createdAt: createdAt
                 deletedAt:
@@ -6817,6 +6881,7 @@ components:
                 valid: true
                 time: time
               maxRetries: 3
+              public: true
               pingInfo:
                 createdAt: createdAt
                 deletedAt:
@@ -7039,6 +7104,7 @@ components:
                 valid: true
                 time: time
               maxRetries: 3
+              public: true
               pingInfo:
                 createdAt: createdAt
                 deletedAt:
@@ -7380,6 +7446,7 @@ components:
                 valid: true
                 time: time
               maxRetries: 3
+              public: true
               pingInfo:
                 createdAt: createdAt
                 deletedAt:
@@ -7602,6 +7669,7 @@ components:
                 valid: true
                 time: time
               maxRetries: 3
+              public: true
               pingInfo:
                 createdAt: createdAt
                 deletedAt:
@@ -8080,6 +8148,7 @@ components:
             valid: true
             time: time
           maxRetries: 3
+          public: true
           pingInfo:
             createdAt: createdAt
             deletedAt:
@@ -8313,6 +8382,7 @@ components:
             valid: true
             time: time
           maxRetries: 3
+          public: true
           pingInfo:
             createdAt: createdAt
             deletedAt:
@@ -8546,6 +8616,7 @@ components:
             valid: true
             time: time
           maxRetries: 3
+          public: true
           pingInfo:
             createdAt: createdAt
             deletedAt:
@@ -8768,6 +8839,7 @@ components:
             valid: true
             time: time
           maxRetries: 3
+          public: true
           pingInfo:
             createdAt: createdAt
             deletedAt:
@@ -8832,8 +8904,6 @@ components:
       - 1000
       - 1000000
       - 1000000000
-      - 60000000000
-      - 3600000000000
       - 1
       - 1000
       - 1000000
@@ -8847,8 +8917,6 @@ components:
       - Microsecond
       - Millisecond
       - Second
-      - Minute
-      - Hour
       - Nanosecond
       - Microsecond
       - Millisecond
@@ -9062,6 +9130,7 @@ components:
               valid: true
               time: time
             maxRetries: 3
+            public: true
             pingInfo:
               createdAt: createdAt
               deletedAt:
@@ -9284,6 +9353,7 @@ components:
               valid: true
               time: time
             maxRetries: 3
+            public: true
             pingInfo:
               createdAt: createdAt
               deletedAt:
@@ -9634,6 +9704,7 @@ components:
                 valid: true
                 time: time
               maxRetries: 3
+              public: true
               pingInfo:
                 createdAt: createdAt
                 deletedAt:
@@ -9856,6 +9927,7 @@ components:
                 valid: true
                 time: time
               maxRetries: 3
+              public: true
               pingInfo:
                 createdAt: createdAt
                 deletedAt:

@@ -1739,12 +1739,7 @@ const docTemplate = `{
         },
         "/target/{targetID}": {
             "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Allows a user to retrieve information about target with specified ID",
+                "description": "Allows to retrieve information about target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token",
                 "consumes": [
                     "application/json"
                 ],
@@ -1777,20 +1772,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
                     },
-                    "401": {
-                        "description": "Returned when user sending the request supplies an invalid auth token.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Returned when account of user sending the request is disabled.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
                     "404": {
-                        "description": "Returned when a target with given ID couldn't be found.",
+                        "description": "Returned when a target with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public).",
                         "schema": {
                             "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
@@ -2531,6 +2514,79 @@ const docTemplate = `{
                 }
             }
         },
+        "/target/{targetID}/public": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to make Target and it's incidents and heartbeats public or private",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "Make target public/private",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to publish/unpublish",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Public status, can be true for public, false for private. If not supplied, target's public status will change to the opposite of current status.",
+                        "name": "public",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/target.getTargetSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID or public status couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/": {
             "get": {
                 "security": [
@@ -3239,6 +3295,10 @@ const docTemplate = `{
         },
         "model.HeartbeatPayload": {
             "type": "object",
+            "required": [
+                "type",
+                "version"
+            ],
             "properties": {
                 "data": {
                     "type": "object",
@@ -3493,6 +3553,9 @@ const docTemplate = `{
                 },
                 "pingInfo": {
                     "$ref": "#/definitions/model.TargetPingInfo"
+                },
+                "public": {
+                    "type": "boolean"
                 },
                 "timeout": {
                     "type": "integer"
@@ -4051,8 +4114,6 @@ const docTemplate = `{
                 1000,
                 1000000,
                 1000000000,
-                60000000000,
-                3600000000000,
                 1,
                 1000,
                 1000000,
@@ -4065,8 +4126,6 @@ const docTemplate = `{
                 "Microsecond",
                 "Millisecond",
                 "Second",
-                "Minute",
-                "Hour",
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",

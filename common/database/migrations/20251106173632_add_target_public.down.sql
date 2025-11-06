@@ -1,0 +1,1 @@
+alter table targets drop column public;

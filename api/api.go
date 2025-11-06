@@ -85,7 +85,12 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 		authGrp.POST("/register", auth.HandleRegister(db))
 	}
 
-	restrictedGrp := apiGroup.Group("", middleware.AuthMiddleware(db))
+	publicGroup := apiGroup.Group("", middleware.AuthMiddleware(db, true))
+	{
+		publicGroup.GET("/target/:targetID", target.HandleGetTargetByID(db))
+	}
+
+	restrictedGrp := apiGroup.Group("", middleware.AuthMiddleware(db, false))
 	{
 		userGrp := restrictedGrp.Group("/user")
 		{
@@ -120,9 +125,9 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 			specificTargetGrp := targetGrp.Group("/:targetID")
 			{
 				specificTargetGrp.DELETE("", target.HandleDeleteTargetByID(db))
-				specificTargetGrp.GET("", target.HandleGetTargetByID(db))
 				specificTargetGrp.PATCH("", target.HandleUpdateTargetById(db))
 				specificTargetGrp.PATCH("/pause", target.HandlePauseTarget(db))
+				specificTargetGrp.PATCH("/public", target.HandleTargetTogglePublic(db))
 				alarmGrp := specificTargetGrp.Group("/alarm")
 				{
 					alarmGrp.POST("/", alarm.HandleCreateAlarm(db))

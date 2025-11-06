@@ -11,13 +11,13 @@ import (
 	"gorm.io/gorm"
 )
 
-func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
+func AuthMiddleware(db *gorm.DB, softAuth bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var tokenStr string
 
 		authHeader := c.GetHeader("Authorization")
 		if strings.HasPrefix(authHeader, "Bearer ") {
-			tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
+			tokenStr = strings.TrimPrefix(authHeader, "Bearer ")
 		}
 
 		cookie, err := c.Cookie("auth-token")
@@ -26,7 +26,11 @@ func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		if tokenStr == "" {
-			abortAuth(c)
+			if softAuth {
+				c.Next()
+			} else {
+				abortAuth(c)
+			}
 			return
 		}
 
