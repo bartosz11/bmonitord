@@ -14,7 +14,7 @@ func HandleAgentPost(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		key := c.Param("key")
 		var target model.Target
-		err := db.Joins("Agent").First(&target, "agents.key = ?", key).Error
+		err := db.Joins("Agent").First(&target, `"Agent"."key" = ?`, key).Error
 		if err != nil {
 			helpers.NotFound(c)
 			return
@@ -25,6 +25,8 @@ func HandleAgentPost(db *gorm.DB) gin.HandlerFunc {
 			helpers.BadRequestWithSpecificError(c, "bad request body")
 			return
 		}
+
+		payload.Data["ip"] = c.ClientIP()
 
 		hb := model.Heartbeat{
 			Timestamp: time.Now(),
