@@ -132,6 +132,10 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 					alarmGrp.PATCH("/:alarmID", alarm.HandleUpdateAlarm(db))
 					alarmGrp.PATCH("/:alarmID/mute", alarm.HandleMuteAlarm(db))
 				}
+				agentGrp := specificTargetGrp.Group("/agent")
+				{
+					agentGrp.PATCH("/key", target.HandleAgentKeyReset(db))
+				}
 			}
 		}
 		checkerGrp := restrictedGrp.Group("/checker")

@@ -28,4 +28,4 @@
 		{/snippet}
 	</AlarmDataDialog>
 {/snippet}
-<DataTable columns={alarmColumns} data={$alarms} meta={tableMeta} />
+<DataTable columns={alarmColumns} data={$alarms} meta={tableMeta} defaultSorting={{id: "id", desc: false}}/>

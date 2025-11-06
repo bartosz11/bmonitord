@@ -19,6 +19,11 @@ definitions:
         - $ref: '#/definitions/model.AlarmThresholdField'
         description: Threshold field must be supplied if type is 1 (threshold). At
           the moment the only accepted value is 0 (latency)
+      thresholdFieldParams:
+        description: Threshold field params must be supplied if type is 1 (threshold).
+          Used to specify when to trigger alarms in some cases, can be left blank
+          though
+        type: string
       type:
         allOf:
         - $ref: '#/definitions/model.AlarmType'
@@ -46,6 +51,11 @@ definitions:
         - $ref: '#/definitions/model.AlarmThresholdField'
         description: Must be supplied if type is getting changed to threshold (1),
           at the moment the only accepted value is 0 (latency)
+      thresholdFieldParams:
+        description: Threshold field params must be supplied if type is getting changed
+          to 1 (threshold). Used to specify when to trigger alarms in some cases,
+          can be left blank though
+        type: string
       type:
         allOf:
         - $ref: '#/definitions/model.AlarmType'
@@ -179,6 +189,27 @@ definitions:
         example: parsing id failed
         type: string
     type: object
+  model.Agent:
+    properties:
+      HideIp:
+        type: boolean
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      installed:
+        type: boolean
+      key:
+        type: string
+      lastDataReceived:
+        type: string
+      targetId:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
   model.Alarm:
     properties:
       active:
@@ -203,6 +234,9 @@ definitions:
         type: number
       thresholdField:
         $ref: '#/definitions/model.AlarmThresholdField'
+      thresholdFieldParams:
+        description: For example what NIC should the threshold apply to
+        type: string
       type:
         $ref: '#/definitions/model.AlarmType'
       updatedAt:
@@ -212,9 +246,25 @@ definitions:
     enum:
     - 0
     - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
     type: integer
     x-enum-varnames:
     - Latency
+    - CPUFrequency
+    - CPUUsage
+    - IOWait
+    - MemoryUsagePercent
+    - SwapUsagePercent
+    - DiskUsagePercent
+    - NICInbound
+    - NICOutbound
     - thresholdFieldMax
   model.AlarmType:
     enum:
@@ -266,7 +316,14 @@ definitions:
       id:
         type: integer
       latency:
+        description: Latency is a "generic" field, payload can provide further information
+          in non-push targets (http, ping etc.)
         type: integer
+      payload:
+        allOf:
+        - $ref: '#/definitions/model.HeartbeatPayload'
+        description: Payload is stored as gzipped json in a bytea column, but sent
+          in JSON normally
       status:
         $ref: '#/definitions/model.TargetStatus'
       target:
@@ -277,6 +334,19 @@ definitions:
         type: string
       updatedAt:
         type: string
+    type: object
+  model.HeartbeatPayload:
+    properties:
+      data:
+        additionalProperties: {}
+        type: object
+      type:
+        allOf:
+        - $ref: '#/definitions/model.TargetType'
+        description: All TargetTypes are allowed to submit further details
+      version:
+        description: Each Type of payload can have their own versioning
+        type: integer
     type: object
   model.Incident:
     properties:
@@ -395,6 +465,8 @@ definitions:
     type: object
   model.Target:
     properties:
+      agent:
+        $ref: '#/definitions/model.Agent'
       alarms:
         items:
           $ref: '#/definitions/model.Alarm'
@@ -497,16 +569,19 @@ definitions:
     - 0
     - 1
     - 2
+    - 3
     type: integer
     x-enum-comments:
       targetTypeMax: '"sentinel" value'
     x-enum-descriptions:
     - ""
     - ""
+    - ""
     - '"sentinel" value'
     x-enum-varnames:
     - PING
     - HTTP
+    - AGENT
     - targetTypeMax
   model.User:
     properties:
@@ -684,17 +759,17 @@ definitions:
   target.CreateTargetRequest:
     properties:
       checkerIDs:
-        description: At least one checker must be supplied, all checkers must exist
+        description: At least one checker must be supplied if type is 0 or 1, all
+          checkers must exist, if given type is 2 this is ignored
         items:
           type: integer
-        minItems: 1
         type: array
       httpInfo:
         allOf:
         - $ref: '#/definitions/target.HTTPInfoCreateRequest'
         description: Must be supplied if type is 1 (HTTP)
       maxRetries:
-        description: Max retries is required
+        description: Max retries is required, ignored in case of agents
         type: integer
       name:
         description: Name must not be blank
@@ -709,7 +784,7 @@ definitions:
       type:
         allOf:
         - $ref: '#/definitions/model.TargetType'
-        description: Type must be 0 (PING) or 1 (HTTP)
+        description: Type must be 0 (PING), 1 (HTTP) or 2 (AGENT)
     required:
     - checkerIDs
     - name
@@ -765,13 +840,15 @@ definitions:
     properties:
       checkerIDs:
         description: Must contain at least one checker ID, all checkers must exist.
-          This is a "replace update"
+          This is a "replace update". This is ignored if Target's type is 2 (AGENT)
         items:
           type: integer
         type: array
       httpInfo:
         $ref: '#/definitions/target.HTTPInfoUpdateRequest'
       maxRetries:
+        description: Value of maxRetries can be updated even if target's type is 2
+          (agent), but it's ignored in the checking behavior
         type: integer
       name:
         description: Name must not be blank if supplied
@@ -809,8 +886,6 @@ definitions:
     type: object
   time.Duration:
     enum:
-    - -9223372036854775808
-    - 9223372036854775807
     - 1
     - 1000
     - 1000000
@@ -826,8 +901,6 @@ definitions:
     format: int64
     type: integer
     x-enum-varnames:
-    - minDuration
-    - maxDuration
     - Nanosecond
     - Microsecond
     - Millisecond
@@ -2164,6 +2237,52 @@ paths:
       security:
       - BearerAuth: []
       summary: Update target
+      tags:
+      - target
+  /target/{targetID}/agent/key:
+    patch:
+      consumes:
+      - application/json
+      description: Allows a user to regenerate the key of agent of target with specified
+        ID
+      parameters:
+      - description: ID of target to regenerate agent's key
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/target.getTargetSuccessResponse'
+        "400":
+          description: Returned when given ID or pause status couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target with given ID couldn't be found or it's
+            type isn't 2 (agent).
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Regenerate target's agent's key
       tags:
       - target
   /target/{targetID}/alarm/:

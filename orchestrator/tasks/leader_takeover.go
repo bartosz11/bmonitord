@@ -52,19 +52,20 @@ func LeaderTakeoverTask(db *gorm.DB, orchestratorCfg *config.OrchestratorConfig,
 			db.Model(&model.Orchestrator{}).Where("name = ?", orchestratorCfg.Name).Update("leader", true)
 			log.Info().Msg("orchestrator: leader takeover succeeded")
 
-			var lastBroadcastTaskRun model.Setting
-			db.First(&lastBroadcastTaskRun, "key = ?", "last-broadcast-task-started")
-			if lastBroadcastTaskRun.Value == nil || *lastBroadcastTaskRun.Value == "" {
-				// Means this setting hasn't been created yet - the broadcast task never ran
-				runBroadcastTaskNowAndEvery60s(db, orchestratorCfg, c)
+			// This setting is saved every time by the broadcast task
+			var lastCheckTasksRun model.Setting
+			db.First(&lastCheckTasksRun, "key = ?", "last-check-tasks-run")
+			if lastCheckTasksRun.Value == nil || *lastCheckTasksRun.Value == "" {
+				// Means this setting hasn't been created yet - the check tasks never ran
+				runCheckTasksNowAndEvery60s(db, orchestratorCfg, c)
 				return
 			}
-			lastRunTimestamp, err := strconv.ParseInt(*lastBroadcastTaskRun.Value, 10, 64)
+			lastRunTimestamp, err := strconv.ParseInt(*lastCheckTasksRun.Value, 10, 64)
 			if err != nil {
 				//Shouldn't happen
-				log.Error().Err(err).Msg("orchestrator: failed to parse last broadcast task run timestamp")
+				log.Error().Err(err).Msg("orchestrator: failed to parse last check tasks run timestamp")
 				//I guess we should fall back to running NOW and every 60s
-				runBroadcastTaskNowAndEvery60s(db, orchestratorCfg, c)
+				runCheckTasksNowAndEvery60s(db, orchestratorCfg, c)
 				return
 			}
 			now := time.Now().UnixMilli()
@@ -73,24 +74,29 @@ func LeaderTakeoverTask(db *gorm.DB, orchestratorCfg *config.OrchestratorConfig,
 			// Also if it went negative, without this "handler" we'd be stuck without a check for 60,000+ ms
 			// because even 60,000 - (-1) = 60000
 			if delta >= 60000 || delta < 0 {
-				runBroadcastTaskNowAndEvery60s(db, orchestratorCfg, c)
+				runCheckTasksNowAndEvery60s(db, orchestratorCfg, c)
 			} else {
 				//delta is in range 0-59999 ms
 				timeTillNext := 60000 - delta
 				go time.AfterFunc(time.Duration(timeTillNext)*time.Millisecond, func() {
 					//Delay execution and the scheduling by timeTillNext
-					runBroadcastTaskNowAndEvery60s(db, orchestratorCfg, c)
+					runCheckTasksNowAndEvery60s(db, orchestratorCfg, c)
 				})
 			}
 		}
 	}
 }
 
-func runBroadcastTaskNowAndEvery60s(db *gorm.DB, orchestratorCfg *config.OrchestratorConfig, c *cron.Cron) {
+func runCheckTasksNowAndEvery60s(db *gorm.DB, orchestratorCfg *config.OrchestratorConfig, c *cron.Cron) {
 	go BroadcastTask(db, orchestratorCfg.MaxNetworkOverhead)()
+	go CheckPushTargetsTask(db, orchestratorCfg.GracePeriod)()
 
 	_, err := c.AddFunc("@every 60s", BroadcastTask(db, orchestratorCfg.MaxNetworkOverhead))
 	if err != nil {
 		log.Err(err).Msg("failed to schedule broadcast task")
+	}
+	_, err = c.AddFunc("@every 60s", CheckPushTargetsTask(db, orchestratorCfg.GracePeriod))
+	if err != nil {
+		log.Err(err).Msg("failed to schedule check push targets task")
 	}
 }

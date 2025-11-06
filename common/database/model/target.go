@@ -24,6 +24,7 @@ type Target struct {
 	Checkers    []Checker      `gorm:"many2many:targets_checkers;constraint:OnDelete:CASCADE;" json:"checkers"`
 	HTTPInfo    TargetHTTPInfo `gorm:"constraint:OnDelete:CASCADE;" json:"httpInfo"`
 	PingInfo    TargetPingInfo `gorm:"constraint:OnDelete:CASCADE;" json:"pingInfo"`
+	Agent       Agent          `gorm:"constraint:OnDelete:CASCADE;" json:"agent"`
 }
 
 type TargetType uint
@@ -31,6 +32,7 @@ type TargetType uint
 const (
 	PING TargetType = iota
 	HTTP
+	AGENT
 	targetTypeMax // "sentinel" value
 )
 
@@ -59,4 +61,21 @@ func ValidateTargetType(tt TargetType) error {
 		return fmt.Errorf("invalid target type: %d", tt)
 	}
 	return nil
+}
+
+func (t TargetType) IsPush() bool {
+	return t == AGENT
+}
+
+func (target *Target) GetHost() string {
+	switch target.Type {
+	case PING:
+		return target.PingInfo.Host
+	case HTTP:
+		return target.HTTPInfo.Host
+	case AGENT:
+		return "Server Agent"
+	default:
+		return ""
+	}
 }

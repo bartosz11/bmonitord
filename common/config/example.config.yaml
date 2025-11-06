@@ -16,7 +16,14 @@ email:
   from: "replace_me" # usually the same as username, basically the email address messages will be sent from
 
 orchestrator:
+  # How long the should the orchestrator wait for checkers to send back the check result on top of each target's timeout? in ms, 1 second = 1000 ms
+  # Going over 1000 is not recommended, 500 should be enough in most cases, although you can increase it if you see lots of "target not queued" errors in logs
   max-network-overhead: 500
+  # How long should the orchestrator wait after taking over leadership before starting to check on push targets (for example agent targets)?
+  # In minutes. This is a behavior reimplemented from bmonitord v2, where checks on agent monitors weren't being run for the first 5 minutes of instance's uptime
+  # Note that it doesn't stop processing THRESHOLD alarms when agent sends data that can trigger one assigned to it
+  # Setting this to 0 will disable this behavior entirely
+  grace-period: 1
   name: "replace_me" # This is ignored by the AIO binary/image
 
 # Keep these settings in sync across all API instances you're hosting if you're hosting multiple!

@@ -1,0 +1,1 @@
+alter table alarms drop column threshold_field_params;

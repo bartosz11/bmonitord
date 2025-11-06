@@ -25,4 +25,4 @@
 	</NotificationDataDialog>
 {/snippet}
 
-<DataTable columns={notificationColumns} data={$notifications} meta={notifications} />
+<DataTable columns={notificationColumns} data={$notifications} meta={notifications} defaultSorting={{id: "id", desc: false}}/>

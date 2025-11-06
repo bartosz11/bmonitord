@@ -3,13 +3,15 @@ import type { Component } from 'svelte';
 import Ping from '$lib/components/dashboard/targets/parts/Ping.svelte';
 import HTTP from '$lib/components/dashboard/targets/parts/HTTP.svelte';
 import type { ModelTarget } from '$lib/api-client-axios';
+import Agent from '$lib/components/dashboard/targets/parts/Agent.svelte';
 
 // Lots of stuff in this file is analogical to ../notifications/utils.ts
 
 // I might change this later to a "generated" solution like in notifications, but right now it can be done like this
 export const targetTypeNames = {
 	0: 'Ping',
-	1: 'HTTP'
+	1: 'HTTP',
+	2: 'Agent'
 } as Record<number, string>;
 
 export const targetTypeOptions = Object.entries(targetTypeNames).map(([value, name]) => {
@@ -23,7 +25,8 @@ export const httpCodes: string[] = Array.from({ length: 500 }, (_, i) => (i + 10
 
 export const targetSubForms: Record<number, Component> = {
 	0: Ping,
-	1: HTTP
+	1: HTTP,
+	2: Agent
 };
 
 export function getTypeSpecificInfo(target: ModelTarget): object {
@@ -35,6 +38,12 @@ export function getTypeSpecificInfo(target: ModelTarget): object {
 		case 1:
 			info.httpInfo = target.httpInfo!;
 			break;
+		// Agent contains no special info that could be displayed in the create/edit form
 	}
 	return info;
+}
+
+export function isTargetTypePush(type: number): boolean {
+	// Right now we only have to check if the type is equal to agent
+	return type === 2;
 }

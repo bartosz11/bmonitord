@@ -5,7 +5,7 @@
 	import { notNegative } from '$lib/validators';
 	import { Select, SelectContent, SelectItem, SelectTrigger } from '$lib/components/ui/select';
 	import {
-		getTypeSpecificInfo,
+		getTypeSpecificInfo, isTargetTypePush,
 		targetSubFormOutput, targetSubForms,
 		targetSubFormValidity, targetTypeOptions
 	} from '$lib/components/dashboard/targets/utils';
@@ -29,7 +29,7 @@
 			initial: target ? target.name!.toString() : undefined
 		},
 		maxRetries: {
-			initial: target ? target.maxRetries!.toString() : undefined
+			initial: target ? target.maxRetries!.toString() : "0"
 		},
 		timeout: {
 			initial: target ? target.timeout!.toString() : undefined
@@ -59,7 +59,6 @@
 			checkerIDs: $checkers,
 			...$targetSubFormOutput
 		};
-		console.log(output);
 		const req = target ? targetApi.targetTargetIDPatch(target.id!, output) : targetApi.targetPost({ type: parseInt(type) as ModelTargetType, ...output });
 		req.then((resp) => {
 			//Update doesn't use 201 and create doesn't use 200, so we can do sth like this instead of some pointless if (target) ... else ...
@@ -71,7 +70,7 @@
 				toast.success('Successfully created a new target.');
 				goto('/dashboard/targets');
 			}
-		}).catch((err) => toast.error(`Failed to ${target ? "update" : "create"} target: ` + (err.response?.data?.error ?? 'something went wrong')));
+		}).catch((err) => toast.error(`Failed to ${target ? 'update' : 'create'} target: ` + (err.response?.data?.error ?? 'something went wrong')));
 	}
 </script>
 
@@ -96,11 +95,14 @@
 			</Select>
 		{/if}
 		<!--	TODO: add a tooltip / some kind of helper here to explain these two -->
-		<Label>Max retries</Label>
-		<Input name="maxRetries" type="number" validators={[required, notNegative]}></Input>
-		<div>
-			<Hint for="maxRetries" form="targetDataForm" on="required">Max retries is required.</Hint>
-			<Hint for="maxRetries" form="targetDataForm" on="notNegative">Max retries must be a non-negative number.</Hint>
+		<!-- Just so we can hide everything at once -->
+		<div class={isTargetTypePush(parseInt(type)) ? "hidden" : "space-y-4"}>
+			<Label>Max retries</Label>
+			<Input name="maxRetries" type="number" validators={[required, notNegative]}></Input>
+			<div>
+				<Hint for="maxRetries" form="targetDataForm" on="required">Max retries is required.</Hint>
+				<Hint for="maxRetries" form="targetDataForm" on="notNegative">Max retries must be a non-negative number.</Hint>
+			</div>
 		</div>
 		<Label>Timeout (seconds)</Label>
 		<Input name="timeout" type="number" validators={[required, notNegative]}></Input>
@@ -112,19 +114,22 @@
 
 	<SubForm />
 
-	<div class="flex flex-col gap-4">
-		<div>
-			<h2 class="text-xl font-semibold">Locations</h2>
-			<p class="mt-2 text-sm">You must select at least one location.</p>
+	{#if !isTargetTypePush(parseInt(type))}
+		<div class="flex flex-col gap-4">
+			<div>
+				<h2 class="text-xl font-semibold">Locations</h2>
+				<p class="mt-2 text-sm">You must select at least one location.</p>
+			</div>
+			<div class="flex flex-row flex-wrap gap-4">
+				{#each locations as checker (checker.id)}
+					<TargetCheckerToggle {checker} {checkers}
+															 initialState={target ? targetCheckerIDs.includes(checker.id) : false} />
+				{/each}
+			</div>
 		</div>
-		<div class="flex flex-row flex-wrap gap-4">
-			{#each locations as checker (checker.id)}
-				<TargetCheckerToggle {checker} {checkers}
-														 initialState={target ? targetCheckerIDs.includes(checker.id) : false} />
-			{/each}
-		</div>
-	</div>
+	{/if}
 
-	<Button disabled={!($form.valid && $targetSubFormValidity && $checkers.length !== 0)}
-					onclick={onSubmit}>{target ? "Edit" : "Create"}</Button>
+	<Button
+		disabled={!($form.valid && $targetSubFormValidity && ($checkers.length !== 0 || isTargetTypePush(parseInt(type))))}
+		onclick={onSubmit}>{target ? "Edit" : "Create"}</Button>
 </div>

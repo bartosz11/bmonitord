@@ -77,7 +77,7 @@ func BootstrapAIO(db *gorm.DB) (model.Orchestrator, model.Checker) {
 		systemChecker = model.Checker{
 			Name:   "AIO built-in checker",
 			Key:    checkerApi.GenerateUniqueKey(db),
-			System: false,
+			System: true,
 		}
 		if db.Create(&systemChecker).Error != nil {
 			log.Fatal().Err(err).Msg("an error occurred while adding default checker")

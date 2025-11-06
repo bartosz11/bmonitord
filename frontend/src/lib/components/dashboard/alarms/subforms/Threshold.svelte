@@ -12,21 +12,23 @@
 
 	let threshold = $state();
 	let thresholdField = $state(alarmThresholdFieldOptions[0].value);
+	let thresholdFieldParams = $state("");
 	const triggerContent = $derived(
 		alarmThresholdFieldOptions.find((opt) => opt.value === thresholdField)?.label
 	);
 	onMount(() => {
 		let output = $alarmSubFormOutput;
-		if (typeof output === 'object' && "thresholdField" in output && "threshold" in output) {
+		if (typeof output === 'object' && "thresholdField" in output && "threshold" in output && "thresholdFieldParams" in output) {
 			const alarm = output as ModelAlarm; // casting because TS tends to cry
 			thresholdField = alarm.thresholdField!.toString();
 			threshold = alarm.threshold!;
+			thresholdFieldParams = alarm.thresholdFieldParams!;
 		}
 	})
 
 	$effect(() => {
 		alarmSubFormOutput.set({
-			thresholdField: parseInt(thresholdField), threshold
+			thresholdField: parseInt(thresholdField), threshold, thresholdFieldParams
 		});
 	});
 
@@ -48,6 +50,8 @@
 		</SelectContent>
 	</Select>
 	<Label>Threshold</Label>
-	<Input name="host" placeholder="250" type="number" bind:value={threshold} validators={[required]}></Input>
-	<Hint for="host" form="thresholdSubForm" on="required">Threshold is required.</Hint>
+	<Input name="threshold" placeholder="250" type="number" bind:value={threshold} validators={[required]}></Input>
+	<Hint for="threshold" form="thresholdSubForm" on="required">Threshold is required.</Hint>
+	<Label>Threshold field parameters</Label>
+	<Input name="thresholdFieldParams" type="text" bind:value={thresholdFieldParams}></Input>
 </form>

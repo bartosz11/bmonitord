@@ -16,5 +16,5 @@
 	<CheckerCreateDialog {checkers} />
 {/snippet}
 
-<DataTable data={$checkers} columns={checkerColumns} meta={checkers} />
+<DataTable data={$checkers} columns={checkerColumns} meta={checkers} defaultSorting={{id: "id", desc: false}}/>
 

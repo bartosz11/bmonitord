@@ -27,7 +27,7 @@ func HandleGetAllUsersTargets(db *gorm.DB) gin.HandlerFunc {
 		user := val.(model.User)
 
 		var targets []model.Target
-		db.Joins("HTTPInfo").Joins("PingInfo").Preload("Checkers").Preload("Alarms").
+		db.Joins("HTTPInfo").Joins("PingInfo").Joins("Agent").Preload("Checkers").Preload("Alarms").
 			Find(&targets, "user_id = ?", user.ID)
 
 		SanitizeTargets(&targets)

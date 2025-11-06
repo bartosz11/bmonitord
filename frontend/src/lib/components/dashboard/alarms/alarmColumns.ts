@@ -62,7 +62,7 @@ function getTriggerDescription(alarm: ModelAlarm): string {
 			break;
 		case 1: {
 			const meta = alarmThresholdFieldMetas[alarm.thresholdField!];
-			desc = `When ${meta.formattedName} goes above ${alarm.threshold}${meta.unit}`;
+			desc = `When ${meta.formattedName} goes above ${alarm.threshold}${meta.unit}${alarm.thresholdFieldParams ? ` on ${alarm.thresholdFieldParams}` : ""}`;
 			break;
 		}
 	}

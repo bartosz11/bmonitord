@@ -1943,6 +1943,73 @@ const docTemplate = `{
                 }
             }
         },
+        "/target/{targetID}/agent/key": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to regenerate the key of agent of target with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "Regenerate target's agent's key",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to regenerate agent's key",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/target.getTargetSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID or pause status couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found or it's type isn't 2 (agent).",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/target/{targetID}/alarm/": {
             "get": {
                 "security": [
@@ -2719,6 +2786,10 @@ const docTemplate = `{
                         }
                     ]
                 },
+                "thresholdFieldParams": {
+                    "description": "Threshold field params must be supplied if type is 1 (threshold). Used to specify when to trigger alarms in some cases, can be left blank though",
+                    "type": "string"
+                },
                 "type": {
                     "description": "Type must be 0 (unavailable) or 1 (threshold)",
                     "allOf": [
@@ -2754,6 +2825,10 @@ const docTemplate = `{
                             "$ref": "#/definitions/model.AlarmThresholdField"
                         }
                     ]
+                },
+                "thresholdFieldParams": {
+                    "description": "Threshold field params must be supplied if type is getting changed to 1 (threshold). Used to specify when to trigger alarms in some cases, can be left blank though",
+                    "type": "string"
                 },
                 "type": {
                     "description": "Type must be 0 (unavailable) or 1 (threshold), if supplied",
@@ -2954,6 +3029,38 @@ const docTemplate = `{
                 }
             }
         },
+        "model.Agent": {
+            "type": "object",
+            "properties": {
+                "HideIp": {
+                    "type": "boolean"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "installed": {
+                    "type": "boolean"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "lastDataReceived": {
+                    "type": "string"
+                },
+                "targetId": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Alarm": {
             "type": "object",
             "properties": {
@@ -2990,6 +3097,10 @@ const docTemplate = `{
                 "thresholdField": {
                     "$ref": "#/definitions/model.AlarmThresholdField"
                 },
+                "thresholdFieldParams": {
+                    "description": "For example what NIC should the threshold apply to",
+                    "type": "string"
+                },
                 "type": {
                     "$ref": "#/definitions/model.AlarmType"
                 },
@@ -3002,10 +3113,26 @@ const docTemplate = `{
             "type": "integer",
             "enum": [
                 0,
-                1
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
             ],
             "x-enum-varnames": [
                 "Latency",
+                "CPUFrequency",
+                "CPUUsage",
+                "IOWait",
+                "MemoryUsagePercent",
+                "SwapUsagePercent",
+                "DiskUsagePercent",
+                "NICInbound",
+                "NICOutbound",
                 "thresholdFieldMax"
             ]
         },
@@ -3082,7 +3209,16 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "latency": {
+                    "description": "Latency is a \"generic\" field, payload can provide further information in non-push targets (http, ping etc.)",
                     "type": "integer"
+                },
+                "payload": {
+                    "description": "Payload is stored as gzipped json in a bytea column, but sent in JSON normally",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.HeartbeatPayload"
+                        }
+                    ]
                 },
                 "status": {
                     "$ref": "#/definitions/model.TargetStatus"
@@ -3098,6 +3234,27 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "type": "string"
+                }
+            }
+        },
+        "model.HeartbeatPayload": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "type": {
+                    "description": "All TargetTypes are allowed to submit further details",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.TargetType"
+                        }
+                    ]
+                },
+                "version": {
+                    "description": "Each Type of payload can have their own versioning",
+                    "type": "integer"
                 }
             }
         },
@@ -3274,6 +3431,9 @@ const docTemplate = `{
         "model.Target": {
             "type": "object",
             "properties": {
+                "agent": {
+                    "$ref": "#/definitions/model.Agent"
+                },
                 "alarms": {
                     "type": "array",
                     "items": {
@@ -3424,7 +3584,8 @@ const docTemplate = `{
             "enum": [
                 0,
                 1,
-                2
+                2,
+                3
             ],
             "x-enum-comments": {
                 "targetTypeMax": "\"sentinel\" value"
@@ -3432,11 +3593,13 @@ const docTemplate = `{
             "x-enum-descriptions": [
                 "",
                 "",
+                "",
                 "\"sentinel\" value"
             ],
             "x-enum-varnames": [
                 "PING",
                 "HTTP",
+                "AGENT",
                 "targetTypeMax"
             ]
         },
@@ -3703,9 +3866,8 @@ const docTemplate = `{
             ],
             "properties": {
                 "checkerIDs": {
-                    "description": "At least one checker must be supplied, all checkers must exist",
+                    "description": "At least one checker must be supplied if type is 0 or 1, all checkers must exist, if given type is 2 this is ignored",
                     "type": "array",
-                    "minItems": 1,
                     "items": {
                         "type": "integer"
                     }
@@ -3719,7 +3881,7 @@ const docTemplate = `{
                     ]
                 },
                 "maxRetries": {
-                    "description": "Max retries is required",
+                    "description": "Max retries is required, ignored in case of agents",
                     "type": "integer"
                 },
                 "name": {
@@ -3739,7 +3901,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "type": {
-                    "description": "Type must be 0 (PING) or 1 (HTTP)",
+                    "description": "Type must be 0 (PING), 1 (HTTP) or 2 (AGENT)",
                     "allOf": [
                         {
                             "$ref": "#/definitions/model.TargetType"
@@ -3817,7 +3979,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "checkerIDs": {
-                    "description": "Must contain at least one checker ID, all checkers must exist. This is a \"replace update\"",
+                    "description": "Must contain at least one checker ID, all checkers must exist. This is a \"replace update\". This is ignored if Target's type is 2 (AGENT)",
                     "type": "array",
                     "items": {
                         "type": "integer"
@@ -3827,6 +3989,7 @@ const docTemplate = `{
                     "$ref": "#/definitions/target.HTTPInfoUpdateRequest"
                 },
                 "maxRetries": {
+                    "description": "Value of maxRetries can be updated even if target's type is 2 (agent), but it's ignored in the checking behavior",
                     "type": "integer"
                 },
                 "name": {
@@ -3884,8 +4047,6 @@ const docTemplate = `{
             "type": "integer",
             "format": "int64",
             "enum": [
-                -9223372036854775808,
-                9223372036854775807,
                 1,
                 1000,
                 1000000,
@@ -3900,8 +4061,6 @@ const docTemplate = `{
                 3600000000000
             ],
             "x-enum-varnames": [
-                "minDuration",
-                "maxDuration",
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",
