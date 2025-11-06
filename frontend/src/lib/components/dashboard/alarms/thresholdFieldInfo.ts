@@ -16,7 +16,7 @@ export const alarmThresholdFieldMetas: Record<number, ThresholdFieldMeta> = {
 	},
 	1: {
 		formattedName: 'CPU frequency',
-		unit: ' Mhz',
+		unit: ' MHz',
 		getValueFunc: (heartbeat) => {
 			const data = heartbeat.payload!.data!;
 			if ('cpu' in data) {
@@ -63,7 +63,7 @@ export const alarmThresholdFieldMetas: Record<number, ThresholdFieldMeta> = {
 			const data = heartbeat.payload!.data!;
 			if ('memory' in data) {
 				const memory = data.memory as object;
-				calculateUsage(memory);
+				return calculateUsage(memory);
 			}
 			return 0;
 		}
@@ -75,7 +75,7 @@ export const alarmThresholdFieldMetas: Record<number, ThresholdFieldMeta> = {
 			const data = heartbeat.payload!.data!;
 			if ('swap' in data) {
 				const swap = data.swap as object;
-				calculateUsage(swap);
+				return calculateUsage(swap);
 			}
 			return 0;
 		}

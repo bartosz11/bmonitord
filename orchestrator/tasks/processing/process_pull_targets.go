@@ -103,7 +103,8 @@ func assignCheckersToHeartbeats(hbsAll []model.Heartbeat, db *gorm.DB) {
 
 	checkerMap := make(map[uint]*model.Checker, len(checkers)) // id:checker map for fast lookup
 	for _, checker := range checkers {
-		checkerMap[checker.ID] = &checker
+		c := checker
+		checkerMap[checker.ID] = &c
 	}
 
 	for i := range hbsAll { // finally assign the checkers to heartbeats
@@ -111,7 +112,7 @@ func assignCheckersToHeartbeats(hbsAll []model.Heartbeat, db *gorm.DB) {
 	}
 }
 
-func pullNotificationContentBuilder(payload *notificationproviders.NotificationPayload, target *model.Target, alarm *model.Alarm, decisiveHeartbeat *model.Heartbeat, heartbeats *[]model.Heartbeat, allHbs *[]model.Heartbeat) {
+func pullNotificationContentBuilder(payload *notificationproviders.NotificationPayload, target *model.Target, alarm *model.Alarm, decisiveHeartbeat *model.Heartbeat, _ *[]model.Heartbeat, allHbs *[]model.Heartbeat) {
 	var bodyBuilder strings.Builder
 	switch alarm.Type {
 	case model.Unavailable:
@@ -121,6 +122,7 @@ func pullNotificationContentBuilder(payload *notificationproviders.NotificationP
 			bodyBuilder.WriteString(fmt.Sprintf("Duration: %s\n", humanDuration))
 		}
 		for i, heartbeat := range *allHbs {
+			// It's nearly impossible for Checker to be nil here since this is pull not push
 			bodyBuilder.WriteString(heartbeat.Checker.Name)
 			bodyBuilder.WriteString(": ")
 			bodyBuilder.WriteString(model.StatusToString(heartbeat.Status))
@@ -141,7 +143,7 @@ func pullNotificationContentBuilder(payload *notificationproviders.NotificationP
 			if heartbeat.Status == model.Unknown {
 				bodyBuilder.WriteString("unknown")
 			} else {
-				bodyBuilder.WriteString(strconv.FormatFloat(meta.GetValueFunc(&(*heartbeats)[i], alarm), 'f', -1, 64))
+				bodyBuilder.WriteString(strconv.FormatFloat(meta.GetValueFunc(&(*allHbs)[i], alarm), 'f', -1, 64))
 			}
 			if i != len(*allHbs)-1 {
 				bodyBuilder.WriteString("\n")

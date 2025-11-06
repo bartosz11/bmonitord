@@ -24,7 +24,7 @@ def collect_system_data():
         os_name = f"{platform.system()} {platform.release()}"
 
     # Unless we collect the metrics twice and sleep in between they're completely inaccurate
-    cpu_start = psutil.cpu_times_percent(interval=None)
+    psutil.cpu_times_percent(interval=None)
     net_start = psutil.net_io_counters(pernic=True)
     time.sleep(sleep)
     cpu_end = psutil.cpu_times_percent(interval=None)
