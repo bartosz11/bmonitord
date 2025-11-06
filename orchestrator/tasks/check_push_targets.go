@@ -49,7 +49,7 @@ func CheckPushTargetsTask(db *gorm.DB, gracePeriod int) func() {
 				target.ChecksUp++
 				target.LastStatus = model.Up
 			}
-			db.Save(target)
+			db.Save(&target)
 		}
 	}
 }
