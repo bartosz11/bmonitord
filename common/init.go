@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/bartosz11/checkmate/common/config"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -23,8 +24,9 @@ func SetupRouter(cfg *config.Config) *gin.Engine {
 	if cfg.Production {
 		gin.SetMode(gin.ReleaseMode)
 	}
-
-	return gin.Default()
+	r := gin.Default()
+	r.Use(gzip.Gzip(gzip.DefaultCompression, gzip.WithDecompressFn(gzip.DefaultDecompressHandle)))
+	return r
 }
 
 func StartRouter(router *gin.Engine, bind string) {

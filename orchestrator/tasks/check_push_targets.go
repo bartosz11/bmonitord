@@ -39,6 +39,7 @@ func CheckPushTargetsTask(db *gorm.DB, gracePeriod int) func() {
 					Status:    model.Down,
 					TargetID:  target.ID,
 					Target:    target,
+					Payload:   &(model.HeartbeatPayload{}),
 				}
 
 				processing.ProcessPushHeartbeat(&target, &heartbeat, db, false)

@@ -48,7 +48,8 @@ func BroadcastTask(db *gorm.DB, maxNetworkOverhead int) func() {
 						Timestamp: time.Now(),
 						Status:    2,
 						TargetID:  target.ID,
-						CheckerID: checker.ID,
+						CheckerID: &checker.ID,
+						Payload:   &(model.HeartbeatPayload{}),
 					})
 					processingTask.UnreachableCheckers = append(processingTask.UnreachableCheckers, checker.ID)
 					continue

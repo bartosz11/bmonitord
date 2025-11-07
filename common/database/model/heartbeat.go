@@ -12,7 +12,7 @@ type Heartbeat struct {
 	Status    TargetStatus `gorm:"not null" json:"status"`
 	TargetID  uint         `gorm:"not null" json:"targetId"`
 	Target    Target       `gorm:"foreignKey:TargetID" json:"target"`
-	CheckerID uint         `json:"checkerId"`
+	CheckerID *uint        `json:"checkerId"`
 	Checker   *Checker     `gorm:"foreignKey:CheckerID" json:"checker"`
 	// Payload is stored as gzipped json in a bytea column, but sent in JSON normally
 	Payload *HeartbeatPayload `gorm:"type:bytea" json:"payload"`

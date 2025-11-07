@@ -78,10 +78,11 @@ func createMissingHbs(task *Task, target *model.Target) []model.Heartbeat {
 	for _, checker := range task.Checkers {
 		if !helpers.Contains(task.CompleteCheckers, checker.ID) || helpers.Contains(task.UnreachableCheckers, checker.ID) {
 			missingHbs = append(missingHbs, model.Heartbeat{
-				CheckerID: checker.ID,
+				CheckerID: &(checker.ID),
 				TargetID:  target.ID,
 				Status:    model.Unknown,
 				Timestamp: time.Now(),
+				Payload:   &(model.HeartbeatPayload{}),
 			})
 		}
 	}
@@ -91,7 +92,7 @@ func createMissingHbs(task *Task, target *model.Target) []model.Heartbeat {
 func assignCheckersToHeartbeats(hbsAll []model.Heartbeat, db *gorm.DB) {
 	checkerIDs := make(map[uint]struct{}) // Get checkers assigned to heartbeats, also for notification purposes
 	for _, hb := range hbsAll {
-		checkerIDs[hb.CheckerID] = struct{}{} // Map allows us to de-duplicate easily, keys can't repeat
+		checkerIDs[*hb.CheckerID] = struct{}{} // Map allows us to de-duplicate easily, keys can't repeat
 	}
 	ids := make([]uint, 0, len(checkerIDs))
 	for id := range checkerIDs {
@@ -108,7 +109,7 @@ func assignCheckersToHeartbeats(hbsAll []model.Heartbeat, db *gorm.DB) {
 	}
 
 	for i := range hbsAll { // finally assign the checkers to heartbeats
-		hbsAll[i].Checker = checkerMap[hbsAll[i].CheckerID]
+		hbsAll[i].Checker = checkerMap[*hbsAll[i].CheckerID]
 	}
 }
 

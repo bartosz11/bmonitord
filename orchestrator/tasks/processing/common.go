@@ -10,7 +10,8 @@ const NotificationTimeFormat = "2006-01-02 15:04:05"
 
 func CheckLastIncident(target *model.Target, hb *model.Heartbeat, db *gorm.DB) *model.Incident {
 	var lastIncident *model.Incident
-	if hb.Status != target.LastStatus { // Process incidents on status changes, no need to check for UNKNOWN since we already saved the new status and re-fetched it
+	// turns out I actually need to check if target's status is not unknown, covers the case of push check saving the target AFTER this function is invoked
+	if hb.Status != target.LastStatus && target.LastStatus != model.Unknown {
 		if hb.Status == model.Up { // Change from DOWN to UP
 			lastIncident = &target.Incidents[0] // Has to exist, incidents are always created on DOWN statuses
 			lastIncident.Ongoing = false

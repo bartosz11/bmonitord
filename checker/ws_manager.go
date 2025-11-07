@@ -73,7 +73,8 @@ func attemptConnecting(host string, key string) {
 			}
 
 			heartbeat := checkproviders.CheckProviders[target.Type](target)
-			heartbeat.CheckerID = uint(selfId)
+			u := uint(selfId)
+			heartbeat.CheckerID = &u
 
 			payload, err := json.Marshal(heartbeat)
 			if err != nil {

@@ -95,7 +95,7 @@ func HandleNewWSConnection(db *gorm.DB) func(ctx *gin.Context) {
 				}
 				task := load.(*processing.Task)
 				task.Heartbeats <- hb
-				task.CompleteCheckers = append(task.CompleteCheckers, hb.CheckerID)
+				task.CompleteCheckers = append(task.CompleteCheckers, *hb.CheckerID)
 				helpers.SendJSON(conn, helpers.WebSocketMessage{Type: "info", Payload: json.RawMessage(`"check-ok"`)})
 				break
 			case "pong":
