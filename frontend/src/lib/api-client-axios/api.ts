@@ -363,6 +363,63 @@ export interface GormDeletedAt {
 /**
  * 
  * @export
+ * @interface HeartbeatGetHeartbeatPageSuccessResponse
+ */
+export interface HeartbeatGetHeartbeatPageSuccessResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof HeartbeatGetHeartbeatPageSuccessResponse
+     */
+    'code'?: number;
+    /**
+     * 
+     * @type {HelpersPageModelHeartbeat}
+     * @memberof HeartbeatGetHeartbeatPageSuccessResponse
+     */
+    'data'?: HelpersPageModelHeartbeat;
+}
+/**
+ * 
+ * @export
+ * @interface HeartbeatGetHeartbeatSuccessResponse
+ */
+export interface HeartbeatGetHeartbeatSuccessResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof HeartbeatGetHeartbeatSuccessResponse
+     */
+    'code'?: number;
+    /**
+     * 
+     * @type {ModelHeartbeat}
+     * @memberof HeartbeatGetHeartbeatSuccessResponse
+     */
+    'data'?: ModelHeartbeat;
+}
+/**
+ * 
+ * @export
+ * @interface HeartbeatGetManyHeartbeatsSuccessResponse
+ */
+export interface HeartbeatGetManyHeartbeatsSuccessResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof HeartbeatGetManyHeartbeatsSuccessResponse
+     */
+    'code'?: number;
+    /**
+     * 
+     * @type {Array<ModelHeartbeat>}
+     * @memberof HeartbeatGetManyHeartbeatsSuccessResponse
+     */
+    'data'?: Array<ModelHeartbeat>;
+}
+/**
+ * 
+ * @export
  * @interface HelpersGenericDeleteSuccessResponse
  */
 export interface HelpersGenericDeleteSuccessResponse {
@@ -391,6 +448,137 @@ export interface HelpersGenericErrorResponse {
      * @memberof HelpersGenericErrorResponse
      */
     'error'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface HelpersPageModelHeartbeat
+ */
+export interface HelpersPageModelHeartbeat {
+    /**
+     * 
+     * @type {Array<ModelHeartbeat>}
+     * @memberof HelpersPageModelHeartbeat
+     */
+    'content'?: Array<ModelHeartbeat>;
+    /**
+     * 
+     * @type {number}
+     * @memberof HelpersPageModelHeartbeat
+     */
+    'page'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof HelpersPageModelHeartbeat
+     */
+    'size'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof HelpersPageModelHeartbeat
+     */
+    'totalElements'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof HelpersPageModelHeartbeat
+     */
+    'totalPages'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface HelpersPageModelIncident
+ */
+export interface HelpersPageModelIncident {
+    /**
+     * 
+     * @type {Array<ModelIncident>}
+     * @memberof HelpersPageModelIncident
+     */
+    'content'?: Array<ModelIncident>;
+    /**
+     * 
+     * @type {number}
+     * @memberof HelpersPageModelIncident
+     */
+    'page'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof HelpersPageModelIncident
+     */
+    'size'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof HelpersPageModelIncident
+     */
+    'totalElements'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof HelpersPageModelIncident
+     */
+    'totalPages'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface IncidentGetIncidentPageSuccessResponse
+ */
+export interface IncidentGetIncidentPageSuccessResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof IncidentGetIncidentPageSuccessResponse
+     */
+    'code'?: number;
+    /**
+     * 
+     * @type {HelpersPageModelIncident}
+     * @memberof IncidentGetIncidentPageSuccessResponse
+     */
+    'data'?: HelpersPageModelIncident;
+}
+/**
+ * 
+ * @export
+ * @interface IncidentGetIncidentSuccessResponse
+ */
+export interface IncidentGetIncidentSuccessResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof IncidentGetIncidentSuccessResponse
+     */
+    'code'?: number;
+    /**
+     * 
+     * @type {ModelIncident}
+     * @memberof IncidentGetIncidentSuccessResponse
+     */
+    'data'?: ModelIncident;
+}
+/**
+ * 
+ * @export
+ * @interface IncidentGetManyIncidentsSuccessResponse
+ */
+export interface IncidentGetManyIncidentsSuccessResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof IncidentGetManyIncidentsSuccessResponse
+     */
+    'code'?: number;
+    /**
+     * 
+     * @type {Array<ModelIncident>}
+     * @memberof IncidentGetManyIncidentsSuccessResponse
+     */
+    'data'?: Array<ModelIncident>;
 }
 /**
  * 
@@ -800,6 +988,12 @@ export interface ModelIncident {
      * @memberof ModelIncident
      */
     'start'?: string;
+    /**
+     * 
+     * @type {ModelTarget}
+     * @memberof ModelIncident
+     */
+    'target'?: ModelTarget;
     /**
      * 
      * @type {number}
@@ -1948,12 +2142,18 @@ export const TimeDuration = {
     Microsecond: 1000,
     Millisecond: 1000000,
     Second: 1000000000,
+    Minute: 60000000000,
+    Hour: 3600000000000,
     Nanosecond: 1,
     Microsecond: 1000,
     Millisecond: 1000000,
     Second: 1000000000,
     Minute: 60000000000,
-    Hour: 3600000000000
+    Hour: 3600000000000,
+    Nanosecond: 1,
+    Microsecond: 1000,
+    Millisecond: 1000000,
+    Second: 1000000000
 } as const;
 
 export type TimeDuration = typeof TimeDuration[keyof typeof TimeDuration];
@@ -3187,6 +3387,720 @@ export class CheckerApi extends BaseAPI {
      */
     public checkerPost(checkerInfo: CheckerCreateCheckerRequest, options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerPost(checkerInfo, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * HeartbeatApi - axios parameter creator
+ * @export
+ */
+export const HeartbeatApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Allows to retrieve information about heartbeat with specified ID, if heartbeat\'s target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get heartbeat by ID
+         * @param {number} id ID of heartbeat to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        heartbeatIdGet: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('heartbeatIdGet', 'id', id)
+            const localVarPath = `/heartbeat/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows to retrieve information about the last heartbeat of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get last heartbeat of target
+         * @param {number} id ID of target to get the last heartbeat info of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        heartbeatIdLastGet: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('heartbeatIdLastGet', 'id', id)
+            const localVarPath = `/heartbeat/{id}/last`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows to retrieve a page of heartbeats of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.
+         * @summary Get page of heartbeats of target
+         * @param {number} id ID of target to get the page of heartbeats for
+         * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+         * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+         * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (latency, timestamp, status, heartbeats.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        heartbeatIdPageGet: async (id: number, size?: number, page?: number, sort?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('heartbeatIdPageGet', 'id', id)
+            const localVarPath = `/heartbeat/{id}/page`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (sort !== undefined) {
+                localVarQueryParameter['sort'] = sort;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows to retrieve a list of heartbeats of a target that have been collected in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by heartbeat\'s timestamp ascending (oldest first).
+         * @summary Get heartbeats of target in time range
+         * @param {number} id ID of target to get the list of heartbeats for
+         * @param {number} start Unix epoch second representing start of the time range
+         * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        heartbeatIdTimerangeGet: async (id: number, start: number, end?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('heartbeatIdTimerangeGet', 'id', id)
+            // verify required parameter 'start' is not null or undefined
+            assertParamExists('heartbeatIdTimerangeGet', 'start', start)
+            const localVarPath = `/heartbeat/{id}/timerange`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (start !== undefined) {
+                localVarQueryParameter['start'] = start;
+            }
+
+            if (end !== undefined) {
+                localVarQueryParameter['end'] = end;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * HeartbeatApi - functional programming interface
+ * @export
+ */
+export const HeartbeatApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = HeartbeatApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Allows to retrieve information about heartbeat with specified ID, if heartbeat\'s target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get heartbeat by ID
+         * @param {number} id ID of heartbeat to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async heartbeatIdGet(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HeartbeatGetHeartbeatSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.heartbeatIdGet(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HeartbeatApi.heartbeatIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows to retrieve information about the last heartbeat of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get last heartbeat of target
+         * @param {number} id ID of target to get the last heartbeat info of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async heartbeatIdLastGet(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HeartbeatGetHeartbeatSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.heartbeatIdLastGet(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HeartbeatApi.heartbeatIdLastGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows to retrieve a page of heartbeats of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.
+         * @summary Get page of heartbeats of target
+         * @param {number} id ID of target to get the page of heartbeats for
+         * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+         * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+         * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (latency, timestamp, status, heartbeats.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async heartbeatIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HeartbeatGetHeartbeatPageSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.heartbeatIdPageGet(id, size, page, sort, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HeartbeatApi.heartbeatIdPageGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows to retrieve a list of heartbeats of a target that have been collected in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by heartbeat\'s timestamp ascending (oldest first).
+         * @summary Get heartbeats of target in time range
+         * @param {number} id ID of target to get the list of heartbeats for
+         * @param {number} start Unix epoch second representing start of the time range
+         * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async heartbeatIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HeartbeatGetManyHeartbeatsSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.heartbeatIdTimerangeGet(id, start, end, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HeartbeatApi.heartbeatIdTimerangeGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * HeartbeatApi - factory interface
+ * @export
+ */
+export const HeartbeatApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = HeartbeatApiFp(configuration)
+    return {
+        /**
+         * Allows to retrieve information about heartbeat with specified ID, if heartbeat\'s target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get heartbeat by ID
+         * @param {number} id ID of heartbeat to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        heartbeatIdGet(id: number, options?: RawAxiosRequestConfig): AxiosPromise<HeartbeatGetHeartbeatSuccessResponse> {
+            return localVarFp.heartbeatIdGet(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows to retrieve information about the last heartbeat of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get last heartbeat of target
+         * @param {number} id ID of target to get the last heartbeat info of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        heartbeatIdLastGet(id: number, options?: RawAxiosRequestConfig): AxiosPromise<HeartbeatGetHeartbeatSuccessResponse> {
+            return localVarFp.heartbeatIdLastGet(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows to retrieve a page of heartbeats of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.
+         * @summary Get page of heartbeats of target
+         * @param {number} id ID of target to get the page of heartbeats for
+         * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+         * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+         * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (latency, timestamp, status, heartbeats.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        heartbeatIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig): AxiosPromise<HeartbeatGetHeartbeatPageSuccessResponse> {
+            return localVarFp.heartbeatIdPageGet(id, size, page, sort, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows to retrieve a list of heartbeats of a target that have been collected in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by heartbeat\'s timestamp ascending (oldest first).
+         * @summary Get heartbeats of target in time range
+         * @param {number} id ID of target to get the list of heartbeats for
+         * @param {number} start Unix epoch second representing start of the time range
+         * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        heartbeatIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig): AxiosPromise<HeartbeatGetManyHeartbeatsSuccessResponse> {
+            return localVarFp.heartbeatIdTimerangeGet(id, start, end, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * HeartbeatApi - object-oriented interface
+ * @export
+ * @class HeartbeatApi
+ * @extends {BaseAPI}
+ */
+export class HeartbeatApi extends BaseAPI {
+    /**
+     * Allows to retrieve information about heartbeat with specified ID, if heartbeat\'s target is public then the info can be retrieved by anyone, even without an auth token
+     * @summary Get heartbeat by ID
+     * @param {number} id ID of heartbeat to get
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HeartbeatApi
+     */
+    public heartbeatIdGet(id: number, options?: RawAxiosRequestConfig) {
+        return HeartbeatApiFp(this.configuration).heartbeatIdGet(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows to retrieve information about the last heartbeat of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
+     * @summary Get last heartbeat of target
+     * @param {number} id ID of target to get the last heartbeat info of
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HeartbeatApi
+     */
+    public heartbeatIdLastGet(id: number, options?: RawAxiosRequestConfig) {
+        return HeartbeatApiFp(this.configuration).heartbeatIdLastGet(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows to retrieve a page of heartbeats of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.
+     * @summary Get page of heartbeats of target
+     * @param {number} id ID of target to get the page of heartbeats for
+     * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+     * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+     * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (latency, timestamp, status, heartbeats.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HeartbeatApi
+     */
+    public heartbeatIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig) {
+        return HeartbeatApiFp(this.configuration).heartbeatIdPageGet(id, size, page, sort, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows to retrieve a list of heartbeats of a target that have been collected in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by heartbeat\'s timestamp ascending (oldest first).
+     * @summary Get heartbeats of target in time range
+     * @param {number} id ID of target to get the list of heartbeats for
+     * @param {number} start Unix epoch second representing start of the time range
+     * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HeartbeatApi
+     */
+    public heartbeatIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig) {
+        return HeartbeatApiFp(this.configuration).heartbeatIdTimerangeGet(id, start, end, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * IncidentApi - axios parameter creator
+ * @export
+ */
+export const IncidentApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Allows to retrieve information about incident with specified ID, if incident\'s target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get incident by ID
+         * @param {number} id ID of incident to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentIdGet: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('incidentIdGet', 'id', id)
+            const localVarPath = `/incident/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows to retrieve information about the last incident of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get last incident of target
+         * @param {number} id ID of target to get the last incident info of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentIdLastGet: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('incidentIdLastGet', 'id', id)
+            const localVarPath = `/incident/{id}/last`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows to retrieve a page of incidents of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.
+         * @summary Get page of incidents of target
+         * @param {number} id ID of target to get the page of incidents for
+         * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+         * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+         * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentIdPageGet: async (id: number, size?: number, page?: number, sort?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('incidentIdPageGet', 'id', id)
+            const localVarPath = `/incident/{id}/page`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (sort !== undefined) {
+                localVarQueryParameter['sort'] = sort;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows to retrieve a list of incidents of a target that have started in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by incident\'s start timestamp ascending (oldest first).
+         * @summary Get incidents of target in time range
+         * @param {number} id ID of target to get the list of incidents for
+         * @param {number} start Unix epoch second representing start of the time range
+         * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentIdTimerangeGet: async (id: number, start: number, end?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('incidentIdTimerangeGet', 'id', id)
+            // verify required parameter 'start' is not null or undefined
+            assertParamExists('incidentIdTimerangeGet', 'start', start)
+            const localVarPath = `/incident/{id}/timerange`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (start !== undefined) {
+                localVarQueryParameter['start'] = start;
+            }
+
+            if (end !== undefined) {
+                localVarQueryParameter['end'] = end;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * IncidentApi - functional programming interface
+ * @export
+ */
+export const IncidentApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = IncidentApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Allows to retrieve information about incident with specified ID, if incident\'s target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get incident by ID
+         * @param {number} id ID of incident to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async incidentIdGet(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IncidentGetIncidentSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentIdGet(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows to retrieve information about the last incident of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get last incident of target
+         * @param {number} id ID of target to get the last incident info of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async incidentIdLastGet(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IncidentGetIncidentSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentIdLastGet(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentIdLastGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows to retrieve a page of incidents of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.
+         * @summary Get page of incidents of target
+         * @param {number} id ID of target to get the page of incidents for
+         * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+         * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+         * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async incidentIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IncidentGetIncidentPageSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentIdPageGet(id, size, page, sort, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentIdPageGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows to retrieve a list of incidents of a target that have started in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by incident\'s start timestamp ascending (oldest first).
+         * @summary Get incidents of target in time range
+         * @param {number} id ID of target to get the list of incidents for
+         * @param {number} start Unix epoch second representing start of the time range
+         * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async incidentIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IncidentGetManyIncidentsSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentIdTimerangeGet(id, start, end, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentIdTimerangeGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * IncidentApi - factory interface
+ * @export
+ */
+export const IncidentApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = IncidentApiFp(configuration)
+    return {
+        /**
+         * Allows to retrieve information about incident with specified ID, if incident\'s target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get incident by ID
+         * @param {number} id ID of incident to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentIdGet(id: number, options?: RawAxiosRequestConfig): AxiosPromise<IncidentGetIncidentSuccessResponse> {
+            return localVarFp.incidentIdGet(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows to retrieve information about the last incident of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get last incident of target
+         * @param {number} id ID of target to get the last incident info of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentIdLastGet(id: number, options?: RawAxiosRequestConfig): AxiosPromise<IncidentGetIncidentSuccessResponse> {
+            return localVarFp.incidentIdLastGet(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows to retrieve a page of incidents of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.
+         * @summary Get page of incidents of target
+         * @param {number} id ID of target to get the page of incidents for
+         * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+         * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+         * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig): AxiosPromise<IncidentGetIncidentPageSuccessResponse> {
+            return localVarFp.incidentIdPageGet(id, size, page, sort, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows to retrieve a list of incidents of a target that have started in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by incident\'s start timestamp ascending (oldest first).
+         * @summary Get incidents of target in time range
+         * @param {number} id ID of target to get the list of incidents for
+         * @param {number} start Unix epoch second representing start of the time range
+         * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig): AxiosPromise<IncidentGetManyIncidentsSuccessResponse> {
+            return localVarFp.incidentIdTimerangeGet(id, start, end, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * IncidentApi - object-oriented interface
+ * @export
+ * @class IncidentApi
+ * @extends {BaseAPI}
+ */
+export class IncidentApi extends BaseAPI {
+    /**
+     * Allows to retrieve information about incident with specified ID, if incident\'s target is public then the info can be retrieved by anyone, even without an auth token
+     * @summary Get incident by ID
+     * @param {number} id ID of incident to get
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IncidentApi
+     */
+    public incidentIdGet(id: number, options?: RawAxiosRequestConfig) {
+        return IncidentApiFp(this.configuration).incidentIdGet(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows to retrieve information about the last incident of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
+     * @summary Get last incident of target
+     * @param {number} id ID of target to get the last incident info of
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IncidentApi
+     */
+    public incidentIdLastGet(id: number, options?: RawAxiosRequestConfig) {
+        return IncidentApiFp(this.configuration).incidentIdLastGet(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows to retrieve a page of incidents of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.
+     * @summary Get page of incidents of target
+     * @param {number} id ID of target to get the page of incidents for
+     * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+     * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+     * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IncidentApi
+     */
+    public incidentIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig) {
+        return IncidentApiFp(this.configuration).incidentIdPageGet(id, size, page, sort, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows to retrieve a list of incidents of a target that have started in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by incident\'s start timestamp ascending (oldest first).
+     * @summary Get incidents of target in time range
+     * @param {number} id ID of target to get the list of incidents for
+     * @param {number} start Unix epoch second representing start of the time range
+     * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IncidentApi
+     */
+    public incidentIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig) {
+        return IncidentApiFp(this.configuration).incidentIdTimerangeGet(id, start, end, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

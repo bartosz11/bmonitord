@@ -1,0 +1,22 @@
+meta {
+  name: Get targets incidents in time range
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{API_URL}}/api/heartbeat/:targetID/timerange?start=1762547886
+&end=1762553483
+  body: none
+  auth: none
+}
+
+params:query {
+  start: 
+  
+  end:
+}
+
+params:path {
+  targetID: 18
+}

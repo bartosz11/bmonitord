@@ -1,0 +1,15 @@
+meta {
+  name: Get last heartbeat of target
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{API_URL}}/api/heartbeat/:targetID/last
+  body: none
+  auth: none
+}
+
+params:path {
+  targetID: 18
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Get heartbeat by ID
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{API_URL}}/api/heartbeat/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 1
+}

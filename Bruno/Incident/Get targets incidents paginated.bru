@@ -1,0 +1,22 @@
+meta {
+  name: Get targets incidents paginated
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{API_URL}}/api/incident/:targetID/page?page&size&sort
+  body: none
+  auth: none
+}
+
+params:query {
+  page: 
+  size: 
+  sort: 
+  ~sort: 
+}
+
+params:path {
+  targetID: 18
+}

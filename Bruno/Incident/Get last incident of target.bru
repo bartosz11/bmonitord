@@ -1,0 +1,15 @@
+meta {
+  name: Get last incident of target
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{API_URL}}/api/incident/:targetID/last
+  body: none
+  auth: none
+}
+
+params:path {
+  targetID: 18
+}

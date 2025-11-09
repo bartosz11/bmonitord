@@ -936,6 +936,444 @@ const docTemplate = `{
                 }
             }
         },
+        "/heartbeat/{id}": {
+            "get": {
+                "description": "Allows to retrieve information about heartbeat with specified ID, if heartbeat's target is public then the info can be retrieved by anyone, even without an auth token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "heartbeat"
+                ],
+                "summary": "Get heartbeat by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of heartbeat to get",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/heartbeat.getHeartbeatSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a heartbeat with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public).",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/heartbeat/{id}/last": {
+            "get": {
+                "description": "Allows to retrieve information about the last heartbeat of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "heartbeat"
+                ],
+                "summary": "Get last heartbeat of target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to get the last heartbeat info of",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/heartbeat.getHeartbeatSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public).",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/heartbeat/{id}/page": {
+            "get": {
+                "description": "Allows to retrieve a page of heartbeats of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "heartbeat"
+                ],
+                "summary": "Get page of heartbeats of target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to get the page of heartbeats for",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number, if a negative number is given it defaults to 0.",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sorting settings. Format: \u003cfield\u003e,\u003cdirection\u003e where field can be one of: (latency, timestamp, status, heartbeats.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/heartbeat.getHeartbeatPageSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when a parameter couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/heartbeat/{id}/timerange": {
+            "get": {
+                "description": "Allows to retrieve a list of heartbeats of a target that have been collected in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by heartbeat's timestamp ascending (oldest first).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "heartbeat"
+                ],
+                "summary": "Get heartbeats of target in time range",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to get the list of heartbeats for",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Unix epoch second representing start of the time range",
+                        "name": "start",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.",
+                        "name": "end",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/heartbeat.getManyHeartbeatsSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when a parameter couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/incident/{id}": {
+            "get": {
+                "description": "Allows to retrieve information about incident with specified ID, if incident's target is public then the info can be retrieved by anyone, even without an auth token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "incident"
+                ],
+                "summary": "Get incident by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of incident to get",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/incident.getIncidentSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when an incident with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public).",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/incident/{id}/last": {
+            "get": {
+                "description": "Allows to retrieve information about the last incident of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "incident"
+                ],
+                "summary": "Get last incident of target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to get the last incident info of",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/incident.getIncidentSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public).",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/incident/{id}/page": {
+            "get": {
+                "description": "Allows to retrieve a page of incidents of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "incident"
+                ],
+                "summary": "Get page of incidents of target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to get the page of incidents for",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number, if a negative number is given it defaults to 0.",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sorting settings. Format: \u003cfield\u003e,\u003cdirection\u003e where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/incident.getIncidentPageSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when a parameter couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/incident/{id}/timerange": {
+            "get": {
+                "description": "Allows to retrieve a list of incidents of a target that have started in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by incident's start timestamp ascending (oldest first).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "incident"
+                ],
+                "summary": "Get incidents of target in time range",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to get the list of incidents for",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Unix epoch second representing start of the time range",
+                        "name": "start",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.",
+                        "name": "end",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/incident.getManyIncidentsSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when a parameter couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/notification/": {
             "get": {
                 "security": [
@@ -3063,6 +3501,45 @@ const docTemplate = `{
                 }
             }
         },
+        "heartbeat.getHeartbeatPageSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/helpers.Page-model_Heartbeat"
+                }
+            }
+        },
+        "heartbeat.getHeartbeatSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Heartbeat"
+                }
+            }
+        },
+        "heartbeat.getManyHeartbeatsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Heartbeat"
+                    }
+                }
+            }
+        },
         "helpers.GenericDeleteSuccessResponse": {
             "type": "object",
             "properties": {
@@ -3082,6 +3559,91 @@ const docTemplate = `{
                 "error": {
                     "type": "string",
                     "example": "parsing id failed"
+                }
+            }
+        },
+        "helpers.Page-model_Heartbeat": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Heartbeat"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "totalElements": {
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "helpers.Page-model_Incident": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Incident"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "totalElements": {
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "incident.getIncidentPageSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/helpers.Page-model_Incident"
+                }
+            }
+        },
+        "incident.getIncidentSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Incident"
+                }
+            }
+        },
+        "incident.getManyIncidentsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Incident"
+                    }
                 }
             }
         },
@@ -3341,6 +3903,9 @@ const docTemplate = `{
                 },
                 "start": {
                     "type": "string"
+                },
+                "target": {
+                    "$ref": "#/definitions/model.Target"
                 },
                 "targetId": {
                     "type": "integer"
@@ -4114,24 +4679,36 @@ const docTemplate = `{
                 1000,
                 1000000,
                 1000000000,
+                60000000000,
+                3600000000000,
                 1,
                 1000,
                 1000000,
                 1000000000,
                 60000000000,
-                3600000000000
+                3600000000000,
+                1,
+                1000,
+                1000000,
+                1000000000
             ],
             "x-enum-varnames": [
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",
                 "Second",
+                "Minute",
+                "Hour",
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",
                 "Second",
                 "Minute",
-                "Hour"
+                "Hour",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second"
             ]
         },
         "user.ChangePasswordRequest": {

@@ -7,6 +7,8 @@ import (
 	"github.com/bartosz11/checkmate/api/handlers"
 	"github.com/bartosz11/checkmate/api/handlers/auth"
 	"github.com/bartosz11/checkmate/api/handlers/checker"
+	"github.com/bartosz11/checkmate/api/handlers/heartbeat"
+	"github.com/bartosz11/checkmate/api/handlers/incident"
 	"github.com/bartosz11/checkmate/api/handlers/notification"
 	"github.com/bartosz11/checkmate/api/handlers/orchestrator"
 	"github.com/bartosz11/checkmate/api/handlers/session"
@@ -88,6 +90,21 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 	publicGroup := apiGroup.Group("", middleware.AuthMiddleware(db, true))
 	{
 		publicGroup.GET("/target/:targetID", target.HandleGetTargetByID(db))
+		incidentGroup := publicGroup.Group("/incident/:id")
+		{
+			incidentGroup.GET("", incident.HandleGetIncidentById(db))
+			// /:id means target ID in case of these, Gin doesn't really let me do it differently
+			incidentGroup.GET("/last", incident.HandleGetLastIncidentForTargetId(db))
+			incidentGroup.GET("/timerange", incident.HandleGetIncidentsForTargetInTimeRange(db))
+			incidentGroup.GET("/page", incident.HandleGetIncidentPageForTarget(db))
+		}
+		heartbeatGroup := publicGroup.Group("/heartbeat/:id")
+		{
+			heartbeatGroup.GET("", heartbeat.HandleGetHeartbeatById(db))
+			heartbeatGroup.GET("/last", heartbeat.HandleGetLastHeartbeatForTargetId(db))
+			heartbeatGroup.GET("/timerange", heartbeat.HandleGetHeartbeatsForTargetInTimeRange(db))
+			heartbeatGroup.GET("/page", heartbeat.HandleGetHeartbeatPageForTarget(db))
+		}
 	}
 
 	restrictedGrp := apiGroup.Group("", middleware.AuthMiddleware(db, false))
@@ -156,9 +173,6 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 			}
 		}
 	}
-	//TODO: separate incident and heartbeat groups - read only data that might be public at some point
-	// so that's why it should be on separate group, there's no point in making things like /target/:id/heartbeat[s]/:id
-	// they're theoretically child entities, but the "publicity" makes them kind of independent
 
 	adminGrp := restrictedGrp.Group("/admin", middleware.AdminMiddleware())
 	{

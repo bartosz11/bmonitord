@@ -11,4 +11,5 @@ type Incident struct {
 	Duration time.Duration `json:"duration"`
 	Ongoing  bool          `gorm:"not null'" json:"ongoing"`
 	TargetID uint          `gorm:"not null" json:"targetId"`
+	Target   Target        `gorm:"foreignKey:TargetID" json:"target"`
 }
