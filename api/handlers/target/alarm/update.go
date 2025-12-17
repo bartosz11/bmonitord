@@ -92,6 +92,10 @@ func HandleUpdateAlarm(db *gorm.DB) gin.HandlerFunc {
 			alarm.Type = *updateReq.Type
 		}
 
+		if updateReq.MaxRetries != nil {
+			alarm.MaxRetries = *updateReq.MaxRetries
+		}
+
 		if alarm.Type == model.Threshold {
 			if updateReq.Threshold != nil {
 				alarm.Threshold = *updateReq.Threshold
@@ -121,10 +125,6 @@ func HandleUpdateAlarm(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		if updateReq.NotificationIDs != nil {
-			if len(*updateReq.NotificationIDs) < 1 {
-				helpers.BadRequestWithSpecificError(c, "alarm should have at least 1 notification assigned")
-				return
-			}
 			var notifications []model.Notification
 			err = db.Find(&notifications, "id in ? and user_id = ?", *updateReq.NotificationIDs, user.ID).Error
 			if err != nil {
@@ -159,7 +159,8 @@ func HandleUpdateAlarm(db *gorm.DB) gin.HandlerFunc {
 
 type UpdateAlarmRequest struct {
 	// Name must not be blank if supplied
-	Name *string `json:"name"`
+	Name       *string `json:"name"`
+	MaxRetries *uint   `json:"maxRetries,omitempty"`
 	// Type must be 0 (unavailable) or 1 (threshold), if supplied
 	Type *model.AlarmType `json:"type"`
 	// min. length = 1 if supplied, all notifications must exist. This is a "replace update"

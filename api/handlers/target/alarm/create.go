@@ -58,7 +58,8 @@ func HandleCreateAlarm(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		alarm := model.Alarm{
-			TargetID: target.ID,
+			TargetID:   target.ID,
+			MaxRetries: createReq.MaxRetries,
 		}
 
 		if helpers.IsBlank(createReq.Name) {
@@ -129,10 +130,12 @@ func HandleCreateAlarm(db *gorm.DB) gin.HandlerFunc {
 type CreateAlarmRequest struct {
 	// Name must not be blank
 	Name string `json:"name" binding:"required"`
+	// Max retries is required, ignored in case of agents
+	MaxRetries uint `json:"maxRetries" binding:"requiredUint"`
 	// Type must be 0 (unavailable) or 1 (threshold)
 	Type model.AlarmType `json:"type" binding:"requiredUint"`
 	// All notifications in this list must exist
-	NotificationIDs []uint `json:"notificationIDs" binding:"required,min=1"`
+	NotificationIDs []uint `json:"notificationIDs" binding:"required"`
 	// Threshold must be supplied if type is 1 (threshold)
 	Threshold *float64 `json:"threshold"`
 	// Threshold field must be supplied if type is 1 (threshold). At the moment the only accepted value is 0 (latency)

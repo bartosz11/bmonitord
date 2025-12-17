@@ -49,7 +49,6 @@ func HandleCreateTarget(db *gorm.DB) gin.HandlerFunc {
 
 		target := model.Target{
 			Name:       createReq.Name,
-			MaxRetries: createReq.MaxRetries,
 			Type:       createReq.Type,
 			Timeout:    createReq.Timeout,
 			UserID:     user.ID,
@@ -138,8 +137,6 @@ type createTargetSuccessResponse struct {
 type CreateTargetRequest struct {
 	// Name must not be blank
 	Name string `json:"name" binding:"required"`
-	// Max retries is required, ignored in case of agents
-	MaxRetries uint `json:"maxRetries" binding:"requiredUint"`
 	// Type must be 0 (PING), 1 (HTTP) or 2 (AGENT)
 	Type model.TargetType `json:"type" binding:"requiredUint"`
 	// Timeout is required

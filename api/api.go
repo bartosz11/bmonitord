@@ -153,6 +153,7 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 					alarmGrp.DELETE("/:alarmID", alarm.HandleDeleteAlarmByID(db))
 					alarmGrp.PATCH("/:alarmID", alarm.HandleUpdateAlarm(db))
 					alarmGrp.PATCH("/:alarmID/mute", alarm.HandleMuteAlarm(db))
+					alarmGrp.PATCH("/:alarmID/suspend", alarm.HandleSuspendAlarm(db))
 				}
 				agentGrp := specificTargetGrp.Group("/agent")
 				{
