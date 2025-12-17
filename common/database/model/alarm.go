@@ -2,22 +2,28 @@ package model
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/bartosz11/checkmate/common/helpers"
 )
 
 type Alarm struct {
 	BaseModel
-	Name           string              `gorm:"not null" json:"name"`
-	Type           AlarmType           `gorm:"not null" json:"type"`
-	Active         bool                `gorm:"default:false" json:"active"`
-	Muted          bool                `gorm:"default:false" json:"muted"`
-	Threshold      float64             `json:"threshold"`
-	ThresholdField AlarmThresholdField `json:"thresholdField"`
+	Name                    string              `gorm:"not null" json:"name"`
+	Type                    AlarmType           `gorm:"not null" json:"type"`
+	Triggered               bool                `gorm:"default:false" json:"triggered"`
+	TriggeredStateChangedAt time.Time           `json:"triggeredStateChangedAt"`
+	Suspended               bool                `gorm:"not null;default:false" json:"suspended"`
+	Muted                   bool                `gorm:"default:false" json:"muted"`
+	MaxRetries              uint                `gorm:"not null;default:0" json:"maxRetries"`
+	UsedRetries             uint                `gorm:"not null;default:0" json:"usedRetries"`
+	Threshold               float64             `json:"threshold"`
+	ThresholdField          AlarmThresholdField `json:"thresholdField"`
 	// For example what NIC should the threshold apply to
 	ThresholdFieldParams string         `json:"thresholdFieldParams"`
 	TargetID             uint           `gorm:"not null" json:"targetId"`
 	Notifications        []Notification `gorm:"many2many:alarms_notifications;constraint:OnDelete:CASCADE;" json:"notifications"`
+	Incidents            []Incident     `gorm:"constraint:OnDelete:CASCADE;" json:"incidents"`
 }
 
 type AlarmType uint
