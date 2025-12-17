@@ -99,13 +99,17 @@ func assignCheckersToHeartbeats(hbsAll []model.Heartbeat, db *gorm.DB) {
 
 func pullNotificationContentBuilder(payload *notificationproviders.NotificationPayload, target *model.Target, alarm *model.Alarm, decisiveHeartbeat *model.Heartbeat, _ *[]model.Heartbeat, allHbs *[]model.Heartbeat) {
 	var bodyBuilder strings.Builder
+	if !payload.Incident.Ongoing {
+		humanDuration := helpers.HumanizeDuration(payload.Incident.Duration)
+		bodyBuilder.WriteString(fmt.Sprintf("Duration: %s\n", humanDuration))
+	}
+	bodyBuilder.WriteString(fmt.Sprintf("Host: %s\n", target.GetHost()))
+	bodyBuilder.WriteString(decisiveHeartbeat.Timestamp.Format(NotificationTimeFormat))
+	bodyBuilder.WriteString("\n")
+
 	switch alarm.Type {
 	case model.Unavailable:
 		payload.Header = target.Name + " is now " + model.StatusToString(decisiveHeartbeat.Status) + "."
-		if decisiveHeartbeat.Status == model.Up {
-			humanDuration := helpers.HumanizeDuration(payload.Incident.Duration)
-			bodyBuilder.WriteString(fmt.Sprintf("Duration: %s\n", humanDuration))
-		}
 		for i, heartbeat := range *allHbs {
 			// It's nearly impossible for Checker to be nil here since this is pull not push
 			bodyBuilder.WriteString(heartbeat.Checker.Name)
@@ -135,7 +139,6 @@ func pullNotificationContentBuilder(payload *notificationproviders.NotificationP
 			}
 		}
 	}
-	bodyBuilder.WriteString(fmt.Sprintf("Host: %s\n", target.GetHost()))
-	bodyBuilder.WriteString(decisiveHeartbeat.Timestamp.Format(NotificationTimeFormat))
+
 	payload.Body = bodyBuilder.String()
 }
