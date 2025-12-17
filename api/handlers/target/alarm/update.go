@@ -85,7 +85,7 @@ func HandleUpdateAlarm(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		if updateReq.Type != nil {
-			if err = model.ValidateAlarmType(*updateReq.Type); err != nil {
+			if err = model.ValidateAlarmTypeForCreateUpdate(*updateReq.Type); err != nil {
 				helpers.BadRequestWithSpecificError(c, err.Error())
 				return
 			}
@@ -161,7 +161,7 @@ type UpdateAlarmRequest struct {
 	// Name must not be blank if supplied
 	Name       *string `json:"name"`
 	MaxRetries *uint   `json:"maxRetries,omitempty"`
-	// Type must be 0 (unavailable) or 1 (threshold), if supplied
+	// Type must be 1 (threshold), if supplied. This is left in place for possible future use
 	Type *model.AlarmType `json:"type"`
 	// min. length = 1 if supplied, all notifications must exist. This is a "replace update"
 	NotificationIDs *[]uint `json:"notificationIDs"`

@@ -15,6 +15,7 @@ type Alarm struct {
 	TriggeredStateChangedAt time.Time           `json:"triggeredStateChangedAt"`
 	Suspended               bool                `gorm:"not null;default:false" json:"suspended"`
 	Muted                   bool                `gorm:"default:false" json:"muted"`
+	System                  bool                `gorm:"not null;default:false" json:"system"`
 	MaxRetries              uint                `gorm:"not null;default:0" json:"maxRetries"`
 	UsedRetries             uint                `gorm:"not null;default:0" json:"usedRetries"`
 	Threshold               float64             `json:"threshold"`
@@ -34,7 +35,10 @@ const (
 	alarmTypeMax
 )
 
-func ValidateAlarmType(at AlarmType) error {
+func ValidateAlarmTypeForCreateUpdate(at AlarmType) error {
+	if at == Unavailable {
+		return fmt.Errorf("type %d cannot be used to create new alarms or update existing ones to it", at)
+	}
 	if at >= alarmTypeMax {
 		return fmt.Errorf("invalid alarm type: %d", at)
 	}

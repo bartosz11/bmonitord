@@ -63,8 +63,18 @@ func HandleDeleteAlarmByID(db *gorm.DB) gin.HandlerFunc {
 			helpers.NotFound(c)
 			return
 		}
+
 		if err != nil {
 			helpers.DBInteractionFailed(c)
+			return
+		}
+
+		if alarm.System {
+			resp := helpers.HTTPResponse{
+				Code:  http.StatusBadRequest,
+				Error: "system alarms cannot be deleted",
+			}
+			resp.WriteAsJSON(c)
 			return
 		}
 

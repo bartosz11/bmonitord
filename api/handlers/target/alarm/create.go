@@ -68,7 +68,7 @@ func HandleCreateAlarm(db *gorm.DB) gin.HandlerFunc {
 		}
 		alarm.Name = createReq.Name
 
-		if err = model.ValidateAlarmType(createReq.Type); err != nil {
+		if err = model.ValidateAlarmTypeForCreateUpdate(createReq.Type); err != nil {
 			helpers.BadRequestWithSpecificError(c, err.Error())
 			return
 		}
@@ -132,7 +132,7 @@ type CreateAlarmRequest struct {
 	Name string `json:"name" binding:"required"`
 	// Max retries is required, ignored in case of agents
 	MaxRetries uint `json:"maxRetries" binding:"requiredUint"`
-	// Type must be 0 (unavailable) or 1 (threshold)
+	// Type must be 1 (threshold). This is left in place for possible future use
 	Type model.AlarmType `json:"type" binding:"requiredUint"`
 	// All notifications in this list must exist
 	NotificationIDs []uint `json:"notificationIDs" binding:"required"`

@@ -12,7 +12,7 @@ import (
 
 // HandleCreateTarget docs
 // @Summary Create a target
-// @Description Allows a user to create a target
+// @Description Allows a user to create a target. This endpoint also creates a system alarm of type Unavailable assigned to the newly created target. The alarm is not returned by this endpoint.
 // @Tags target
 // @Security BearerAuth
 // @Accept json
@@ -116,6 +116,19 @@ func HandleCreateTarget(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		err = db.Save(&target).Error
+		if err != nil {
+			helpers.DBInteractionFailed(c)
+			return
+		}
+
+		unavailableAlarm := model.Alarm{
+			Name:     "Default unavailable alarm",
+			Type:     model.Unavailable,
+			System:   true,
+			TargetID: target.ID,
+		}
+
+		err = db.Save(&unavailableAlarm).Error
 		if err != nil {
 			helpers.DBInteractionFailed(c)
 			return
