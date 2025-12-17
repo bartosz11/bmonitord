@@ -8,72 +8,82 @@ import (
 
 const NotificationTimeFormat = "2006-01-02 15:04:05"
 
-func CheckLastIncident(target *model.Target, hb *model.Heartbeat, db *gorm.DB) *model.Incident {
-	var lastIncident *model.Incident
-	// turns out I actually need to check if target's status is not unknown, covers the case of push check saving the target AFTER this function is invoked
-	if hb.Status != target.LastStatus && target.LastStatus != model.Unknown {
-		if hb.Status == model.Up { // Change from DOWN to UP
-			lastIncident = &target.Incidents[0] // Has to exist, incidents are always created on DOWN statuses
-			lastIncident.Ongoing = false
-			lastIncident.End = hb.Timestamp
-			lastIncident.Duration = hb.Timestamp.Sub(lastIncident.Start) // end - start, I love Go types
-			db.Save(lastIncident)
-		} else { // change from UP to DOWN, check providers shouldn't return UNKNOWN
-			incident := model.Incident{
-				Start:    hb.Timestamp,
-				Ongoing:  true,
-				TargetID: target.ID,
-			}
-			lastIncident = &incident
-			db.Save(&incident)
-		}
-	}
-	return lastIncident
-}
+func ProcessAlarms(db *gorm.DB, target *model.Target, decisiveHeartbeat *model.Heartbeat, hbs *[]model.Heartbeat, hbsAll *[]model.Heartbeat, contentBuilder func(payload *notificationproviders.NotificationPayload, target *model.Target, alarm *model.Alarm, decisiveHeartbeat *model.Heartbeat, heartbeats *[]model.Heartbeat, allHbs *[]model.Heartbeat)) {
+	targetStatus := model.Up
 
-func ProcessAlarms(db *gorm.DB, target *model.Target, decisiveHeartbeat *model.Heartbeat, lastIncident *model.Incident, hbs *[]model.Heartbeat, hbsAll *[]model.Heartbeat, contentBuilder func(payload *notificationproviders.NotificationPayload, target *model.Target, alarm *model.Alarm, decisiveHeartbeat *model.Heartbeat, heartbeats *[]model.Heartbeat, allHbs *[]model.Heartbeat)) {
+	// target.Alarms shouldn't contain alarms that are suspended
 	for _, alarm := range target.Alarms {
-		shouldNotify := false
-		payload := notificationproviders.NotificationPayload{
-			Target:            *target,
-			DecisiveHeartbeat: *decisiveHeartbeat,
-			Heartbeats:        *hbsAll,
-		}
-		if lastIncident != nil { // I actually experienced a panic because of a nil dereference, funny how I was sure it won't happen :)
-			payload.Incident = *lastIncident
-		}
-		// determine if we should notify the user
+		triggeredBefore := alarm.Triggered
+
+		conditionMet := false
 		switch alarm.Type {
 		case model.Unavailable:
-			if alarm.Active && decisiveHeartbeat.Status == model.Up {
-				alarm.Active = false
-				shouldNotify = !alarm.Muted
-			} else if !alarm.Active && decisiveHeartbeat.Status == model.Down {
-				alarm.Active = true
-				shouldNotify = !alarm.Muted
-			}
+			conditionMet = decisiveHeartbeat.Status == model.Down
 		case model.Threshold:
 			meta := model.AlarmThresholdFieldMetas[alarm.ThresholdField]
-			thresholdExceeded := false
 			for _, hb := range *hbs { // Check on all non-0 hbs for threshold exceeding, if it's exceeded anywhere, trigger the alarm
 				value := meta.GetValueFunc(&hb, &alarm)
 				if value > alarm.Threshold {
-					thresholdExceeded = true
+					conditionMet = true
 					break // No need to check further since at least one still exceeds the threshold
 				}
 			}
+		}
 
-			if !alarm.Active && thresholdExceeded {
-				alarm.Active = true
-				shouldNotify = !alarm.Muted
+		if conditionMet {
+			alarm.UsedRetries++
+			if alarm.UsedRetries <= alarm.MaxRetries {
+				// the retry stage is supposed to be a place where the alarm is not triggered yet
+				alarm.Triggered = false
+				// "down" is the highest status in the "hierarchy" - down -> unknown -> alarm
+				// because "something has failed definitely" -> "something might be failing" -> "everything's ok"
+				// this check is performed so alarms don't overwrite each other's result
+				if targetStatus != model.Down {
+					targetStatus = model.Unknown
+				}
+			} else {
+				alarm.Triggered = true
+				// "down' is the highest status in the "hierarchy", we can safely overwrite it over and over
+				targetStatus = model.Down
 			}
-			if alarm.Active && !thresholdExceeded {
-				alarm.Active = false
-				shouldNotify = !alarm.Muted
+		} else {
+			alarm.UsedRetries = 0
+			alarm.Triggered = false
+			// "up" is the default value of targetStatus - if no other alarm will overwrite it because of it's "conclusions", it's gonna remain as it is now
+		}
+
+		shouldNotify := false
+		var lastIncident model.Incident
+
+		if triggeredBefore != alarm.Triggered {
+			alarm.TriggeredStateChangedAt = decisiveHeartbeat.Timestamp
+			shouldNotify = !alarm.Muted
+
+			if alarm.Triggered { // changed from "up" to "down"
+				lastIncident = model.Incident{
+					Start:    decisiveHeartbeat.Timestamp,
+					Ongoing:  true,
+					TargetID: target.ID,
+					AlarmID:  alarm.ID,
+				}
+				db.Save(&lastIncident)
+			} else { // changed from "down" to "up"
+				lastIncident = alarm.Incidents[0] // Has to exist, incidents are always created on DOWN statuses
+				lastIncident.Ongoing = false
+				lastIncident.End = decisiveHeartbeat.Timestamp
+				lastIncident.Duration = decisiveHeartbeat.Timestamp.Sub(lastIncident.Start) // end - start, I love Go types
+				db.Save(&lastIncident)
 			}
 		}
 
 		if shouldNotify {
+			payload := notificationproviders.NotificationPayload{
+				Target:            *target,
+				DecisiveHeartbeat: *decisiveHeartbeat,
+				Heartbeats:        *hbsAll,
+				Incident:          lastIncident,
+			}
+
 			//build and send the notifications
 			contentBuilder(&payload, target, &alarm, decisiveHeartbeat, hbs, hbsAll)
 			for _, notification := range alarm.Notifications {
@@ -82,4 +92,12 @@ func ProcessAlarms(db *gorm.DB, target *model.Target, decisiveHeartbeat *model.H
 		}
 		db.Save(&alarm) // We might want to do this in bulk/reintroduce the alarmChanged variable from the unfinished Java orchestrator
 	}
+
+	target.LastStatus = targetStatus
+	if targetStatus == model.Up {
+		target.ChecksUp++
+	} else if targetStatus == model.Down {
+		target.ChecksDown++
+	}
+	db.Save(&target)
 }

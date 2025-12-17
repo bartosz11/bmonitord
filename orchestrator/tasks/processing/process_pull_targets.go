@@ -42,33 +42,17 @@ func ProcessPullHeartbeats(hbs []model.Heartbeat, task *Task, db *gorm.DB) {
 	decisiveHeartbeat := &task.DecisiveHeartbeat
 
 	target.LastCheck = decisiveHeartbeat.Timestamp
-	if decisiveHeartbeat.Status == model.Up {
-		target.ChecksUp++
-		target.UsedRetries = 0
-		target.LastStatus = model.Up
-	} else {
-		target.UsedRetries++
-		if target.UsedRetries <= target.MaxRetries {
-			db.Save(target) // Save just the retries count if it hasn't been exceeded yet, stop further processing
-			return
-		} else {
-			target.ChecksDown++
-			target.LastStatus = model.Down
-		}
-	}
 	db.Save(target)
 
-	db.Preload("Incidents", func(db *gorm.DB) *gorm.DB {
+	db.Preload("Alarms", "suspended = false").Preload("Alarms.Incidents", func(db *gorm.DB) *gorm.DB {
 		return db.Order("start desc") // Sort incidents by timestamps descending
-	}).Preload("Alarms").Preload("Alarms.Notifications").First(target, "id = ?", target.ID)
-
-	lastIncident := CheckLastIncident(target, decisiveHeartbeat, db)
+	}).Preload("Alarms.Notifications").First(target, "id = ?", target.ID)
 
 	hbsAll := append(hbs, missingHbs...) // For notification body content purposes and saving
 
 	assignCheckersToHeartbeats(hbsAll, db)
 
-	ProcessAlarms(db, target, decisiveHeartbeat, lastIncident, &hbs, &hbsAll, pullNotificationContentBuilder)
+	ProcessAlarms(db, target, decisiveHeartbeat, &hbs, &hbsAll, pullNotificationContentBuilder)
 
 	db.Save(&hbsAll)
 }
@@ -133,7 +117,7 @@ func pullNotificationContentBuilder(payload *notificationproviders.NotificationP
 		}
 	case model.Threshold:
 		meta := model.AlarmThresholdFieldMetas[alarm.ThresholdField]
-		if alarm.Active {
+		if alarm.Triggered {
 			payload.Header = target.Name + ": " + meta.FormattedName + " threshold exceeded"
 		} else {
 			payload.Header = target.Name + ": " + meta.FormattedName + " threshold no longer exceeded"
