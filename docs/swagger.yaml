@@ -2,6 +2,9 @@ basePath: /api
 definitions:
   alarm.CreateAlarmRequest:
     properties:
+      maxRetries:
+        description: Max retries is required, ignored in case of agents
+        type: integer
       name:
         description: Name must not be blank
         type: string
@@ -9,7 +12,6 @@ definitions:
         description: All notifications in this list must exist
         items:
           type: integer
-        minItems: 1
         type: array
       threshold:
         description: Threshold must be supplied if type is 1 (threshold)
@@ -27,13 +29,16 @@ definitions:
       type:
         allOf:
         - $ref: '#/definitions/model.AlarmType'
-        description: Type must be 0 (unavailable) or 1 (threshold)
+        description: Type must be 1 (threshold). This is left in place for possible
+          future use
     required:
     - name
     - notificationIDs
     type: object
   alarm.UpdateAlarmRequest:
     properties:
+      maxRetries:
+        type: integer
       name:
         description: Name must not be blank if supplied
         type: string
@@ -59,7 +64,8 @@ definitions:
       type:
         allOf:
         - $ref: '#/definitions/model.AlarmType'
-        description: Type must be 0 (unavailable) or 1 (threshold), if supplied
+        description: Type must be 1 (threshold), if supplied. This is left in place
+          for possible future use
     type: object
   alarm.createAlarmSuccessResponse:
     properties:
@@ -245,31 +251,13 @@ definitions:
       totalPages:
         type: integer
     type: object
-  incident.getIncidentPageSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        $ref: '#/definitions/helpers.Page-model_Incident'
-    type: object
-  incident.getIncidentSuccessResponse:
+  incident.GetIncidentSuccessResponse:
     properties:
       code:
         example: 200
         type: integer
       data:
         $ref: '#/definitions/model.Incident'
-    type: object
-  incident.getManyIncidentsSuccessResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/model.Incident'
-        type: array
     type: object
   model.Agent:
     properties:
@@ -294,13 +282,17 @@ definitions:
     type: object
   model.Alarm:
     properties:
-      active:
-        type: boolean
       createdAt:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
       id:
+        type: integer
+      incidents:
+        items:
+          $ref: '#/definitions/model.Incident'
+        type: array
+      maxRetries:
         type: integer
       muted:
         type: boolean
@@ -310,6 +302,10 @@ definitions:
         items:
           $ref: '#/definitions/model.Notification'
         type: array
+      suspended:
+        type: boolean
+      system:
+        type: boolean
       targetId:
         type: integer
       threshold:
@@ -319,10 +315,16 @@ definitions:
       thresholdFieldParams:
         description: For example what NIC should the threshold apply to
         type: string
+      triggered:
+        type: boolean
+      triggeredStateChangedAt:
+        type: string
       type:
         $ref: '#/definitions/model.AlarmType'
       updatedAt:
         type: string
+      usedRetries:
+        type: integer
     type: object
   model.AlarmThresholdField:
     enum:
@@ -435,6 +437,10 @@ definitions:
     type: object
   model.Incident:
     properties:
+      alarm:
+        $ref: '#/definitions/model.Alarm'
+      alarmId:
+        type: integer
       createdAt:
         type: string
       deletedAt:
@@ -565,6 +571,8 @@ definitions:
       checksDown:
         type: integer
       checksUp:
+        description: These 4 are "shortcuts", incidents are the "source of truth"
+          about what's going on with the Target
         type: integer
       createdAt:
         type: string
@@ -586,8 +594,6 @@ definitions:
         type: string
       lastStatus:
         $ref: '#/definitions/model.TargetStatus'
-      maxRetries:
-        type: integer
       name:
         type: string
       paused:
@@ -602,8 +608,6 @@ definitions:
         $ref: '#/definitions/model.TargetType'
       updatedAt:
         type: string
-      usedRetries:
-        type: integer
       userId:
         type: integer
     type: object
@@ -857,9 +861,6 @@ definitions:
         allOf:
         - $ref: '#/definitions/target.HTTPInfoCreateRequest'
         description: Must be supplied if type is 1 (HTTP)
-      maxRetries:
-        description: Max retries is required, ignored in case of agents
-        type: integer
       name:
         description: Name must not be blank
         type: string
@@ -877,6 +878,24 @@ definitions:
     required:
     - checkerIDs
     - name
+    type: object
+  target.GetIncidentPageSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/helpers.Page-model_Incident'
+    type: object
+  target.GetManyIncidentsSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Incident'
+        type: array
     type: object
   target.HTTPInfoCreateRequest:
     properties:
@@ -935,10 +954,6 @@ definitions:
         type: array
       httpInfo:
         $ref: '#/definitions/target.HTTPInfoUpdateRequest'
-      maxRetries:
-        description: Value of maxRetries can be updated even if target's type is 2
-          (agent), but it's ignored in the checking behavior
-        type: integer
       name:
         description: Name must not be blank if supplied
         type: string
@@ -975,12 +990,16 @@ definitions:
     type: object
   time.Duration:
     enum:
+    - -9223372036854775808
+    - 9223372036854775807
     - 1
     - 1000
     - 1000000
     - 1000000000
     - 60000000000
     - 3600000000000
+    - -9223372036854775808
+    - 9223372036854775807
     - 1
     - 1000
     - 1000000
@@ -994,12 +1013,16 @@ definitions:
     format: int64
     type: integer
     x-enum-varnames:
+    - minDuration
+    - maxDuration
     - Nanosecond
     - Microsecond
     - Millisecond
     - Second
     - Minute
     - Hour
+    - minDuration
+    - maxDuration
     - Nanosecond
     - Microsecond
     - Millisecond
@@ -1850,7 +1873,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/incident.getIncidentSuccessResponse'
+            $ref: '#/definitions/incident.GetIncidentSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed.
           schema:
@@ -1867,15 +1890,15 @@ paths:
       summary: Get incident by ID
       tags:
       - incident
-  /incident/{id}/last:
+  /incident/alarm/{id}/last:
     get:
       consumes:
       - application/json
-      description: Allows to retrieve information about the last incident of target
-        with specified ID, if target is public then the info can be retrieved by anyone,
-        even without an auth token
+      description: Allows to retrieve information about the last incident of alarm
+        with specified ID, if alarm's target is public then the info can be retrieved
+        by anyone, even without an auth token
       parameters:
-      - description: ID of target to get the last incident info of
+      - description: ID of alarm to get the last incident info of
         in: path
         name: id
         required: true
@@ -1886,13 +1909,13 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/incident.getIncidentSuccessResponse'
+            $ref: '#/definitions/incident.GetIncidentSuccessResponse'
         "400":
           description: Returned when given ID couldn't be parsed.
           schema:
             $ref: '#/definitions/helpers.GenericErrorResponse'
         "404":
-          description: Returned when a target with given ID couldn't be found or user
+          description: Returned when an alarm with given ID couldn't be found or user
             sending the request isn't allowed to access it (target isn't public).
           schema:
             $ref: '#/definitions/helpers.GenericErrorResponse'
@@ -1900,10 +1923,102 @@ paths:
           description: Returned when a DB interaction fails.
           schema:
             $ref: '#/definitions/helpers.GenericErrorResponse'
-      summary: Get last incident of target
+      summary: Get last incident of alarm
       tags:
       - incident
-  /incident/{id}/page:
+  /incident/alarm/{id}/page:
+    get:
+      consumes:
+      - application/json
+      description: Allows to retrieve a page of incidents of an alarm, if alarm's
+        target is public then the info can be retrieved by anyone, even without an
+        auth token. This endpoint may return empty pages if alarm's target is not
+        public.
+      parameters:
+      - description: ID of alarm to get the page of incidents for
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Size of the page, has to be a number in range [1, 200]. If value
+          smaller or equal to 0 is given it defaults to 20. If value higher than 200
+          is given, 200 is used.
+        in: query
+        name: size
+        type: integer
+      - description: Page number, if a negative number is given it defaults to 0.
+        in: query
+        name: page
+        type: integer
+      - description: 'Sorting settings. Format: <field>,<direction> where field can
+          be one of: (start, end duration, ongoing, incidents.id) and direction can
+          be either asc for ascending or desc for descending. This param can be provided
+          multiple times to sort by multiple columns at the same time.'
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/target.GetIncidentPageSuccessResponse'
+        "400":
+          description: Returned when a parameter couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      summary: Get page of incidents of alarm
+      tags:
+      - incident
+  /incident/alarm/{id}/timerange:
+    get:
+      consumes:
+      - application/json
+      description: Allows to retrieve a list of incidents of an alarm that have started
+        in the specified time range, if alarm's target is public then the info can
+        be retrieved by anyone, even without an auth token. This endpoint may return
+        an empty list if alarm's target is not public. The list is ordered by incident's
+        start timestamp ascending (oldest first).
+      parameters:
+      - description: ID of alarm to get the list of incidents for
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Unix epoch second representing start of the time range
+        in: query
+        name: start
+        required: true
+        type: integer
+      - description: Unix epoch second representing end of the time range. If not
+          specified, current time is used as end timestamp of the time range.
+        in: query
+        name: end
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/target.GetManyIncidentsSuccessResponse'
+        "400":
+          description: Returned when a parameter couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      summary: Get incidents of alarm in time range
+      tags:
+      - incident
+  /incident/target/{id}/page:
     get:
       consumes:
       - application/json
@@ -1939,7 +2054,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/incident.getIncidentPageSuccessResponse'
+            $ref: '#/definitions/target.GetIncidentPageSuccessResponse'
         "400":
           description: Returned when a parameter couldn't be parsed.
           schema:
@@ -1951,7 +2066,7 @@ paths:
       summary: Get page of incidents of target
       tags:
       - incident
-  /incident/{id}/timerange:
+  /incident/target/{id}/timerange:
     get:
       consumes:
       - application/json
@@ -1982,7 +2097,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/incident.getManyIncidentsSuccessResponse'
+            $ref: '#/definitions/target.GetManyIncidentsSuccessResponse'
         "400":
           description: Returned when a parameter couldn't be parsed.
           schema:
@@ -2487,7 +2602,9 @@ paths:
     post:
       consumes:
       - application/json
-      description: Allows a user to create a target
+      description: Allows a user to create a target. This endpoint also creates a
+        system alarm of type Unavailable assigned to the newly created target. The
+        alarm is not returned by this endpoint.
       parameters:
       - description: Information about new target
         in: body
@@ -3001,6 +3118,62 @@ paths:
       security:
       - BearerAuth: []
       summary: Mute alarm
+      tags:
+      - alarm
+  /target/{targetID}/alarm/{alarmID}/suspend:
+    patch:
+      consumes:
+      - application/json
+      description: Allows a user to change suspend status of an alarm
+      parameters:
+      - description: ID of target the alarm belongs to
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      - description: ID of the alarm
+        in: path
+        name: alarmID
+        required: true
+        type: integer
+      - description: Suspend status. Can be true for suspended, false for unsuspended.
+          If not supplied, suspend status of the alarm will change to the opposite
+          of current status.
+        in: query
+        name: suspend
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/alarm.getAlarmSuccessResponse'
+        "400":
+          description: Returned when given target ID, alarm ID or suspend status couldn't
+            be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "401":
+          description: Returned when user sending the request supplies an invalid
+            auth token.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "403":
+          description: Returned when account of user sending the request is disabled.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target or alarm with given ID couldn't be found.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Suspend alarm
       tags:
       - alarm
   /target/{targetID}/pause:

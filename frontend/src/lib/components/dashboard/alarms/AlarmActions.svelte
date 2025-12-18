@@ -1,5 +1,4 @@
 <script lang="ts">
-
 	import type { ModelAlarm, ModelNotification, ModelTarget } from '$lib/api-client-axios';
 	import type { Writable } from 'svelte/store';
 	import { toast } from 'svelte-sonner';
@@ -34,6 +33,18 @@
 			}
 		}).catch((err) => toast.error('Failed to toggle mute status: ' + (err.response?.data?.error ?? 'something went wrong')))
 	}
+
+	function onSuspendToggleClick() {
+		alarmApi.targetTargetIDAlarmAlarmIDSuspendPatch(targetId, row.id!).then((resp) => {
+			if (resp.status === 200) {
+				toast.success(`Successfully ${row.muted ? "unsuspended" : "suspended"} alarm.`);
+				rows.update((arr) =>
+					arr.map(n =>
+						n.id! === row!.id! ? { ...n, ...resp.data.data! } : n
+					));
+			}
+		}).catch((err) => toast.error('Failed to toggle suspend status: ' + (err.response?.data?.error ?? 'something went wrong')))
+	}
 </script>
 
 <ActionsBase>
@@ -41,13 +52,18 @@
 		<DropdownMenuGroup>
 			<DropdownMenuLabel>Actions</DropdownMenuLabel>
 			<DropdownMenuItem onclick={onMuteToggleClick}>{row.muted ? "Unmute" : "Mute"}</DropdownMenuItem>
+			<DropdownMenuItem onclick={onSuspendToggleClick}>{row.suspended ? "Unsuspend" : "Suspend"}</DropdownMenuItem>
 			<AlarmDataDialog {targetId} alarm={row} {notifications} alarms={rows}>
 				{#snippet trigger()}
 					<DropdownMenuItem onclick={(e) => e.preventDefault()}>Edit</DropdownMenuItem>
 				{/snippet}
 			</AlarmDataDialog>
 			<DropdownMenuSeparator />
-			<AlarmDeleteDialog {row} {rows} />
+			{#if row.system}
+				<DropdownMenuItem class="text-destructive" disabled>Delete</DropdownMenuItem>
+			{:else}
+				<AlarmDeleteDialog {row} {rows} />
+			{/if}
 		</DropdownMenuGroup>
 	{/snippet}
 </ActionsBase>

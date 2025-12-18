@@ -1,4 +1,4 @@
-package incident
+package target
 
 import (
 	"net/http"
@@ -20,10 +20,10 @@ import (
 // @Param size query uint false "Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used."
 // @Param page query uint false "Page number, if a negative number is given it defaults to 0."
 // @Param sort query string false "Sorting settings. Format: <field>,<direction> where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time."
-// @Success 200 {object} getIncidentPageSuccessResponse
+// @Success 200 {object} GetIncidentPageSuccessResponse
 // @Failure 400 {object} helpers.GenericErrorResponse "Returned when a parameter couldn't be parsed."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
-// @Router /incident/{id}/page [get]
+// @Router /incident/target/{id}/page [get]
 func HandleGetIncidentPageForTarget(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		allowedFields := []string{"start", "end", "duration", "ongoing", "incidents.id"}
@@ -46,7 +46,7 @@ func HandleGetIncidentPageForTarget(db *gorm.DB) gin.HandlerFunc {
 			user = val.(model.User)
 		}
 
-		query := db.Model(&model.Incident{}).Joins("Target").Where(`"Target"."id" = ? and ("Target"."public" = true or ("Target"."user_id" = ? and ?))`, id, user.ID, authenticatedUser)
+		query := db.Model(&model.Incident{}).Joins("Target").Joins("Alarm").Where(`"Target"."id" = ? and ("Target"."public" = true or ("Target"."user_id" = ? and ?))`, id, user.ID, authenticatedUser)
 		page, err := helpers.ApplyPageable[model.Incident](query, pageable)
 		if err != nil {
 			helpers.DBInteractionFailed(c)
@@ -61,7 +61,7 @@ func HandleGetIncidentPageForTarget(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-type getIncidentPageSuccessResponse struct {
+type GetIncidentPageSuccessResponse struct {
 	Code int                          `json:"code" example:"200"`
 	Data helpers.Page[model.Incident] `json:"data"`
 }

@@ -5,6 +5,7 @@ import type { Writable } from 'svelte/store';
 import TableSortableHeaderButton from '$lib/components/dashboard/TableSortableHeaderButton.svelte';
 import { alarmThresholdFieldMetas } from '$lib/components/dashboard/alarms/thresholdFieldInfo';
 import AlarmActions from '$lib/components/dashboard/alarms/AlarmActions.svelte';
+import AlarmStatusCell from '$lib/components/dashboard/alarms/AlarmStatusCell.svelte';
 
 export type AlarmTableMeta = {
 	alarms: Writable<ModelAlarm[]>;
@@ -41,7 +42,7 @@ export const alarmColumns: ColumnDef<ModelAlarm>[] = [
 		header: 'Status',
 		cell: ({ row }) => {
 			const alarm = row.original;
-			return `${alarm.active ? 'Active' : 'Inactive'}, ${alarm.muted ? 'muted' : 'unmuted'}`;
+			return renderComponent(AlarmStatusCell, { alarm });
 		}
 	},
 	{

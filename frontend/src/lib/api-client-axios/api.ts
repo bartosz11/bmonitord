@@ -23,716 +23,211 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- * 
- * @export
- * @interface AlarmCreateAlarmRequest
- */
 export interface AlarmCreateAlarmRequest {
     /**
+     * Max retries is required, ignored in case of agents
+     */
+    'maxRetries'?: number;
+    /**
      * Name must not be blank
-     * @type {string}
-     * @memberof AlarmCreateAlarmRequest
      */
     'name': string;
     /**
      * All notifications in this list must exist
-     * @type {Array<number>}
-     * @memberof AlarmCreateAlarmRequest
      */
     'notificationIDs': Array<number>;
     /**
      * Threshold must be supplied if type is 1 (threshold)
-     * @type {number}
-     * @memberof AlarmCreateAlarmRequest
      */
     'threshold'?: number;
     /**
      * Threshold field must be supplied if type is 1 (threshold). At the moment the only accepted value is 0 (latency)
-     * @type {ModelAlarmThresholdField}
-     * @memberof AlarmCreateAlarmRequest
      */
     'thresholdField'?: ModelAlarmThresholdField;
     /**
      * Threshold field params must be supplied if type is 1 (threshold). Used to specify when to trigger alarms in some cases, can be left blank though
-     * @type {string}
-     * @memberof AlarmCreateAlarmRequest
      */
     'thresholdFieldParams'?: string;
     /**
-     * Type must be 0 (unavailable) or 1 (threshold)
-     * @type {ModelAlarmType}
-     * @memberof AlarmCreateAlarmRequest
+     * Type must be 1 (threshold). This is left in place for possible future use
      */
     'type'?: ModelAlarmType;
 }
 
 
-/**
- * 
- * @export
- * @interface AlarmCreateAlarmSuccessResponse
- */
 export interface AlarmCreateAlarmSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof AlarmCreateAlarmSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelAlarm}
-     * @memberof AlarmCreateAlarmSuccessResponse
-     */
     'data'?: ModelAlarm;
 }
-/**
- * 
- * @export
- * @interface AlarmGetAlarmSuccessResponse
- */
 export interface AlarmGetAlarmSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof AlarmGetAlarmSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelAlarm}
-     * @memberof AlarmGetAlarmSuccessResponse
-     */
     'data'?: ModelAlarm;
 }
-/**
- * 
- * @export
- * @interface AlarmListAlarmsSuccessResponse
- */
 export interface AlarmListAlarmsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof AlarmListAlarmsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelAlarm>}
-     * @memberof AlarmListAlarmsSuccessResponse
-     */
     'data'?: Array<ModelAlarm>;
 }
-/**
- * 
- * @export
- * @interface AlarmUpdateAlarmRequest
- */
 export interface AlarmUpdateAlarmRequest {
+    'maxRetries'?: number;
     /**
      * Name must not be blank if supplied
-     * @type {string}
-     * @memberof AlarmUpdateAlarmRequest
      */
     'name'?: string;
     /**
      * min. length = 1 if supplied, all notifications must exist. This is a \"replace update\"
-     * @type {Array<number>}
-     * @memberof AlarmUpdateAlarmRequest
      */
     'notificationIDs'?: Array<number>;
     /**
      * Must be supplied if type is getting changed to threshold (1)
-     * @type {number}
-     * @memberof AlarmUpdateAlarmRequest
      */
     'threshold'?: number;
     /**
      * Must be supplied if type is getting changed to threshold (1), at the moment the only accepted value is 0 (latency)
-     * @type {ModelAlarmThresholdField}
-     * @memberof AlarmUpdateAlarmRequest
      */
     'thresholdField'?: ModelAlarmThresholdField;
     /**
      * Threshold field params must be supplied if type is getting changed to 1 (threshold). Used to specify when to trigger alarms in some cases, can be left blank though
-     * @type {string}
-     * @memberof AlarmUpdateAlarmRequest
      */
     'thresholdFieldParams'?: string;
     /**
-     * Type must be 0 (unavailable) or 1 (threshold), if supplied
-     * @type {ModelAlarmType}
-     * @memberof AlarmUpdateAlarmRequest
+     * Type must be 1 (threshold), if supplied. This is left in place for possible future use
      */
     'type'?: ModelAlarmType;
 }
 
 
-/**
- * 
- * @export
- * @interface AuthCredentials
- */
 export interface AuthCredentials {
     /**
      * Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.
-     * @type {string}
-     * @memberof AuthCredentials
      */
     'password': string;
     /**
      * Username cannot be blank
-     * @type {string}
-     * @memberof AuthCredentials
      */
     'username': string;
 }
-/**
- * 
- * @export
- * @interface AuthLoginSuccessResponse
- */
 export interface AuthLoginSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof AuthLoginSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {AuthLoginSuccessResponseData}
-     * @memberof AuthLoginSuccessResponse
-     */
     'data'?: AuthLoginSuccessResponseData;
 }
-/**
- * 
- * @export
- * @interface AuthLoginSuccessResponseData
- */
 export interface AuthLoginSuccessResponseData {
-    /**
-     * 
-     * @type {ModelSession}
-     * @memberof AuthLoginSuccessResponseData
-     */
     'session'?: ModelSession;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthLoginSuccessResponseData
-     */
     'token'?: string;
 }
-/**
- * 
- * @export
- * @interface AuthRegisterSuccessResponse
- */
 export interface AuthRegisterSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof AuthRegisterSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelUser}
-     * @memberof AuthRegisterSuccessResponse
-     */
     'data'?: ModelUser;
 }
-/**
- * 
- * @export
- * @interface CheckerCreateCheckerRequest
- */
 export interface CheckerCreateCheckerRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof CheckerCreateCheckerRequest
-     */
     'location'?: string;
     /**
      * Name cannot be blank
-     * @type {string}
-     * @memberof CheckerCreateCheckerRequest
      */
     'name': string;
 }
-/**
- * 
- * @export
- * @interface CheckerCreateCheckerSuccessResponse
- */
 export interface CheckerCreateCheckerSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof CheckerCreateCheckerSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelChecker}
-     * @memberof CheckerCreateCheckerSuccessResponse
-     */
     'data'?: ModelChecker;
 }
-/**
- * 
- * @export
- * @interface CheckerGetCheckerSuccessResponse
- */
 export interface CheckerGetCheckerSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof CheckerGetCheckerSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelChecker}
-     * @memberof CheckerGetCheckerSuccessResponse
-     */
     'data'?: ModelChecker;
 }
-/**
- * 
- * @export
- * @interface CheckerListCheckersSuccessResponse
- */
 export interface CheckerListCheckersSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof CheckerListCheckersSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelChecker>}
-     * @memberof CheckerListCheckersSuccessResponse
-     */
     'data'?: Array<ModelChecker>;
 }
-/**
- * 
- * @export
- * @interface CheckerUpdateCheckerRequest
- */
 export interface CheckerUpdateCheckerRequest {
     /**
      * Location can be blank
-     * @type {string}
-     * @memberof CheckerUpdateCheckerRequest
      */
     'location'?: string;
     /**
      * Name must not be blank if supplied
-     * @type {string}
-     * @memberof CheckerUpdateCheckerRequest
      */
     'name'?: string;
 }
-/**
- * 
- * @export
- * @interface GormDeletedAt
- */
 export interface GormDeletedAt {
-    /**
-     * 
-     * @type {string}
-     * @memberof GormDeletedAt
-     */
     'time'?: string;
     /**
      * Valid is true if Time is not NULL
-     * @type {boolean}
-     * @memberof GormDeletedAt
      */
     'valid'?: boolean;
 }
-/**
- * 
- * @export
- * @interface HeartbeatGetHeartbeatPageSuccessResponse
- */
 export interface HeartbeatGetHeartbeatPageSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof HeartbeatGetHeartbeatPageSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {HelpersPageModelHeartbeat}
-     * @memberof HeartbeatGetHeartbeatPageSuccessResponse
-     */
     'data'?: HelpersPageModelHeartbeat;
 }
-/**
- * 
- * @export
- * @interface HeartbeatGetHeartbeatSuccessResponse
- */
 export interface HeartbeatGetHeartbeatSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof HeartbeatGetHeartbeatSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelHeartbeat}
-     * @memberof HeartbeatGetHeartbeatSuccessResponse
-     */
     'data'?: ModelHeartbeat;
 }
-/**
- * 
- * @export
- * @interface HeartbeatGetManyHeartbeatsSuccessResponse
- */
 export interface HeartbeatGetManyHeartbeatsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof HeartbeatGetManyHeartbeatsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelHeartbeat>}
-     * @memberof HeartbeatGetManyHeartbeatsSuccessResponse
-     */
     'data'?: Array<ModelHeartbeat>;
 }
-/**
- * 
- * @export
- * @interface HelpersGenericDeleteSuccessResponse
- */
 export interface HelpersGenericDeleteSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersGenericDeleteSuccessResponse
-     */
     'code'?: number;
 }
-/**
- * 
- * @export
- * @interface HelpersGenericErrorResponse
- */
 export interface HelpersGenericErrorResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersGenericErrorResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof HelpersGenericErrorResponse
-     */
     'error'?: string;
 }
-/**
- * 
- * @export
- * @interface HelpersPageModelHeartbeat
- */
 export interface HelpersPageModelHeartbeat {
-    /**
-     * 
-     * @type {Array<ModelHeartbeat>}
-     * @memberof HelpersPageModelHeartbeat
-     */
     'content'?: Array<ModelHeartbeat>;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelHeartbeat
-     */
     'page'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelHeartbeat
-     */
     'size'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelHeartbeat
-     */
     'totalElements'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelHeartbeat
-     */
     'totalPages'?: number;
 }
-/**
- * 
- * @export
- * @interface HelpersPageModelIncident
- */
 export interface HelpersPageModelIncident {
-    /**
-     * 
-     * @type {Array<ModelIncident>}
-     * @memberof HelpersPageModelIncident
-     */
     'content'?: Array<ModelIncident>;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelIncident
-     */
     'page'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelIncident
-     */
     'size'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelIncident
-     */
     'totalElements'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelIncident
-     */
     'totalPages'?: number;
 }
-/**
- * 
- * @export
- * @interface IncidentGetIncidentPageSuccessResponse
- */
-export interface IncidentGetIncidentPageSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof IncidentGetIncidentPageSuccessResponse
-     */
-    'code'?: number;
-    /**
-     * 
-     * @type {HelpersPageModelIncident}
-     * @memberof IncidentGetIncidentPageSuccessResponse
-     */
-    'data'?: HelpersPageModelIncident;
-}
-/**
- * 
- * @export
- * @interface IncidentGetIncidentSuccessResponse
- */
 export interface IncidentGetIncidentSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof IncidentGetIncidentSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelIncident}
-     * @memberof IncidentGetIncidentSuccessResponse
-     */
     'data'?: ModelIncident;
 }
-/**
- * 
- * @export
- * @interface IncidentGetManyIncidentsSuccessResponse
- */
-export interface IncidentGetManyIncidentsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof IncidentGetManyIncidentsSuccessResponse
-     */
-    'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelIncident>}
-     * @memberof IncidentGetManyIncidentsSuccessResponse
-     */
-    'data'?: Array<ModelIncident>;
-}
-/**
- * 
- * @export
- * @interface ModelAgent
- */
 export interface ModelAgent {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelAgent
-     */
     'HideIp'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAgent
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelAgent
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAgent
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelAgent
-     */
     'installed'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAgent
-     */
     'key'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAgent
-     */
     'lastDataReceived'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAgent
-     */
     'targetId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAgent
-     */
     'updatedAt'?: string;
 }
-/**
- * 
- * @export
- * @interface ModelAlarm
- */
 export interface ModelAlarm {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelAlarm
-     */
-    'active'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAlarm
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelAlarm
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAlarm
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelAlarm
-     */
+    'incidents'?: Array<ModelIncident>;
+    'maxRetries'?: number;
     'muted'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAlarm
-     */
     'name'?: string;
-    /**
-     * 
-     * @type {Array<ModelNotification>}
-     * @memberof ModelAlarm
-     */
     'notifications'?: Array<ModelNotification>;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAlarm
-     */
+    'suspended'?: boolean;
+    'system'?: boolean;
     'targetId'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAlarm
-     */
     'threshold'?: number;
-    /**
-     * 
-     * @type {ModelAlarmThresholdField}
-     * @memberof ModelAlarm
-     */
     'thresholdField'?: ModelAlarmThresholdField;
     /**
      * For example what NIC should the threshold apply to
-     * @type {string}
-     * @memberof ModelAlarm
      */
     'thresholdFieldParams'?: string;
-    /**
-     * 
-     * @type {ModelAlarmType}
-     * @memberof ModelAlarm
-     */
+    'triggered'?: boolean;
+    'triggeredStateChangedAt'?: string;
     'type'?: ModelAlarmType;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAlarm
-     */
     'updatedAt'?: string;
+    'usedRetries'?: number;
 }
 
 
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const ModelAlarmThresholdField = {
     Latency: 0,
@@ -750,11 +245,6 @@ export const ModelAlarmThresholdField = {
 export type ModelAlarmThresholdField = typeof ModelAlarmThresholdField[keyof typeof ModelAlarmThresholdField];
 
 
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const ModelAlarmType = {
     Unavailable: 0,
@@ -765,318 +255,82 @@ export const ModelAlarmType = {
 export type ModelAlarmType = typeof ModelAlarmType[keyof typeof ModelAlarmType];
 
 
-/**
- * 
- * @export
- * @interface ModelChecker
- */
 export interface ModelChecker {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelChecker
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelChecker
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {Array<ModelHeartbeat>}
-     * @memberof ModelChecker
-     */
     'heartbeats'?: Array<ModelHeartbeat>;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelChecker
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelChecker
-     */
     'key'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelChecker
-     */
     'location'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelChecker
-     */
     'name'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelChecker
-     */
     'system'?: boolean;
-    /**
-     * 
-     * @type {Array<ModelTarget>}
-     * @memberof ModelChecker
-     */
     'targets'?: Array<ModelTarget>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelChecker
-     */
     'updatedAt'?: string;
 }
-/**
- * 
- * @export
- * @interface ModelHeartbeat
- */
 export interface ModelHeartbeat {
-    /**
-     * 
-     * @type {ModelChecker}
-     * @memberof ModelHeartbeat
-     */
     'checker'?: ModelChecker;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelHeartbeat
-     */
     'checkerId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelHeartbeat
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelHeartbeat
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelHeartbeat
-     */
     'id'?: number;
     /**
      * Latency is a \"generic\" field, payload can provide further information in non-push targets (http, ping etc.)
-     * @type {number}
-     * @memberof ModelHeartbeat
      */
     'latency'?: number;
     /**
      * Payload is stored as gzipped json in a bytea column, but sent in JSON normally
-     * @type {ModelHeartbeatPayload}
-     * @memberof ModelHeartbeat
      */
     'payload'?: ModelHeartbeatPayload;
-    /**
-     * 
-     * @type {ModelTargetStatus}
-     * @memberof ModelHeartbeat
-     */
     'status'?: ModelTargetStatus;
-    /**
-     * 
-     * @type {ModelTarget}
-     * @memberof ModelHeartbeat
-     */
     'target'?: ModelTarget;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelHeartbeat
-     */
     'targetId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelHeartbeat
-     */
     'timestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelHeartbeat
-     */
     'updatedAt'?: string;
 }
 
 
-/**
- * 
- * @export
- * @interface ModelHeartbeatPayload
- */
 export interface ModelHeartbeatPayload {
-    /**
-     * 
-     * @type {{ [key: string]: object; }}
-     * @memberof ModelHeartbeatPayload
-     */
     'data'?: { [key: string]: object; };
     /**
      * All TargetTypes are allowed to submit further details
-     * @type {ModelTargetType}
-     * @memberof ModelHeartbeatPayload
      */
     'type': ModelTargetType;
     /**
      * Each Type of payload can have their own versioning
-     * @type {number}
-     * @memberof ModelHeartbeatPayload
      */
     'version': number;
 }
 
 
-/**
- * 
- * @export
- * @interface ModelIncident
- */
 export interface ModelIncident {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelIncident
-     */
+    'alarm'?: ModelAlarm;
+    'alarmId'?: number;
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelIncident
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {TimeDuration}
-     * @memberof ModelIncident
-     */
     'duration'?: TimeDuration;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelIncident
-     */
     'end'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelIncident
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelIncident
-     */
     'ongoing'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelIncident
-     */
     'start'?: string;
-    /**
-     * 
-     * @type {ModelTarget}
-     * @memberof ModelIncident
-     */
     'target'?: ModelTarget;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelIncident
-     */
     'targetId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelIncident
-     */
     'updatedAt'?: string;
 }
 
 
-/**
- * 
- * @export
- * @interface ModelNotification
- */
 export interface ModelNotification {
-    /**
-     * 
-     * @type {Array<ModelAlarm>}
-     * @memberof ModelNotification
-     */
     'alarms'?: Array<ModelAlarm>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelNotification
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelNotification
-     */
     'credentials'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelNotification
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelNotification
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelNotification
-     */
     'name'?: string;
-    /**
-     * 
-     * @type {ModelNotificationType}
-     * @memberof ModelNotification
-     */
     'type'?: ModelNotificationType;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelNotification
-     */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelNotification
-     */
     'userId'?: number;
 }
 
 
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const ModelNotificationType = {
     Discord: 0,
@@ -1090,421 +344,82 @@ export const ModelNotificationType = {
 export type ModelNotificationType = typeof ModelNotificationType[keyof typeof ModelNotificationType];
 
 
-/**
- * 
- * @export
- * @interface ModelOrchestrator
- */
 export interface ModelOrchestrator {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelOrchestrator
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelOrchestrator
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelOrchestrator
-     */
     'host'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelOrchestrator
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelOrchestrator
-     */
     'leader'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelOrchestrator
-     */
     'name'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelOrchestrator
-     */
     'system'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelOrchestrator
-     */
     'updatedAt'?: string;
 }
-/**
- * 
- * @export
- * @interface ModelSession
- */
 export interface ModelSession {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'browser'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelSession
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'device'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'expiresAt'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelSession
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'ipAddress'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'lastActive'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'os'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {ModelUser}
-     * @memberof ModelSession
-     */
     'user'?: ModelUser;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'userAgent'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelSession
-     */
     'userId'?: number;
 }
-/**
- * 
- * @export
- * @interface ModelSetting
- */
 export interface ModelSetting {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSetting
-     */
     'key'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSetting
-     */
     'value'?: string;
 }
-/**
- * 
- * @export
- * @interface ModelTarget
- */
 export interface ModelTarget {
-    /**
-     * 
-     * @type {ModelAgent}
-     * @memberof ModelTarget
-     */
     'agent'?: ModelAgent;
-    /**
-     * 
-     * @type {Array<ModelAlarm>}
-     * @memberof ModelTarget
-     */
     'alarms'?: Array<ModelAlarm>;
-    /**
-     * 
-     * @type {Array<ModelChecker>}
-     * @memberof ModelTarget
-     */
     'checkers'?: Array<ModelChecker>;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTarget
-     */
     'checksDown'?: number;
     /**
-     * 
-     * @type {number}
-     * @memberof ModelTarget
+     * These 4 are \"shortcuts\", incidents are the \"source of truth\" about what\'s going on with the Target
      */
     'checksUp'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTarget
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelTarget
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {Array<ModelHeartbeat>}
-     * @memberof ModelTarget
-     */
     'heartbeats'?: Array<ModelHeartbeat>;
-    /**
-     * 
-     * @type {ModelTargetHTTPInfo}
-     * @memberof ModelTarget
-     */
     'httpInfo'?: ModelTargetHTTPInfo;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTarget
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {Array<ModelIncident>}
-     * @memberof ModelTarget
-     */
     'incidents'?: Array<ModelIncident>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTarget
-     */
     'lastCheck'?: string;
-    /**
-     * 
-     * @type {ModelTargetStatus}
-     * @memberof ModelTarget
-     */
     'lastStatus'?: ModelTargetStatus;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTarget
-     */
-    'maxRetries'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTarget
-     */
     'name'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelTarget
-     */
     'paused'?: boolean;
-    /**
-     * 
-     * @type {ModelTargetPingInfo}
-     * @memberof ModelTarget
-     */
     'pingInfo'?: ModelTargetPingInfo;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelTarget
-     */
     'public'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTarget
-     */
     'timeout'?: number;
-    /**
-     * 
-     * @type {ModelTargetType}
-     * @memberof ModelTarget
-     */
     'type'?: ModelTargetType;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTarget
-     */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTarget
-     */
-    'usedRetries'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTarget
-     */
     'userId'?: number;
 }
 
 
-/**
- * 
- * @export
- * @interface ModelTargetHTTPInfo
- */
 export interface ModelTargetHTTPInfo {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetHTTPInfo
-     */
     'allowedCodes'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetHTTPInfo
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelTargetHTTPInfo
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelTargetHTTPInfo
-     */
     'followRedirects'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetHTTPInfo
-     */
     'host'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTargetHTTPInfo
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTargetHTTPInfo
-     */
     'targetId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetHTTPInfo
-     */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelTargetHTTPInfo
-     */
     'verifySSLCert'?: boolean;
 }
-/**
- * 
- * @export
- * @interface ModelTargetPingInfo
- */
 export interface ModelTargetPingInfo {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetPingInfo
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelTargetPingInfo
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetPingInfo
-     */
     'host'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTargetPingInfo
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTargetPingInfo
-     */
     'targetId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetPingInfo
-     */
     'updatedAt'?: string;
 }
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const ModelTargetStatus = {
     Up: 0,
@@ -1515,11 +430,6 @@ export const ModelTargetStatus = {
 export type ModelTargetStatus = typeof ModelTargetStatus[keyof typeof ModelTargetStatus];
 
 
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const ModelTargetType = {
     /**
@@ -1543,607 +453,219 @@ export const ModelTargetType = {
 export type ModelTargetType = typeof ModelTargetType[keyof typeof ModelTargetType];
 
 
-/**
- * 
- * @export
- * @interface ModelUser
- */
 export interface ModelUser {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelUser
-     */
     'admin'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelUser
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelUser
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelUser
-     */
     'enabled'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelUser
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {Array<ModelNotification>}
-     * @memberof ModelUser
-     */
     'notifications'?: Array<ModelNotification>;
-    /**
-     * 
-     * @type {Array<ModelSession>}
-     * @memberof ModelUser
-     */
     'sessions'?: Array<ModelSession>;
-    /**
-     * 
-     * @type {Array<ModelTarget>}
-     * @memberof ModelUser
-     */
     'targets'?: Array<ModelTarget>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelUser
-     */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelUser
-     */
     'username'?: string;
 }
-/**
- * 
- * @export
- * @interface NotificationCreateNotificationRequest
- */
 export interface NotificationCreateNotificationRequest {
     /**
      * Credentials must be valid for the selected type, e.g. webhook URLs have to start with http:// or https://
-     * @type {string}
-     * @memberof NotificationCreateNotificationRequest
      */
     'credentials': string;
     /**
      * Name must not be blank
-     * @type {string}
-     * @memberof NotificationCreateNotificationRequest
      */
     'name': string;
     /**
      * Type must be a number in range 0-5, inclusive
-     * @type {ModelNotificationType}
-     * @memberof NotificationCreateNotificationRequest
      */
     'type'?: ModelNotificationType;
 }
 
 
-/**
- * 
- * @export
- * @interface NotificationCreateNotificationSuccessResponse
- */
 export interface NotificationCreateNotificationSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof NotificationCreateNotificationSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelNotification}
-     * @memberof NotificationCreateNotificationSuccessResponse
-     */
     'data'?: ModelNotification;
 }
-/**
- * 
- * @export
- * @interface NotificationGetNotificationSuccessResponse
- */
 export interface NotificationGetNotificationSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof NotificationGetNotificationSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelNotification}
-     * @memberof NotificationGetNotificationSuccessResponse
-     */
     'data'?: ModelNotification;
 }
-/**
- * 
- * @export
- * @interface NotificationListNotificationsSuccessResponse
- */
 export interface NotificationListNotificationsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof NotificationListNotificationsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelNotification>}
-     * @memberof NotificationListNotificationsSuccessResponse
-     */
     'data'?: Array<ModelNotification>;
 }
-/**
- * 
- * @export
- * @interface NotificationUpdateNotificationRequest
- */
 export interface NotificationUpdateNotificationRequest {
     /**
      * Credentials must be valid for the selected type, e.g. webhook URLs have to start with http:// or https://, if supplied
-     * @type {string}
-     * @memberof NotificationUpdateNotificationRequest
      */
     'credentials'?: string;
     /**
      * Name must not be blank if supplied
-     * @type {string}
-     * @memberof NotificationUpdateNotificationRequest
      */
     'name'?: string;
     /**
      * Type must be a number in range of 0-5 (inclusive), if supplied. If type is changed, credentials valid for the new type also have to be supplied.
-     * @type {ModelNotificationType}
-     * @memberof NotificationUpdateNotificationRequest
      */
     'type'?: ModelNotificationType;
 }
 
 
-/**
- * 
- * @export
- * @interface OrchestratorCreateOrchestratorRequest
- */
 export interface OrchestratorCreateOrchestratorRequest {
     /**
      * Host must start with ws:// or wss:// and must be unique
-     * @type {string}
-     * @memberof OrchestratorCreateOrchestratorRequest
      */
     'host': string;
     /**
      * Name must not be blank and must be unique
-     * @type {string}
-     * @memberof OrchestratorCreateOrchestratorRequest
      */
     'name': string;
 }
-/**
- * 
- * @export
- * @interface OrchestratorCreateOrchestratorSuccessResponse
- */
 export interface OrchestratorCreateOrchestratorSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof OrchestratorCreateOrchestratorSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelOrchestrator}
-     * @memberof OrchestratorCreateOrchestratorSuccessResponse
-     */
     'data'?: ModelOrchestrator;
 }
-/**
- * 
- * @export
- * @interface OrchestratorGetOrchestratorSuccessResponse
- */
 export interface OrchestratorGetOrchestratorSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof OrchestratorGetOrchestratorSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelOrchestrator}
-     * @memberof OrchestratorGetOrchestratorSuccessResponse
-     */
     'data'?: ModelOrchestrator;
 }
-/**
- * 
- * @export
- * @interface OrchestratorListOrchestratorsSuccessResponse
- */
 export interface OrchestratorListOrchestratorsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof OrchestratorListOrchestratorsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelOrchestrator>}
-     * @memberof OrchestratorListOrchestratorsSuccessResponse
-     */
     'data'?: Array<ModelOrchestrator>;
 }
-/**
- * 
- * @export
- * @interface SessionGetSessionSuccessResponse
- */
 export interface SessionGetSessionSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof SessionGetSessionSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelSession}
-     * @memberof SessionGetSessionSuccessResponse
-     */
     'data'?: ModelSession;
 }
-/**
- * 
- * @export
- * @interface SessionListSessionsSuccessResponse
- */
 export interface SessionListSessionsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof SessionListSessionsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelSession>}
-     * @memberof SessionListSessionsSuccessResponse
-     */
     'data'?: Array<ModelSession>;
 }
-/**
- * 
- * @export
- * @interface SettingsChangeSettingRequest
- */
 export interface SettingsChangeSettingRequest {
     /**
      * Key must be updatable. Currently, the only setting that can be updated is \"registration-enabled\".
-     * @type {string}
-     * @memberof SettingsChangeSettingRequest
      */
     'key': string;
     /**
      * Value must match a set of valid values for given setting key
-     * @type {string}
-     * @memberof SettingsChangeSettingRequest
      */
     'value'?: string;
 }
-/**
- * 
- * @export
- * @interface SettingsGetSettingSuccessResponse
- */
 export interface SettingsGetSettingSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof SettingsGetSettingSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelSetting}
-     * @memberof SettingsGetSettingSuccessResponse
-     */
     'data'?: ModelSetting;
 }
-/**
- * 
- * @export
- * @interface SettingsListSettingsSuccessResponse
- */
 export interface SettingsListSettingsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof SettingsListSettingsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelSetting>}
-     * @memberof SettingsListSettingsSuccessResponse
-     */
     'data'?: Array<ModelSetting>;
 }
-/**
- * 
- * @export
- * @interface TargetCreateTargetRequest
- */
 export interface TargetCreateTargetRequest {
     /**
      * At least one checker must be supplied if type is 0 or 1, all checkers must exist, if given type is 2 this is ignored
-     * @type {Array<number>}
-     * @memberof TargetCreateTargetRequest
      */
     'checkerIDs': Array<number>;
     /**
      * Must be supplied if type is 1 (HTTP)
-     * @type {TargetHTTPInfoCreateRequest}
-     * @memberof TargetCreateTargetRequest
      */
     'httpInfo'?: TargetHTTPInfoCreateRequest;
     /**
-     * Max retries is required, ignored in case of agents
-     * @type {number}
-     * @memberof TargetCreateTargetRequest
-     */
-    'maxRetries'?: number;
-    /**
      * Name must not be blank
-     * @type {string}
-     * @memberof TargetCreateTargetRequest
      */
     'name': string;
     /**
      * Must be supplied if type is 0 (PING)
-     * @type {TargetPingInfoCreateRequest}
-     * @memberof TargetCreateTargetRequest
      */
     'pingInfo'?: TargetPingInfoCreateRequest;
     /**
      * Timeout is required
-     * @type {number}
-     * @memberof TargetCreateTargetRequest
      */
     'timeout'?: number;
     /**
      * Type must be 0 (PING), 1 (HTTP) or 2 (AGENT)
-     * @type {ModelTargetType}
-     * @memberof TargetCreateTargetRequest
      */
     'type'?: ModelTargetType;
 }
 
 
-/**
- * 
- * @export
- * @interface TargetCreateTargetSuccessResponse
- */
 export interface TargetCreateTargetSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetCreateTargetSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelTarget}
-     * @memberof TargetCreateTargetSuccessResponse
-     */
     'data'?: ModelTarget;
 }
-/**
- * 
- * @export
- * @interface TargetGetTargetSuccessResponse
- */
+export interface TargetGetIncidentPageSuccessResponse {
+    'code'?: number;
+    'data'?: HelpersPageModelIncident;
+}
+export interface TargetGetManyIncidentsSuccessResponse {
+    'code'?: number;
+    'data'?: Array<ModelIncident>;
+}
 export interface TargetGetTargetSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetGetTargetSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelTarget}
-     * @memberof TargetGetTargetSuccessResponse
-     */
     'data'?: ModelTarget;
 }
-/**
- * 
- * @export
- * @interface TargetHTTPInfoCreateRequest
- */
 export interface TargetHTTPInfoCreateRequest {
     /**
      * HTTP response codes separated by a space. Must contain at least one code. All codes must be exactly 3 digits long.
-     * @type {string}
-     * @memberof TargetHTTPInfoCreateRequest
      */
     'allowedCodes': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TargetHTTPInfoCreateRequest
-     */
     'followRedirects': boolean;
     /**
      * Host must start with http:// or https://
-     * @type {string}
-     * @memberof TargetHTTPInfoCreateRequest
      */
     'host': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TargetHTTPInfoCreateRequest
-     */
     'verifySSLCert': boolean;
 }
-/**
- * 
- * @export
- * @interface TargetHTTPInfoUpdateRequest
- */
 export interface TargetHTTPInfoUpdateRequest {
     /**
      * HTTP response codes separated by a space. Must contain at least one code if supplied. All codes must be exactly 3 digits long.
-     * @type {string}
-     * @memberof TargetHTTPInfoUpdateRequest
      */
     'allowedCodes'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TargetHTTPInfoUpdateRequest
-     */
     'followRedirects'?: boolean;
     /**
      * Host must start with http:// or https:// if supplied
-     * @type {string}
-     * @memberof TargetHTTPInfoUpdateRequest
      */
     'host'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TargetHTTPInfoUpdateRequest
-     */
     'verifySSLCert'?: boolean;
 }
-/**
- * 
- * @export
- * @interface TargetListTargetsSuccessResponse
- */
 export interface TargetListTargetsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetListTargetsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelTarget>}
-     * @memberof TargetListTargetsSuccessResponse
-     */
     'data'?: Array<ModelTarget>;
 }
-/**
- * 
- * @export
- * @interface TargetPingInfoCreateRequest
- */
 export interface TargetPingInfoCreateRequest {
     /**
      * Host must not be blank
-     * @type {string}
-     * @memberof TargetPingInfoCreateRequest
      */
     'host': string;
 }
-/**
- * 
- * @export
- * @interface TargetPingInfoUpdateRequest
- */
 export interface TargetPingInfoUpdateRequest {
     /**
      * Host must not be blank if pingInfo is supplied in UpdateTargetRequest
-     * @type {string}
-     * @memberof TargetPingInfoUpdateRequest
      */
     'host'?: string;
 }
-/**
- * 
- * @export
- * @interface TargetUpdateTargetRequest
- */
 export interface TargetUpdateTargetRequest {
     /**
      * Must contain at least one checker ID, all checkers must exist. This is a \"replace update\". This is ignored if Target\'s type is 2 (AGENT)
-     * @type {Array<number>}
-     * @memberof TargetUpdateTargetRequest
      */
     'checkerIDs'?: Array<number>;
-    /**
-     * 
-     * @type {TargetHTTPInfoUpdateRequest}
-     * @memberof TargetUpdateTargetRequest
-     */
     'httpInfo'?: TargetHTTPInfoUpdateRequest;
     /**
-     * Value of maxRetries can be updated even if target\'s type is 2 (agent), but it\'s ignored in the checking behavior
-     * @type {number}
-     * @memberof TargetUpdateTargetRequest
-     */
-    'maxRetries'?: number;
-    /**
      * Name must not be blank if supplied
-     * @type {string}
-     * @memberof TargetUpdateTargetRequest
      */
     'name'?: string;
-    /**
-     * 
-     * @type {TargetPingInfoUpdateRequest}
-     * @memberof TargetUpdateTargetRequest
-     */
     'pingInfo'?: TargetPingInfoUpdateRequest;
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetUpdateTargetRequest
-     */
     'timeout'?: number;
 }
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const TimeDuration = {
+    minDuration: -9223372036854775808,
+    maxDuration: 9223372036854775807,
     Nanosecond: 1,
     Microsecond: 1000,
     Millisecond: 1000000,
     Second: 1000000000,
     Minute: 60000000000,
     Hour: 3600000000000,
+    minDuration: -9223372036854775808,
+    maxDuration: 9223372036854775807,
     Nanosecond: 1,
     Microsecond: 1000,
     Millisecond: 1000000,
@@ -2159,61 +681,26 @@ export const TimeDuration = {
 export type TimeDuration = typeof TimeDuration[keyof typeof TimeDuration];
 
 
-/**
- * 
- * @export
- * @interface UserChangePasswordRequest
- */
 export interface UserChangePasswordRequest {
     /**
      * New password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.
-     * @type {string}
-     * @memberof UserChangePasswordRequest
      */
     'newPassword': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserChangePasswordRequest
-     */
     'oldPassword': string;
 }
-/**
- * 
- * @export
- * @interface UserChangeUsernameRequest
- */
 export interface UserChangeUsernameRequest {
     /**
      * Must not be blank and must not contain any whitespace characters
-     * @type {string}
-     * @memberof UserChangeUsernameRequest
      */
     'newUsername': string;
 }
-/**
- * 
- * @export
- * @interface UserGetUserSuccessResponse
- */
 export interface UserGetUserSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof UserGetUserSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelUser}
-     * @memberof UserGetUserSuccessResponse
-     */
     'data'?: ModelUser;
 }
 
 /**
  * AlarmApi - axios parameter creator
- * @export
  */
 export const AlarmApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -2393,6 +880,52 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * Allows a user to change suspend status of an alarm
+         * @summary Suspend alarm
+         * @param {number} targetID ID of target the alarm belongs to
+         * @param {number} alarmID ID of the alarm
+         * @param {boolean} [suspend] Suspend status. Can be true for suspended, false for unsuspended. If not supplied, suspend status of the alarm will change to the opposite of current status.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        targetTargetIDAlarmAlarmIDSuspendPatch: async (targetID: number, alarmID: number, suspend?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'targetID' is not null or undefined
+            assertParamExists('targetTargetIDAlarmAlarmIDSuspendPatch', 'targetID', targetID)
+            // verify required parameter 'alarmID' is not null or undefined
+            assertParamExists('targetTargetIDAlarmAlarmIDSuspendPatch', 'alarmID', alarmID)
+            const localVarPath = `/target/{targetID}/alarm/{alarmID}/suspend`
+                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)))
+                .replace(`{${"alarmID"}}`, encodeURIComponent(String(alarmID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (suspend !== undefined) {
+                localVarQueryParameter['suspend'] = suspend;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Allows a user to get a list of alarms that belong to a target
          * @summary Get all alarms of a target
          * @param {number} targetID ID of target
@@ -2477,7 +1010,6 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
 
 /**
  * AlarmApi - functional programming interface
- * @export
  */
 export const AlarmApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AlarmApiAxiosParamCreator(configuration)
@@ -2541,6 +1073,21 @@ export const AlarmApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * Allows a user to change suspend status of an alarm
+         * @summary Suspend alarm
+         * @param {number} targetID ID of target the alarm belongs to
+         * @param {number} alarmID ID of the alarm
+         * @param {boolean} [suspend] Suspend status. Can be true for suspended, false for unsuspended. If not supplied, suspend status of the alarm will change to the opposite of current status.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async targetTargetIDAlarmAlarmIDSuspendPatch(targetID: number, alarmID: number, suspend?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AlarmGetAlarmSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.targetTargetIDAlarmAlarmIDSuspendPatch(targetID, alarmID, suspend, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AlarmApi.targetTargetIDAlarmAlarmIDSuspendPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Allows a user to get a list of alarms that belong to a target
          * @summary Get all alarms of a target
          * @param {number} targetID ID of target
@@ -2572,7 +1119,6 @@ export const AlarmApiFp = function(configuration?: Configuration) {
 
 /**
  * AlarmApi - factory interface
- * @export
  */
 export const AlarmApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AlarmApiFp(configuration)
@@ -2624,6 +1170,18 @@ export const AlarmApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.targetTargetIDAlarmAlarmIDPatch(targetID, alarmID, updateReq, options).then((request) => request(axios, basePath));
         },
         /**
+         * Allows a user to change suspend status of an alarm
+         * @summary Suspend alarm
+         * @param {number} targetID ID of target the alarm belongs to
+         * @param {number} alarmID ID of the alarm
+         * @param {boolean} [suspend] Suspend status. Can be true for suspended, false for unsuspended. If not supplied, suspend status of the alarm will change to the opposite of current status.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        targetTargetIDAlarmAlarmIDSuspendPatch(targetID: number, alarmID: number, suspend?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<AlarmGetAlarmSuccessResponse> {
+            return localVarFp.targetTargetIDAlarmAlarmIDSuspendPatch(targetID, alarmID, suspend, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Allows a user to get a list of alarms that belong to a target
          * @summary Get all alarms of a target
          * @param {number} targetID ID of target
@@ -2649,9 +1207,6 @@ export const AlarmApiFactory = function (configuration?: Configuration, basePath
 
 /**
  * AlarmApi - object-oriented interface
- * @export
- * @class AlarmApi
- * @extends {BaseAPI}
  */
 export class AlarmApi extends BaseAPI {
     /**
@@ -2661,7 +1216,6 @@ export class AlarmApi extends BaseAPI {
      * @param {number} alarmID ID of the alarm
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmAlarmIDDelete(targetID: number, alarmID: number, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmAlarmIDDelete(targetID, alarmID, options).then((request) => request(this.axios, this.basePath));
@@ -2674,7 +1228,6 @@ export class AlarmApi extends BaseAPI {
      * @param {number} alarmID ID of the alarm
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmAlarmIDGet(targetID: number, alarmID: number, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmAlarmIDGet(targetID, alarmID, options).then((request) => request(this.axios, this.basePath));
@@ -2688,7 +1241,6 @@ export class AlarmApi extends BaseAPI {
      * @param {boolean} [mute] Mute status. Can be true for muted, false for unmuted. If not supplied, mute status of the alarm will change to the opposite of current status.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmAlarmIDMutePatch(targetID: number, alarmID: number, mute?: boolean, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmAlarmIDMutePatch(targetID, alarmID, mute, options).then((request) => request(this.axios, this.basePath));
@@ -2702,10 +1254,22 @@ export class AlarmApi extends BaseAPI {
      * @param {AlarmUpdateAlarmRequest} updateReq New information about the alarm
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmAlarmIDPatch(targetID: number, alarmID: number, updateReq: AlarmUpdateAlarmRequest, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmAlarmIDPatch(targetID, alarmID, updateReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to change suspend status of an alarm
+     * @summary Suspend alarm
+     * @param {number} targetID ID of target the alarm belongs to
+     * @param {number} alarmID ID of the alarm
+     * @param {boolean} [suspend] Suspend status. Can be true for suspended, false for unsuspended. If not supplied, suspend status of the alarm will change to the opposite of current status.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public targetTargetIDAlarmAlarmIDSuspendPatch(targetID: number, alarmID: number, suspend?: boolean, options?: RawAxiosRequestConfig) {
+        return AlarmApiFp(this.configuration).targetTargetIDAlarmAlarmIDSuspendPatch(targetID, alarmID, suspend, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2714,7 +1278,6 @@ export class AlarmApi extends BaseAPI {
      * @param {number} targetID ID of target
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmGet(targetID: number, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmGet(targetID, options).then((request) => request(this.axios, this.basePath));
@@ -2727,7 +1290,6 @@ export class AlarmApi extends BaseAPI {
      * @param {AlarmCreateAlarmRequest} updateReq Information about the new alarm
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmPost(targetID: number, updateReq: AlarmCreateAlarmRequest, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmPost(targetID, updateReq, options).then((request) => request(this.axios, this.basePath));
@@ -2738,7 +1300,6 @@ export class AlarmApi extends BaseAPI {
 
 /**
  * AuthApi - axios parameter creator
- * @export
  */
 export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -2819,7 +1380,6 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
 
 /**
  * AuthApi - functional programming interface
- * @export
  */
 export const AuthApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
@@ -2855,7 +1415,6 @@ export const AuthApiFp = function(configuration?: Configuration) {
 
 /**
  * AuthApi - factory interface
- * @export
  */
 export const AuthApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AuthApiFp(configuration)
@@ -2885,9 +1444,6 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
 
 /**
  * AuthApi - object-oriented interface
- * @export
- * @class AuthApi
- * @extends {BaseAPI}
  */
 export class AuthApi extends BaseAPI {
     /**
@@ -2896,7 +1452,6 @@ export class AuthApi extends BaseAPI {
      * @param {AuthCredentials} credentials Valid credentials of user who wants to create a new session
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AuthApi
      */
     public authLoginPost(credentials: AuthCredentials, options?: RawAxiosRequestConfig) {
         return AuthApiFp(this.configuration).authLoginPost(credentials, options).then((request) => request(this.axios, this.basePath));
@@ -2908,7 +1463,6 @@ export class AuthApi extends BaseAPI {
      * @param {AuthCredentials} credentials Username and password for the new user account
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AuthApi
      */
     public authRegisterPost(credentials: AuthCredentials, options?: RawAxiosRequestConfig) {
         return AuthApiFp(this.configuration).authRegisterPost(credentials, options).then((request) => request(this.axios, this.basePath));
@@ -2919,7 +1473,6 @@ export class AuthApi extends BaseAPI {
 
 /**
  * CheckerApi - axios parameter creator
- * @export
  */
 export const CheckerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -3154,7 +1707,6 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * CheckerApi - functional programming interface
- * @export
  */
 export const CheckerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = CheckerApiAxiosParamCreator(configuration)
@@ -3242,7 +1794,6 @@ export const CheckerApiFp = function(configuration?: Configuration) {
 
 /**
  * CheckerApi - factory interface
- * @export
  */
 export const CheckerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = CheckerApiFp(configuration)
@@ -3312,9 +1863,6 @@ export const CheckerApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * CheckerApi - object-oriented interface
- * @export
- * @class CheckerApi
- * @extends {BaseAPI}
  */
 export class CheckerApi extends BaseAPI {
     /**
@@ -3322,7 +1870,6 @@ export class CheckerApi extends BaseAPI {
      * @summary Get all checkers
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerGet(options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerGet(options).then((request) => request(this.axios, this.basePath));
@@ -3334,7 +1881,6 @@ export class CheckerApi extends BaseAPI {
      * @param {number} id ID of checker that should be deleted
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerIdDelete(id: number, options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerIdDelete(id, options).then((request) => request(this.axios, this.basePath));
@@ -3346,7 +1892,6 @@ export class CheckerApi extends BaseAPI {
      * @param {number} id ID of checker that should be retrieved
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerIdGet(id: number, options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerIdGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -3358,7 +1903,6 @@ export class CheckerApi extends BaseAPI {
      * @param {number} id ID of checker that should get a new key
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerIdKeyPatch(id: number, options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerIdKeyPatch(id, options).then((request) => request(this.axios, this.basePath));
@@ -3371,7 +1915,6 @@ export class CheckerApi extends BaseAPI {
      * @param {CheckerUpdateCheckerRequest} checkerInfo New checker details
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerIdPatch(id: number, checkerInfo: CheckerUpdateCheckerRequest, options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerIdPatch(id, checkerInfo, options).then((request) => request(this.axios, this.basePath));
@@ -3383,7 +1926,6 @@ export class CheckerApi extends BaseAPI {
      * @param {CheckerCreateCheckerRequest} checkerInfo Data required to create a new checker
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerPost(checkerInfo: CheckerCreateCheckerRequest, options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerPost(checkerInfo, options).then((request) => request(this.axios, this.basePath));
@@ -3394,7 +1936,6 @@ export class CheckerApi extends BaseAPI {
 
 /**
  * HeartbeatApi - axios parameter creator
- * @export
  */
 export const HeartbeatApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -3566,7 +2107,6 @@ export const HeartbeatApiAxiosParamCreator = function (configuration?: Configura
 
 /**
  * HeartbeatApi - functional programming interface
- * @export
  */
 export const HeartbeatApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = HeartbeatApiAxiosParamCreator(configuration)
@@ -3633,7 +2173,6 @@ export const HeartbeatApiFp = function(configuration?: Configuration) {
 
 /**
  * HeartbeatApi - factory interface
- * @export
  */
 export const HeartbeatApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = HeartbeatApiFp(configuration)
@@ -3688,9 +2227,6 @@ export const HeartbeatApiFactory = function (configuration?: Configuration, base
 
 /**
  * HeartbeatApi - object-oriented interface
- * @export
- * @class HeartbeatApi
- * @extends {BaseAPI}
  */
 export class HeartbeatApi extends BaseAPI {
     /**
@@ -3699,7 +2235,6 @@ export class HeartbeatApi extends BaseAPI {
      * @param {number} id ID of heartbeat to get
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof HeartbeatApi
      */
     public heartbeatIdGet(id: number, options?: RawAxiosRequestConfig) {
         return HeartbeatApiFp(this.configuration).heartbeatIdGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -3711,7 +2246,6 @@ export class HeartbeatApi extends BaseAPI {
      * @param {number} id ID of target to get the last heartbeat info of
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof HeartbeatApi
      */
     public heartbeatIdLastGet(id: number, options?: RawAxiosRequestConfig) {
         return HeartbeatApiFp(this.configuration).heartbeatIdLastGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -3726,7 +2260,6 @@ export class HeartbeatApi extends BaseAPI {
      * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (latency, timestamp, status, heartbeats.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof HeartbeatApi
      */
     public heartbeatIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig) {
         return HeartbeatApiFp(this.configuration).heartbeatIdPageGet(id, size, page, sort, options).then((request) => request(this.axios, this.basePath));
@@ -3740,7 +2273,6 @@ export class HeartbeatApi extends BaseAPI {
      * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof HeartbeatApi
      */
     public heartbeatIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig) {
         return HeartbeatApiFp(this.configuration).heartbeatIdTimerangeGet(id, start, end, options).then((request) => request(this.axios, this.basePath));
@@ -3751,10 +2283,138 @@ export class HeartbeatApi extends BaseAPI {
 
 /**
  * IncidentApi - axios parameter creator
- * @export
  */
 export const IncidentApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * Allows to retrieve information about the last incident of alarm with specified ID, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get last incident of alarm
+         * @param {number} id ID of alarm to get the last incident info of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentAlarmIdLastGet: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('incidentAlarmIdLastGet', 'id', id)
+            const localVarPath = `/incident/alarm/{id}/last`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows to retrieve a page of incidents of an alarm, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if alarm\'s target is not public.
+         * @summary Get page of incidents of alarm
+         * @param {number} id ID of alarm to get the page of incidents for
+         * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+         * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+         * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentAlarmIdPageGet: async (id: number, size?: number, page?: number, sort?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('incidentAlarmIdPageGet', 'id', id)
+            const localVarPath = `/incident/alarm/{id}/page`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (sort !== undefined) {
+                localVarQueryParameter['sort'] = sort;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows to retrieve a list of incidents of an alarm that have started in the specified time range, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if alarm\'s target is not public. The list is ordered by incident\'s start timestamp ascending (oldest first).
+         * @summary Get incidents of alarm in time range
+         * @param {number} id ID of alarm to get the list of incidents for
+         * @param {number} start Unix epoch second representing start of the time range
+         * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentAlarmIdTimerangeGet: async (id: number, start: number, end?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('incidentAlarmIdTimerangeGet', 'id', id)
+            // verify required parameter 'start' is not null or undefined
+            assertParamExists('incidentAlarmIdTimerangeGet', 'start', start)
+            const localVarPath = `/incident/alarm/{id}/timerange`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (start !== undefined) {
+                localVarQueryParameter['start'] = start;
+            }
+
+            if (end !== undefined) {
+                localVarQueryParameter['end'] = end;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * Allows to retrieve information about incident with specified ID, if incident\'s target is public then the info can be retrieved by anyone, even without an auth token
          * @summary Get incident by ID
@@ -3790,40 +2450,6 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         * Allows to retrieve information about the last incident of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
-         * @summary Get last incident of target
-         * @param {number} id ID of target to get the last incident info of
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        incidentIdLastGet: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('incidentIdLastGet', 'id', id)
-            const localVarPath = `/incident/{id}/last`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Allows to retrieve a page of incidents of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.
          * @summary Get page of incidents of target
          * @param {number} id ID of target to get the page of incidents for
@@ -3833,10 +2459,10 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        incidentIdPageGet: async (id: number, size?: number, page?: number, sort?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        incidentTargetIdPageGet: async (id: number, size?: number, page?: number, sort?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('incidentIdPageGet', 'id', id)
-            const localVarPath = `/incident/{id}/page`
+            assertParamExists('incidentTargetIdPageGet', 'id', id)
+            const localVarPath = `/incident/target/{id}/page`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3881,12 +2507,12 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        incidentIdTimerangeGet: async (id: number, start: number, end?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        incidentTargetIdTimerangeGet: async (id: number, start: number, end?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('incidentIdTimerangeGet', 'id', id)
+            assertParamExists('incidentTargetIdTimerangeGet', 'id', id)
             // verify required parameter 'start' is not null or undefined
-            assertParamExists('incidentIdTimerangeGet', 'start', start)
-            const localVarPath = `/incident/{id}/timerange`
+            assertParamExists('incidentTargetIdTimerangeGet', 'start', start)
+            const localVarPath = `/incident/target/{id}/timerange`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3923,11 +2549,54 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
 
 /**
  * IncidentApi - functional programming interface
- * @export
  */
 export const IncidentApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = IncidentApiAxiosParamCreator(configuration)
     return {
+        /**
+         * Allows to retrieve information about the last incident of alarm with specified ID, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get last incident of alarm
+         * @param {number} id ID of alarm to get the last incident info of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async incidentAlarmIdLastGet(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IncidentGetIncidentSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentAlarmIdLastGet(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentAlarmIdLastGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows to retrieve a page of incidents of an alarm, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if alarm\'s target is not public.
+         * @summary Get page of incidents of alarm
+         * @param {number} id ID of alarm to get the page of incidents for
+         * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+         * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+         * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async incidentAlarmIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TargetGetIncidentPageSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentAlarmIdPageGet(id, size, page, sort, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentAlarmIdPageGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows to retrieve a list of incidents of an alarm that have started in the specified time range, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if alarm\'s target is not public. The list is ordered by incident\'s start timestamp ascending (oldest first).
+         * @summary Get incidents of alarm in time range
+         * @param {number} id ID of alarm to get the list of incidents for
+         * @param {number} start Unix epoch second representing start of the time range
+         * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async incidentAlarmIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TargetGetManyIncidentsSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentAlarmIdTimerangeGet(id, start, end, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentAlarmIdTimerangeGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
         /**
          * Allows to retrieve information about incident with specified ID, if incident\'s target is public then the info can be retrieved by anyone, even without an auth token
          * @summary Get incident by ID
@@ -3942,19 +2611,6 @@ export const IncidentApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Allows to retrieve information about the last incident of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
-         * @summary Get last incident of target
-         * @param {number} id ID of target to get the last incident info of
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async incidentIdLastGet(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IncidentGetIncidentSuccessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentIdLastGet(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentIdLastGet']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Allows to retrieve a page of incidents of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.
          * @summary Get page of incidents of target
          * @param {number} id ID of target to get the page of incidents for
@@ -3964,10 +2620,10 @@ export const IncidentApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async incidentIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IncidentGetIncidentPageSuccessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentIdPageGet(id, size, page, sort, options);
+        async incidentTargetIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TargetGetIncidentPageSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentTargetIdPageGet(id, size, page, sort, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentIdPageGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentTargetIdPageGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -3979,10 +2635,10 @@ export const IncidentApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async incidentIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IncidentGetManyIncidentsSuccessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentIdTimerangeGet(id, start, end, options);
+        async incidentTargetIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TargetGetManyIncidentsSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.incidentTargetIdTimerangeGet(id, start, end, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentIdTimerangeGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['IncidentApi.incidentTargetIdTimerangeGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -3990,11 +2646,45 @@ export const IncidentApiFp = function(configuration?: Configuration) {
 
 /**
  * IncidentApi - factory interface
- * @export
  */
 export const IncidentApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = IncidentApiFp(configuration)
     return {
+        /**
+         * Allows to retrieve information about the last incident of alarm with specified ID, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token
+         * @summary Get last incident of alarm
+         * @param {number} id ID of alarm to get the last incident info of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentAlarmIdLastGet(id: number, options?: RawAxiosRequestConfig): AxiosPromise<IncidentGetIncidentSuccessResponse> {
+            return localVarFp.incidentAlarmIdLastGet(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows to retrieve a page of incidents of an alarm, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if alarm\'s target is not public.
+         * @summary Get page of incidents of alarm
+         * @param {number} id ID of alarm to get the page of incidents for
+         * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+         * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+         * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentAlarmIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig): AxiosPromise<TargetGetIncidentPageSuccessResponse> {
+            return localVarFp.incidentAlarmIdPageGet(id, size, page, sort, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows to retrieve a list of incidents of an alarm that have started in the specified time range, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if alarm\'s target is not public. The list is ordered by incident\'s start timestamp ascending (oldest first).
+         * @summary Get incidents of alarm in time range
+         * @param {number} id ID of alarm to get the list of incidents for
+         * @param {number} start Unix epoch second representing start of the time range
+         * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        incidentAlarmIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig): AxiosPromise<TargetGetManyIncidentsSuccessResponse> {
+            return localVarFp.incidentAlarmIdTimerangeGet(id, start, end, options).then((request) => request(axios, basePath));
+        },
         /**
          * Allows to retrieve information about incident with specified ID, if incident\'s target is public then the info can be retrieved by anyone, even without an auth token
          * @summary Get incident by ID
@@ -4006,16 +2696,6 @@ export const IncidentApiFactory = function (configuration?: Configuration, baseP
             return localVarFp.incidentIdGet(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * Allows to retrieve information about the last incident of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
-         * @summary Get last incident of target
-         * @param {number} id ID of target to get the last incident info of
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        incidentIdLastGet(id: number, options?: RawAxiosRequestConfig): AxiosPromise<IncidentGetIncidentSuccessResponse> {
-            return localVarFp.incidentIdLastGet(id, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Allows to retrieve a page of incidents of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.
          * @summary Get page of incidents of target
          * @param {number} id ID of target to get the page of incidents for
@@ -4025,8 +2705,8 @@ export const IncidentApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        incidentIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig): AxiosPromise<IncidentGetIncidentPageSuccessResponse> {
-            return localVarFp.incidentIdPageGet(id, size, page, sort, options).then((request) => request(axios, basePath));
+        incidentTargetIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig): AxiosPromise<TargetGetIncidentPageSuccessResponse> {
+            return localVarFp.incidentTargetIdPageGet(id, size, page, sort, options).then((request) => request(axios, basePath));
         },
         /**
          * Allows to retrieve a list of incidents of a target that have started in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by incident\'s start timestamp ascending (oldest first).
@@ -4037,41 +2717,63 @@ export const IncidentApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        incidentIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig): AxiosPromise<IncidentGetManyIncidentsSuccessResponse> {
-            return localVarFp.incidentIdTimerangeGet(id, start, end, options).then((request) => request(axios, basePath));
+        incidentTargetIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig): AxiosPromise<TargetGetManyIncidentsSuccessResponse> {
+            return localVarFp.incidentTargetIdTimerangeGet(id, start, end, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
  * IncidentApi - object-oriented interface
- * @export
- * @class IncidentApi
- * @extends {BaseAPI}
  */
 export class IncidentApi extends BaseAPI {
+    /**
+     * Allows to retrieve information about the last incident of alarm with specified ID, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token
+     * @summary Get last incident of alarm
+     * @param {number} id ID of alarm to get the last incident info of
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public incidentAlarmIdLastGet(id: number, options?: RawAxiosRequestConfig) {
+        return IncidentApiFp(this.configuration).incidentAlarmIdLastGet(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows to retrieve a page of incidents of an alarm, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if alarm\'s target is not public.
+     * @summary Get page of incidents of alarm
+     * @param {number} id ID of alarm to get the page of incidents for
+     * @param {number} [size] Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.
+     * @param {number} [page] Page number, if a negative number is given it defaults to 0.
+     * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public incidentAlarmIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig) {
+        return IncidentApiFp(this.configuration).incidentAlarmIdPageGet(id, size, page, sort, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows to retrieve a list of incidents of an alarm that have started in the specified time range, if alarm\'s target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if alarm\'s target is not public. The list is ordered by incident\'s start timestamp ascending (oldest first).
+     * @summary Get incidents of alarm in time range
+     * @param {number} id ID of alarm to get the list of incidents for
+     * @param {number} start Unix epoch second representing start of the time range
+     * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public incidentAlarmIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig) {
+        return IncidentApiFp(this.configuration).incidentAlarmIdTimerangeGet(id, start, end, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Allows to retrieve information about incident with specified ID, if incident\'s target is public then the info can be retrieved by anyone, even without an auth token
      * @summary Get incident by ID
      * @param {number} id ID of incident to get
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof IncidentApi
      */
     public incidentIdGet(id: number, options?: RawAxiosRequestConfig) {
         return IncidentApiFp(this.configuration).incidentIdGet(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Allows to retrieve information about the last incident of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
-     * @summary Get last incident of target
-     * @param {number} id ID of target to get the last incident info of
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IncidentApi
-     */
-    public incidentIdLastGet(id: number, options?: RawAxiosRequestConfig) {
-        return IncidentApiFp(this.configuration).incidentIdLastGet(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -4083,10 +2785,9 @@ export class IncidentApi extends BaseAPI {
      * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof IncidentApi
      */
-    public incidentIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig) {
-        return IncidentApiFp(this.configuration).incidentIdPageGet(id, size, page, sort, options).then((request) => request(this.axios, this.basePath));
+    public incidentTargetIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig) {
+        return IncidentApiFp(this.configuration).incidentTargetIdPageGet(id, size, page, sort, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -4097,10 +2798,9 @@ export class IncidentApi extends BaseAPI {
      * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof IncidentApi
      */
-    public incidentIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig) {
-        return IncidentApiFp(this.configuration).incidentIdTimerangeGet(id, start, end, options).then((request) => request(this.axios, this.basePath));
+    public incidentTargetIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig) {
+        return IncidentApiFp(this.configuration).incidentTargetIdTimerangeGet(id, start, end, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -4108,7 +2808,6 @@ export class IncidentApi extends BaseAPI {
 
 /**
  * NotificationApi - axios parameter creator
- * @export
  */
 export const NotificationApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -4343,7 +3042,6 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
 
 /**
  * NotificationApi - functional programming interface
- * @export
  */
 export const NotificationApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = NotificationApiAxiosParamCreator(configuration)
@@ -4431,7 +3129,6 @@ export const NotificationApiFp = function(configuration?: Configuration) {
 
 /**
  * NotificationApi - factory interface
- * @export
  */
 export const NotificationApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = NotificationApiFp(configuration)
@@ -4501,9 +3198,6 @@ export const NotificationApiFactory = function (configuration?: Configuration, b
 
 /**
  * NotificationApi - object-oriented interface
- * @export
- * @class NotificationApi
- * @extends {BaseAPI}
  */
 export class NotificationApi extends BaseAPI {
     /**
@@ -4511,7 +3205,6 @@ export class NotificationApi extends BaseAPI {
      * @summary Get all notifications
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationGet(options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationGet(options).then((request) => request(this.axios, this.basePath));
@@ -4523,7 +3216,6 @@ export class NotificationApi extends BaseAPI {
      * @param {number} id ID of notification to be deleted
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationIdDelete(id: number, options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationIdDelete(id, options).then((request) => request(this.axios, this.basePath));
@@ -4535,7 +3227,6 @@ export class NotificationApi extends BaseAPI {
      * @param {number} id ID of notification to get
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationIdGet(id: number, options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationIdGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -4548,7 +3239,6 @@ export class NotificationApi extends BaseAPI {
      * @param {NotificationUpdateNotificationRequest} updateReq Changes to make to the notification
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationIdPatch(id: number, updateReq: NotificationUpdateNotificationRequest, options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationIdPatch(id, updateReq, options).then((request) => request(this.axios, this.basePath));
@@ -4560,7 +3250,6 @@ export class NotificationApi extends BaseAPI {
      * @param {number} id ID of notification to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationIdTestPost(id: number, options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationIdTestPost(id, options).then((request) => request(this.axios, this.basePath));
@@ -4572,7 +3261,6 @@ export class NotificationApi extends BaseAPI {
      * @param {NotificationCreateNotificationRequest} createReq Information about new notification
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationPost(createReq: NotificationCreateNotificationRequest, options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationPost(createReq, options).then((request) => request(this.axios, this.basePath));
@@ -4583,7 +3271,6 @@ export class NotificationApi extends BaseAPI {
 
 /**
  * OrchestratorApi - axios parameter creator
- * @export
  */
 export const OrchestratorApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -4738,7 +3425,6 @@ export const OrchestratorApiAxiosParamCreator = function (configuration?: Config
 
 /**
  * OrchestratorApi - functional programming interface
- * @export
  */
 export const OrchestratorApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = OrchestratorApiAxiosParamCreator(configuration)
@@ -4799,7 +3485,6 @@ export const OrchestratorApiFp = function(configuration?: Configuration) {
 
 /**
  * OrchestratorApi - factory interface
- * @export
  */
 export const OrchestratorApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = OrchestratorApiFp(configuration)
@@ -4848,9 +3533,6 @@ export const OrchestratorApiFactory = function (configuration?: Configuration, b
 
 /**
  * OrchestratorApi - object-oriented interface
- * @export
- * @class OrchestratorApi
- * @extends {BaseAPI}
  */
 export class OrchestratorApi extends BaseAPI {
     /**
@@ -4858,7 +3540,6 @@ export class OrchestratorApi extends BaseAPI {
      * @summary Get all orchestrators
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof OrchestratorApi
      */
     public adminOrchestratorGet(options?: RawAxiosRequestConfig) {
         return OrchestratorApiFp(this.configuration).adminOrchestratorGet(options).then((request) => request(this.axios, this.basePath));
@@ -4870,7 +3551,6 @@ export class OrchestratorApi extends BaseAPI {
      * @param {number} id ID of orchestrator that should get deleted
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof OrchestratorApi
      */
     public adminOrchestratorIdDelete(id: number, options?: RawAxiosRequestConfig) {
         return OrchestratorApiFp(this.configuration).adminOrchestratorIdDelete(id, options).then((request) => request(this.axios, this.basePath));
@@ -4882,7 +3562,6 @@ export class OrchestratorApi extends BaseAPI {
      * @param {number} id ID of orchestrator to get
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof OrchestratorApi
      */
     public adminOrchestratorIdGet(id: number, options?: RawAxiosRequestConfig) {
         return OrchestratorApiFp(this.configuration).adminOrchestratorIdGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -4894,7 +3573,6 @@ export class OrchestratorApi extends BaseAPI {
      * @param {OrchestratorCreateOrchestratorRequest} createRequest Information about new orchestrator
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof OrchestratorApi
      */
     public adminOrchestratorPost(createRequest: OrchestratorCreateOrchestratorRequest, options?: RawAxiosRequestConfig) {
         return OrchestratorApiFp(this.configuration).adminOrchestratorPost(createRequest, options).then((request) => request(this.axios, this.basePath));
@@ -4905,7 +3583,6 @@ export class OrchestratorApi extends BaseAPI {
 
 /**
  * SessionApi - axios parameter creator
- * @export
  */
 export const SessionApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -5120,7 +3797,6 @@ export const SessionApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * SessionApi - functional programming interface
- * @export
  */
 export const SessionApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = SessionApiAxiosParamCreator(configuration)
@@ -5204,7 +3880,6 @@ export const SessionApiFp = function(configuration?: Configuration) {
 
 /**
  * SessionApi - factory interface
- * @export
  */
 export const SessionApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = SessionApiFp(configuration)
@@ -5270,9 +3945,6 @@ export const SessionApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * SessionApi - object-oriented interface
- * @export
- * @class SessionApi
- * @extends {BaseAPI}
  */
 export class SessionApi extends BaseAPI {
     /**
@@ -5280,7 +3952,6 @@ export class SessionApi extends BaseAPI {
      * @summary Get current session
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionCurrentGet(options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionCurrentGet(options).then((request) => request(this.axios, this.basePath));
@@ -5291,7 +3962,6 @@ export class SessionApi extends BaseAPI {
      * @summary Delete (invalidate) all sessions
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionDelete(options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionDelete(options).then((request) => request(this.axios, this.basePath));
@@ -5302,7 +3972,6 @@ export class SessionApi extends BaseAPI {
      * @summary Get all sessions
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionGet(options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionGet(options).then((request) => request(this.axios, this.basePath));
@@ -5314,7 +3983,6 @@ export class SessionApi extends BaseAPI {
      * @param {number} id ID of session to delete
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionIdDelete(id: number, options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionIdDelete(id, options).then((request) => request(this.axios, this.basePath));
@@ -5326,7 +3994,6 @@ export class SessionApi extends BaseAPI {
      * @param {number} id ID of session to retrieve
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionIdGet(id: number, options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionIdGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -5337,7 +4004,6 @@ export class SessionApi extends BaseAPI {
      * @summary Log out
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionLogoutPost(options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionLogoutPost(options).then((request) => request(this.axios, this.basePath));
@@ -5348,7 +4014,6 @@ export class SessionApi extends BaseAPI {
 
 /**
  * SettingsApi - axios parameter creator
- * @export
  */
 export const SettingsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -5466,7 +4131,6 @@ export const SettingsApiAxiosParamCreator = function (configuration?: Configurat
 
 /**
  * SettingsApi - functional programming interface
- * @export
  */
 export const SettingsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = SettingsApiAxiosParamCreator(configuration)
@@ -5514,7 +4178,6 @@ export const SettingsApiFp = function(configuration?: Configuration) {
 
 /**
  * SettingsApi - factory interface
- * @export
  */
 export const SettingsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = SettingsApiFp(configuration)
@@ -5553,9 +4216,6 @@ export const SettingsApiFactory = function (configuration?: Configuration, baseP
 
 /**
  * SettingsApi - object-oriented interface
- * @export
- * @class SettingsApi
- * @extends {BaseAPI}
  */
 export class SettingsApi extends BaseAPI {
     /**
@@ -5563,7 +4223,6 @@ export class SettingsApi extends BaseAPI {
      * @summary Get all settings
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SettingsApi
      */
     public adminSettingsGet(options?: RawAxiosRequestConfig) {
         return SettingsApiFp(this.configuration).adminSettingsGet(options).then((request) => request(this.axios, this.basePath));
@@ -5575,7 +4234,6 @@ export class SettingsApi extends BaseAPI {
      * @param {string} key Setting to retrieve
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SettingsApi
      */
     public adminSettingsKeyGet(key: string, options?: RawAxiosRequestConfig) {
         return SettingsApiFp(this.configuration).adminSettingsKeyGet(key, options).then((request) => request(this.axios, this.basePath));
@@ -5587,7 +4245,6 @@ export class SettingsApi extends BaseAPI {
      * @param {SettingsChangeSettingRequest} changeRequest Setting to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SettingsApi
      */
     public adminSettingsPost(changeRequest: SettingsChangeSettingRequest, options?: RawAxiosRequestConfig) {
         return SettingsApiFp(this.configuration).adminSettingsPost(changeRequest, options).then((request) => request(this.axios, this.basePath));
@@ -5598,7 +4255,6 @@ export class SettingsApi extends BaseAPI {
 
 /**
  * TargetApi - axios parameter creator
- * @export
  */
 export const TargetApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -5636,7 +4292,7 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
-         * Allows a user to create a target
+         * Allows a user to create a target. This endpoint also creates a system alarm of type Unavailable assigned to the newly created target. The alarm is not returned by this endpoint.
          * @summary Create a target
          * @param {TargetCreateTargetRequest} createReq Information about new target
          * @param {*} [options] Override http request option.
@@ -5914,7 +4570,6 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
 
 /**
  * TargetApi - functional programming interface
- * @export
  */
 export const TargetApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = TargetApiAxiosParamCreator(configuration)
@@ -5932,7 +4587,7 @@ export const TargetApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Allows a user to create a target
+         * Allows a user to create a target. This endpoint also creates a system alarm of type Unavailable assigned to the newly created target. The alarm is not returned by this endpoint.
          * @summary Create a target
          * @param {TargetCreateTargetRequest} createReq Information about new target
          * @param {*} [options] Override http request option.
@@ -6030,7 +4685,6 @@ export const TargetApiFp = function(configuration?: Configuration) {
 
 /**
  * TargetApi - factory interface
- * @export
  */
 export const TargetApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = TargetApiFp(configuration)
@@ -6045,7 +4699,7 @@ export const TargetApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.targetGet(options).then((request) => request(axios, basePath));
         },
         /**
-         * Allows a user to create a target
+         * Allows a user to create a target. This endpoint also creates a system alarm of type Unavailable assigned to the newly created target. The alarm is not returned by this endpoint.
          * @summary Create a target
          * @param {TargetCreateTargetRequest} createReq Information about new target
          * @param {*} [options] Override http request option.
@@ -6122,9 +4776,6 @@ export const TargetApiFactory = function (configuration?: Configuration, basePat
 
 /**
  * TargetApi - object-oriented interface
- * @export
- * @class TargetApi
- * @extends {BaseAPI}
  */
 export class TargetApi extends BaseAPI {
     /**
@@ -6132,19 +4783,17 @@ export class TargetApi extends BaseAPI {
      * @summary Get all targets
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetGet(options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Allows a user to create a target
+     * Allows a user to create a target. This endpoint also creates a system alarm of type Unavailable assigned to the newly created target. The alarm is not returned by this endpoint.
      * @summary Create a target
      * @param {TargetCreateTargetRequest} createReq Information about new target
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetPost(createReq: TargetCreateTargetRequest, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetPost(createReq, options).then((request) => request(this.axios, this.basePath));
@@ -6156,7 +4805,6 @@ export class TargetApi extends BaseAPI {
      * @param {number} targetID ID of target to regenerate agent\&#39;s key
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDAgentKeyPatch(targetID: number, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDAgentKeyPatch(targetID, options).then((request) => request(this.axios, this.basePath));
@@ -6168,7 +4816,6 @@ export class TargetApi extends BaseAPI {
      * @param {number} targetID ID of target to delete
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDDelete(targetID: number, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDDelete(targetID, options).then((request) => request(this.axios, this.basePath));
@@ -6180,7 +4827,6 @@ export class TargetApi extends BaseAPI {
      * @param {number} targetID ID of target to get
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDGet(targetID: number, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDGet(targetID, options).then((request) => request(this.axios, this.basePath));
@@ -6193,7 +4839,6 @@ export class TargetApi extends BaseAPI {
      * @param {TargetUpdateTargetRequest} updateReq New information about target
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDPatch(targetID: number, updateReq: TargetUpdateTargetRequest, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDPatch(targetID, updateReq, options).then((request) => request(this.axios, this.basePath));
@@ -6206,7 +4851,6 @@ export class TargetApi extends BaseAPI {
      * @param {boolean} [pause] Pause status, can be true for paused, false for unpaused. If not supplied, target\&#39;s pause status will change to the opposite of current status.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDPausePatch(targetID: number, pause?: boolean, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDPausePatch(targetID, pause, options).then((request) => request(this.axios, this.basePath));
@@ -6219,7 +4863,6 @@ export class TargetApi extends BaseAPI {
      * @param {boolean} [_public] Public status, can be true for public, false for private. If not supplied, target\&#39;s public status will change to the opposite of current status.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDPublicPatch(targetID: number, _public?: boolean, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDPublicPatch(targetID, _public, options).then((request) => request(this.axios, this.basePath));
@@ -6230,7 +4873,6 @@ export class TargetApi extends BaseAPI {
 
 /**
  * UserApi - axios parameter creator
- * @export
  */
 export const UserApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -6383,7 +5025,6 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
 /**
  * UserApi - functional programming interface
- * @export
  */
 export const UserApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UserApiAxiosParamCreator(configuration)
@@ -6443,7 +5084,6 @@ export const UserApiFp = function(configuration?: Configuration) {
 
 /**
  * UserApi - factory interface
- * @export
  */
 export const UserApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = UserApiFp(configuration)
@@ -6491,9 +5131,6 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
 
 /**
  * UserApi - object-oriented interface
- * @export
- * @class UserApi
- * @extends {BaseAPI}
  */
 export class UserApi extends BaseAPI {
     /**
@@ -6501,7 +5138,6 @@ export class UserApi extends BaseAPI {
      * @summary Delete current user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof UserApi
      */
     public userDelete(options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).userDelete(options).then((request) => request(this.axios, this.basePath));
@@ -6512,7 +5148,6 @@ export class UserApi extends BaseAPI {
      * @summary Get current user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof UserApi
      */
     public userGet(options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).userGet(options).then((request) => request(this.axios, this.basePath));
@@ -6524,7 +5159,6 @@ export class UserApi extends BaseAPI {
      * @param {UserChangePasswordRequest} changePasswordReq Old and new password
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof UserApi
      */
     public userPasswordPatch(changePasswordReq: UserChangePasswordRequest, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).userPasswordPatch(changePasswordReq, options).then((request) => request(this.axios, this.basePath));
@@ -6536,7 +5170,6 @@ export class UserApi extends BaseAPI {
      * @param {UserChangeUsernameRequest} changeUsernameReq New username
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof UserApi
      */
     public userUsernamePatch(changeUsernameReq: UserChangeUsernameRequest, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).userUsernamePatch(changeUsernameReq, options).then((request) => request(this.axios, this.basePath));

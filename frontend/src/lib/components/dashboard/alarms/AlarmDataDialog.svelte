@@ -1,12 +1,12 @@
 <script lang="ts">
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Button } from '$lib/components/ui/button';
+	import { notNegative } from '$lib/validators';
 	import { Hint, required, useForm } from 'svelte-use-form';
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
 	import type { ModelAlarm, ModelAlarmType, ModelNotification } from '$lib/api-client-axios';
 	import { writable, type Writable } from 'svelte/store';
-	import { Select, SelectContent, SelectItem, SelectTrigger } from '$lib/components/ui/select/index';
 	import { toast } from 'svelte-sonner';
 	import type { Snippet } from 'svelte';
 	import {
@@ -32,17 +32,17 @@
 	const form = useForm({
 		name: {
 			initial: alarm ? alarm.name! : undefined
-		}
+		},
+		maxRetries: {
+			initial: alarm ? alarm.maxRetries!.toString() : "0"
+		},
 	}, 'alarmDataDialogForm');
 	const notificationsSelectedBefore: Array<number | undefined> = alarm ? alarm.notifications!.map(n => n.id!) : [];
 
-	let type = $state(alarm ? alarm.type!.toString() : alarmTypeOptions[0].value);
+	// Use "threshold" type as default value, if user is trying to edit the default "unavailable" alarm, fine - nothing gets rendered, we can safely derive the SubForm from the existing alarm's type
+	let type = $state(alarm ? alarm.type!.toString() : alarmTypeOptions[1].value);
 	let SubForm = $derived(alarmSubForms[parseInt(type)]);
 	let selectedNotifications = writable<number[]>([]);
-	// update the select's thing
-	const triggerContent = $derived(
-		alarmTypeOptions.find((opt) => opt.value === type)?.label
-	);
 
 	if (alarm) {
 		alarmSubFormOutput.set(alarm);
@@ -52,11 +52,16 @@
 
 	function onSubmit() {
 		const reqBody = {
-			type: parseInt(type) as ModelAlarmType,
 			name: $form.name.value,
+			maxRetries: Number($form.maxRetries.value),
 			notificationIDs: $selectedNotifications,
+			type:  parseInt(type) as ModelAlarmType,
 			...$alarmSubFormOutput
 		};
+		if (type === "0") {
+			// @ts-expect-error it's not optional according to TS because it's defined above but in API specs it's optional in update, which is the only case it can even be 0 in this component
+			delete reqBody.type;
+		}
 		const req = alarm ? alarmApi.targetTargetIDAlarmAlarmIDPatch(targetId, alarm.id!, reqBody) : alarmApi.targetTargetIDAlarmPost(targetId, reqBody);
 		req.then((resp) => {
 			if (resp.status === 201) {
@@ -89,17 +94,13 @@
 				<Label>Name</Label>
 				<Input type="text" name="name" validators={[required]}></Input>
 				<Hint for="name" on="required" form="alarmDataDialogForm">Name is required.</Hint>
-				<Label>Type</Label>
-				<Select name="type" bind:value={type} type="single">
-					<SelectTrigger class="w-full">
-						{triggerContent}
-					</SelectTrigger>
-					<SelectContent>
-						{#each alarmTypeOptions as option(option.value)}
-							<SelectItem label={option.label} value={option.value}>{option.label}</SelectItem>
-						{/each}
-					</SelectContent>
-				</Select>
+				<!--	TODO: add a tooltip / some kind of helper here to explain this  -->
+				<Label>Max retries</Label>
+				<Input name="maxRetries" type="number" validators={[required, notNegative]}></Input>
+				<div>
+					<Hint for="maxRetries" form="alarmDataDialogForm" on="required">Max retries is required.</Hint>
+					<Hint for="maxRetries" form="alarmDataDialogForm" on="notNegative">Max retries must be a non-negative number.</Hint>
+				</div>
 			</form>
 			<SubForm></SubForm>
 			<Label class="mt-4">Notifications</Label>
@@ -114,7 +115,7 @@
 		<Dialog.Footer>
 			<Button type="button" variant="outline" class="mt-4" onclick={() => open = false}>Close</Button>
 			<Button type="submit" class="mt-4"
-							disabled={!($form.valid && $alarmSubFormValidity && $selectedNotifications.length !== 0)}
+							disabled={!($form.valid && $alarmSubFormValidity)}
 							onclick={onSubmit}>{alarm ? "Edit" : "Create"}</Button>
 		</Dialog.Footer>
 

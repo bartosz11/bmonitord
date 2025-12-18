@@ -1,4 +1,4 @@
-package incident
+package target
 
 import (
 	"net/http"
@@ -20,10 +20,10 @@ import (
 // @Param id path uint true "ID of target to get the list of incidents for"
 // @Param start query uint true "Unix epoch second representing start of the time range"
 // @Param end query uint false "Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range."
-// @Success 200 {object} getManyIncidentsSuccessResponse
+// @Success 200 {object} GetManyIncidentsSuccessResponse
 // @Failure 400 {object} helpers.GenericErrorResponse "Returned when a parameter couldn't be parsed."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
-// @Router /incident/{id}/timerange [get]
+// @Router /incident/target/{id}/timerange [get]
 func HandleGetIncidentsForTargetInTimeRange(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		startParam := c.Query("start")
@@ -63,7 +63,7 @@ func HandleGetIncidentsForTargetInTimeRange(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		var incidents []model.Incident
-		err = db.Joins("Target").Order("incidents.start asc").Find(&incidents, `"Target"."id" = ? and incidents.start between ? and ? and ("Target"."public" = true or ("Target"."user_id" = ? and ?))`, targetId, start, end, user.ID, authenticatedUser).Error
+		err = db.Joins("Target").Joins("Alarm").Order("incidents.start asc").Find(&incidents, `"Target"."id" = ? and incidents.start between ? and ? and ("Target"."public" = true or ("Target"."user_id" = ? and ?))`, targetId, start, end, user.ID, authenticatedUser).Error
 		if err != nil {
 			helpers.DBInteractionFailed(c)
 			return
@@ -77,7 +77,7 @@ func HandleGetIncidentsForTargetInTimeRange(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-type getManyIncidentsSuccessResponse struct {
+type GetManyIncidentsSuccessResponse struct {
 	Code int              `json:"code" example:"200"`
 	Data []model.Incident `json:"data"`
 }

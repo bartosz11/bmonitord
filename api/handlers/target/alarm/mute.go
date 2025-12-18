@@ -78,9 +78,9 @@ func HandleMuteAlarm(db *gorm.DB) gin.HandlerFunc {
 			if err != nil {
 				helpers.ParsingFailed(c, "mute status")
 				return
-			} else {
-				alarm.Muted = mute
 			}
+
+			alarm.Muted = mute
 		}
 
 		if db.Save(&alarm).Error != nil {

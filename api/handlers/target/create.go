@@ -12,7 +12,7 @@ import (
 
 // HandleCreateTarget docs
 // @Summary Create a target
-// @Description Allows a user to create a target
+// @Description Allows a user to create a target. This endpoint also creates a system alarm of type Unavailable assigned to the newly created target. The alarm is not returned by this endpoint.
 // @Tags target
 // @Security BearerAuth
 // @Accept json
@@ -49,7 +49,6 @@ func HandleCreateTarget(db *gorm.DB) gin.HandlerFunc {
 
 		target := model.Target{
 			Name:       createReq.Name,
-			MaxRetries: createReq.MaxRetries,
 			Type:       createReq.Type,
 			Timeout:    createReq.Timeout,
 			UserID:     user.ID,
@@ -122,6 +121,19 @@ func HandleCreateTarget(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
+		unavailableAlarm := model.Alarm{
+			Name:     "Default unavailable alarm",
+			Type:     model.Unavailable,
+			System:   true,
+			TargetID: target.ID,
+		}
+
+		err = db.Save(&unavailableAlarm).Error
+		if err != nil {
+			helpers.DBInteractionFailed(c)
+			return
+		}
+
 		SanitizeTarget(&target)
 		response := helpers.HTTPResponse{
 			Code: http.StatusCreated,
@@ -138,8 +150,6 @@ type createTargetSuccessResponse struct {
 type CreateTargetRequest struct {
 	// Name must not be blank
 	Name string `json:"name" binding:"required"`
-	// Max retries is required, ignored in case of agents
-	MaxRetries uint `json:"maxRetries" binding:"requiredUint"`
 	// Type must be 0 (PING), 1 (HTTP) or 2 (AGENT)
 	Type model.TargetType `json:"type" binding:"requiredUint"`
 	// Timeout is required
