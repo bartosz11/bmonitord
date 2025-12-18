@@ -28,9 +28,6 @@
 		name: {
 			initial: target ? target.name!.toString() : undefined
 		},
-		maxRetries: {
-			initial: target ? target.maxRetries!.toString() : "0"
-		},
 		timeout: {
 			initial: target ? target.timeout!.toString() : undefined
 		}
@@ -55,7 +52,6 @@
 		const output = {
 			name: $form.name.value,
 			timeout: parseInt($form.timeout.value),
-			maxRetries: parseInt($form.maxRetries.value),
 			checkerIDs: $checkers,
 			...$targetSubFormOutput
 		};
@@ -94,16 +90,7 @@
 				</SelectContent>
 			</Select>
 		{/if}
-		<!--	TODO: add a tooltip / some kind of helper here to explain these two -->
-		<!-- Just so we can hide everything at once -->
-		<div class={isTargetTypePush(parseInt(type)) ? "hidden" : "space-y-4"}>
-			<Label>Max retries</Label>
-			<Input name="maxRetries" type="number" validators={[required, notNegative]}></Input>
-			<div>
-				<Hint for="maxRetries" form="targetDataForm" on="required">Max retries is required.</Hint>
-				<Hint for="maxRetries" form="targetDataForm" on="notNegative">Max retries must be a non-negative number.</Hint>
-			</div>
-		</div>
+		<!--	TODO: add a tooltip / some kind of helper here to explain this  -->
 		<Label>Timeout (seconds)</Label>
 		<Input name="timeout" type="number" validators={[required, notNegative]}></Input>
 		<div>

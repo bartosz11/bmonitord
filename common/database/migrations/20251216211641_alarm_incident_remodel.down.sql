@@ -1,7 +1,7 @@
 -- Running this migration will break retries on targets/alarms!
 
 alter table alarms rename column triggered to active;
-alter table alarms drop column trigger_state_changed_at;
+alter table alarms drop column triggered_state_changed_at;
 alter table alarms add column suspended;
 alter table alarms add column max_retries;
 alter table alarms drop column used_retries;

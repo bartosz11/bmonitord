@@ -3,13 +3,13 @@
 	import { CircleArrowUp, CircleArrowDown, CircleHelp } from '@lucide/svelte';
 	import Tooltip from '$lib/components/ui/tooltip/Tooltip.svelte';
 
-	let { target }: { target: ModelTarget } = $props();
+	let { target: target }: { target: ModelTarget } = $props();
 
 	const lastCheckDate = target.lastCheck!;
 </script>
 
 <Tooltip
-	content={`Last check: ${new Date(lastCheckDate).toLocaleString()} <br> Used retries: ${target.usedRetries} out of ${target.maxRetries} <br> Paused: ${target.paused ? "yes" : "no"}`}>
+	content={`Last check: ${new Date(lastCheckDate).toLocaleString()} <br> Paused: ${target.paused ? "yes" : "no"}`}>
 	{#snippet trigger()}
 		<!-- TODO: maybe fix up contrasts here later, on light theme they're an issue, on dark the gray isn't good enough too-->
 		{#if target.lastStatus === 0}
