@@ -30,7 +30,11 @@
 			<CheckerEditDialog {row} {rows} />
 			<DropdownMenuSeparator />
 			<CheckerRegenerateKeyDialog {row} />
-			<CheckerDeleteDialog {row} {rows} />
+			{#if row.system}
+				<DropdownMenuItem class="text-destructive" disabled>Delete</DropdownMenuItem>
+			{:else}
+				<CheckerDeleteDialog {row} {rows} />
+			{/if}
 		</DropdownMenuGroup>
 	{/snippet}
 </ActionsBase>

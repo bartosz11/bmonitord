@@ -59,7 +59,11 @@
 				{/snippet}
 			</AlarmDataDialog>
 			<DropdownMenuSeparator />
-			<AlarmDeleteDialog {row} {rows} />
+			{#if row.system}
+				<DropdownMenuItem class="text-destructive" disabled>Delete</DropdownMenuItem>
+			{:else}
+				<AlarmDeleteDialog {row} {rows} />
+			{/if}
 		</DropdownMenuGroup>
 	{/snippet}
 </ActionsBase>

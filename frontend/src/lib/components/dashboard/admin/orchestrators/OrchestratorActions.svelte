@@ -25,7 +25,12 @@
 			<DropdownMenuLabel>Actions</DropdownMenuLabel>
 			<DropdownMenuItem onclick={onCopyHostClick}>Copy host to clipboard</DropdownMenuItem>
 			<DropdownMenuSeparator />
-			<OrchestratorDeleteDialog {row} {rows}/>
+			<!-- This is a nasty workaround to visually "gray-out" the option when it can't even be used, if I just rendered OrchestratorDeleteDialog the onClick even would've worked and opened the dialog anyway, which is unwanted	-->
+			{#if row.system}
+				<DropdownMenuItem class="text-destructive" disabled>Delete</DropdownMenuItem>
+			{:else}
+				<OrchestratorDeleteDialog {row} {rows}/>
+			{/if}
 		</DropdownMenuGroup>
 	{/snippet}
 </ActionsBase>
