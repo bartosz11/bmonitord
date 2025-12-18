@@ -20,7 +20,7 @@ import (
 // @Param id path uint true "ID of alarm to get the list of incidents for"
 // @Param start query uint true "Unix epoch second representing start of the time range"
 // @Param end query uint false "Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range."
-// @Success 200 {object} getManyIncidentsSuccessResponse
+// @Success 200 {object} target.GetManyIncidentsSuccessResponse
 // @Failure 400 {object} helpers.GenericErrorResponse "Returned when a parameter couldn't be parsed."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
 // @Router /incident/alarm/{id}/timerange [get]

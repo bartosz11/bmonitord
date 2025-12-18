@@ -17,7 +17,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param id path uint true "ID of incident to get"
-// @Success 200 {object} getIncidentSuccessResponse
+// @Success 200 {object} GetIncidentSuccessResponse
 // @Failure 400 {object} helpers.GenericErrorResponse "Returned when given ID couldn't be parsed."
 // @Failure 404 {object} helpers.GenericErrorResponse "Returned when an incident with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public)."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
@@ -58,7 +58,7 @@ func HandleGetIncidentById(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-type getIncidentSuccessResponse struct {
+type GetIncidentSuccessResponse struct {
 	Code int            `json:"code" example:"200"`
 	Data model.Incident `json:"data"`
 }

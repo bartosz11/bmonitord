@@ -1155,9 +1155,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/incident/{id}": {
+        "/incident/alarm/{id}/last": {
             "get": {
-                "description": "Allows to retrieve information about incident with specified ID, if incident's target is public then the info can be retrieved by anyone, even without an auth token",
+                "description": "Allows to retrieve information about the last incident of alarm with specified ID, if alarm's target is public then the info can be retrieved by anyone, even without an auth token",
                 "consumes": [
                     "application/json"
                 ],
@@ -1167,11 +1167,11 @@ const docTemplate = `{
                 "tags": [
                     "incident"
                 ],
-                "summary": "Get incident by ID",
+                "summary": "Get last incident of alarm",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ID of incident to get",
+                        "description": "ID of alarm to get the last incident info of",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1181,7 +1181,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/incident.getIncidentSuccessResponse"
+                            "$ref": "#/definitions/incident.GetIncidentSuccessResponse"
                         }
                     },
                     "400": {
@@ -1191,7 +1191,7 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Returned when an incident with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public).",
+                        "description": "Returned when an alarm with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public).",
                         "schema": {
                             "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
@@ -1205,9 +1205,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/incident/{id}/last": {
+        "/incident/alarm/{id}/page": {
             "get": {
-                "description": "Allows to retrieve information about the last incident of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token",
+                "description": "Allows to retrieve a page of incidents of an alarm, if alarm's target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if alarm's target is not public.",
                 "consumes": [
                     "application/json"
                 ],
@@ -1217,31 +1217,43 @@ const docTemplate = `{
                 "tags": [
                     "incident"
                 ],
-                "summary": "Get last incident of target",
+                "summary": "Get page of incidents of alarm",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ID of target to get the last incident info of",
+                        "description": "ID of alarm to get the page of incidents for",
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Size of the page, has to be a number in range [1, 200]. If value smaller or equal to 0 is given it defaults to 20. If value higher than 200 is given, 200 is used.",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number, if a negative number is given it defaults to 0.",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sorting settings. Format: \u003cfield\u003e,\u003cdirection\u003e where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.",
+                        "name": "sort",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/incident.getIncidentSuccessResponse"
+                            "$ref": "#/definitions/target.GetIncidentPageSuccessResponse"
                         }
                     },
                     "400": {
-                        "description": "Returned when given ID couldn't be parsed.",
-                        "schema": {
-                            "$ref": "#/definitions/helpers.GenericErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Returned when a target with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public).",
+                        "description": "Returned when a parameter couldn't be parsed.",
                         "schema": {
                             "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
@@ -1255,7 +1267,64 @@ const docTemplate = `{
                 }
             }
         },
-        "/incident/{id}/page": {
+        "/incident/alarm/{id}/timerange": {
+            "get": {
+                "description": "Allows to retrieve a list of incidents of an alarm that have started in the specified time range, if alarm's target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if alarm's target is not public. The list is ordered by incident's start timestamp ascending (oldest first).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "incident"
+                ],
+                "summary": "Get incidents of alarm in time range",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of alarm to get the list of incidents for",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Unix epoch second representing start of the time range",
+                        "name": "start",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.",
+                        "name": "end",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/target.GetManyIncidentsSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when a parameter couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/incident/target/{id}/page": {
             "get": {
                 "description": "Allows to retrieve a page of incidents of a target, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return empty pages if target is not public.",
                 "consumes": [
@@ -1299,7 +1368,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/incident.getIncidentPageSuccessResponse"
+                            "$ref": "#/definitions/target.GetIncidentPageSuccessResponse"
                         }
                     },
                     "400": {
@@ -1317,7 +1386,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/incident/{id}/timerange": {
+        "/incident/target/{id}/timerange": {
             "get": {
                 "description": "Allows to retrieve a list of incidents of a target that have started in the specified time range, if target is public then the info can be retrieved by anyone, even without an auth token. This endpoint may return an empty list if target is not public. The list is ordered by incident's start timestamp ascending (oldest first).",
                 "consumes": [
@@ -1356,11 +1425,61 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/incident.getManyIncidentsSuccessResponse"
+                            "$ref": "#/definitions/target.GetManyIncidentsSuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Returned when a parameter couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/incident/{id}": {
+            "get": {
+                "description": "Allows to retrieve information about incident with specified ID, if incident's target is public then the info can be retrieved by anyone, even without an auth token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "incident"
+                ],
+                "summary": "Get incident by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of incident to get",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/incident.GetIncidentSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when an incident with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public).",
                         "schema": {
                             "$ref": "#/definitions/helpers.GenericErrorResponse"
                         }
@@ -2119,7 +2238,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Allows a user to create a target",
+                "description": "Allows a user to create a target. This endpoint also creates a system alarm of type Unavailable assigned to the newly created target. The alarm is not returned by this endpoint.",
                 "consumes": [
                     "application/json"
                 ],
@@ -2879,6 +2998,86 @@ const docTemplate = `{
                 }
             }
         },
+        "/target/{targetID}/alarm/{alarmID}/suspend": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to change suspend status of an alarm",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "alarm"
+                ],
+                "summary": "Suspend alarm",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target the alarm belongs to",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of the alarm",
+                        "name": "alarmID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Suspend status. Can be true for suspended, false for unsuspended. If not supplied, suspend status of the alarm will change to the opposite of current status.",
+                        "name": "suspend",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/alarm.getAlarmSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given target ID, alarm ID or suspend status couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target or alarm with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/target/{targetID}/pause": {
             "patch": {
                 "security": [
@@ -3256,6 +3455,10 @@ const docTemplate = `{
                 "notificationIDs"
             ],
             "properties": {
+                "maxRetries": {
+                    "description": "Max retries is required, ignored in case of agents",
+                    "type": "integer"
+                },
                 "name": {
                     "description": "Name must not be blank",
                     "type": "string"
@@ -3263,7 +3466,6 @@ const docTemplate = `{
                 "notificationIDs": {
                     "description": "All notifications in this list must exist",
                     "type": "array",
-                    "minItems": 1,
                     "items": {
                         "type": "integer"
                     }
@@ -3285,7 +3487,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "description": "Type must be 0 (unavailable) or 1 (threshold)",
+                    "description": "Type must be 1 (threshold). This is left in place for possible future use",
                     "allOf": [
                         {
                             "$ref": "#/definitions/model.AlarmType"
@@ -3297,6 +3499,9 @@ const docTemplate = `{
         "alarm.UpdateAlarmRequest": {
             "type": "object",
             "properties": {
+                "maxRetries": {
+                    "type": "integer"
+                },
                 "name": {
                     "description": "Name must not be blank if supplied",
                     "type": "string"
@@ -3325,7 +3530,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "description": "Type must be 0 (unavailable) or 1 (threshold), if supplied",
+                    "description": "Type must be 1 (threshold), if supplied. This is left in place for possible future use",
                     "allOf": [
                         {
                             "$ref": "#/definitions/model.AlarmType"
@@ -3608,19 +3813,7 @@ const docTemplate = `{
                 }
             }
         },
-        "incident.getIncidentPageSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "$ref": "#/definitions/helpers.Page-model_Incident"
-                }
-            }
-        },
-        "incident.getIncidentSuccessResponse": {
+        "incident.GetIncidentSuccessResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -3629,21 +3822,6 @@ const docTemplate = `{
                 },
                 "data": {
                     "$ref": "#/definitions/model.Incident"
-                }
-            }
-        },
-        "incident.getManyIncidentsSuccessResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Incident"
-                    }
                 }
             }
         },
@@ -3682,9 +3860,6 @@ const docTemplate = `{
         "model.Alarm": {
             "type": "object",
             "properties": {
-                "active": {
-                    "type": "boolean"
-                },
                 "createdAt": {
                     "type": "string"
                 },
@@ -3692,6 +3867,15 @@ const docTemplate = `{
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
                 "id": {
+                    "type": "integer"
+                },
+                "incidents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Incident"
+                    }
+                },
+                "maxRetries": {
                     "type": "integer"
                 },
                 "muted": {
@@ -3706,6 +3890,12 @@ const docTemplate = `{
                         "$ref": "#/definitions/model.Notification"
                     }
                 },
+                "suspended": {
+                    "type": "boolean"
+                },
+                "system": {
+                    "type": "boolean"
+                },
                 "targetId": {
                     "type": "integer"
                 },
@@ -3719,11 +3909,20 @@ const docTemplate = `{
                     "description": "For example what NIC should the threshold apply to",
                     "type": "string"
                 },
+                "triggered": {
+                    "type": "boolean"
+                },
+                "triggeredStateChangedAt": {
+                    "type": "string"
+                },
                 "type": {
                     "$ref": "#/definitions/model.AlarmType"
                 },
                 "updatedAt": {
                     "type": "string"
+                },
+                "usedRetries": {
+                    "type": "integer"
                 }
             }
         },
@@ -3883,6 +4082,12 @@ const docTemplate = `{
         "model.Incident": {
             "type": "object",
             "properties": {
+                "alarm": {
+                    "$ref": "#/definitions/model.Alarm"
+                },
+                "alarmId": {
+                    "type": "integer"
+                },
                 "createdAt": {
                     "type": "string"
                 },
@@ -4075,6 +4280,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "checksUp": {
+                    "description": "These 4 are \"shortcuts\", incidents are the \"source of truth\" about what's going on with the Target",
                     "type": "integer"
                 },
                 "createdAt": {
@@ -4107,9 +4313,6 @@ const docTemplate = `{
                 "lastStatus": {
                     "$ref": "#/definitions/model.TargetStatus"
                 },
-                "maxRetries": {
-                    "type": "integer"
-                },
                 "name": {
                     "type": "string"
                 },
@@ -4130,9 +4333,6 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "type": "string"
-                },
-                "usedRetries": {
-                    "type": "integer"
                 },
                 "userId": {
                     "type": "integer"
@@ -4508,10 +4708,6 @@ const docTemplate = `{
                         }
                     ]
                 },
-                "maxRetries": {
-                    "description": "Max retries is required, ignored in case of agents",
-                    "type": "integer"
-                },
                 "name": {
                     "description": "Name must not be blank",
                     "type": "string"
@@ -4535,6 +4731,33 @@ const docTemplate = `{
                             "$ref": "#/definitions/model.TargetType"
                         }
                     ]
+                }
+            }
+        },
+        "target.GetIncidentPageSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/helpers.Page-model_Incident"
+                }
+            }
+        },
+        "target.GetManyIncidentsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Incident"
+                    }
                 }
             }
         },
@@ -4616,10 +4839,6 @@ const docTemplate = `{
                 "httpInfo": {
                     "$ref": "#/definitions/target.HTTPInfoUpdateRequest"
                 },
-                "maxRetries": {
-                    "description": "Value of maxRetries can be updated even if target's type is 2 (agent), but it's ignored in the checking behavior",
-                    "type": "integer"
-                },
                 "name": {
                     "description": "Name must not be blank if supplied",
                     "type": "string"
@@ -4675,12 +4894,16 @@ const docTemplate = `{
             "type": "integer",
             "format": "int64",
             "enum": [
+                -9223372036854775808,
+                9223372036854775807,
                 1,
                 1000,
                 1000000,
                 1000000000,
                 60000000000,
                 3600000000000,
+                -9223372036854775808,
+                9223372036854775807,
                 1,
                 1000,
                 1000000,
@@ -4693,12 +4916,16 @@ const docTemplate = `{
                 1000000000
             ],
             "x-enum-varnames": [
+                "minDuration",
+                "maxDuration",
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",
                 "Second",
                 "Minute",
                 "Hour",
+                "minDuration",
+                "maxDuration",
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",
