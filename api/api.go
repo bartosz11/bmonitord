@@ -9,6 +9,8 @@ import (
 	"github.com/bartosz11/checkmate/api/handlers/checker"
 	"github.com/bartosz11/checkmate/api/handlers/heartbeat"
 	"github.com/bartosz11/checkmate/api/handlers/incident"
+	alarmsIncidents "github.com/bartosz11/checkmate/api/handlers/incident/alarm"
+	targetsIncidents "github.com/bartosz11/checkmate/api/handlers/incident/target"
 	"github.com/bartosz11/checkmate/api/handlers/notification"
 	"github.com/bartosz11/checkmate/api/handlers/orchestrator"
 	"github.com/bartosz11/checkmate/api/handlers/session"
@@ -90,13 +92,20 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 	publicGroup := apiGroup.Group("", middleware.AuthMiddleware(db, true))
 	{
 		publicGroup.GET("/target/:targetID", target.HandleGetTargetByID(db))
-		incidentGroup := publicGroup.Group("/incident/:id")
+		incidentGroup := publicGroup.Group("/incident")
 		{
-			incidentGroup.GET("", incident.HandleGetIncidentById(db))
-			// /:id means target ID in case of these, Gin doesn't really let me do it differently
-			incidentGroup.GET("/last", incident.HandleGetLastIncidentForTargetId(db))
-			incidentGroup.GET("/timerange", incident.HandleGetIncidentsForTargetInTimeRange(db))
-			incidentGroup.GET("/page", incident.HandleGetIncidentPageForTarget(db))
+			incidentGroup.GET("/:id", incident.HandleGetIncidentById(db))
+			targetGrp := incidentGroup.Group("/target/:id")
+			{
+				targetGrp.GET("/timerange", targetsIncidents.HandleGetIncidentsForTargetInTimeRange(db))
+				targetGrp.GET("/page", targetsIncidents.HandleGetIncidentPageForTarget(db))
+			}
+			alarmGrp := incidentGroup.Group("/alarm/:id")
+			{
+				alarmGrp.GET("/last", alarmsIncidents.HandleGetLastIncidentForAlarm(db))
+				alarmGrp.GET("/timerange", alarmsIncidents.HandleGetIncidentsForAlarmInTimeRange(db))
+				alarmGrp.GET("/page", alarmsIncidents.HandleGetIncidentPageForAlarm(db))
+			}
 		}
 		heartbeatGroup := publicGroup.Group("/heartbeat/:id")
 		{

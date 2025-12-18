@@ -1,4 +1,4 @@
-package incident
+package alarm
 
 import (
 	"errors"
@@ -10,24 +10,24 @@ import (
 	"gorm.io/gorm"
 )
 
-// HandleGetLastIncidentForTargetId docs
-// @Summary Get last incident of target
-// @Description Allows to retrieve information about the last incident of target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token
+// HandleGetLastIncidentForAlarm docs
+// @Summary Get last incident of alarm
+// @Description Allows to retrieve information about the last incident of alarm with specified ID, if alarm's target is public then the info can be retrieved by anyone, even without an auth token
 // @Tags incident
 // @Accept json
 // @Produce json
-// @Param id path uint true "ID of target to get the last incident info of"
+// @Param id path uint true "ID of alarm to get the last incident info of"
 // @Success 200 {object} getIncidentSuccessResponse
 // @Failure 400 {object} helpers.GenericErrorResponse "Returned when given ID couldn't be parsed."
-// @Failure 404 {object} helpers.GenericErrorResponse "Returned when a target with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public)."
+// @Failure 404 {object} helpers.GenericErrorResponse "Returned when an alarm with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public)."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
-// @Router /incident/{id}/last [get]
-func HandleGetLastIncidentForTargetId(db *gorm.DB) gin.HandlerFunc {
+// @Router /incident/alarm/{id}/last [get]
+func HandleGetLastIncidentForAlarm(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		param := c.Param("id")
-		targetID, err := strconv.ParseUint(param, 10, 64)
+		alarmId, err := strconv.ParseUint(param, 10, 64)
 		if err != nil {
-			helpers.ParsingFailed(c, "target id")
+			helpers.ParsingFailed(c, "alarm id")
 			return
 		}
 
@@ -39,7 +39,7 @@ func HandleGetLastIncidentForTargetId(db *gorm.DB) gin.HandlerFunc {
 
 		var incident model.Incident
 		// last incident may not have an end date so we sort by start date instead
-		err = db.Joins("Target").Order("incidents.start desc").First(&incident, `"Target"."id" = ? and ("Target"."public" = true or ("Target"."user_id" = ? and ?))`, targetID, user.ID, userAuthenticated).Error
+		err = db.Joins("Target").Joins("Alarm").Order("incidents.start desc").First(&incident, `"Alarm"."id" = ? and ("Target"."public" = true or ("Target"."user_id" = ? and ?))`, alarmId, user.ID, userAuthenticated).Error
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			helpers.NotFound(c)
 			return

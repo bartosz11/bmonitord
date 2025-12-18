@@ -1,4 +1,4 @@
-package incident
+package target
 
 import (
 	"net/http"
@@ -23,7 +23,7 @@ import (
 // @Success 200 {object} getIncidentPageSuccessResponse
 // @Failure 400 {object} helpers.GenericErrorResponse "Returned when a parameter couldn't be parsed."
 // @Failure 500 {object} helpers.GenericErrorResponse "Returned when a DB interaction fails."
-// @Router /incident/{id}/page [get]
+// @Router /incident/target/{id}/page [get]
 func HandleGetIncidentPageForTarget(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		allowedFields := []string{"start", "end", "duration", "ongoing", "incidents.id"}
@@ -46,7 +46,7 @@ func HandleGetIncidentPageForTarget(db *gorm.DB) gin.HandlerFunc {
 			user = val.(model.User)
 		}
 
-		query := db.Model(&model.Incident{}).Joins("Target").Where(`"Target"."id" = ? and ("Target"."public" = true or ("Target"."user_id" = ? and ?))`, id, user.ID, authenticatedUser)
+		query := db.Model(&model.Incident{}).Joins("Target").Joins("Alarm").Where(`"Target"."id" = ? and ("Target"."public" = true or ("Target"."user_id" = ? and ?))`, id, user.ID, authenticatedUser)
 		page, err := helpers.ApplyPageable[model.Incident](query, pageable)
 		if err != nil {
 			helpers.DBInteractionFailed(c)
