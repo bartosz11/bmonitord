@@ -9,7 +9,6 @@ import (
 	"github.com/bartosz11/checkmate/common/database/model"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -73,7 +72,7 @@ func HandleRegister(db *gorm.DB) gin.HandlerFunc {
 			admin = true
 		}
 
-		hash, err := bcrypt.GenerateFromPassword([]byte(registerReq.Password), 12)
+		hash, err := helpers.HashPassword(registerReq.Password)
 		if err != nil {
 			log.Err(err).Msg("failed to hash password")
 			helpers.PasswordHashingFailed(c)
@@ -82,7 +81,7 @@ func HandleRegister(db *gorm.DB) gin.HandlerFunc {
 
 		user := model.User{
 			Username: registerReq.Username,
-			Password: string(hash),
+			Password: hash,
 			Enabled:  true,
 			Admin:    admin,
 		}

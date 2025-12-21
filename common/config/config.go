@@ -46,11 +46,12 @@ type OrchestratorConfig struct {
 }
 
 type APIConfig struct {
-	JWTSecret     string `mapstructure:"jwt-secret"`
-	JWTValidity   int    `mapstructure:"jwt-validity"`
-	HostDocs      bool   `mapstructure:"host-docs"`
-	HostFrontend  bool   `mapstructure:"host-frontend"`
-	SecureCookies bool   `mapstructure:"secure-cookies"`
+	JWTSecret       string `mapstructure:"jwt-secret"`
+	JWTValidity     int    `mapstructure:"jwt-validity"`
+	HostDocs        bool   `mapstructure:"host-docs"`
+	HostFrontend    bool   `mapstructure:"host-frontend"`
+	SecureCookies   bool   `mapstructure:"secure-cookies"`
+	HashingPoolSize int    `mapstructure:"hashing-pool-size"`
 }
 
 type CheckerConfig struct {

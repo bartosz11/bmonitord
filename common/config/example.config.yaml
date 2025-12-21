@@ -33,6 +33,9 @@ api:
   host-docs: true # Should this API instance also host swagger API docs? if true, they'll be available at /swagger/index.html
   secure-cookies: false # Set to true if your instance is accessible through https. Cookies will have the "Secure" flag
   host-frontend: true # Should this API instance also host the web dashboard? note that it's  bundled in the binary and disabling this won't make the binary/docker image lighter
+  # How many Argon2id hashing operations are allowed in parallel? Each can consume around 64MB of RAM.
+  # This may affect performance of login/register/change password operations if you have many users performing these simultaneously. Lowest allowed value is 1.
+  hashing-pool-size: 2
 
 checker:
   key: replace_me # This is ignored by the AIO binary/image

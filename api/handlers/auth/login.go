@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 	"github.com/ua-parser/uap-go/uaparser"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -54,9 +53,26 @@ func HandleLogin(db *gorm.DB, secureCookies *bool, parser *uaparser.Parser) gin.
 			return
 		}
 
-		if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginReq.Password)) != nil {
+		match, needsRehash, err := helpers.CheckPassword(loginReq.Password, user.Password)
+		if err != nil || !match {
 			invalidUsernameOrPassword(c)
 			return
+		}
+
+		if needsRehash {
+			hash, err := helpers.HashPassword(loginReq.Password)
+			if err != nil {
+				log.Err(err).Msg("failed to hash password")
+				helpers.PasswordHashingFailed(c)
+				return
+			}
+
+			user.Password = hash
+			err = db.Save(&user).Error
+			if err != nil {
+				helpers.DBInteractionFailed(c)
+				return
+			}
 		}
 
 		ua := c.GetHeader("User-Agent")
@@ -72,7 +88,7 @@ func HandleLogin(db *gorm.DB, secureCookies *bool, parser *uaparser.Parser) gin.
 
 		ParseUAInfoIntoSession(&session, parser, &ua)
 
-		err := db.Create(&session).Error
+		err = db.Create(&session).Error
 		if err != nil {
 			helpers.DBInteractionFailed(c)
 			return

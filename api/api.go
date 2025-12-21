@@ -82,6 +82,7 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 	apiGroup.GET("/health", common.HandleHealthcheck(db))
 
 	helpers.InitJWTHelper(apiConfig)
+	helpers.InitHashLimiter(apiConfig.HashingPoolSize)
 
 	authGrp := apiGroup.Group("/auth")
 	{

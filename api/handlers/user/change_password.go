@@ -7,7 +7,6 @@ import (
 	"github.com/bartosz11/checkmate/common/database/model"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -42,7 +41,9 @@ func HandleChangePassword(db *gorm.DB) gin.HandlerFunc {
 		value, _ := c.Get("user")
 		user := value.(model.User)
 
-		if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(changePasswordReq.OldPassword)) != nil {
+		// We ignore the rehash results, for hopefully obvious reasons
+		match, _, err := helpers.CheckPassword(changePasswordReq.OldPassword, user.Password)
+		if !match || err != nil {
 			resp := helpers.HTTPResponse{
 				Code:  http.StatusForbidden,
 				Error: "invalid old password",
@@ -51,14 +52,14 @@ func HandleChangePassword(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		hash, err := bcrypt.GenerateFromPassword([]byte(changePasswordReq.NewPassword), 12)
+		hash, err := helpers.HashPassword(changePasswordReq.NewPassword)
 		if err != nil {
 			log.Err(err).Msg("failed to hash password")
 			helpers.PasswordHashingFailed(c)
 			return
 		}
 
-		user.Password = string(hash)
+		user.Password = hash
 		err = db.Save(&user).Error
 		if err != nil {
 			helpers.DBInteractionFailed(c)
