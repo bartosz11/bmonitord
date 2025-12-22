@@ -2,6 +2,7 @@ package common
 
 import (
 	"os"
+	"strings"
 
 	"github.com/bartosz11/checkmate/common/config"
 	"github.com/gin-contrib/gzip"
@@ -25,7 +26,16 @@ func SetupRouter(cfg *config.Config) *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.Default()
-	r.Use(gzip.Gzip(gzip.DefaultCompression, gzip.WithDecompressFn(gzip.DefaultDecompressHandle)))
+	r.Use(func(c *gin.Context) {
+		// we want Upgrade: websocket in any case specifically, hence EqualFold, but Connection can be something like Connection: Upgrade, keep-alive, so we have to watch out for that
+		// WS connections need to be excluded from the gzip
+		if strings.Contains(strings.ToLower(c.GetHeader("Connection")), "upgrade") && strings.EqualFold(c.GetHeader("Upgrade"), "websocket") {
+			c.Next()
+			return
+		}
+
+		gzip.Gzip(gzip.DefaultCompression, gzip.WithDecompressFn(gzip.DefaultDecompressHandle))(c)
+	})
 	return r
 }
 
