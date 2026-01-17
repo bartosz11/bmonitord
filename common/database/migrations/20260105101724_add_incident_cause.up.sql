@@ -1,0 +1,1 @@
+alter table incidents add column cause text;

@@ -9,7 +9,7 @@
 </script>
 
 <Tooltip
-	content={`Last check: ${new Date(lastCheckDate).toLocaleString()} <br> Paused: ${target.paused ? "yes" : "no"}`}>
+	content={`Last check: ${new Date(lastCheckDate).toLocaleString(navigator.language)} <br> Paused: ${target.paused ? "yes" : "no"}`}>
 	{#snippet trigger()}
 		<!-- TODO: maybe fix up contrasts here later, on light theme they're an issue, on dark the gray isn't good enough too-->
 		{#if target.lastStatus === 0}

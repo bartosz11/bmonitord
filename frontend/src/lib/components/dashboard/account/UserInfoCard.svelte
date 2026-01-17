@@ -24,7 +24,7 @@
 			<li>
 				<span class="font-semibold">Creation date: </span>
 				{#if user.createdAt}
-					<span>{new Date(user.createdAt).toLocaleString()}</span>
+					<span>{new Date(user.createdAt).toLocaleString(navigator.language)}</span>
 				{:else}
 					<span>unknown</span>
 				{/if}
@@ -32,7 +32,7 @@
 			<li>
 				<span class="font-semibold">Last update: </span>
 				{#if user.updatedAt}
-					<span>{new Date(user.updatedAt).toLocaleString()}</span>
+					<span>{new Date(user.updatedAt).toLocaleString(navigator.language)}</span>
 				{:else}
 					<span>unknown</span>
 				{/if}

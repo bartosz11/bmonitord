@@ -50,6 +50,8 @@
 			<DropdownMenuItem onclick={onPublicClick}>Make {row.public ? "private" : "public"}</DropdownMenuItem>
 			<DropdownMenuItem onclick={() => goto(`/dashboard/targets/${row.id}/edit`)}>Edit</DropdownMenuItem>
 			<DropdownMenuItem onclick={() => goto(`/dashboard/targets/${row.id}/alarms`)}>Manage alarms</DropdownMenuItem>
+			<DropdownMenuSeparator />
+			<DropdownMenuItem onclick={() => window.open(`/report/${row.id}`, "_blank")}>View report in a new tab</DropdownMenuItem>
 			{#if row.type === 2}
 				<DropdownMenuSeparator />
 				<AgentSetupInstructions {row} />

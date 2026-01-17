@@ -1,4 +1,5 @@
-import { AlarmApi, AuthApi, CheckerApi, Configuration, NotificationApi, OrchestratorApi, SessionApi, SettingsApi, TargetApi, UserApi } from "./api-client-axios";
+import { AlarmApi, AuthApi, CheckerApi, Configuration,
+	HeartbeatApi, NotificationApi, OrchestratorApi, SessionApi, SettingsApi, TargetApi, UserApi } from "./api-client-axios";
 
 const config = new Configuration({
 	basePath: import.meta.env.VITE_API_BASE_URL ?? '/api',
@@ -16,3 +17,4 @@ export const sessionApi = new SessionApi(config);
 export const settingsApi = new SettingsApi(config);
 export const targetApi = new TargetApi(config);
 export const userApi = new UserApi(config);
+export const heartbeatApi = new HeartbeatApi(config);

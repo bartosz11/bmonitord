@@ -93,6 +93,7 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 	publicGroup := apiGroup.Group("", middleware.AuthMiddleware(db, true))
 	{
 		publicGroup.GET("/target/:targetID", target.HandleGetTargetByID(db))
+		publicGroup.GET("/target/:targetID/report", target.HandleGetTargetReportData(db))
 		incidentGroup := publicGroup.Group("/incident")
 		{
 			incidentGroup.GET("/:id", incident.HandleGetIncidentById(db))

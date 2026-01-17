@@ -47,3 +47,9 @@ export function isTargetTypePush(type: number): boolean {
 	// Right now we only have to check if the type is equal to agent
 	return type === 2;
 }
+
+export const targetStatusAsText = {
+	0: 'Up',
+	1: 'Down',
+	2: 'Unknown'
+} as Record<number, string>;

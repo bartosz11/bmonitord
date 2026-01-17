@@ -63,7 +63,10 @@ func HandleGetHeartbeatsForTargetInTimeRange(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		var heartbeats []model.Heartbeat
-		err = db.Joins("Target").Order("heartbeats.timestamp asc").Find(&heartbeats, `"Target"."id" = ? and heartbeats.timestamp between ? and ? and ("Target"."public" = true or ("Target"."user_id" = ? and ?))`, targetId, start, end, user.ID, authenticatedUser).Error
+		err = db.Joins("Target").Preload("Checker", func(db *gorm.DB) *gorm.DB {
+			return db.Omit("key")
+		}).Order("heartbeats.timestamp asc").
+			Find(&heartbeats, `"Target"."id" = ? and heartbeats.timestamp between ? and ? and ("Target"."public" = true or ("Target"."user_id" = ? and ?))`, targetId, start, end, user.ID, authenticatedUser).Error
 		if err != nil {
 			helpers.DBInteractionFailed(c)
 			return

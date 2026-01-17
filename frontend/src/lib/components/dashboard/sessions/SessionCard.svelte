@@ -84,18 +84,18 @@
 		{#snippet content()}
 			<p>Device: {session.device ?? "Unknown" } — IP: {session.ipAddress}</p>
 			<p>
-				<Tooltip content={new Date(dates.createdAt).toLocaleString()}>
+				<Tooltip content={new Date(dates.createdAt).toLocaleString(navigator.language)}>
 					{#snippet trigger()}
 						<span>Created: {dayjs(dates.createdAt).fromNow()}</span>
 					{/snippet}
 				</Tooltip> &bull;
-				<Tooltip content={new Date(dates.lastActive).toLocaleString()}>
+				<Tooltip content={new Date(dates.lastActive).toLocaleString(navigator.language)}>
 					{#snippet trigger()}
 						<span> Last active: {dayjs(dates.lastActive).fromNow()}</span>
 					{/snippet}
 				</Tooltip>
 				&bull;
-				<Tooltip content={new Date(dates.expiresAt).toLocaleString()}>
+				<Tooltip content={new Date(dates.expiresAt).toLocaleString(navigator.language)}>
 					{#snippet trigger()}
 						<span>Expires: {dayjs(session.expiresAt).fromNow()}</span>
 					{/snippet}

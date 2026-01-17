@@ -16,10 +16,11 @@
 		columns: ColumnDef<TData, TValue>[];
 		data: TData[];
 		meta?: TableMeta<TData>,
-        defaultSorting?: ColumnSort
+		defaultSorting?: ColumnSort,
+		noResultsText?: string
 	};
 
-	let { data, columns, meta, defaultSorting }: DataTableProps<TData, TValue> = $props();
+	let { data, columns, meta, defaultSorting, noResultsText = "No results." }: DataTableProps<TData, TValue> = $props();
 	let sorting = $state<SortingState>(defaultSorting ? [defaultSorting] : []);
 
 	const table = createSvelteTable({
@@ -78,7 +79,7 @@
 			{:else}
 				<Table.Row>
 					<Table.Cell colspan={columns.length} class="h-24 text-center">
-						No results.
+						{noResultsText}
 					</Table.Cell>
 				</Table.Row>
 			{/each}

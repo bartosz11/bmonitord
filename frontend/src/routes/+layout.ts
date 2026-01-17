@@ -15,8 +15,8 @@ export const load = (async ({ url }) => {
 		}
 		return { user: resp.data.data! }
 	} catch {
-		// session is invalid for whatever reason, if user is not trying to log in / sign up, throw them at the login page
-		if (!pathname.startsWith('/auth/') || pathname === "/") {
+		// session is invalid for whatever reason, if user is not browsing a public page, throw them at the login page
+		if ((!pathname.startsWith('/auth/') && !pathname.startsWith("/report/")) || pathname === '/') {
 			Cookies.remove('auth-token');
 			await goto('/auth/login');
 		}

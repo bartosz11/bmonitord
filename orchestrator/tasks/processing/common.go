@@ -65,6 +65,7 @@ func ProcessAlarms(db *gorm.DB, target *model.Target, decisiveHeartbeat *model.H
 					Ongoing:  true,
 					TargetID: target.ID,
 					AlarmID:  alarm.ID,
+					Cause:    alarm.CreateIncidentCause(),
 				}
 				db.Save(&lastIncident)
 			} else { // changed from "down" to "up"

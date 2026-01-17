@@ -2,6 +2,8 @@ package model
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/bartosz11/checkmate/common/helpers"
@@ -25,6 +27,30 @@ type Alarm struct {
 	TargetID             uint           `gorm:"not null" json:"targetId"`
 	Notifications        []Notification `gorm:"many2many:alarms_notifications;constraint:OnDelete:CASCADE;" json:"notifications"`
 	Incidents            []Incident     `gorm:"constraint:OnDelete:CASCADE;" json:"incidents"`
+}
+
+func (alarm *Alarm) CreateIncidentCause() string {
+	var builder strings.Builder
+	switch alarm.Type {
+	case Unavailable:
+		builder.WriteString("Health check failed")
+	case Threshold:
+		meta := AlarmThresholdFieldMetas[alarm.ThresholdField]
+		builder.WriteString(meta.FormattedName)
+		if len(alarm.ThresholdFieldParams) != 0 {
+			builder.WriteString(" on ")
+			builder.WriteString(alarm.ThresholdFieldParams)
+		}
+		builder.WriteString(" exceeded ")
+		builder.WriteString(strconv.FormatFloat(alarm.Threshold, 'f', -1, 64))
+		builder.WriteString(meta.Unit)
+	case alarmTypeMax:
+		//	Literally cannot happen
+	}
+	builder.WriteString("(")
+	builder.WriteString(strconv.FormatUint(uint64(alarm.MaxRetries), 10))
+	builder.WriteString(" retries exceeded)")
+	return builder.String()
 }
 
 type AlarmType uint

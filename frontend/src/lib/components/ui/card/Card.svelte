@@ -5,7 +5,7 @@
 	let { title, description, action, content, footer, ...rest }: CardProps = $props();
 
 	type CardProps = {
-		title: string | Snippet,
+		title?: string | Snippet,
 		description?: string,
 		action?: Snippet,
 		content: Snippet,
@@ -15,23 +15,27 @@
 </script>
 
 <Card.Root {...rest}>
-	<Card.Header>
-		<Card.Title>
-			{#if typeof title === 'string'}
-				{title}
-			{:else}
-				{@render title()}
+	{#if title || description}
+		<Card.Header>
+			{#if title}
+				<Card.Title>
+					{#if typeof title === 'string'}
+						{title}
+					{:else}
+						{@render title()}
+					{/if}
+				</Card.Title>
 			{/if}
-		</Card.Title>
-		{#if description}
-			<Card.Description>{description}</Card.Description>
-		{/if}
-		{#if action}
-			<Card.Action>
-				{@render action()}
-			</Card.Action>
-		{/if}
-	</Card.Header>
+			{#if description}
+				<Card.Description>{description}</Card.Description>
+			{/if}
+			{#if action}
+				<Card.Action>
+					{@render action()}
+				</Card.Action>
+			{/if}
+		</Card.Header>
+	{/if}
 	<Card.Content>
 		{@render content()}
 	</Card.Content>

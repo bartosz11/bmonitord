@@ -30,6 +30,7 @@
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.0.0",
 		"globals": "^16.0.0",
+		"layerchart": "2.0.0-next.43",
 		"prettier": "^3.4.2",
 		"prettier-plugin-svelte": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",
@@ -47,8 +48,10 @@
 		"vite-plugin-devtools-json": "^0.2.0"
 	},
 	"dependencies": {
+		"@types/d3-scale": "^4.0.9",
 		"@types/js-cookie": "^3.0.6",
 		"axios": "^1.11.0",
+		"d3-scale": "^4.0.2",
 		"dayjs": "^1.11.13",
 		"js-cookie": "^3.0.5",
 		"mode-watcher": "^1.1.0"

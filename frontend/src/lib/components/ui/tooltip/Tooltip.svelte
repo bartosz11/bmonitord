@@ -11,12 +11,10 @@
 	};
 </script>
 
-<Tooltip.Provider>
-	<Tooltip.Root>
-		<Tooltip.Trigger {...rest}>{@render trigger()}</Tooltip.Trigger>
-		<Tooltip.Content>
-			<!-- eslint-disable-next-line svelte/no-at-html-tags This is safe -->
-			{@html content}
-		</Tooltip.Content>
-	</Tooltip.Root>
-</Tooltip.Provider>
+<Tooltip.Root>
+	<Tooltip.Trigger {...rest}>{@render trigger()}</Tooltip.Trigger>
+	<Tooltip.Content>
+		<!-- eslint-disable-next-line svelte/no-at-html-tags This is safe -->
+		{@html content}
+	</Tooltip.Content>
+</Tooltip.Root>

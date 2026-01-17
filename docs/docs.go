@@ -3224,6 +3224,56 @@ const docTemplate = `{
                 }
             }
         },
+        "/target/{targetID}/report": {
+            "get": {
+                "description": "Allows to retrieve data for report about target with specified ID, if target is public then the info can be retrieved by anyone, even without an auth token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "target"
+                ],
+                "summary": "Get target's report data by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of target to get the data for",
+                        "name": "targetID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/target.getTargetReportDataSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a target with given ID couldn't be found or user sending the request isn't allowed to access it (target isn't public).",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/": {
             "get": {
                 "security": [
@@ -3828,14 +3878,14 @@ const docTemplate = `{
         "model.Agent": {
             "type": "object",
             "properties": {
-                "HideIp": {
-                    "type": "boolean"
-                },
                 "createdAt": {
                     "type": "string"
                 },
                 "deletedAt": {
                     "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "hideIp": {
+                    "type": "boolean"
                 },
                 "id": {
                     "type": "integer"
@@ -4087,6 +4137,9 @@ const docTemplate = `{
                 },
                 "alarmId": {
                     "type": "integer"
+                },
+                "cause": {
+                    "type": "string"
                 },
                 "createdAt": {
                     "type": "string"
@@ -4826,6 +4879,41 @@ const docTemplate = `{
                 }
             }
         },
+        "target.ReportData": {
+            "type": "object",
+            "properties": {
+                "incidentHistory": {
+                    "description": "IncidentHistory contains incidents from last 30 days",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Incident"
+                    }
+                },
+                "lastHeartbeatsFromLocations": {
+                    "description": "LastHeartbeatsFromLocations contains most recent heartbeats from all locations, one per location or the last heartbeat if target is of a type that's push",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Heartbeat"
+                    }
+                },
+                "target": {
+                    "description": "Target is the target the report was requested for",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.Target"
+                        }
+                    ]
+                },
+                "uptime": {
+                    "description": "Uptime contains pre-computed uptime percentages for various time periods based on incidents in these time periods",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/target.UptimeData"
+                        }
+                    ]
+                }
+            }
+        },
         "target.UpdateTargetRequest": {
             "type": "object",
             "properties": {
@@ -4851,6 +4939,31 @@ const docTemplate = `{
                 }
             }
         },
+        "target.UptimeData": {
+            "type": "object",
+            "properties": {
+                "last_24h": {
+                    "type": "number",
+                    "example": 99.572
+                },
+                "last_30d": {
+                    "type": "number",
+                    "example": 99.573
+                },
+                "last_365d": {
+                    "type": "number",
+                    "example": 99.573
+                },
+                "last_7d": {
+                    "type": "number",
+                    "example": 99.573
+                },
+                "overall": {
+                    "type": "number",
+                    "example": 99.573
+                }
+            }
+        },
         "target.createTargetSuccessResponse": {
             "type": "object",
             "properties": {
@@ -4860,6 +4973,18 @@ const docTemplate = `{
                 },
                 "data": {
                     "$ref": "#/definitions/model.Target"
+                }
+            }
+        },
+        "target.getTargetReportDataSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/target.ReportData"
                 }
             }
         },
@@ -4910,10 +5035,14 @@ const docTemplate = `{
                 1000000000,
                 60000000000,
                 3600000000000,
+                -9223372036854775808,
+                9223372036854775807,
                 1,
                 1000,
                 1000000,
-                1000000000
+                1000000000,
+                60000000000,
+                3600000000000
             ],
             "x-enum-varnames": [
                 "minDuration",
@@ -4932,10 +5061,14 @@ const docTemplate = `{
                 "Second",
                 "Minute",
                 "Hour",
+                "minDuration",
+                "maxDuration",
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",
-                "Second"
+                "Second",
+                "Minute",
+                "Hour"
             ]
         },
         "user.ChangePasswordRequest": {

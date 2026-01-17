@@ -261,12 +261,12 @@ definitions:
     type: object
   model.Agent:
     properties:
-      HideIp:
-        type: boolean
       createdAt:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
+      hideIp:
+        type: boolean
       id:
         type: integer
       installed:
@@ -441,6 +441,8 @@ definitions:
         $ref: '#/definitions/model.Alarm'
       alarmId:
         type: integer
+      cause:
+        type: string
       createdAt:
         type: string
       deletedAt:
@@ -944,6 +946,30 @@ definitions:
         description: Host must not be blank if pingInfo is supplied in UpdateTargetRequest
         type: string
     type: object
+  target.ReportData:
+    properties:
+      incidentHistory:
+        description: IncidentHistory contains incidents from last 30 days
+        items:
+          $ref: '#/definitions/model.Incident'
+        type: array
+      lastHeartbeatsFromLocations:
+        description: LastHeartbeatsFromLocations contains most recent heartbeats from
+          all locations, one per location or the last heartbeat if target is of a
+          type that's push
+        items:
+          $ref: '#/definitions/model.Heartbeat'
+        type: array
+      target:
+        allOf:
+        - $ref: '#/definitions/model.Target'
+        description: Target is the target the report was requested for
+      uptime:
+        allOf:
+        - $ref: '#/definitions/target.UptimeData'
+        description: Uptime contains pre-computed uptime percentages for various time
+          periods based on incidents in these time periods
+    type: object
   target.UpdateTargetRequest:
     properties:
       checkerIDs:
@@ -962,6 +988,24 @@ definitions:
       timeout:
         type: integer
     type: object
+  target.UptimeData:
+    properties:
+      last_7d:
+        example: 99.573
+        type: number
+      last_24h:
+        example: 99.572
+        type: number
+      last_30d:
+        example: 99.573
+        type: number
+      last_365d:
+        example: 99.573
+        type: number
+      overall:
+        example: 99.573
+        type: number
+    type: object
   target.createTargetSuccessResponse:
     properties:
       code:
@@ -969,6 +1013,14 @@ definitions:
         type: integer
       data:
         $ref: '#/definitions/model.Target'
+    type: object
+  target.getTargetReportDataSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/target.ReportData'
     type: object
   target.getTargetSuccessResponse:
     properties:
@@ -1006,10 +1058,14 @@ definitions:
     - 1000000000
     - 60000000000
     - 3600000000000
+    - -9223372036854775808
+    - 9223372036854775807
     - 1
     - 1000
     - 1000000
     - 1000000000
+    - 60000000000
+    - 3600000000000
     format: int64
     type: integer
     x-enum-varnames:
@@ -1029,10 +1085,14 @@ definitions:
     - Second
     - Minute
     - Hour
+    - minDuration
+    - maxDuration
     - Nanosecond
     - Microsecond
     - Millisecond
     - Second
+    - Minute
+    - Hour
   user.ChangePasswordRequest:
     properties:
       newPassword:
@@ -3275,6 +3335,42 @@ paths:
       security:
       - BearerAuth: []
       summary: Make target public/private
+      tags:
+      - target
+  /target/{targetID}/report:
+    get:
+      consumes:
+      - application/json
+      description: Allows to retrieve data for report about target with specified
+        ID, if target is public then the info can be retrieved by anyone, even without
+        an auth token
+      parameters:
+      - description: ID of target to get the data for
+        in: path
+        name: targetID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/target.getTargetReportDataSuccessResponse'
+        "400":
+          description: Returned when given ID couldn't be parsed.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "404":
+          description: Returned when a target with given ID couldn't be found or user
+            sending the request isn't allowed to access it (target isn't public).
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+        "500":
+          description: Returned when a DB interaction fails.
+          schema:
+            $ref: '#/definitions/helpers.GenericErrorResponse'
+      summary: Get target's report data by ID
       tags:
       - target
   /user/:
