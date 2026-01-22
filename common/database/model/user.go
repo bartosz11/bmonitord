@@ -9,4 +9,5 @@ type User struct {
 	Targets       []Target       `gorm:"constraint:OnDelete:CASCADE;" json:"targets"`
 	Notifications []Notification `gorm:"constraint:OnDelete:CASCADE;" json:"notifications"`
 	Sessions      []Session      `gorm:"constraint:OnDelete:CASCADE;" json:"sessions"`
+	Statuspages   []Statuspage   `gorm:"constraint:OnDelete:CASCADE;" json:"statuspages"`
 }
