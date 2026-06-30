@@ -1,0 +1,1 @@
+alter table statuspages rename column logo_on_click_url to title_section_on_click_url;
