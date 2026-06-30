@@ -18,731 +18,280 @@ import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction, replaceWithSerializableTypeIfNeeded } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- * 
- * @export
- * @interface AlarmCreateAlarmRequest
- */
 export interface AlarmCreateAlarmRequest {
     /**
      * Max retries is required, ignored in case of agents
-     * @type {number}
-     * @memberof AlarmCreateAlarmRequest
      */
     'maxRetries'?: number;
     /**
      * Name must not be blank
-     * @type {string}
-     * @memberof AlarmCreateAlarmRequest
      */
     'name': string;
     /**
      * All notifications in this list must exist
-     * @type {Array<number>}
-     * @memberof AlarmCreateAlarmRequest
      */
     'notificationIDs': Array<number>;
     /**
      * Threshold must be supplied if type is 1 (threshold)
-     * @type {number}
-     * @memberof AlarmCreateAlarmRequest
      */
     'threshold'?: number;
     /**
      * Threshold field must be supplied if type is 1 (threshold). At the moment the only accepted value is 0 (latency)
-     * @type {ModelAlarmThresholdField}
-     * @memberof AlarmCreateAlarmRequest
      */
     'thresholdField'?: ModelAlarmThresholdField;
     /**
      * Threshold field params must be supplied if type is 1 (threshold). Used to specify when to trigger alarms in some cases, can be left blank though
-     * @type {string}
-     * @memberof AlarmCreateAlarmRequest
      */
     'thresholdFieldParams'?: string;
     /**
      * Type must be 1 (threshold). This is left in place for possible future use
-     * @type {ModelAlarmType}
-     * @memberof AlarmCreateAlarmRequest
      */
     'type'?: ModelAlarmType;
 }
 
 
-/**
- * 
- * @export
- * @interface AlarmCreateAlarmSuccessResponse
- */
 export interface AlarmCreateAlarmSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof AlarmCreateAlarmSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelAlarm}
-     * @memberof AlarmCreateAlarmSuccessResponse
-     */
     'data'?: ModelAlarm;
 }
-/**
- * 
- * @export
- * @interface AlarmGetAlarmSuccessResponse
- */
 export interface AlarmGetAlarmSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof AlarmGetAlarmSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelAlarm}
-     * @memberof AlarmGetAlarmSuccessResponse
-     */
     'data'?: ModelAlarm;
 }
-/**
- * 
- * @export
- * @interface AlarmListAlarmsSuccessResponse
- */
 export interface AlarmListAlarmsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof AlarmListAlarmsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelAlarm>}
-     * @memberof AlarmListAlarmsSuccessResponse
-     */
     'data'?: Array<ModelAlarm>;
 }
-/**
- * 
- * @export
- * @interface AlarmUpdateAlarmRequest
- */
 export interface AlarmUpdateAlarmRequest {
-    /**
-     * 
-     * @type {number}
-     * @memberof AlarmUpdateAlarmRequest
-     */
     'maxRetries'?: number;
     /**
      * Name must not be blank if supplied
-     * @type {string}
-     * @memberof AlarmUpdateAlarmRequest
      */
     'name'?: string;
     /**
      * min. length = 1 if supplied, all notifications must exist. This is a \"replace update\"
-     * @type {Array<number>}
-     * @memberof AlarmUpdateAlarmRequest
      */
     'notificationIDs'?: Array<number>;
     /**
      * Must be supplied if type is getting changed to threshold (1)
-     * @type {number}
-     * @memberof AlarmUpdateAlarmRequest
      */
     'threshold'?: number;
     /**
      * Must be supplied if type is getting changed to threshold (1), at the moment the only accepted value is 0 (latency)
-     * @type {ModelAlarmThresholdField}
-     * @memberof AlarmUpdateAlarmRequest
      */
     'thresholdField'?: ModelAlarmThresholdField;
     /**
      * Threshold field params must be supplied if type is getting changed to 1 (threshold). Used to specify when to trigger alarms in some cases, can be left blank though
-     * @type {string}
-     * @memberof AlarmUpdateAlarmRequest
      */
     'thresholdFieldParams'?: string;
     /**
      * Type must be 1 (threshold), if supplied. This is left in place for possible future use
-     * @type {ModelAlarmType}
-     * @memberof AlarmUpdateAlarmRequest
      */
     'type'?: ModelAlarmType;
 }
 
 
-/**
- * 
- * @export
- * @interface AuthCredentials
- */
 export interface AuthCredentials {
     /**
      * Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.
-     * @type {string}
-     * @memberof AuthCredentials
      */
     'password': string;
     /**
      * Username cannot be blank
-     * @type {string}
-     * @memberof AuthCredentials
      */
     'username': string;
 }
-/**
- * 
- * @export
- * @interface AuthLoginSuccessResponse
- */
 export interface AuthLoginSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof AuthLoginSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {AuthLoginSuccessResponseData}
-     * @memberof AuthLoginSuccessResponse
-     */
     'data'?: AuthLoginSuccessResponseData;
 }
-/**
- * 
- * @export
- * @interface AuthLoginSuccessResponseData
- */
 export interface AuthLoginSuccessResponseData {
-    /**
-     * 
-     * @type {ModelSession}
-     * @memberof AuthLoginSuccessResponseData
-     */
     'session'?: ModelSession;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthLoginSuccessResponseData
-     */
     'token'?: string;
 }
-/**
- * 
- * @export
- * @interface AuthRegisterSuccessResponse
- */
 export interface AuthRegisterSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof AuthRegisterSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelUser}
-     * @memberof AuthRegisterSuccessResponse
-     */
     'data'?: ModelUser;
 }
-/**
- * 
- * @export
- * @interface CheckerCreateCheckerRequest
- */
 export interface CheckerCreateCheckerRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof CheckerCreateCheckerRequest
-     */
     'location'?: string;
     /**
      * Name cannot be blank
-     * @type {string}
-     * @memberof CheckerCreateCheckerRequest
      */
     'name': string;
 }
-/**
- * 
- * @export
- * @interface CheckerCreateCheckerSuccessResponse
- */
 export interface CheckerCreateCheckerSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof CheckerCreateCheckerSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelChecker}
-     * @memberof CheckerCreateCheckerSuccessResponse
-     */
     'data'?: ModelChecker;
 }
-/**
- * 
- * @export
- * @interface CheckerGetCheckerSuccessResponse
- */
 export interface CheckerGetCheckerSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof CheckerGetCheckerSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelChecker}
-     * @memberof CheckerGetCheckerSuccessResponse
-     */
     'data'?: ModelChecker;
 }
-/**
- * 
- * @export
- * @interface CheckerListCheckersSuccessResponse
- */
 export interface CheckerListCheckersSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof CheckerListCheckersSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelChecker>}
-     * @memberof CheckerListCheckersSuccessResponse
-     */
     'data'?: Array<ModelChecker>;
 }
-/**
- * 
- * @export
- * @interface CheckerUpdateCheckerRequest
- */
 export interface CheckerUpdateCheckerRequest {
     /**
      * Location can be blank
-     * @type {string}
-     * @memberof CheckerUpdateCheckerRequest
      */
     'location'?: string;
     /**
      * Name must not be blank if supplied
-     * @type {string}
-     * @memberof CheckerUpdateCheckerRequest
      */
     'name'?: string;
 }
-/**
- * 
- * @export
- * @interface GormDeletedAt
- */
-export interface GormDeletedAt {
+export interface DomainCreateStatuspageDomainRequest {
     /**
-     * 
-     * @type {string}
-     * @memberof GormDeletedAt
+     * Domain must not be blank and must not be already taken across the instance
      */
+    'domain': string;
+}
+export interface DomainCreateStatuspageDomainSuccessResponse {
+    'code'?: number;
+    'data'?: ModelStatuspageDomain;
+}
+export interface DomainGetStatuspageDomainSuccessResponse {
+    'code'?: number;
+    'data'?: ModelStatuspageDomain;
+}
+export interface DomainListStatuspageDomainsSuccessResponse {
+    'code'?: number;
+    'data'?: Array<ModelStatuspageDomain>;
+}
+export interface DomainUpdateStatuspageDomainRequest {
+    /**
+     * Domain cannot be blank or taken across the instance if supplied
+     */
+    'domain'?: string;
+}
+export interface GormDeletedAt {
     'time'?: string;
     /**
      * Valid is true if Time is not NULL
-     * @type {boolean}
-     * @memberof GormDeletedAt
      */
     'valid'?: boolean;
 }
-/**
- * 
- * @export
- * @interface HeartbeatGetHeartbeatPageSuccessResponse
- */
-export interface HeartbeatGetHeartbeatPageSuccessResponse {
+export interface GroupCreateStatuspageGroupRequest {
     /**
-     * 
-     * @type {number}
-     * @memberof HeartbeatGetHeartbeatPageSuccessResponse
+     * Description is optional
      */
+    'description'?: string;
+    /**
+     * Name cannot be empty
+     */
+    'name': string;
+    /**
+     * Position is optional, must be a non-negative value if provided. Value of 0 is persisted if not provided.
+     */
+    'position'?: number;
+}
+export interface GroupCreateStatuspageGroupSuccessResponse {
     'code'?: number;
-    /**
-     * 
-     * @type {HelpersPageModelHeartbeat}
-     * @memberof HeartbeatGetHeartbeatPageSuccessResponse
-     */
-    'data'?: HelpersPageModelHeartbeat;
+    'data'?: ModelStatuspageGroup;
 }
-/**
- * 
- * @export
- * @interface HeartbeatGetHeartbeatSuccessResponse
- */
-export interface HeartbeatGetHeartbeatSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof HeartbeatGetHeartbeatSuccessResponse
-     */
+export interface GroupGetStatuspageGroupSuccessResponse {
     'code'?: number;
-    /**
-     * 
-     * @type {ModelHeartbeat}
-     * @memberof HeartbeatGetHeartbeatSuccessResponse
-     */
-    'data'?: ModelHeartbeat;
+    'data'?: ModelStatuspageGroup;
 }
-/**
- * 
- * @export
- * @interface HeartbeatGetManyHeartbeatsSuccessResponse
- */
-export interface HeartbeatGetManyHeartbeatsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof HeartbeatGetManyHeartbeatsSuccessResponse
-     */
+export interface GroupListStatuspageGroupsSuccessResponse {
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelHeartbeat>}
-     * @memberof HeartbeatGetManyHeartbeatsSuccessResponse
-     */
-    'data'?: Array<ModelHeartbeat>;
+    'data'?: Array<ModelStatuspageGroup>;
 }
-/**
- * 
- * @export
- * @interface HelpersGenericDeleteSuccessResponse
- */
-export interface HelpersGenericDeleteSuccessResponse {
+export interface GroupUpdateStatuspageGroupRequest {
     /**
-     * 
-     * @type {number}
-     * @memberof HelpersGenericDeleteSuccessResponse
+     * Description is optional, empty string can be specified to reset
      */
-    'code'?: number;
-}
-/**
- * 
- * @export
- * @interface HelpersGenericErrorResponse
- */
-export interface HelpersGenericErrorResponse {
+    'description'?: string;
     /**
-     * 
-     * @type {number}
-     * @memberof HelpersGenericErrorResponse
-     */
-    'code'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof HelpersGenericErrorResponse
-     */
-    'error'?: string;
-}
-/**
- * 
- * @export
- * @interface HelpersPageModelHeartbeat
- */
-export interface HelpersPageModelHeartbeat {
-    /**
-     * 
-     * @type {Array<ModelHeartbeat>}
-     * @memberof HelpersPageModelHeartbeat
-     */
-    'content'?: Array<ModelHeartbeat>;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelHeartbeat
-     */
-    'page'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelHeartbeat
-     */
-    'size'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelHeartbeat
-     */
-    'totalElements'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelHeartbeat
-     */
-    'totalPages'?: number;
-}
-/**
- * 
- * @export
- * @interface HelpersPageModelIncident
- */
-export interface HelpersPageModelIncident {
-    /**
-     * 
-     * @type {Array<ModelIncident>}
-     * @memberof HelpersPageModelIncident
-     */
-    'content'?: Array<ModelIncident>;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelIncident
-     */
-    'page'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelIncident
-     */
-    'size'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelIncident
-     */
-    'totalElements'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof HelpersPageModelIncident
-     */
-    'totalPages'?: number;
-}
-/**
- * 
- * @export
- * @interface IncidentGetIncidentSuccessResponse
- */
-export interface IncidentGetIncidentSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof IncidentGetIncidentSuccessResponse
-     */
-    'code'?: number;
-    /**
-     * 
-     * @type {ModelIncident}
-     * @memberof IncidentGetIncidentSuccessResponse
-     */
-    'data'?: ModelIncident;
-}
-/**
- * 
- * @export
- * @interface ModelAgent
- */
-export interface ModelAgent {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAgent
-     */
-    'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelAgent
-     */
-    'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelAgent
-     */
-    'hideIp'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAgent
-     */
-    'id'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelAgent
-     */
-    'installed'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAgent
-     */
-    'key'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAgent
-     */
-    'lastDataReceived'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAgent
-     */
-    'targetId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAgent
-     */
-    'updatedAt'?: string;
-}
-/**
- * 
- * @export
- * @interface ModelAlarm
- */
-export interface ModelAlarm {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAlarm
-     */
-    'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelAlarm
-     */
-    'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAlarm
-     */
-    'id'?: number;
-    /**
-     * 
-     * @type {Array<ModelIncident>}
-     * @memberof ModelAlarm
-     */
-    'incidents'?: Array<ModelIncident>;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAlarm
-     */
-    'maxRetries'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelAlarm
-     */
-    'muted'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAlarm
+     * Name must not be empty if specified
      */
     'name'?: string;
     /**
-     * 
-     * @type {Array<ModelNotification>}
-     * @memberof ModelAlarm
+     * Position is optional, must be a non-negative number if provided
      */
-    'notifications'?: Array<ModelNotification>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelAlarm
-     */
-    'suspended'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelAlarm
-     */
-    'system'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAlarm
-     */
+    'position'?: number;
+}
+export interface HeartbeatGetHeartbeatPageSuccessResponse {
+    'code'?: number;
+    'data'?: HelpersPageModelHeartbeat;
+}
+export interface HeartbeatGetHeartbeatSuccessResponse {
+    'code'?: number;
+    'data'?: ModelHeartbeat;
+}
+export interface HeartbeatGetManyHeartbeatsSuccessResponse {
+    'code'?: number;
+    'data'?: Array<ModelHeartbeat>;
+}
+export interface HelpersGenericDeleteSuccessResponse {
+    'code'?: number;
+}
+export interface HelpersGenericErrorResponse {
+    'code'?: number;
+    'error'?: string;
+}
+export interface HelpersPageModelHeartbeat {
+    'content'?: Array<ModelHeartbeat>;
+    'page'?: number;
+    'size'?: number;
+    'totalElements'?: number;
+    'totalPages'?: number;
+}
+export interface HelpersPageModelIncident {
+    'content'?: Array<ModelIncident>;
+    'page'?: number;
+    'size'?: number;
+    'totalElements'?: number;
+    'totalPages'?: number;
+}
+export interface IncidentGetIncidentSuccessResponse {
+    'code'?: number;
+    'data'?: ModelIncident;
+}
+export interface ModelAgent {
+    'createdAt'?: string;
+    'deletedAt'?: GormDeletedAt;
+    'hideIp'?: boolean;
+    'id'?: number;
+    'installed'?: boolean;
+    'key'?: string;
+    'lastDataReceived'?: string;
     'targetId'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAlarm
-     */
+    'updatedAt'?: string;
+}
+export interface ModelAlarm {
+    'createdAt'?: string;
+    'deletedAt'?: GormDeletedAt;
+    'id'?: number;
+    'incidents'?: Array<ModelIncident>;
+    'maxRetries'?: number;
+    'muted'?: boolean;
+    'name'?: string;
+    'notifications'?: Array<ModelNotification>;
+    'suspended'?: boolean;
+    'system'?: boolean;
+    'targetId'?: number;
     'threshold'?: number;
-    /**
-     * 
-     * @type {ModelAlarmThresholdField}
-     * @memberof ModelAlarm
-     */
     'thresholdField'?: ModelAlarmThresholdField;
     /**
      * For example what NIC should the threshold apply to
-     * @type {string}
-     * @memberof ModelAlarm
      */
     'thresholdFieldParams'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelAlarm
-     */
     'triggered'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAlarm
-     */
     'triggeredStateChangedAt'?: string;
-    /**
-     * 
-     * @type {ModelAlarmType}
-     * @memberof ModelAlarm
-     */
     'type'?: ModelAlarmType;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelAlarm
-     */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelAlarm
-     */
     'usedRetries'?: number;
 }
 
 
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const ModelAlarmThresholdField = {
     Latency: 0,
@@ -754,357 +303,99 @@ export const ModelAlarmThresholdField = {
     DiskUsagePercent: 6,
     NICInbound: 7,
     NICOutbound: 8,
-    thresholdFieldMax: 9
+    thresholdFieldMax: 9,
 } as const;
 
 export type ModelAlarmThresholdField = typeof ModelAlarmThresholdField[keyof typeof ModelAlarmThresholdField];
 
 
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const ModelAlarmType = {
     Unavailable: 0,
     Threshold: 1,
-    alarmTypeMax: 2
+    alarmTypeMax: 2,
 } as const;
 
 export type ModelAlarmType = typeof ModelAlarmType[keyof typeof ModelAlarmType];
 
 
-/**
- * 
- * @export
- * @interface ModelChecker
- */
 export interface ModelChecker {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelChecker
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelChecker
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {Array<ModelHeartbeat>}
-     * @memberof ModelChecker
-     */
     'heartbeats'?: Array<ModelHeartbeat>;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelChecker
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelChecker
-     */
     'key'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelChecker
-     */
     'location'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelChecker
-     */
     'name'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelChecker
-     */
     'system'?: boolean;
-    /**
-     * 
-     * @type {Array<ModelTarget>}
-     * @memberof ModelChecker
-     */
     'targets'?: Array<ModelTarget>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelChecker
-     */
     'updatedAt'?: string;
 }
-/**
- * 
- * @export
- * @interface ModelHeartbeat
- */
 export interface ModelHeartbeat {
-    /**
-     * 
-     * @type {ModelChecker}
-     * @memberof ModelHeartbeat
-     */
     'checker'?: ModelChecker;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelHeartbeat
-     */
     'checkerId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelHeartbeat
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelHeartbeat
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelHeartbeat
-     */
     'id'?: number;
     /**
      * Latency is a \"generic\" field, payload can provide further information in non-push targets (http, ping etc.)
-     * @type {number}
-     * @memberof ModelHeartbeat
      */
     'latency'?: number;
     /**
      * Payload is stored as gzipped json in a bytea column, but sent in JSON normally
-     * @type {ModelHeartbeatPayload}
-     * @memberof ModelHeartbeat
      */
     'payload'?: ModelHeartbeatPayload;
-    /**
-     * 
-     * @type {ModelTargetStatus}
-     * @memberof ModelHeartbeat
-     */
     'status'?: ModelTargetStatus;
-    /**
-     * 
-     * @type {ModelTarget}
-     * @memberof ModelHeartbeat
-     */
     'target'?: ModelTarget;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelHeartbeat
-     */
     'targetId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelHeartbeat
-     */
     'timestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelHeartbeat
-     */
     'updatedAt'?: string;
 }
 
 
-/**
- * 
- * @export
- * @interface ModelHeartbeatPayload
- */
 export interface ModelHeartbeatPayload {
-    /**
-     * 
-     * @type {{ [key: string]: object; }}
-     * @memberof ModelHeartbeatPayload
-     */
     'data'?: { [key: string]: object; };
     /**
      * All TargetTypes are allowed to submit further details
-     * @type {ModelTargetType}
-     * @memberof ModelHeartbeatPayload
      */
     'type': ModelTargetType;
     /**
      * Each Type of payload can have their own versioning
-     * @type {number}
-     * @memberof ModelHeartbeatPayload
      */
     'version': number;
 }
 
 
-/**
- * 
- * @export
- * @interface ModelIncident
- */
 export interface ModelIncident {
-    /**
-     * 
-     * @type {ModelAlarm}
-     * @memberof ModelIncident
-     */
     'alarm'?: ModelAlarm;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelIncident
-     */
     'alarmId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelIncident
-     */
     'cause'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelIncident
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelIncident
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {TimeDuration}
-     * @memberof ModelIncident
-     */
     'duration'?: TimeDuration;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelIncident
-     */
     'end'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelIncident
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelIncident
-     */
     'ongoing'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelIncident
-     */
     'start'?: string;
-    /**
-     * 
-     * @type {ModelTarget}
-     * @memberof ModelIncident
-     */
     'target'?: ModelTarget;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelIncident
-     */
     'targetId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelIncident
-     */
     'updatedAt'?: string;
 }
 
 
-/**
- * 
- * @export
- * @interface ModelNotification
- */
 export interface ModelNotification {
-    /**
-     * 
-     * @type {Array<ModelAlarm>}
-     * @memberof ModelNotification
-     */
     'alarms'?: Array<ModelAlarm>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelNotification
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelNotification
-     */
     'credentials'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelNotification
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelNotification
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelNotification
-     */
     'name'?: string;
-    /**
-     * 
-     * @type {ModelNotificationType}
-     * @memberof ModelNotification
-     */
     'type'?: ModelNotificationType;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelNotification
-     */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelNotification
-     */
     'userId'?: number;
 }
 
 
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const ModelNotificationType = {
     Discord: 0,
@@ -1112,430 +403,223 @@ export const ModelNotificationType = {
     Pushbullet: 2,
     Email: 3,
     Gotify: 4,
-    GenericWebhook: 5
+    GenericWebhook: 5,
 } as const;
 
 export type ModelNotificationType = typeof ModelNotificationType[keyof typeof ModelNotificationType];
 
 
-/**
- * 
- * @export
- * @interface ModelOrchestrator
- */
 export interface ModelOrchestrator {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelOrchestrator
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelOrchestrator
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelOrchestrator
-     */
     'host'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelOrchestrator
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelOrchestrator
-     */
     'leader'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelOrchestrator
-     */
     'name'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelOrchestrator
-     */
     'system'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelOrchestrator
-     */
     'updatedAt'?: string;
 }
-/**
- * 
- * @export
- * @interface ModelSession
- */
 export interface ModelSession {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'browser'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelSession
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'device'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'expiresAt'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelSession
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'ipAddress'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'lastActive'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'os'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {ModelUser}
-     * @memberof ModelSession
-     */
     'user'?: ModelUser;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSession
-     */
     'userAgent'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelSession
-     */
     'userId'?: number;
 }
-/**
- * 
- * @export
- * @interface ModelSetting
- */
 export interface ModelSetting {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSetting
-     */
     'key'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelSetting
-     */
     'value'?: string;
 }
-/**
- * 
- * @export
- * @interface ModelTarget
- */
+export interface ModelStatuspage {
+    'createdAt'?: string;
+    'deletedAt'?: GormDeletedAt;
+    'description'?: string;
+    'displayCheckmateFooter'?: boolean;
+    'domains'?: Array<ModelStatuspageDomain>;
+    'footerContent'?: string;
+    'groups'?: Array<ModelStatuspageGroup>;
+    'id'?: number;
+    'logoURL'?: string;
+    'name'?: string;
+    'notices'?: Array<ModelStatuspageNotice>;
+    'slug'?: string;
+    'targets'?: Array<ModelStatuspageTarget>;
+    'title'?: string;
+    'titleSectionOnClickURL'?: string;
+    'updatedAt'?: string;
+    'userId'?: number;
+}
+export interface ModelStatuspageDomain {
+    'createdAt'?: string;
+    'deletedAt'?: GormDeletedAt;
+    'domain'?: string;
+    'id'?: number;
+    'statuspage'?: ModelStatuspage;
+    'statuspageId'?: number;
+    'updatedAt'?: string;
+}
+export interface ModelStatuspageGroup {
+    'createdAt'?: string;
+    'deletedAt'?: GormDeletedAt;
+    'description'?: string;
+    'id'?: number;
+    'name'?: string;
+    'position'?: number;
+    'statuspage'?: ModelStatuspage;
+    'statuspageId'?: number;
+    'targets'?: Array<ModelStatuspageTarget>;
+    'updatedAt'?: string;
+}
+export interface ModelStatuspageNotice {
+    'createdAt'?: string;
+    'deletedAt'?: GormDeletedAt;
+    'id'?: number;
+    'resolvedAt'?: string;
+    'scheduledEndAt'?: string;
+    'scheduledStartAt'?: string;
+    'severity'?: ModelStatuspageNoticeSeverity;
+    'startedAt'?: string;
+    'status'?: ModelStatuspageNoticeStatus;
+    'statuspage'?: ModelStatuspage;
+    'statuspageId'?: number;
+    'targets'?: Array<ModelTarget>;
+    'title'?: string;
+    'type'?: ModelStatuspageNoticeType;
+    'updatedAt'?: string;
+    'updates'?: Array<ModelStatuspageNoticeUpdate>;
+}
+
+
+
+export const ModelStatuspageNoticeSeverity = {
+    None: 0,
+    Degraded: 1,
+    PartialOutage: 2,
+    MajorOutage: 3,
+    statuspageNoticeSeverityMax: 4,
+} as const;
+
+export type ModelStatuspageNoticeSeverity = typeof ModelStatuspageNoticeSeverity[keyof typeof ModelStatuspageNoticeSeverity];
+
+
+
+export const ModelStatuspageNoticeStatus = {
+    Scheduled: 0,
+    Started: 1,
+    Investigating: 2,
+    Identified: 3,
+    Monitoring: 4,
+    Resolved: 5,
+    Completed: 6,
+    statuspageNoticeStatusMax: 7,
+} as const;
+
+export type ModelStatuspageNoticeStatus = typeof ModelStatuspageNoticeStatus[keyof typeof ModelStatuspageNoticeStatus];
+
+
+
+export const ModelStatuspageNoticeType = {
+    Issue: 0,
+    Maintenance: 1,
+    Announcement: 2,
+    statuspageNoticeTypeMax: 3,
+} as const;
+
+export type ModelStatuspageNoticeType = typeof ModelStatuspageNoticeType[keyof typeof ModelStatuspageNoticeType];
+
+
+export interface ModelStatuspageNoticeUpdate {
+    'createdAt'?: string;
+    'date'?: string;
+    'deletedAt'?: GormDeletedAt;
+    'id'?: number;
+    'message'?: string;
+    'notice'?: ModelStatuspageNotice;
+    'noticeId'?: number;
+    'status'?: ModelStatuspageNoticeStatus;
+    'updatedAt'?: string;
+}
+
+
+export interface ModelStatuspageTarget {
+    'createdAt'?: string;
+    'deletedAt'?: GormDeletedAt;
+    'id'?: number;
+    'position'?: number;
+    'statuspage'?: ModelStatuspage;
+    'statuspageGroup'?: ModelStatuspageGroup;
+    'statuspageGroupId'?: number;
+    'statuspageId'?: number;
+    'target'?: ModelTarget;
+    'targetId'?: number;
+    'updatedAt'?: string;
+}
 export interface ModelTarget {
-    /**
-     * 
-     * @type {ModelAgent}
-     * @memberof ModelTarget
-     */
     'agent'?: ModelAgent;
-    /**
-     * 
-     * @type {Array<ModelAlarm>}
-     * @memberof ModelTarget
-     */
     'alarms'?: Array<ModelAlarm>;
-    /**
-     * 
-     * @type {Array<ModelChecker>}
-     * @memberof ModelTarget
-     */
     'checkers'?: Array<ModelChecker>;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTarget
-     */
     'checksDown'?: number;
     /**
      * These 4 are \"shortcuts\", incidents are the \"source of truth\" about what\'s going on with the Target
-     * @type {number}
-     * @memberof ModelTarget
      */
     'checksUp'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTarget
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelTarget
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {Array<ModelHeartbeat>}
-     * @memberof ModelTarget
-     */
     'heartbeats'?: Array<ModelHeartbeat>;
-    /**
-     * 
-     * @type {ModelTargetHTTPInfo}
-     * @memberof ModelTarget
-     */
     'httpInfo'?: ModelTargetHTTPInfo;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTarget
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {Array<ModelIncident>}
-     * @memberof ModelTarget
-     */
     'incidents'?: Array<ModelIncident>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTarget
-     */
     'lastCheck'?: string;
-    /**
-     * 
-     * @type {ModelTargetStatus}
-     * @memberof ModelTarget
-     */
     'lastStatus'?: ModelTargetStatus;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTarget
-     */
     'name'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelTarget
-     */
     'paused'?: boolean;
-    /**
-     * 
-     * @type {ModelTargetPingInfo}
-     * @memberof ModelTarget
-     */
     'pingInfo'?: ModelTargetPingInfo;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelTarget
-     */
     'public'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTarget
-     */
+    'targets'?: Array<ModelStatuspageNotice>;
     'timeout'?: number;
-    /**
-     * 
-     * @type {ModelTargetType}
-     * @memberof ModelTarget
-     */
     'type'?: ModelTargetType;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTarget
-     */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTarget
-     */
     'userId'?: number;
 }
 
 
-/**
- * 
- * @export
- * @interface ModelTargetHTTPInfo
- */
 export interface ModelTargetHTTPInfo {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetHTTPInfo
-     */
     'allowedCodes'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetHTTPInfo
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelTargetHTTPInfo
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelTargetHTTPInfo
-     */
     'followRedirects'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetHTTPInfo
-     */
     'host'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTargetHTTPInfo
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTargetHTTPInfo
-     */
     'targetId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetHTTPInfo
-     */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelTargetHTTPInfo
-     */
     'verifySSLCert'?: boolean;
 }
-/**
- * 
- * @export
- * @interface ModelTargetPingInfo
- */
 export interface ModelTargetPingInfo {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetPingInfo
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelTargetPingInfo
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetPingInfo
-     */
     'host'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTargetPingInfo
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelTargetPingInfo
-     */
     'targetId'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelTargetPingInfo
-     */
     'updatedAt'?: string;
 }
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const ModelTargetStatus = {
     Up: 0,
     Down: 1,
-    Unknown: 2
+    Unknown: 2,
 } as const;
 
 export type ModelTargetStatus = typeof ModelTargetStatus[keyof typeof ModelTargetStatus];
 
 
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const ModelTargetType = {
     /**
@@ -1553,804 +637,486 @@ export const ModelTargetType = {
     /**
     * &quot;sentinel&quot; value
     */
-    targetTypeMax: 3
+    targetTypeMax: 3,
 } as const;
 
 export type ModelTargetType = typeof ModelTargetType[keyof typeof ModelTargetType];
 
 
-/**
- * 
- * @export
- * @interface ModelUser
- */
 export interface ModelUser {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelUser
-     */
     'admin'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelUser
-     */
     'createdAt'?: string;
-    /**
-     * 
-     * @type {GormDeletedAt}
-     * @memberof ModelUser
-     */
     'deletedAt'?: GormDeletedAt;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ModelUser
-     */
     'enabled'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelUser
-     */
     'id'?: number;
-    /**
-     * 
-     * @type {Array<ModelNotification>}
-     * @memberof ModelUser
-     */
     'notifications'?: Array<ModelNotification>;
-    /**
-     * 
-     * @type {Array<ModelSession>}
-     * @memberof ModelUser
-     */
     'sessions'?: Array<ModelSession>;
-    /**
-     * 
-     * @type {Array<ModelTarget>}
-     * @memberof ModelUser
-     */
+    'statuspages'?: Array<ModelStatuspage>;
     'targets'?: Array<ModelTarget>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelUser
-     */
     'updatedAt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelUser
-     */
     'username'?: string;
 }
-/**
- * 
- * @export
- * @interface NotificationCreateNotificationRequest
- */
+export interface NoticeCreateStatuspageNoticeRequest {
+    /**
+     * FirstUpdate is required
+     */
+    'firstUpdate': UpdateCreateStatuspageNoticeUpdateRequest;
+    /**
+     * ScheduledEndAt is optional, if supplied ScheduledStartAt must be also supplied and must be before ScheduledStartAt
+     */
+    'scheduledEndAt'?: string;
+    /**
+     * ScheduledStartAt is optional, if supplied ScheduledEndAt must be also supplied and must be after ScheduledStartAt
+     */
+    'scheduledStartAt'?: string;
+    /**
+     * Severity is required, must be set to none (0) for notices of type announcement (2)
+     */
+    'severity'?: ModelStatuspageNoticeSeverity;
+    /**
+     * StartedAt is optional
+     */
+    'startedAt'?: string;
+    /**
+     * TargetIDs are optional, although if supplied, the targets must all belong to the same statuspage
+     */
+    'targets'?: Array<number>;
+    /**
+     * Title is required and must not be empty
+     */
+    'title': string;
+    /**
+     * Type is required and cannot be edited afterwards
+     */
+    'type'?: ModelStatuspageNoticeType;
+}
+
+
+export interface NoticeCreateStatuspageNoticeSuccessResponse {
+    'code'?: number;
+    'data'?: ModelStatuspageNotice;
+}
+export interface NoticeGetStatuspageNoticeSuccessResponse {
+    'code'?: number;
+    'data'?: ModelStatuspageNotice;
+}
+export interface NoticeListStatuspageNoticesSuccessResponse {
+    'code'?: number;
+    'data'?: Array<ModelStatuspageNotice>;
+}
+export interface NoticeUpdateStatuspageNoticeRequest {
+    /**
+     * ResolvedAt is optional, must be after StartedAt if its value isn\'t empty in the request or in the notice
+     */
+    'resolvedAt'?: string;
+    /**
+     * ScheduledEndAt is optional, if supplied ScheduledStartAt must be also supplied or must be already set for the notice. ScheduledEndAt must a timestamp after ScheduledStartAt.
+     */
+    'scheduledEndAt'?: string;
+    /**
+     * ScheduledStartAt is optional, if supplied ScheduledEndAt must be also supplied or must be already set for the notice. ScheduledStartAt must a timestamp before ScheduledEndAt.
+     */
+    'scheduledStartAt'?: string;
+    /**
+     * Severity is optional. Notices of type announcement (2) must use severity \"none\" (0)
+     */
+    'severity'?: ModelStatuspageNoticeSeverity;
+    /**
+     * StartedAt is optional, must be before ResolvedAt if its value isn\'t empty in the request or in the notice
+     */
+    'startedAt'?: string;
+    /**
+     * TargetIDs are optional. If provided, they replace the current target list. All specified targets must belong to the same statuspage as the notice.
+     */
+    'targets'?: Array<number>;
+    /**
+     * Title is optional, must not be empty if provided
+     */
+    'title'?: string;
+}
+
+
 export interface NotificationCreateNotificationRequest {
     /**
      * Credentials must be valid for the selected type, e.g. webhook URLs have to start with http:// or https://
-     * @type {string}
-     * @memberof NotificationCreateNotificationRequest
      */
     'credentials': string;
     /**
      * Name must not be blank
-     * @type {string}
-     * @memberof NotificationCreateNotificationRequest
      */
     'name': string;
     /**
      * Type must be a number in range 0-5, inclusive
-     * @type {ModelNotificationType}
-     * @memberof NotificationCreateNotificationRequest
      */
     'type'?: ModelNotificationType;
 }
 
 
-/**
- * 
- * @export
- * @interface NotificationCreateNotificationSuccessResponse
- */
 export interface NotificationCreateNotificationSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof NotificationCreateNotificationSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelNotification}
-     * @memberof NotificationCreateNotificationSuccessResponse
-     */
     'data'?: ModelNotification;
 }
-/**
- * 
- * @export
- * @interface NotificationGetNotificationSuccessResponse
- */
 export interface NotificationGetNotificationSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof NotificationGetNotificationSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelNotification}
-     * @memberof NotificationGetNotificationSuccessResponse
-     */
     'data'?: ModelNotification;
 }
-/**
- * 
- * @export
- * @interface NotificationListNotificationsSuccessResponse
- */
 export interface NotificationListNotificationsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof NotificationListNotificationsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelNotification>}
-     * @memberof NotificationListNotificationsSuccessResponse
-     */
     'data'?: Array<ModelNotification>;
 }
-/**
- * 
- * @export
- * @interface NotificationUpdateNotificationRequest
- */
 export interface NotificationUpdateNotificationRequest {
     /**
      * Credentials must be valid for the selected type, e.g. webhook URLs have to start with http:// or https://, if supplied
-     * @type {string}
-     * @memberof NotificationUpdateNotificationRequest
      */
     'credentials'?: string;
     /**
      * Name must not be blank if supplied
-     * @type {string}
-     * @memberof NotificationUpdateNotificationRequest
      */
     'name'?: string;
     /**
      * Type must be a number in range of 0-5 (inclusive), if supplied. If type is changed, credentials valid for the new type also have to be supplied.
-     * @type {ModelNotificationType}
-     * @memberof NotificationUpdateNotificationRequest
      */
     'type'?: ModelNotificationType;
 }
 
 
-/**
- * 
- * @export
- * @interface OrchestratorCreateOrchestratorRequest
- */
 export interface OrchestratorCreateOrchestratorRequest {
     /**
      * Host must start with ws:// or wss:// and must be unique
-     * @type {string}
-     * @memberof OrchestratorCreateOrchestratorRequest
      */
     'host': string;
     /**
      * Name must not be blank and must be unique
-     * @type {string}
-     * @memberof OrchestratorCreateOrchestratorRequest
      */
     'name': string;
 }
-/**
- * 
- * @export
- * @interface OrchestratorCreateOrchestratorSuccessResponse
- */
 export interface OrchestratorCreateOrchestratorSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof OrchestratorCreateOrchestratorSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelOrchestrator}
-     * @memberof OrchestratorCreateOrchestratorSuccessResponse
-     */
     'data'?: ModelOrchestrator;
 }
-/**
- * 
- * @export
- * @interface OrchestratorGetOrchestratorSuccessResponse
- */
 export interface OrchestratorGetOrchestratorSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof OrchestratorGetOrchestratorSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelOrchestrator}
-     * @memberof OrchestratorGetOrchestratorSuccessResponse
-     */
     'data'?: ModelOrchestrator;
 }
-/**
- * 
- * @export
- * @interface OrchestratorListOrchestratorsSuccessResponse
- */
 export interface OrchestratorListOrchestratorsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof OrchestratorListOrchestratorsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelOrchestrator>}
-     * @memberof OrchestratorListOrchestratorsSuccessResponse
-     */
     'data'?: Array<ModelOrchestrator>;
 }
-/**
- * 
- * @export
- * @interface SessionGetSessionSuccessResponse
- */
 export interface SessionGetSessionSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof SessionGetSessionSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelSession}
-     * @memberof SessionGetSessionSuccessResponse
-     */
     'data'?: ModelSession;
 }
-/**
- * 
- * @export
- * @interface SessionListSessionsSuccessResponse
- */
 export interface SessionListSessionsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof SessionListSessionsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelSession>}
-     * @memberof SessionListSessionsSuccessResponse
-     */
     'data'?: Array<ModelSession>;
 }
-/**
- * 
- * @export
- * @interface SettingsChangeSettingRequest
- */
 export interface SettingsChangeSettingRequest {
     /**
      * Key must be updatable. Currently, the only setting that can be updated is \"registration-enabled\".
-     * @type {string}
-     * @memberof SettingsChangeSettingRequest
      */
     'key': string;
     /**
      * Value must match a set of valid values for given setting key
-     * @type {string}
-     * @memberof SettingsChangeSettingRequest
      */
     'value'?: string;
 }
-/**
- * 
- * @export
- * @interface SettingsGetSettingSuccessResponse
- */
 export interface SettingsGetSettingSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof SettingsGetSettingSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelSetting}
-     * @memberof SettingsGetSettingSuccessResponse
-     */
     'data'?: ModelSetting;
 }
-/**
- * 
- * @export
- * @interface SettingsListSettingsSuccessResponse
- */
 export interface SettingsListSettingsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof SettingsListSettingsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelSetting>}
-     * @memberof SettingsListSettingsSuccessResponse
-     */
     'data'?: Array<ModelSetting>;
 }
-/**
- * 
- * @export
- * @interface TargetCreateTargetRequest
- */
+export interface StatuspageCreateStatuspageRequest {
+    /**
+     * Description is displayed below the title, it\'s optional
+     */
+    'description'?: string;
+    /**
+     * DisplayCheckmateFooter specifies whether a \"Powered by checkmate\" footer is displayed at the bottom of the page.
+     */
+    'displayCheckmateFooter'?: boolean;
+    /**
+     * FooterContent is the text displayed in the footer area, it\'s optional
+     */
+    'footerContent'?: string;
+    /**
+     * LogoURL\'s value is used to display a logo left of the title, it\'s optional
+     */
+    'logoURL'?: string;
+    /**
+     * Name is only displayed in the dashboard, must not be blank
+     */
+    'name': string;
+    /**
+     * Slug is used to route viewers to statuspages. Given slug must not be used across this instance already. A slug is deemed invalid if it is empty, starts or ends with a hyphen, contains characters other than lowercase letters, digits, or hyphens, or includes consecutive hyphens.
+     */
+    'slug': string;
+    /**
+     * Title is displayed on top of the statuspage, must not be blank
+     */
+    'title': string;
+    /**
+     * TitleSectionOnClickURL\'s value is where the title section (title and logo) will redirect when the user clicks on it. If not supplied, clicking will do nothing
+     */
+    'titleSectionOnClickURL'?: string;
+}
+export interface StatuspageCreateStatuspageSuccessResponse {
+    'code'?: number;
+    'data'?: ModelStatuspage;
+}
+export interface StatuspageGetStatuspageSuccessResponse {
+    'code'?: number;
+    'data'?: ModelStatuspage;
+}
+export interface StatuspageListStatuspagesSuccessResponse {
+    'code'?: number;
+    'data'?: Array<ModelStatuspage>;
+}
+export interface StatuspageTargetCreateStatuspageTargetRequest {
+    /**
+     * GroupID is optional, but the group must exist and belong to the statuspage if provided
+     */
+    'groupId'?: number;
+    /**
+     * Position is optional, must be a non-negative number if supplied. Value of 0 is persisted if not provided.
+     */
+    'position'?: number;
+    /**
+     * TargetID is required and the target with given ID must exist and belong to the same user as the statuspage
+     */
+    'targetId'?: number;
+}
+export interface StatuspageTargetCreateStatuspageTargetSuccessResponse {
+    'code'?: number;
+    'data'?: ModelStatuspageTarget;
+}
+export interface StatuspageTargetGetStatuspageTargetSuccessResponse {
+    'code'?: number;
+    'data'?: ModelStatuspageTarget;
+}
+export interface StatuspageTargetListStatuspageTargetsSuccessResponse {
+    'code'?: number;
+    'data'?: Array<ModelStatuspageTarget>;
+}
+export interface StatuspageUpdateStatuspageRequest {
+    /**
+     * Description is displayed below the title, can be blank to reset
+     */
+    'description'?: string;
+    /**
+     * DisplayCheckmateFooter specifies whether a \"Powered by checkmate\" footer is displayed at the bottom of the page.
+     */
+    'displayCheckmateFooter'?: boolean;
+    /**
+     * FooterContent is the text displayed in the footer area, can be blank to reset
+     */
+    'footerContent'?: string;
+    /**
+     * LogoURL\'s value is used to display a logo left of the title, can be blank to reset
+     */
+    'logoURL'?: string;
+    /**
+     * Name is only displayed in the dashboard, must not be blank if provided
+     */
+    'name'?: string;
+    /**
+     * Slug is used to route viewers to statuspages. Given slug must not be used across this instance already. Must not be blank if provided A slug is deemed invalid if it is empty, starts or ends with a hyphen, contains characters other than lowercase letters, digits, or hyphens, or includes consecutive hyphens.
+     */
+    'slug'?: string;
+    /**
+     * Title is displayed on top of the statuspage, must not be blank if provided
+     */
+    'title'?: string;
+    /**
+     * TitleSectionOnClickURL\'s value is where the title section (title and logo) will redirect when the user clicks on it. Clicking will do nothing if this value is empty. Can be set to an empty string to reset.
+     */
+    'titleSectionOnClickURL'?: string;
+}
 export interface TargetCreateTargetRequest {
     /**
      * At least one checker must be supplied if type is 0 or 1, all checkers must exist, if given type is 2 this is ignored
-     * @type {Array<number>}
-     * @memberof TargetCreateTargetRequest
      */
     'checkerIDs': Array<number>;
     /**
      * Must be supplied if type is 1 (HTTP)
-     * @type {TargetHTTPInfoCreateRequest}
-     * @memberof TargetCreateTargetRequest
      */
     'httpInfo'?: TargetHTTPInfoCreateRequest;
     /**
      * Name must not be blank
-     * @type {string}
-     * @memberof TargetCreateTargetRequest
      */
     'name': string;
     /**
      * Must be supplied if type is 0 (PING)
-     * @type {TargetPingInfoCreateRequest}
-     * @memberof TargetCreateTargetRequest
      */
     'pingInfo'?: TargetPingInfoCreateRequest;
     /**
      * Timeout is required
-     * @type {number}
-     * @memberof TargetCreateTargetRequest
      */
     'timeout'?: number;
     /**
      * Type must be 0 (PING), 1 (HTTP) or 2 (AGENT)
-     * @type {ModelTargetType}
-     * @memberof TargetCreateTargetRequest
      */
     'type'?: ModelTargetType;
 }
 
 
-/**
- * 
- * @export
- * @interface TargetCreateTargetSuccessResponse
- */
 export interface TargetCreateTargetSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetCreateTargetSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelTarget}
-     * @memberof TargetCreateTargetSuccessResponse
-     */
     'data'?: ModelTarget;
 }
-/**
- * 
- * @export
- * @interface TargetGetIncidentPageSuccessResponse
- */
 export interface TargetGetIncidentPageSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetGetIncidentPageSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {HelpersPageModelIncident}
-     * @memberof TargetGetIncidentPageSuccessResponse
-     */
     'data'?: HelpersPageModelIncident;
 }
-/**
- * 
- * @export
- * @interface TargetGetManyIncidentsSuccessResponse
- */
 export interface TargetGetManyIncidentsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetGetManyIncidentsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelIncident>}
-     * @memberof TargetGetManyIncidentsSuccessResponse
-     */
     'data'?: Array<ModelIncident>;
 }
-/**
- * 
- * @export
- * @interface TargetGetTargetReportDataSuccessResponse
- */
 export interface TargetGetTargetReportDataSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetGetTargetReportDataSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {TargetReportData}
-     * @memberof TargetGetTargetReportDataSuccessResponse
-     */
     'data'?: TargetReportData;
 }
-/**
- * 
- * @export
- * @interface TargetGetTargetSuccessResponse
- */
 export interface TargetGetTargetSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetGetTargetSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelTarget}
-     * @memberof TargetGetTargetSuccessResponse
-     */
     'data'?: ModelTarget;
 }
-/**
- * 
- * @export
- * @interface TargetHTTPInfoCreateRequest
- */
 export interface TargetHTTPInfoCreateRequest {
     /**
      * HTTP response codes separated by a space. Must contain at least one code. All codes must be exactly 3 digits long.
-     * @type {string}
-     * @memberof TargetHTTPInfoCreateRequest
      */
     'allowedCodes': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TargetHTTPInfoCreateRequest
-     */
     'followRedirects': boolean;
     /**
      * Host must start with http:// or https://
-     * @type {string}
-     * @memberof TargetHTTPInfoCreateRequest
      */
     'host': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TargetHTTPInfoCreateRequest
-     */
     'verifySSLCert': boolean;
 }
-/**
- * 
- * @export
- * @interface TargetHTTPInfoUpdateRequest
- */
 export interface TargetHTTPInfoUpdateRequest {
     /**
      * HTTP response codes separated by a space. Must contain at least one code if supplied. All codes must be exactly 3 digits long.
-     * @type {string}
-     * @memberof TargetHTTPInfoUpdateRequest
      */
     'allowedCodes'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TargetHTTPInfoUpdateRequest
-     */
     'followRedirects'?: boolean;
     /**
      * Host must start with http:// or https:// if supplied
-     * @type {string}
-     * @memberof TargetHTTPInfoUpdateRequest
      */
     'host'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TargetHTTPInfoUpdateRequest
-     */
     'verifySSLCert'?: boolean;
 }
-/**
- * 
- * @export
- * @interface TargetListTargetsSuccessResponse
- */
 export interface TargetListTargetsSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetListTargetsSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {Array<ModelTarget>}
-     * @memberof TargetListTargetsSuccessResponse
-     */
     'data'?: Array<ModelTarget>;
 }
-/**
- * 
- * @export
- * @interface TargetPingInfoCreateRequest
- */
 export interface TargetPingInfoCreateRequest {
     /**
      * Host must not be blank
-     * @type {string}
-     * @memberof TargetPingInfoCreateRequest
      */
     'host': string;
 }
-/**
- * 
- * @export
- * @interface TargetPingInfoUpdateRequest
- */
 export interface TargetPingInfoUpdateRequest {
     /**
      * Host must not be blank if pingInfo is supplied in UpdateTargetRequest
-     * @type {string}
-     * @memberof TargetPingInfoUpdateRequest
      */
     'host'?: string;
 }
-/**
- * 
- * @export
- * @interface TargetReportData
- */
 export interface TargetReportData {
     /**
      * IncidentHistory contains incidents from last 30 days
-     * @type {Array<ModelIncident>}
-     * @memberof TargetReportData
      */
     'incidentHistory'?: Array<ModelIncident>;
     /**
      * LastHeartbeatsFromLocations contains most recent heartbeats from all locations, one per location or the last heartbeat if target is of a type that\'s push
-     * @type {Array<ModelHeartbeat>}
-     * @memberof TargetReportData
      */
     'lastHeartbeatsFromLocations'?: Array<ModelHeartbeat>;
     /**
      * Target is the target the report was requested for
-     * @type {ModelTarget}
-     * @memberof TargetReportData
      */
     'target'?: ModelTarget;
     /**
      * Uptime contains pre-computed uptime percentages for various time periods based on incidents in these time periods
-     * @type {TargetUptimeData}
-     * @memberof TargetReportData
      */
     'uptime'?: TargetUptimeData;
 }
-/**
- * 
- * @export
- * @interface TargetUpdateTargetRequest
- */
 export interface TargetUpdateTargetRequest {
     /**
      * Must contain at least one checker ID, all checkers must exist. This is a \"replace update\". This is ignored if Target\'s type is 2 (AGENT)
-     * @type {Array<number>}
-     * @memberof TargetUpdateTargetRequest
      */
     'checkerIDs'?: Array<number>;
-    /**
-     * 
-     * @type {TargetHTTPInfoUpdateRequest}
-     * @memberof TargetUpdateTargetRequest
-     */
     'httpInfo'?: TargetHTTPInfoUpdateRequest;
     /**
      * Name must not be blank if supplied
-     * @type {string}
-     * @memberof TargetUpdateTargetRequest
      */
     'name'?: string;
-    /**
-     * 
-     * @type {TargetPingInfoUpdateRequest}
-     * @memberof TargetUpdateTargetRequest
-     */
     'pingInfo'?: TargetPingInfoUpdateRequest;
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetUpdateTargetRequest
-     */
     'timeout'?: number;
 }
-/**
- * 
- * @export
- * @interface TargetUptimeData
- */
 export interface TargetUptimeData {
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetUptimeData
-     */
     'last_7d'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetUptimeData
-     */
     'last_24h'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetUptimeData
-     */
     'last_30d'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetUptimeData
-     */
     'last_365d'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TargetUptimeData
-     */
     'overall'?: number;
 }
-/**
- * 
- * @export
- * @enum {number}
- */
 
 export const TimeDuration = {
-    minDuration: -9223372036854775808,
-    maxDuration: 9223372036854775807,
     Nanosecond: 1,
     Microsecond: 1000,
     Millisecond: 1000000,
     Second: 1000000000,
     Minute: 60000000000,
     Hour: 3600000000000,
-    minDuration: -9223372036854775808,
-    maxDuration: 9223372036854775807,
-    Nanosecond: 1,
-    Microsecond: 1000,
-    Millisecond: 1000000,
-    Second: 1000000000,
-    Minute: 60000000000,
-    Hour: 3600000000000,
-    minDuration: -9223372036854775808,
-    maxDuration: 9223372036854775807,
-    Nanosecond: 1,
-    Microsecond: 1000,
-    Millisecond: 1000000,
-    Second: 1000000000,
-    Minute: 60000000000,
-    Hour: 3600000000000
 } as const;
 
 export type TimeDuration = typeof TimeDuration[keyof typeof TimeDuration];
 
 
-/**
- * 
- * @export
- * @interface UserChangePasswordRequest
- */
+export interface UpdateCreateStatuspageNoticeUpdateRequest {
+    /**
+     * Message must not be empty
+     */
+    'message': string;
+    /**
+     * Status is required, the notice\'s status will be changed to this value
+     */
+    'status'?: ModelStatuspageNoticeStatus;
+}
+
+
+export interface UpdateCreateStatuspageNoticeUpdateSuccessResponse {
+    'code'?: number;
+    'data'?: ModelStatuspageNoticeUpdate;
+}
+export interface UpdateGetStatuspageNoticeUpdateSuccessResponse {
+    'code'?: number;
+    'data'?: ModelStatuspageNoticeUpdate;
+}
+export interface UpdateListStatuspageNoticeUpdatesSuccessResponse {
+    'code'?: number;
+    'data'?: Array<ModelStatuspageNoticeUpdate>;
+}
 export interface UserChangePasswordRequest {
     /**
      * New password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and must consist of at least 8 characters.
-     * @type {string}
-     * @memberof UserChangePasswordRequest
      */
     'newPassword': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserChangePasswordRequest
-     */
     'oldPassword': string;
 }
-/**
- * 
- * @export
- * @interface UserChangeUsernameRequest
- */
 export interface UserChangeUsernameRequest {
     /**
      * Must not be blank and must not contain any whitespace characters
-     * @type {string}
-     * @memberof UserChangeUsernameRequest
      */
     'newUsername': string;
 }
-/**
- * 
- * @export
- * @interface UserGetUserSuccessResponse
- */
 export interface UserGetUserSuccessResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof UserGetUserSuccessResponse
-     */
     'code'?: number;
-    /**
-     * 
-     * @type {ModelUser}
-     * @memberof UserGetUserSuccessResponse
-     */
     'data'?: ModelUser;
 }
 
 /**
  * AlarmApi - axios parameter creator
- * @export
  */
 export const AlarmApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -2368,8 +1134,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'alarmID' is not null or undefined
             assertParamExists('targetTargetIDAlarmAlarmIDDelete', 'alarmID', alarmID)
             const localVarPath = `/target/{targetID}/alarm/{alarmID}`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)))
-                .replace(`{${"alarmID"}}`, encodeURIComponent(String(alarmID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)))
+                .replace('{alarmID}', encodeURIComponent(String(alarmID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2384,8 +1150,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2409,8 +1175,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'alarmID' is not null or undefined
             assertParamExists('targetTargetIDAlarmAlarmIDGet', 'alarmID', alarmID)
             const localVarPath = `/target/{targetID}/alarm/{alarmID}`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)))
-                .replace(`{${"alarmID"}}`, encodeURIComponent(String(alarmID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)))
+                .replace('{alarmID}', encodeURIComponent(String(alarmID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2425,8 +1191,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2451,8 +1217,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'alarmID' is not null or undefined
             assertParamExists('targetTargetIDAlarmAlarmIDMutePatch', 'alarmID', alarmID)
             const localVarPath = `/target/{targetID}/alarm/{alarmID}/mute`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)))
-                .replace(`{${"alarmID"}}`, encodeURIComponent(String(alarmID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)))
+                .replace('{alarmID}', encodeURIComponent(String(alarmID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2471,8 +1237,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['mute'] = mute;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2499,8 +1265,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'updateReq' is not null or undefined
             assertParamExists('targetTargetIDAlarmAlarmIDPatch', 'updateReq', updateReq)
             const localVarPath = `/target/{targetID}/alarm/{alarmID}`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)))
-                .replace(`{${"alarmID"}}`, encodeURIComponent(String(alarmID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)))
+                .replace('{alarmID}', encodeURIComponent(String(alarmID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2515,9 +1281,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2544,8 +1309,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'alarmID' is not null or undefined
             assertParamExists('targetTargetIDAlarmAlarmIDSuspendPatch', 'alarmID', alarmID)
             const localVarPath = `/target/{targetID}/alarm/{alarmID}/suspend`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)))
-                .replace(`{${"alarmID"}}`, encodeURIComponent(String(alarmID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)))
+                .replace('{alarmID}', encodeURIComponent(String(alarmID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2564,8 +1329,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['suspend'] = suspend;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2586,7 +1351,7 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'targetID' is not null or undefined
             assertParamExists('targetTargetIDAlarmGet', 'targetID', targetID)
             const localVarPath = `/target/{targetID}/alarm/`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2601,8 +1366,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2626,7 +1391,7 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'updateReq' is not null or undefined
             assertParamExists('targetTargetIDAlarmPost', 'updateReq', updateReq)
             const localVarPath = `/target/{targetID}/alarm/`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2641,9 +1406,8 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2660,7 +1424,6 @@ export const AlarmApiAxiosParamCreator = function (configuration?: Configuration
 
 /**
  * AlarmApi - functional programming interface
- * @export
  */
 export const AlarmApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AlarmApiAxiosParamCreator(configuration)
@@ -2770,7 +1533,6 @@ export const AlarmApiFp = function(configuration?: Configuration) {
 
 /**
  * AlarmApi - factory interface
- * @export
  */
 export const AlarmApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AlarmApiFp(configuration)
@@ -2859,9 +1621,6 @@ export const AlarmApiFactory = function (configuration?: Configuration, basePath
 
 /**
  * AlarmApi - object-oriented interface
- * @export
- * @class AlarmApi
- * @extends {BaseAPI}
  */
 export class AlarmApi extends BaseAPI {
     /**
@@ -2871,7 +1630,6 @@ export class AlarmApi extends BaseAPI {
      * @param {number} alarmID ID of the alarm
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmAlarmIDDelete(targetID: number, alarmID: number, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmAlarmIDDelete(targetID, alarmID, options).then((request) => request(this.axios, this.basePath));
@@ -2884,7 +1642,6 @@ export class AlarmApi extends BaseAPI {
      * @param {number} alarmID ID of the alarm
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmAlarmIDGet(targetID: number, alarmID: number, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmAlarmIDGet(targetID, alarmID, options).then((request) => request(this.axios, this.basePath));
@@ -2898,7 +1655,6 @@ export class AlarmApi extends BaseAPI {
      * @param {boolean} [mute] Mute status. Can be true for muted, false for unmuted. If not supplied, mute status of the alarm will change to the opposite of current status.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmAlarmIDMutePatch(targetID: number, alarmID: number, mute?: boolean, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmAlarmIDMutePatch(targetID, alarmID, mute, options).then((request) => request(this.axios, this.basePath));
@@ -2912,7 +1668,6 @@ export class AlarmApi extends BaseAPI {
      * @param {AlarmUpdateAlarmRequest} updateReq New information about the alarm
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmAlarmIDPatch(targetID: number, alarmID: number, updateReq: AlarmUpdateAlarmRequest, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmAlarmIDPatch(targetID, alarmID, updateReq, options).then((request) => request(this.axios, this.basePath));
@@ -2926,7 +1681,6 @@ export class AlarmApi extends BaseAPI {
      * @param {boolean} [suspend] Suspend status. Can be true for suspended, false for unsuspended. If not supplied, suspend status of the alarm will change to the opposite of current status.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmAlarmIDSuspendPatch(targetID: number, alarmID: number, suspend?: boolean, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmAlarmIDSuspendPatch(targetID, alarmID, suspend, options).then((request) => request(this.axios, this.basePath));
@@ -2938,7 +1692,6 @@ export class AlarmApi extends BaseAPI {
      * @param {number} targetID ID of target
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmGet(targetID: number, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmGet(targetID, options).then((request) => request(this.axios, this.basePath));
@@ -2951,7 +1704,6 @@ export class AlarmApi extends BaseAPI {
      * @param {AlarmCreateAlarmRequest} updateReq Information about the new alarm
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AlarmApi
      */
     public targetTargetIDAlarmPost(targetID: number, updateReq: AlarmCreateAlarmRequest, options?: RawAxiosRequestConfig) {
         return AlarmApiFp(this.configuration).targetTargetIDAlarmPost(targetID, updateReq, options).then((request) => request(this.axios, this.basePath));
@@ -2962,7 +1714,6 @@ export class AlarmApi extends BaseAPI {
 
 /**
  * AuthApi - axios parameter creator
- * @export
  */
 export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -2988,9 +1739,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3024,9 +1774,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3043,7 +1792,6 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
 
 /**
  * AuthApi - functional programming interface
- * @export
  */
 export const AuthApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
@@ -3079,7 +1827,6 @@ export const AuthApiFp = function(configuration?: Configuration) {
 
 /**
  * AuthApi - factory interface
- * @export
  */
 export const AuthApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AuthApiFp(configuration)
@@ -3109,9 +1856,6 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
 
 /**
  * AuthApi - object-oriented interface
- * @export
- * @class AuthApi
- * @extends {BaseAPI}
  */
 export class AuthApi extends BaseAPI {
     /**
@@ -3120,7 +1864,6 @@ export class AuthApi extends BaseAPI {
      * @param {AuthCredentials} credentials Valid credentials of user who wants to create a new session
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AuthApi
      */
     public authLoginPost(credentials: AuthCredentials, options?: RawAxiosRequestConfig) {
         return AuthApiFp(this.configuration).authLoginPost(credentials, options).then((request) => request(this.axios, this.basePath));
@@ -3132,7 +1875,6 @@ export class AuthApi extends BaseAPI {
      * @param {AuthCredentials} credentials Username and password for the new user account
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AuthApi
      */
     public authRegisterPost(credentials: AuthCredentials, options?: RawAxiosRequestConfig) {
         return AuthApiFp(this.configuration).authRegisterPost(credentials, options).then((request) => request(this.axios, this.basePath));
@@ -3143,7 +1885,6 @@ export class AuthApi extends BaseAPI {
 
 /**
  * CheckerApi - axios parameter creator
- * @export
  */
 export const CheckerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -3169,8 +1910,8 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3191,7 +1932,7 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
             // verify required parameter 'id' is not null or undefined
             assertParamExists('checkerIdDelete', 'id', id)
             const localVarPath = `/checker/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3206,8 +1947,8 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3228,7 +1969,7 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
             // verify required parameter 'id' is not null or undefined
             assertParamExists('checkerIdGet', 'id', id)
             const localVarPath = `/checker/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3243,8 +1984,8 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3265,7 +2006,7 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
             // verify required parameter 'id' is not null or undefined
             assertParamExists('checkerIdKeyPatch', 'id', id)
             const localVarPath = `/checker/{id}/key`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3280,8 +2021,8 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3305,7 +2046,7 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
             // verify required parameter 'checkerInfo' is not null or undefined
             assertParamExists('checkerIdPatch', 'checkerInfo', checkerInfo)
             const localVarPath = `/checker/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3320,9 +2061,8 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3359,9 +2099,8 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3378,7 +2117,6 @@ export const CheckerApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * CheckerApi - functional programming interface
- * @export
  */
 export const CheckerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = CheckerApiAxiosParamCreator(configuration)
@@ -3466,7 +2204,6 @@ export const CheckerApiFp = function(configuration?: Configuration) {
 
 /**
  * CheckerApi - factory interface
- * @export
  */
 export const CheckerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = CheckerApiFp(configuration)
@@ -3536,9 +2273,6 @@ export const CheckerApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * CheckerApi - object-oriented interface
- * @export
- * @class CheckerApi
- * @extends {BaseAPI}
  */
 export class CheckerApi extends BaseAPI {
     /**
@@ -3546,7 +2280,6 @@ export class CheckerApi extends BaseAPI {
      * @summary Get all checkers
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerGet(options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerGet(options).then((request) => request(this.axios, this.basePath));
@@ -3558,7 +2291,6 @@ export class CheckerApi extends BaseAPI {
      * @param {number} id ID of checker that should be deleted
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerIdDelete(id: number, options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerIdDelete(id, options).then((request) => request(this.axios, this.basePath));
@@ -3570,7 +2302,6 @@ export class CheckerApi extends BaseAPI {
      * @param {number} id ID of checker that should be retrieved
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerIdGet(id: number, options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerIdGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -3582,7 +2313,6 @@ export class CheckerApi extends BaseAPI {
      * @param {number} id ID of checker that should get a new key
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerIdKeyPatch(id: number, options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerIdKeyPatch(id, options).then((request) => request(this.axios, this.basePath));
@@ -3595,7 +2325,6 @@ export class CheckerApi extends BaseAPI {
      * @param {CheckerUpdateCheckerRequest} checkerInfo New checker details
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerIdPatch(id: number, checkerInfo: CheckerUpdateCheckerRequest, options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerIdPatch(id, checkerInfo, options).then((request) => request(this.axios, this.basePath));
@@ -3607,7 +2336,6 @@ export class CheckerApi extends BaseAPI {
      * @param {CheckerCreateCheckerRequest} checkerInfo Data required to create a new checker
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof CheckerApi
      */
     public checkerPost(checkerInfo: CheckerCreateCheckerRequest, options?: RawAxiosRequestConfig) {
         return CheckerApiFp(this.configuration).checkerPost(checkerInfo, options).then((request) => request(this.axios, this.basePath));
@@ -3618,7 +2346,6 @@ export class CheckerApi extends BaseAPI {
 
 /**
  * HeartbeatApi - axios parameter creator
- * @export
  */
 export const HeartbeatApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -3633,7 +2360,7 @@ export const HeartbeatApiAxiosParamCreator = function (configuration?: Configura
             // verify required parameter 'id' is not null or undefined
             assertParamExists('heartbeatIdGet', 'id', id)
             const localVarPath = `/heartbeat/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3645,8 +2372,8 @@ export const HeartbeatApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3667,7 +2394,7 @@ export const HeartbeatApiAxiosParamCreator = function (configuration?: Configura
             // verify required parameter 'id' is not null or undefined
             assertParamExists('heartbeatIdLastGet', 'id', id)
             const localVarPath = `/heartbeat/{id}/last`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3679,8 +2406,8 @@ export const HeartbeatApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3704,7 +2431,7 @@ export const HeartbeatApiAxiosParamCreator = function (configuration?: Configura
             // verify required parameter 'id' is not null or undefined
             assertParamExists('heartbeatIdPageGet', 'id', id)
             const localVarPath = `/heartbeat/{id}/page`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3728,8 +2455,8 @@ export const HeartbeatApiAxiosParamCreator = function (configuration?: Configura
                 localVarQueryParameter['sort'] = sort;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3754,7 +2481,7 @@ export const HeartbeatApiAxiosParamCreator = function (configuration?: Configura
             // verify required parameter 'start' is not null or undefined
             assertParamExists('heartbeatIdTimerangeGet', 'start', start)
             const localVarPath = `/heartbeat/{id}/timerange`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3774,8 +2501,8 @@ export const HeartbeatApiAxiosParamCreator = function (configuration?: Configura
                 localVarQueryParameter['end'] = end;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3790,7 +2517,6 @@ export const HeartbeatApiAxiosParamCreator = function (configuration?: Configura
 
 /**
  * HeartbeatApi - functional programming interface
- * @export
  */
 export const HeartbeatApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = HeartbeatApiAxiosParamCreator(configuration)
@@ -3857,7 +2583,6 @@ export const HeartbeatApiFp = function(configuration?: Configuration) {
 
 /**
  * HeartbeatApi - factory interface
- * @export
  */
 export const HeartbeatApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = HeartbeatApiFp(configuration)
@@ -3912,9 +2637,6 @@ export const HeartbeatApiFactory = function (configuration?: Configuration, base
 
 /**
  * HeartbeatApi - object-oriented interface
- * @export
- * @class HeartbeatApi
- * @extends {BaseAPI}
  */
 export class HeartbeatApi extends BaseAPI {
     /**
@@ -3923,7 +2645,6 @@ export class HeartbeatApi extends BaseAPI {
      * @param {number} id ID of heartbeat to get
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof HeartbeatApi
      */
     public heartbeatIdGet(id: number, options?: RawAxiosRequestConfig) {
         return HeartbeatApiFp(this.configuration).heartbeatIdGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -3935,7 +2656,6 @@ export class HeartbeatApi extends BaseAPI {
      * @param {number} id ID of target to get the last heartbeat info of
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof HeartbeatApi
      */
     public heartbeatIdLastGet(id: number, options?: RawAxiosRequestConfig) {
         return HeartbeatApiFp(this.configuration).heartbeatIdLastGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -3950,7 +2670,6 @@ export class HeartbeatApi extends BaseAPI {
      * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (latency, timestamp, status, heartbeats.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof HeartbeatApi
      */
     public heartbeatIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig) {
         return HeartbeatApiFp(this.configuration).heartbeatIdPageGet(id, size, page, sort, options).then((request) => request(this.axios, this.basePath));
@@ -3964,7 +2683,6 @@ export class HeartbeatApi extends BaseAPI {
      * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof HeartbeatApi
      */
     public heartbeatIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig) {
         return HeartbeatApiFp(this.configuration).heartbeatIdTimerangeGet(id, start, end, options).then((request) => request(this.axios, this.basePath));
@@ -3975,7 +2693,6 @@ export class HeartbeatApi extends BaseAPI {
 
 /**
  * IncidentApi - axios parameter creator
- * @export
  */
 export const IncidentApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -3990,7 +2707,7 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'id' is not null or undefined
             assertParamExists('incidentAlarmIdLastGet', 'id', id)
             const localVarPath = `/incident/alarm/{id}/last`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4002,8 +2719,8 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4027,7 +2744,7 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'id' is not null or undefined
             assertParamExists('incidentAlarmIdPageGet', 'id', id)
             const localVarPath = `/incident/alarm/{id}/page`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4051,8 +2768,8 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
                 localVarQueryParameter['sort'] = sort;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4077,7 +2794,7 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'start' is not null or undefined
             assertParamExists('incidentAlarmIdTimerangeGet', 'start', start)
             const localVarPath = `/incident/alarm/{id}/timerange`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4097,8 +2814,8 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
                 localVarQueryParameter['end'] = end;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4119,7 +2836,7 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'id' is not null or undefined
             assertParamExists('incidentIdGet', 'id', id)
             const localVarPath = `/incident/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4131,8 +2848,8 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4156,7 +2873,7 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'id' is not null or undefined
             assertParamExists('incidentTargetIdPageGet', 'id', id)
             const localVarPath = `/incident/target/{id}/page`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4180,8 +2897,8 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
                 localVarQueryParameter['sort'] = sort;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4206,7 +2923,7 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'start' is not null or undefined
             assertParamExists('incidentTargetIdTimerangeGet', 'start', start)
             const localVarPath = `/incident/target/{id}/timerange`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4226,8 +2943,8 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
                 localVarQueryParameter['end'] = end;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4242,7 +2959,6 @@ export const IncidentApiAxiosParamCreator = function (configuration?: Configurat
 
 /**
  * IncidentApi - functional programming interface
- * @export
  */
 export const IncidentApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = IncidentApiAxiosParamCreator(configuration)
@@ -4340,7 +3056,6 @@ export const IncidentApiFp = function(configuration?: Configuration) {
 
 /**
  * IncidentApi - factory interface
- * @export
  */
 export const IncidentApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = IncidentApiFp(configuration)
@@ -4420,9 +3135,6 @@ export const IncidentApiFactory = function (configuration?: Configuration, baseP
 
 /**
  * IncidentApi - object-oriented interface
- * @export
- * @class IncidentApi
- * @extends {BaseAPI}
  */
 export class IncidentApi extends BaseAPI {
     /**
@@ -4431,7 +3143,6 @@ export class IncidentApi extends BaseAPI {
      * @param {number} id ID of alarm to get the last incident info of
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof IncidentApi
      */
     public incidentAlarmIdLastGet(id: number, options?: RawAxiosRequestConfig) {
         return IncidentApiFp(this.configuration).incidentAlarmIdLastGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -4446,7 +3157,6 @@ export class IncidentApi extends BaseAPI {
      * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof IncidentApi
      */
     public incidentAlarmIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig) {
         return IncidentApiFp(this.configuration).incidentAlarmIdPageGet(id, size, page, sort, options).then((request) => request(this.axios, this.basePath));
@@ -4460,7 +3170,6 @@ export class IncidentApi extends BaseAPI {
      * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof IncidentApi
      */
     public incidentAlarmIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig) {
         return IncidentApiFp(this.configuration).incidentAlarmIdTimerangeGet(id, start, end, options).then((request) => request(this.axios, this.basePath));
@@ -4472,7 +3181,6 @@ export class IncidentApi extends BaseAPI {
      * @param {number} id ID of incident to get
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof IncidentApi
      */
     public incidentIdGet(id: number, options?: RawAxiosRequestConfig) {
         return IncidentApiFp(this.configuration).incidentIdGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -4487,7 +3195,6 @@ export class IncidentApi extends BaseAPI {
      * @param {string} [sort] Sorting settings. Format: &lt;field&gt;,&lt;direction&gt; where field can be one of: (start, end duration, ongoing, incidents.id) and direction can be either asc for ascending or desc for descending. This param can be provided multiple times to sort by multiple columns at the same time.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof IncidentApi
      */
     public incidentTargetIdPageGet(id: number, size?: number, page?: number, sort?: string, options?: RawAxiosRequestConfig) {
         return IncidentApiFp(this.configuration).incidentTargetIdPageGet(id, size, page, sort, options).then((request) => request(this.axios, this.basePath));
@@ -4501,7 +3208,6 @@ export class IncidentApi extends BaseAPI {
      * @param {number} [end] Unix epoch second representing end of the time range. If not specified, current time is used as end timestamp of the time range.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof IncidentApi
      */
     public incidentTargetIdTimerangeGet(id: number, start: number, end?: number, options?: RawAxiosRequestConfig) {
         return IncidentApiFp(this.configuration).incidentTargetIdTimerangeGet(id, start, end, options).then((request) => request(this.axios, this.basePath));
@@ -4512,7 +3218,6 @@ export class IncidentApi extends BaseAPI {
 
 /**
  * NotificationApi - axios parameter creator
- * @export
  */
 export const NotificationApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -4538,8 +3243,8 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4560,7 +3265,7 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
             // verify required parameter 'id' is not null or undefined
             assertParamExists('notificationIdDelete', 'id', id)
             const localVarPath = `/notification/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4575,8 +3280,8 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4597,7 +3302,7 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
             // verify required parameter 'id' is not null or undefined
             assertParamExists('notificationIdGet', 'id', id)
             const localVarPath = `/notification/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4612,8 +3317,8 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4637,7 +3342,7 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
             // verify required parameter 'updateReq' is not null or undefined
             assertParamExists('notificationIdPatch', 'updateReq', updateReq)
             const localVarPath = `/notification/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4652,9 +3357,8 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -4677,7 +3381,7 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
             // verify required parameter 'id' is not null or undefined
             assertParamExists('notificationIdTestPost', 'id', id)
             const localVarPath = `/notification/{id}/test`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4692,8 +3396,8 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4728,9 +3432,8 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -4747,7 +3450,6 @@ export const NotificationApiAxiosParamCreator = function (configuration?: Config
 
 /**
  * NotificationApi - functional programming interface
- * @export
  */
 export const NotificationApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = NotificationApiAxiosParamCreator(configuration)
@@ -4835,7 +3537,6 @@ export const NotificationApiFp = function(configuration?: Configuration) {
 
 /**
  * NotificationApi - factory interface
- * @export
  */
 export const NotificationApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = NotificationApiFp(configuration)
@@ -4905,9 +3606,6 @@ export const NotificationApiFactory = function (configuration?: Configuration, b
 
 /**
  * NotificationApi - object-oriented interface
- * @export
- * @class NotificationApi
- * @extends {BaseAPI}
  */
 export class NotificationApi extends BaseAPI {
     /**
@@ -4915,7 +3613,6 @@ export class NotificationApi extends BaseAPI {
      * @summary Get all notifications
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationGet(options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationGet(options).then((request) => request(this.axios, this.basePath));
@@ -4927,7 +3624,6 @@ export class NotificationApi extends BaseAPI {
      * @param {number} id ID of notification to be deleted
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationIdDelete(id: number, options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationIdDelete(id, options).then((request) => request(this.axios, this.basePath));
@@ -4939,7 +3635,6 @@ export class NotificationApi extends BaseAPI {
      * @param {number} id ID of notification to get
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationIdGet(id: number, options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationIdGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -4952,7 +3647,6 @@ export class NotificationApi extends BaseAPI {
      * @param {NotificationUpdateNotificationRequest} updateReq Changes to make to the notification
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationIdPatch(id: number, updateReq: NotificationUpdateNotificationRequest, options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationIdPatch(id, updateReq, options).then((request) => request(this.axios, this.basePath));
@@ -4964,7 +3658,6 @@ export class NotificationApi extends BaseAPI {
      * @param {number} id ID of notification to use
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationIdTestPost(id: number, options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationIdTestPost(id, options).then((request) => request(this.axios, this.basePath));
@@ -4976,7 +3669,6 @@ export class NotificationApi extends BaseAPI {
      * @param {NotificationCreateNotificationRequest} createReq Information about new notification
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NotificationApi
      */
     public notificationPost(createReq: NotificationCreateNotificationRequest, options?: RawAxiosRequestConfig) {
         return NotificationApiFp(this.configuration).notificationPost(createReq, options).then((request) => request(this.axios, this.basePath));
@@ -4987,7 +3679,6 @@ export class NotificationApi extends BaseAPI {
 
 /**
  * OrchestratorApi - axios parameter creator
- * @export
  */
 export const OrchestratorApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -5013,8 +3704,8 @@ export const OrchestratorApiAxiosParamCreator = function (configuration?: Config
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5035,7 +3726,7 @@ export const OrchestratorApiAxiosParamCreator = function (configuration?: Config
             // verify required parameter 'id' is not null or undefined
             assertParamExists('adminOrchestratorIdDelete', 'id', id)
             const localVarPath = `/admin/orchestrator/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -5050,8 +3741,8 @@ export const OrchestratorApiAxiosParamCreator = function (configuration?: Config
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5072,7 +3763,7 @@ export const OrchestratorApiAxiosParamCreator = function (configuration?: Config
             // verify required parameter 'id' is not null or undefined
             assertParamExists('adminOrchestratorIdGet', 'id', id)
             const localVarPath = `/admin/orchestrator/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -5087,8 +3778,8 @@ export const OrchestratorApiAxiosParamCreator = function (configuration?: Config
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5123,9 +3814,8 @@ export const OrchestratorApiAxiosParamCreator = function (configuration?: Config
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -5142,7 +3832,6 @@ export const OrchestratorApiAxiosParamCreator = function (configuration?: Config
 
 /**
  * OrchestratorApi - functional programming interface
- * @export
  */
 export const OrchestratorApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = OrchestratorApiAxiosParamCreator(configuration)
@@ -5203,7 +3892,6 @@ export const OrchestratorApiFp = function(configuration?: Configuration) {
 
 /**
  * OrchestratorApi - factory interface
- * @export
  */
 export const OrchestratorApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = OrchestratorApiFp(configuration)
@@ -5252,9 +3940,6 @@ export const OrchestratorApiFactory = function (configuration?: Configuration, b
 
 /**
  * OrchestratorApi - object-oriented interface
- * @export
- * @class OrchestratorApi
- * @extends {BaseAPI}
  */
 export class OrchestratorApi extends BaseAPI {
     /**
@@ -5262,7 +3947,6 @@ export class OrchestratorApi extends BaseAPI {
      * @summary Get all orchestrators
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof OrchestratorApi
      */
     public adminOrchestratorGet(options?: RawAxiosRequestConfig) {
         return OrchestratorApiFp(this.configuration).adminOrchestratorGet(options).then((request) => request(this.axios, this.basePath));
@@ -5274,7 +3958,6 @@ export class OrchestratorApi extends BaseAPI {
      * @param {number} id ID of orchestrator that should get deleted
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof OrchestratorApi
      */
     public adminOrchestratorIdDelete(id: number, options?: RawAxiosRequestConfig) {
         return OrchestratorApiFp(this.configuration).adminOrchestratorIdDelete(id, options).then((request) => request(this.axios, this.basePath));
@@ -5286,7 +3969,6 @@ export class OrchestratorApi extends BaseAPI {
      * @param {number} id ID of orchestrator to get
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof OrchestratorApi
      */
     public adminOrchestratorIdGet(id: number, options?: RawAxiosRequestConfig) {
         return OrchestratorApiFp(this.configuration).adminOrchestratorIdGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -5298,7 +3980,6 @@ export class OrchestratorApi extends BaseAPI {
      * @param {OrchestratorCreateOrchestratorRequest} createRequest Information about new orchestrator
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof OrchestratorApi
      */
     public adminOrchestratorPost(createRequest: OrchestratorCreateOrchestratorRequest, options?: RawAxiosRequestConfig) {
         return OrchestratorApiFp(this.configuration).adminOrchestratorPost(createRequest, options).then((request) => request(this.axios, this.basePath));
@@ -5309,7 +3990,6 @@ export class OrchestratorApi extends BaseAPI {
 
 /**
  * SessionApi - axios parameter creator
- * @export
  */
 export const SessionApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -5335,8 +4015,8 @@ export const SessionApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5368,8 +4048,8 @@ export const SessionApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5401,8 +4081,8 @@ export const SessionApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5423,7 +4103,7 @@ export const SessionApiAxiosParamCreator = function (configuration?: Configurati
             // verify required parameter 'id' is not null or undefined
             assertParamExists('sessionIdDelete', 'id', id)
             const localVarPath = `/session/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -5438,8 +4118,8 @@ export const SessionApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5460,7 +4140,7 @@ export const SessionApiAxiosParamCreator = function (configuration?: Configurati
             // verify required parameter 'id' is not null or undefined
             assertParamExists('sessionIdGet', 'id', id)
             const localVarPath = `/session/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace('{id}', encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -5475,8 +4155,8 @@ export const SessionApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5508,8 +4188,8 @@ export const SessionApiAxiosParamCreator = function (configuration?: Configurati
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5524,7 +4204,6 @@ export const SessionApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * SessionApi - functional programming interface
- * @export
  */
 export const SessionApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = SessionApiAxiosParamCreator(configuration)
@@ -5608,7 +4287,6 @@ export const SessionApiFp = function(configuration?: Configuration) {
 
 /**
  * SessionApi - factory interface
- * @export
  */
 export const SessionApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = SessionApiFp(configuration)
@@ -5674,9 +4352,6 @@ export const SessionApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * SessionApi - object-oriented interface
- * @export
- * @class SessionApi
- * @extends {BaseAPI}
  */
 export class SessionApi extends BaseAPI {
     /**
@@ -5684,7 +4359,6 @@ export class SessionApi extends BaseAPI {
      * @summary Get current session
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionCurrentGet(options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionCurrentGet(options).then((request) => request(this.axios, this.basePath));
@@ -5695,7 +4369,6 @@ export class SessionApi extends BaseAPI {
      * @summary Delete (invalidate) all sessions
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionDelete(options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionDelete(options).then((request) => request(this.axios, this.basePath));
@@ -5706,7 +4379,6 @@ export class SessionApi extends BaseAPI {
      * @summary Get all sessions
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionGet(options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionGet(options).then((request) => request(this.axios, this.basePath));
@@ -5718,7 +4390,6 @@ export class SessionApi extends BaseAPI {
      * @param {number} id ID of session to delete
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionIdDelete(id: number, options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionIdDelete(id, options).then((request) => request(this.axios, this.basePath));
@@ -5730,7 +4401,6 @@ export class SessionApi extends BaseAPI {
      * @param {number} id ID of session to retrieve
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionIdGet(id: number, options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionIdGet(id, options).then((request) => request(this.axios, this.basePath));
@@ -5741,7 +4411,6 @@ export class SessionApi extends BaseAPI {
      * @summary Log out
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SessionApi
      */
     public sessionLogoutPost(options?: RawAxiosRequestConfig) {
         return SessionApiFp(this.configuration).sessionLogoutPost(options).then((request) => request(this.axios, this.basePath));
@@ -5752,7 +4421,6 @@ export class SessionApi extends BaseAPI {
 
 /**
  * SettingsApi - axios parameter creator
- * @export
  */
 export const SettingsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -5778,8 +4446,8 @@ export const SettingsApiAxiosParamCreator = function (configuration?: Configurat
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5800,7 +4468,7 @@ export const SettingsApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'key' is not null or undefined
             assertParamExists('adminSettingsKeyGet', 'key', key)
             const localVarPath = `/admin/settings/{key}`
-                .replace(`{${"key"}}`, encodeURIComponent(String(key)));
+                .replace('{key}', encodeURIComponent(String(key)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -5815,8 +4483,8 @@ export const SettingsApiAxiosParamCreator = function (configuration?: Configurat
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5851,9 +4519,8 @@ export const SettingsApiAxiosParamCreator = function (configuration?: Configurat
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -5870,7 +4537,6 @@ export const SettingsApiAxiosParamCreator = function (configuration?: Configurat
 
 /**
  * SettingsApi - functional programming interface
- * @export
  */
 export const SettingsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = SettingsApiAxiosParamCreator(configuration)
@@ -5918,7 +4584,6 @@ export const SettingsApiFp = function(configuration?: Configuration) {
 
 /**
  * SettingsApi - factory interface
- * @export
  */
 export const SettingsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = SettingsApiFp(configuration)
@@ -5957,9 +4622,6 @@ export const SettingsApiFactory = function (configuration?: Configuration, baseP
 
 /**
  * SettingsApi - object-oriented interface
- * @export
- * @class SettingsApi
- * @extends {BaseAPI}
  */
 export class SettingsApi extends BaseAPI {
     /**
@@ -5967,7 +4629,6 @@ export class SettingsApi extends BaseAPI {
      * @summary Get all settings
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SettingsApi
      */
     public adminSettingsGet(options?: RawAxiosRequestConfig) {
         return SettingsApiFp(this.configuration).adminSettingsGet(options).then((request) => request(this.axios, this.basePath));
@@ -5979,7 +4640,6 @@ export class SettingsApi extends BaseAPI {
      * @param {string} key Setting to retrieve
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SettingsApi
      */
     public adminSettingsKeyGet(key: string, options?: RawAxiosRequestConfig) {
         return SettingsApiFp(this.configuration).adminSettingsKeyGet(key, options).then((request) => request(this.axios, this.basePath));
@@ -5991,7 +4651,6 @@ export class SettingsApi extends BaseAPI {
      * @param {SettingsChangeSettingRequest} changeRequest Setting to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SettingsApi
      */
     public adminSettingsPost(changeRequest: SettingsChangeSettingRequest, options?: RawAxiosRequestConfig) {
         return SettingsApiFp(this.configuration).adminSettingsPost(changeRequest, options).then((request) => request(this.axios, this.basePath));
@@ -6001,8 +4660,2457 @@ export class SettingsApi extends BaseAPI {
 
 
 /**
+ * StatuspageApi - axios parameter creator
+ */
+export const StatuspageApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Allows a user to get a list of their statuspages
+         * @summary Get all statuspages
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/statuspage/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to create a statuspage.
+         * @summary Create a statuspage
+         * @param {StatuspageCreateStatuspageRequest} createReq Information about new statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspagePost: async (createReq: StatuspageCreateStatuspageRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createReq' is not null or undefined
+            assertParamExists('statuspagePost', 'createReq', createReq)
+            const localVarPath = `/statuspage/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user retrieve information about statuspage with specified slug.
+         * @summary Get statuspage by slug
+         * @param {string} slug Slug of statuspage to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageSlugSlugGet: async (slug: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'slug' is not null or undefined
+            assertParamExists('statuspageSlugSlugGet', 'slug', slug)
+            const localVarPath = `/statuspage/slug/{slug}`
+                .replace('{slug}', encodeURIComponent(String(slug)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user retrieve information about statuspage with specified ID.
+         * @summary Get statuspage by ID
+         * @param {number} statuspageID ID of statuspage to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIDGet: async (statuspageID: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageID' is not null or undefined
+            assertParamExists('statuspageStatuspageIDGet', 'statuspageID', statuspageID)
+            const localVarPath = `/statuspage/{statuspageID}`
+                .replace('{statuspageID}', encodeURIComponent(String(statuspageID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to delete a statuspage with specified ID
+         * @summary Delete statuspage by ID
+         * @param {number} statuspageId ID of statuspage to delete
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDelete: async (statuspageId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdDelete', 'statuspageId', statuspageId)
+            const localVarPath = `/statuspage/{statuspageId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to update a statuspage.
+         * @summary Update a statuspage
+         * @param {number} statuspageId ID of statuspage to update
+         * @param {StatuspageUpdateStatuspageRequest} updateReq New information about statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdPatch: async (statuspageId: number, updateReq: StatuspageUpdateStatuspageRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdPatch', 'statuspageId', statuspageId)
+            // verify required parameter 'updateReq' is not null or undefined
+            assertParamExists('statuspageStatuspageIdPatch', 'updateReq', updateReq)
+            const localVarPath = `/statuspage/{statuspageId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * StatuspageApi - functional programming interface
+ */
+export const StatuspageApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = StatuspageApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Allows a user to get a list of their statuspages
+         * @summary Get all statuspages
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StatuspageListStatuspagesSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageApi.statuspageGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to create a statuspage.
+         * @summary Create a statuspage
+         * @param {StatuspageCreateStatuspageRequest} createReq Information about new statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspagePost(createReq: StatuspageCreateStatuspageRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StatuspageCreateStatuspageSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspagePost(createReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageApi.statuspagePost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user retrieve information about statuspage with specified slug.
+         * @summary Get statuspage by slug
+         * @param {string} slug Slug of statuspage to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageSlugSlugGet(slug: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StatuspageGetStatuspageSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageSlugSlugGet(slug, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageApi.statuspageSlugSlugGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user retrieve information about statuspage with specified ID.
+         * @summary Get statuspage by ID
+         * @param {number} statuspageID ID of statuspage to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIDGet(statuspageID: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StatuspageGetStatuspageSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIDGet(statuspageID, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageApi.statuspageStatuspageIDGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to delete a statuspage with specified ID
+         * @summary Delete statuspage by ID
+         * @param {number} statuspageId ID of statuspage to delete
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdDelete(statuspageId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HelpersGenericDeleteSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdDelete(statuspageId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageApi.statuspageStatuspageIdDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to update a statuspage.
+         * @summary Update a statuspage
+         * @param {number} statuspageId ID of statuspage to update
+         * @param {StatuspageUpdateStatuspageRequest} updateReq New information about statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdPatch(statuspageId: number, updateReq: StatuspageUpdateStatuspageRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StatuspageGetStatuspageSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdPatch(statuspageId, updateReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageApi.statuspageStatuspageIdPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * StatuspageApi - factory interface
+ */
+export const StatuspageApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = StatuspageApiFp(configuration)
+    return {
+        /**
+         * Allows a user to get a list of their statuspages
+         * @summary Get all statuspages
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageGet(options?: RawAxiosRequestConfig): AxiosPromise<StatuspageListStatuspagesSuccessResponse> {
+            return localVarFp.statuspageGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to create a statuspage.
+         * @summary Create a statuspage
+         * @param {StatuspageCreateStatuspageRequest} createReq Information about new statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspagePost(createReq: StatuspageCreateStatuspageRequest, options?: RawAxiosRequestConfig): AxiosPromise<StatuspageCreateStatuspageSuccessResponse> {
+            return localVarFp.statuspagePost(createReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user retrieve information about statuspage with specified slug.
+         * @summary Get statuspage by slug
+         * @param {string} slug Slug of statuspage to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageSlugSlugGet(slug: string, options?: RawAxiosRequestConfig): AxiosPromise<StatuspageGetStatuspageSuccessResponse> {
+            return localVarFp.statuspageSlugSlugGet(slug, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user retrieve information about statuspage with specified ID.
+         * @summary Get statuspage by ID
+         * @param {number} statuspageID ID of statuspage to get
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIDGet(statuspageID: number, options?: RawAxiosRequestConfig): AxiosPromise<StatuspageGetStatuspageSuccessResponse> {
+            return localVarFp.statuspageStatuspageIDGet(statuspageID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to delete a statuspage with specified ID
+         * @summary Delete statuspage by ID
+         * @param {number} statuspageId ID of statuspage to delete
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDelete(statuspageId: number, options?: RawAxiosRequestConfig): AxiosPromise<HelpersGenericDeleteSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdDelete(statuspageId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to update a statuspage.
+         * @summary Update a statuspage
+         * @param {number} statuspageId ID of statuspage to update
+         * @param {StatuspageUpdateStatuspageRequest} updateReq New information about statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdPatch(statuspageId: number, updateReq: StatuspageUpdateStatuspageRequest, options?: RawAxiosRequestConfig): AxiosPromise<StatuspageGetStatuspageSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdPatch(statuspageId, updateReq, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * StatuspageApi - object-oriented interface
+ */
+export class StatuspageApi extends BaseAPI {
+    /**
+     * Allows a user to get a list of their statuspages
+     * @summary Get all statuspages
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageGet(options?: RawAxiosRequestConfig) {
+        return StatuspageApiFp(this.configuration).statuspageGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to create a statuspage.
+     * @summary Create a statuspage
+     * @param {StatuspageCreateStatuspageRequest} createReq Information about new statuspage
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspagePost(createReq: StatuspageCreateStatuspageRequest, options?: RawAxiosRequestConfig) {
+        return StatuspageApiFp(this.configuration).statuspagePost(createReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user retrieve information about statuspage with specified slug.
+     * @summary Get statuspage by slug
+     * @param {string} slug Slug of statuspage to get
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageSlugSlugGet(slug: string, options?: RawAxiosRequestConfig) {
+        return StatuspageApiFp(this.configuration).statuspageSlugSlugGet(slug, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user retrieve information about statuspage with specified ID.
+     * @summary Get statuspage by ID
+     * @param {number} statuspageID ID of statuspage to get
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIDGet(statuspageID: number, options?: RawAxiosRequestConfig) {
+        return StatuspageApiFp(this.configuration).statuspageStatuspageIDGet(statuspageID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to delete a statuspage with specified ID
+     * @summary Delete statuspage by ID
+     * @param {number} statuspageId ID of statuspage to delete
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdDelete(statuspageId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageApiFp(this.configuration).statuspageStatuspageIdDelete(statuspageId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to update a statuspage.
+     * @summary Update a statuspage
+     * @param {number} statuspageId ID of statuspage to update
+     * @param {StatuspageUpdateStatuspageRequest} updateReq New information about statuspage
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdPatch(statuspageId: number, updateReq: StatuspageUpdateStatuspageRequest, options?: RawAxiosRequestConfig) {
+        return StatuspageApiFp(this.configuration).statuspageStatuspageIdPatch(statuspageId, updateReq, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * StatuspageDomainApi - axios parameter creator
+ */
+export const StatuspageDomainApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Allows a user to delete a statuspage domain with specified ID that belongs to a statuspage with given ID
+         * @summary Delete statuspage domain by ID
+         * @param {number} statuspageId ID of statuspage that owns the domain
+         * @param {number} domainId ID of statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDomainDomainIdDelete: async (statuspageId: number, domainId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdDomainDomainIdDelete', 'statuspageId', statuspageId)
+            // verify required parameter 'domainId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdDomainDomainIdDelete', 'domainId', domainId)
+            const localVarPath = `/statuspage/{statuspageId}/domain/{domainId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{domainId}', encodeURIComponent(String(domainId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to retrieve information about a domain with specified ID that belongs to a statuspage with given ID.
+         * @summary Get a statuspage domain by ID
+         * @param {number} statuspageId ID of statuspage that owns the domain
+         * @param {number} domainId ID of statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDomainDomainIdGet: async (statuspageId: number, domainId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdDomainDomainIdGet', 'statuspageId', statuspageId)
+            // verify required parameter 'domainId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdDomainDomainIdGet', 'domainId', domainId)
+            const localVarPath = `/statuspage/{statuspageId}/domain/{domainId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{domainId}', encodeURIComponent(String(domainId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to update information about a statuspage domain with specified ID owned by a statuspage with given ID.
+         * @summary Update a statuspage domain
+         * @param {number} statuspageId ID of statuspage that owns the domain
+         * @param {number} domainId ID of statuspage domain to update
+         * @param {DomainUpdateStatuspageDomainRequest} updateReq New information about statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDomainDomainIdPatch: async (statuspageId: number, domainId: number, updateReq: DomainUpdateStatuspageDomainRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdDomainDomainIdPatch', 'statuspageId', statuspageId)
+            // verify required parameter 'domainId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdDomainDomainIdPatch', 'domainId', domainId)
+            // verify required parameter 'updateReq' is not null or undefined
+            assertParamExists('statuspageStatuspageIdDomainDomainIdPatch', 'updateReq', updateReq)
+            const localVarPath = `/statuspage/{statuspageId}/domain/{domainId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{domainId}', encodeURIComponent(String(domainId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to get a list of their statuspages domains
+         * @summary Get all domains of a statuspage
+         * @param {number} statuspageId ID of statuspage to list domains of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDomainGet: async (statuspageId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdDomainGet', 'statuspageId', statuspageId)
+            const localVarPath = `/statuspage/{statuspageId}/domain`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to create a domain for a statuspage.
+         * @summary Create a statuspage domain
+         * @param {number} statuspageId ID of statuspage to assign the new domain to
+         * @param {DomainCreateStatuspageDomainRequest} createReq Information about new statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDomainPost: async (statuspageId: number, createReq: DomainCreateStatuspageDomainRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdDomainPost', 'statuspageId', statuspageId)
+            // verify required parameter 'createReq' is not null or undefined
+            assertParamExists('statuspageStatuspageIdDomainPost', 'createReq', createReq)
+            const localVarPath = `/statuspage/{statuspageId}/domain`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * StatuspageDomainApi - functional programming interface
+ */
+export const StatuspageDomainApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = StatuspageDomainApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Allows a user to delete a statuspage domain with specified ID that belongs to a statuspage with given ID
+         * @summary Delete statuspage domain by ID
+         * @param {number} statuspageId ID of statuspage that owns the domain
+         * @param {number} domainId ID of statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdDomainDomainIdDelete(statuspageId: number, domainId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HelpersGenericDeleteSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdDomainDomainIdDelete(statuspageId, domainId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageDomainApi.statuspageStatuspageIdDomainDomainIdDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to retrieve information about a domain with specified ID that belongs to a statuspage with given ID.
+         * @summary Get a statuspage domain by ID
+         * @param {number} statuspageId ID of statuspage that owns the domain
+         * @param {number} domainId ID of statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdDomainDomainIdGet(statuspageId: number, domainId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DomainGetStatuspageDomainSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdDomainDomainIdGet(statuspageId, domainId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageDomainApi.statuspageStatuspageIdDomainDomainIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to update information about a statuspage domain with specified ID owned by a statuspage with given ID.
+         * @summary Update a statuspage domain
+         * @param {number} statuspageId ID of statuspage that owns the domain
+         * @param {number} domainId ID of statuspage domain to update
+         * @param {DomainUpdateStatuspageDomainRequest} updateReq New information about statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdDomainDomainIdPatch(statuspageId: number, domainId: number, updateReq: DomainUpdateStatuspageDomainRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DomainGetStatuspageDomainSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdDomainDomainIdPatch(statuspageId, domainId, updateReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageDomainApi.statuspageStatuspageIdDomainDomainIdPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to get a list of their statuspages domains
+         * @summary Get all domains of a statuspage
+         * @param {number} statuspageId ID of statuspage to list domains of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdDomainGet(statuspageId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DomainListStatuspageDomainsSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdDomainGet(statuspageId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageDomainApi.statuspageStatuspageIdDomainGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to create a domain for a statuspage.
+         * @summary Create a statuspage domain
+         * @param {number} statuspageId ID of statuspage to assign the new domain to
+         * @param {DomainCreateStatuspageDomainRequest} createReq Information about new statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdDomainPost(statuspageId: number, createReq: DomainCreateStatuspageDomainRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DomainCreateStatuspageDomainSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdDomainPost(statuspageId, createReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageDomainApi.statuspageStatuspageIdDomainPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * StatuspageDomainApi - factory interface
+ */
+export const StatuspageDomainApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = StatuspageDomainApiFp(configuration)
+    return {
+        /**
+         * Allows a user to delete a statuspage domain with specified ID that belongs to a statuspage with given ID
+         * @summary Delete statuspage domain by ID
+         * @param {number} statuspageId ID of statuspage that owns the domain
+         * @param {number} domainId ID of statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDomainDomainIdDelete(statuspageId: number, domainId: number, options?: RawAxiosRequestConfig): AxiosPromise<HelpersGenericDeleteSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdDomainDomainIdDelete(statuspageId, domainId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to retrieve information about a domain with specified ID that belongs to a statuspage with given ID.
+         * @summary Get a statuspage domain by ID
+         * @param {number} statuspageId ID of statuspage that owns the domain
+         * @param {number} domainId ID of statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDomainDomainIdGet(statuspageId: number, domainId: number, options?: RawAxiosRequestConfig): AxiosPromise<DomainGetStatuspageDomainSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdDomainDomainIdGet(statuspageId, domainId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to update information about a statuspage domain with specified ID owned by a statuspage with given ID.
+         * @summary Update a statuspage domain
+         * @param {number} statuspageId ID of statuspage that owns the domain
+         * @param {number} domainId ID of statuspage domain to update
+         * @param {DomainUpdateStatuspageDomainRequest} updateReq New information about statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDomainDomainIdPatch(statuspageId: number, domainId: number, updateReq: DomainUpdateStatuspageDomainRequest, options?: RawAxiosRequestConfig): AxiosPromise<DomainGetStatuspageDomainSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdDomainDomainIdPatch(statuspageId, domainId, updateReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to get a list of their statuspages domains
+         * @summary Get all domains of a statuspage
+         * @param {number} statuspageId ID of statuspage to list domains of
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDomainGet(statuspageId: number, options?: RawAxiosRequestConfig): AxiosPromise<DomainListStatuspageDomainsSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdDomainGet(statuspageId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to create a domain for a statuspage.
+         * @summary Create a statuspage domain
+         * @param {number} statuspageId ID of statuspage to assign the new domain to
+         * @param {DomainCreateStatuspageDomainRequest} createReq Information about new statuspage domain
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdDomainPost(statuspageId: number, createReq: DomainCreateStatuspageDomainRequest, options?: RawAxiosRequestConfig): AxiosPromise<DomainCreateStatuspageDomainSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdDomainPost(statuspageId, createReq, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * StatuspageDomainApi - object-oriented interface
+ */
+export class StatuspageDomainApi extends BaseAPI {
+    /**
+     * Allows a user to delete a statuspage domain with specified ID that belongs to a statuspage with given ID
+     * @summary Delete statuspage domain by ID
+     * @param {number} statuspageId ID of statuspage that owns the domain
+     * @param {number} domainId ID of statuspage domain
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdDomainDomainIdDelete(statuspageId: number, domainId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageDomainApiFp(this.configuration).statuspageStatuspageIdDomainDomainIdDelete(statuspageId, domainId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to retrieve information about a domain with specified ID that belongs to a statuspage with given ID.
+     * @summary Get a statuspage domain by ID
+     * @param {number} statuspageId ID of statuspage that owns the domain
+     * @param {number} domainId ID of statuspage domain
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdDomainDomainIdGet(statuspageId: number, domainId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageDomainApiFp(this.configuration).statuspageStatuspageIdDomainDomainIdGet(statuspageId, domainId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to update information about a statuspage domain with specified ID owned by a statuspage with given ID.
+     * @summary Update a statuspage domain
+     * @param {number} statuspageId ID of statuspage that owns the domain
+     * @param {number} domainId ID of statuspage domain to update
+     * @param {DomainUpdateStatuspageDomainRequest} updateReq New information about statuspage domain
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdDomainDomainIdPatch(statuspageId: number, domainId: number, updateReq: DomainUpdateStatuspageDomainRequest, options?: RawAxiosRequestConfig) {
+        return StatuspageDomainApiFp(this.configuration).statuspageStatuspageIdDomainDomainIdPatch(statuspageId, domainId, updateReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to get a list of their statuspages domains
+     * @summary Get all domains of a statuspage
+     * @param {number} statuspageId ID of statuspage to list domains of
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdDomainGet(statuspageId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageDomainApiFp(this.configuration).statuspageStatuspageIdDomainGet(statuspageId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to create a domain for a statuspage.
+     * @summary Create a statuspage domain
+     * @param {number} statuspageId ID of statuspage to assign the new domain to
+     * @param {DomainCreateStatuspageDomainRequest} createReq Information about new statuspage domain
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdDomainPost(statuspageId: number, createReq: DomainCreateStatuspageDomainRequest, options?: RawAxiosRequestConfig) {
+        return StatuspageDomainApiFp(this.configuration).statuspageStatuspageIdDomainPost(statuspageId, createReq, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * StatuspageGroupApi - axios parameter creator
+ */
+export const StatuspageGroupApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Allows a user to get a list of groups in a statuspage
+         * @summary Get all groups of a statuspage
+         * @param {number} statuspageId ID of statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdGroupGet: async (statuspageId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdGroupGet', 'statuspageId', statuspageId)
+            const localVarPath = `/statuspage/{statuspageId}/group`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to delete a group belonging to a statuspage with given IDs
+         * @summary Delete a statuspage group
+         * @param {number} statuspageId ID of statuspage the group belongs to
+         * @param {number} groupId ID of statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdGroupGroupIdDelete: async (statuspageId: number, groupId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdGroupGroupIdDelete', 'statuspageId', statuspageId)
+            // verify required parameter 'groupId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdGroupGroupIdDelete', 'groupId', groupId)
+            const localVarPath = `/statuspage/{statuspageId}/group/{groupId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{groupId}', encodeURIComponent(String(groupId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to retrieve information about a group belonging to a statuspage with given IDs
+         * @summary Get a group of a statuspage by ID
+         * @param {number} statuspageId ID of statuspage the group belongs to
+         * @param {number} groupId ID of statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdGroupGroupIdGet: async (statuspageId: number, groupId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdGroupGroupIdGet', 'statuspageId', statuspageId)
+            // verify required parameter 'groupId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdGroupGroupIdGet', 'groupId', groupId)
+            const localVarPath = `/statuspage/{statuspageId}/group/{groupId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{groupId}', encodeURIComponent(String(groupId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to update information about a group belonging to a statuspage with given IDs
+         * @summary Update a statuspage group
+         * @param {number} statuspageId ID of statuspage the group belongs to
+         * @param {number} groupId ID of statuspage group
+         * @param {GroupUpdateStatuspageGroupRequest} updateReq New information about statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdGroupGroupIdPatch: async (statuspageId: number, groupId: number, updateReq: GroupUpdateStatuspageGroupRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdGroupGroupIdPatch', 'statuspageId', statuspageId)
+            // verify required parameter 'groupId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdGroupGroupIdPatch', 'groupId', groupId)
+            // verify required parameter 'updateReq' is not null or undefined
+            assertParamExists('statuspageStatuspageIdGroupGroupIdPatch', 'updateReq', updateReq)
+            const localVarPath = `/statuspage/{statuspageId}/group/{groupId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{groupId}', encodeURIComponent(String(groupId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to create a group for targets in a statuspage.
+         * @summary Create a statuspage group
+         * @param {number} statuspageId ID of statuspage
+         * @param {GroupCreateStatuspageGroupRequest} createReq Information about new statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdGroupPost: async (statuspageId: number, createReq: GroupCreateStatuspageGroupRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdGroupPost', 'statuspageId', statuspageId)
+            // verify required parameter 'createReq' is not null or undefined
+            assertParamExists('statuspageStatuspageIdGroupPost', 'createReq', createReq)
+            const localVarPath = `/statuspage/{statuspageId}/group`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to update information about the placement of a target on a statuspage.
+         * @summary Update a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} targetId ID of target
+         * @param {number} groupId ID of statuspage group
+         * @param {StatuspageTargetCreateStatuspageTargetRequest} updateReq New information about statuspage target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdTargetTargetIdPatch: async (statuspageId: number, targetId: number, groupId: number, updateReq: StatuspageTargetCreateStatuspageTargetRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdTargetTargetIdPatch', 'statuspageId', statuspageId)
+            // verify required parameter 'targetId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdTargetTargetIdPatch', 'targetId', targetId)
+            // verify required parameter 'groupId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdTargetTargetIdPatch', 'groupId', groupId)
+            // verify required parameter 'updateReq' is not null or undefined
+            assertParamExists('statuspageStatuspageIdTargetTargetIdPatch', 'updateReq', updateReq)
+            const localVarPath = `/statuspage/{statuspageId}/target/{targetId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{targetId}', encodeURIComponent(String(targetId)))
+                .replace('{groupId}', encodeURIComponent(String(groupId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * StatuspageGroupApi - functional programming interface
+ */
+export const StatuspageGroupApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = StatuspageGroupApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Allows a user to get a list of groups in a statuspage
+         * @summary Get all groups of a statuspage
+         * @param {number} statuspageId ID of statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdGroupGet(statuspageId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupListStatuspageGroupsSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdGroupGet(statuspageId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageGroupApi.statuspageStatuspageIdGroupGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to delete a group belonging to a statuspage with given IDs
+         * @summary Delete a statuspage group
+         * @param {number} statuspageId ID of statuspage the group belongs to
+         * @param {number} groupId ID of statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdGroupGroupIdDelete(statuspageId: number, groupId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HelpersGenericDeleteSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdGroupGroupIdDelete(statuspageId, groupId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageGroupApi.statuspageStatuspageIdGroupGroupIdDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to retrieve information about a group belonging to a statuspage with given IDs
+         * @summary Get a group of a statuspage by ID
+         * @param {number} statuspageId ID of statuspage the group belongs to
+         * @param {number} groupId ID of statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdGroupGroupIdGet(statuspageId: number, groupId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupGetStatuspageGroupSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdGroupGroupIdGet(statuspageId, groupId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageGroupApi.statuspageStatuspageIdGroupGroupIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to update information about a group belonging to a statuspage with given IDs
+         * @summary Update a statuspage group
+         * @param {number} statuspageId ID of statuspage the group belongs to
+         * @param {number} groupId ID of statuspage group
+         * @param {GroupUpdateStatuspageGroupRequest} updateReq New information about statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdGroupGroupIdPatch(statuspageId: number, groupId: number, updateReq: GroupUpdateStatuspageGroupRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupGetStatuspageGroupSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdGroupGroupIdPatch(statuspageId, groupId, updateReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageGroupApi.statuspageStatuspageIdGroupGroupIdPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to create a group for targets in a statuspage.
+         * @summary Create a statuspage group
+         * @param {number} statuspageId ID of statuspage
+         * @param {GroupCreateStatuspageGroupRequest} createReq Information about new statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdGroupPost(statuspageId: number, createReq: GroupCreateStatuspageGroupRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupCreateStatuspageGroupSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdGroupPost(statuspageId, createReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageGroupApi.statuspageStatuspageIdGroupPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to update information about the placement of a target on a statuspage.
+         * @summary Update a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} targetId ID of target
+         * @param {number} groupId ID of statuspage group
+         * @param {StatuspageTargetCreateStatuspageTargetRequest} updateReq New information about statuspage target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdTargetTargetIdPatch(statuspageId: number, targetId: number, groupId: number, updateReq: StatuspageTargetCreateStatuspageTargetRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StatuspageTargetGetStatuspageTargetSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdTargetTargetIdPatch(statuspageId, targetId, groupId, updateReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageGroupApi.statuspageStatuspageIdTargetTargetIdPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * StatuspageGroupApi - factory interface
+ */
+export const StatuspageGroupApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = StatuspageGroupApiFp(configuration)
+    return {
+        /**
+         * Allows a user to get a list of groups in a statuspage
+         * @summary Get all groups of a statuspage
+         * @param {number} statuspageId ID of statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdGroupGet(statuspageId: number, options?: RawAxiosRequestConfig): AxiosPromise<GroupListStatuspageGroupsSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdGroupGet(statuspageId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to delete a group belonging to a statuspage with given IDs
+         * @summary Delete a statuspage group
+         * @param {number} statuspageId ID of statuspage the group belongs to
+         * @param {number} groupId ID of statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdGroupGroupIdDelete(statuspageId: number, groupId: number, options?: RawAxiosRequestConfig): AxiosPromise<HelpersGenericDeleteSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdGroupGroupIdDelete(statuspageId, groupId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to retrieve information about a group belonging to a statuspage with given IDs
+         * @summary Get a group of a statuspage by ID
+         * @param {number} statuspageId ID of statuspage the group belongs to
+         * @param {number} groupId ID of statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdGroupGroupIdGet(statuspageId: number, groupId: number, options?: RawAxiosRequestConfig): AxiosPromise<GroupGetStatuspageGroupSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdGroupGroupIdGet(statuspageId, groupId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to update information about a group belonging to a statuspage with given IDs
+         * @summary Update a statuspage group
+         * @param {number} statuspageId ID of statuspage the group belongs to
+         * @param {number} groupId ID of statuspage group
+         * @param {GroupUpdateStatuspageGroupRequest} updateReq New information about statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdGroupGroupIdPatch(statuspageId: number, groupId: number, updateReq: GroupUpdateStatuspageGroupRequest, options?: RawAxiosRequestConfig): AxiosPromise<GroupGetStatuspageGroupSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdGroupGroupIdPatch(statuspageId, groupId, updateReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to create a group for targets in a statuspage.
+         * @summary Create a statuspage group
+         * @param {number} statuspageId ID of statuspage
+         * @param {GroupCreateStatuspageGroupRequest} createReq Information about new statuspage group
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdGroupPost(statuspageId: number, createReq: GroupCreateStatuspageGroupRequest, options?: RawAxiosRequestConfig): AxiosPromise<GroupCreateStatuspageGroupSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdGroupPost(statuspageId, createReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to update information about the placement of a target on a statuspage.
+         * @summary Update a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} targetId ID of target
+         * @param {number} groupId ID of statuspage group
+         * @param {StatuspageTargetCreateStatuspageTargetRequest} updateReq New information about statuspage target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdTargetTargetIdPatch(statuspageId: number, targetId: number, groupId: number, updateReq: StatuspageTargetCreateStatuspageTargetRequest, options?: RawAxiosRequestConfig): AxiosPromise<StatuspageTargetGetStatuspageTargetSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdTargetTargetIdPatch(statuspageId, targetId, groupId, updateReq, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * StatuspageGroupApi - object-oriented interface
+ */
+export class StatuspageGroupApi extends BaseAPI {
+    /**
+     * Allows a user to get a list of groups in a statuspage
+     * @summary Get all groups of a statuspage
+     * @param {number} statuspageId ID of statuspage
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdGroupGet(statuspageId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageGroupApiFp(this.configuration).statuspageStatuspageIdGroupGet(statuspageId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to delete a group belonging to a statuspage with given IDs
+     * @summary Delete a statuspage group
+     * @param {number} statuspageId ID of statuspage the group belongs to
+     * @param {number} groupId ID of statuspage group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdGroupGroupIdDelete(statuspageId: number, groupId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageGroupApiFp(this.configuration).statuspageStatuspageIdGroupGroupIdDelete(statuspageId, groupId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to retrieve information about a group belonging to a statuspage with given IDs
+     * @summary Get a group of a statuspage by ID
+     * @param {number} statuspageId ID of statuspage the group belongs to
+     * @param {number} groupId ID of statuspage group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdGroupGroupIdGet(statuspageId: number, groupId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageGroupApiFp(this.configuration).statuspageStatuspageIdGroupGroupIdGet(statuspageId, groupId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to update information about a group belonging to a statuspage with given IDs
+     * @summary Update a statuspage group
+     * @param {number} statuspageId ID of statuspage the group belongs to
+     * @param {number} groupId ID of statuspage group
+     * @param {GroupUpdateStatuspageGroupRequest} updateReq New information about statuspage group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdGroupGroupIdPatch(statuspageId: number, groupId: number, updateReq: GroupUpdateStatuspageGroupRequest, options?: RawAxiosRequestConfig) {
+        return StatuspageGroupApiFp(this.configuration).statuspageStatuspageIdGroupGroupIdPatch(statuspageId, groupId, updateReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to create a group for targets in a statuspage.
+     * @summary Create a statuspage group
+     * @param {number} statuspageId ID of statuspage
+     * @param {GroupCreateStatuspageGroupRequest} createReq Information about new statuspage group
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdGroupPost(statuspageId: number, createReq: GroupCreateStatuspageGroupRequest, options?: RawAxiosRequestConfig) {
+        return StatuspageGroupApiFp(this.configuration).statuspageStatuspageIdGroupPost(statuspageId, createReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to update information about the placement of a target on a statuspage.
+     * @summary Update a statuspage target
+     * @param {number} statuspageId ID of statuspage
+     * @param {number} targetId ID of target
+     * @param {number} groupId ID of statuspage group
+     * @param {StatuspageTargetCreateStatuspageTargetRequest} updateReq New information about statuspage target
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdTargetTargetIdPatch(statuspageId: number, targetId: number, groupId: number, updateReq: StatuspageTargetCreateStatuspageTargetRequest, options?: RawAxiosRequestConfig) {
+        return StatuspageGroupApiFp(this.configuration).statuspageStatuspageIdTargetTargetIdPatch(statuspageId, targetId, groupId, updateReq, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * StatuspageNoticeApi - axios parameter creator
+ */
+export const StatuspageNoticeApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Allows a user to get a list of notices on their statuspage
+         * @summary Get all notices for a statuspage
+         * @param {number} statuspageId ID of statuspage to list notices for
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeGet: async (statuspageId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeGet', 'statuspageId', statuspageId)
+            const localVarPath = `/statuspage/{statuspageId}/notice`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to delete a notice with specified ID that belongs to a statuspage with given ID
+         * @summary Delete statuspage notice by ID
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdDelete: async (statuspageId: number, noticeId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdDelete', 'statuspageId', statuspageId)
+            // verify required parameter 'noticeId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdDelete', 'noticeId', noticeId)
+            const localVarPath = `/statuspage/{statuspageId}/notice/{noticeId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{noticeId}', encodeURIComponent(String(noticeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to retrieve a notice with specified ID that belongs to a statuspage with given ID.
+         * @summary Get a statuspage notice by ID
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdGet: async (statuspageId: number, noticeId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdGet', 'statuspageId', statuspageId)
+            // verify required parameter 'noticeId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdGet', 'noticeId', noticeId)
+            const localVarPath = `/statuspage/{statuspageId}/notice/{noticeId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{noticeId}', encodeURIComponent(String(noticeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to update information about a notice with specified ID that belong to a statuspage with given ID.
+         * @summary Update a statuspage notice
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice update
+         * @param {NoticeUpdateStatuspageNoticeRequest} updateReq New information about statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdPatch: async (statuspageId: number, noticeId: number, updateReq: NoticeUpdateStatuspageNoticeRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdPatch', 'statuspageId', statuspageId)
+            // verify required parameter 'noticeId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdPatch', 'noticeId', noticeId)
+            // verify required parameter 'updateReq' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdPatch', 'updateReq', updateReq)
+            const localVarPath = `/statuspage/{statuspageId}/notice/{noticeId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{noticeId}', encodeURIComponent(String(noticeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to create a notice on a statuspage.
+         * @summary Create a statuspage notice
+         * @param {number} statuspageId ID of statuspage to create the notice in
+         * @param {NoticeCreateStatuspageNoticeRequest} createReq Information about new statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticePost: async (statuspageId: number, createReq: NoticeCreateStatuspageNoticeRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticePost', 'statuspageId', statuspageId)
+            // verify required parameter 'createReq' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticePost', 'createReq', createReq)
+            const localVarPath = `/statuspage/{statuspageId}/notice`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * StatuspageNoticeApi - functional programming interface
+ */
+export const StatuspageNoticeApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = StatuspageNoticeApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Allows a user to get a list of notices on their statuspage
+         * @summary Get all notices for a statuspage
+         * @param {number} statuspageId ID of statuspage to list notices for
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdNoticeGet(statuspageId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NoticeListStatuspageNoticesSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdNoticeGet(statuspageId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageNoticeApi.statuspageStatuspageIdNoticeGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to delete a notice with specified ID that belongs to a statuspage with given ID
+         * @summary Delete statuspage notice by ID
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdNoticeNoticeIdDelete(statuspageId: number, noticeId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HelpersGenericDeleteSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdNoticeNoticeIdDelete(statuspageId, noticeId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageNoticeApi.statuspageStatuspageIdNoticeNoticeIdDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to retrieve a notice with specified ID that belongs to a statuspage with given ID.
+         * @summary Get a statuspage notice by ID
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdNoticeNoticeIdGet(statuspageId: number, noticeId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NoticeGetStatuspageNoticeSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdNoticeNoticeIdGet(statuspageId, noticeId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageNoticeApi.statuspageStatuspageIdNoticeNoticeIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to update information about a notice with specified ID that belong to a statuspage with given ID.
+         * @summary Update a statuspage notice
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice update
+         * @param {NoticeUpdateStatuspageNoticeRequest} updateReq New information about statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdNoticeNoticeIdPatch(statuspageId: number, noticeId: number, updateReq: NoticeUpdateStatuspageNoticeRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NoticeGetStatuspageNoticeSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdNoticeNoticeIdPatch(statuspageId, noticeId, updateReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageNoticeApi.statuspageStatuspageIdNoticeNoticeIdPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to create a notice on a statuspage.
+         * @summary Create a statuspage notice
+         * @param {number} statuspageId ID of statuspage to create the notice in
+         * @param {NoticeCreateStatuspageNoticeRequest} createReq Information about new statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdNoticePost(statuspageId: number, createReq: NoticeCreateStatuspageNoticeRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NoticeCreateStatuspageNoticeSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdNoticePost(statuspageId, createReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageNoticeApi.statuspageStatuspageIdNoticePost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * StatuspageNoticeApi - factory interface
+ */
+export const StatuspageNoticeApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = StatuspageNoticeApiFp(configuration)
+    return {
+        /**
+         * Allows a user to get a list of notices on their statuspage
+         * @summary Get all notices for a statuspage
+         * @param {number} statuspageId ID of statuspage to list notices for
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeGet(statuspageId: number, options?: RawAxiosRequestConfig): AxiosPromise<NoticeListStatuspageNoticesSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdNoticeGet(statuspageId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to delete a notice with specified ID that belongs to a statuspage with given ID
+         * @summary Delete statuspage notice by ID
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdDelete(statuspageId: number, noticeId: number, options?: RawAxiosRequestConfig): AxiosPromise<HelpersGenericDeleteSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdNoticeNoticeIdDelete(statuspageId, noticeId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to retrieve a notice with specified ID that belongs to a statuspage with given ID.
+         * @summary Get a statuspage notice by ID
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdGet(statuspageId: number, noticeId: number, options?: RawAxiosRequestConfig): AxiosPromise<NoticeGetStatuspageNoticeSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdNoticeNoticeIdGet(statuspageId, noticeId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to update information about a notice with specified ID that belong to a statuspage with given ID.
+         * @summary Update a statuspage notice
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice update
+         * @param {NoticeUpdateStatuspageNoticeRequest} updateReq New information about statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdPatch(statuspageId: number, noticeId: number, updateReq: NoticeUpdateStatuspageNoticeRequest, options?: RawAxiosRequestConfig): AxiosPromise<NoticeGetStatuspageNoticeSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdNoticeNoticeIdPatch(statuspageId, noticeId, updateReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to create a notice on a statuspage.
+         * @summary Create a statuspage notice
+         * @param {number} statuspageId ID of statuspage to create the notice in
+         * @param {NoticeCreateStatuspageNoticeRequest} createReq Information about new statuspage notice
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticePost(statuspageId: number, createReq: NoticeCreateStatuspageNoticeRequest, options?: RawAxiosRequestConfig): AxiosPromise<NoticeCreateStatuspageNoticeSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdNoticePost(statuspageId, createReq, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * StatuspageNoticeApi - object-oriented interface
+ */
+export class StatuspageNoticeApi extends BaseAPI {
+    /**
+     * Allows a user to get a list of notices on their statuspage
+     * @summary Get all notices for a statuspage
+     * @param {number} statuspageId ID of statuspage to list notices for
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdNoticeGet(statuspageId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageNoticeApiFp(this.configuration).statuspageStatuspageIdNoticeGet(statuspageId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to delete a notice with specified ID that belongs to a statuspage with given ID
+     * @summary Delete statuspage notice by ID
+     * @param {number} statuspageId ID of statuspage
+     * @param {number} noticeId ID of statuspage notice
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdNoticeNoticeIdDelete(statuspageId: number, noticeId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageNoticeApiFp(this.configuration).statuspageStatuspageIdNoticeNoticeIdDelete(statuspageId, noticeId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to retrieve a notice with specified ID that belongs to a statuspage with given ID.
+     * @summary Get a statuspage notice by ID
+     * @param {number} statuspageId ID of statuspage
+     * @param {number} noticeId ID of statuspage notice
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdNoticeNoticeIdGet(statuspageId: number, noticeId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageNoticeApiFp(this.configuration).statuspageStatuspageIdNoticeNoticeIdGet(statuspageId, noticeId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to update information about a notice with specified ID that belong to a statuspage with given ID.
+     * @summary Update a statuspage notice
+     * @param {number} statuspageId ID of statuspage
+     * @param {number} noticeId ID of statuspage notice update
+     * @param {NoticeUpdateStatuspageNoticeRequest} updateReq New information about statuspage notice
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdNoticeNoticeIdPatch(statuspageId: number, noticeId: number, updateReq: NoticeUpdateStatuspageNoticeRequest, options?: RawAxiosRequestConfig) {
+        return StatuspageNoticeApiFp(this.configuration).statuspageStatuspageIdNoticeNoticeIdPatch(statuspageId, noticeId, updateReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to create a notice on a statuspage.
+     * @summary Create a statuspage notice
+     * @param {number} statuspageId ID of statuspage to create the notice in
+     * @param {NoticeCreateStatuspageNoticeRequest} createReq Information about new statuspage notice
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdNoticePost(statuspageId: number, createReq: NoticeCreateStatuspageNoticeRequest, options?: RawAxiosRequestConfig) {
+        return StatuspageNoticeApiFp(this.configuration).statuspageStatuspageIdNoticePost(statuspageId, createReq, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * StatuspageNoticeUpdateApi - axios parameter creator
+ */
+export const StatuspageNoticeUpdateApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Allows a user to get a list of updates for a notice on their statuspage
+         * @summary Get all updates of a statuspage notice
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of notice to list updates for
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdUpdateGet: async (statuspageId: number, noticeId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdUpdateGet', 'statuspageId', statuspageId)
+            // verify required parameter 'noticeId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdUpdateGet', 'noticeId', noticeId)
+            const localVarPath = `/statuspage/{statuspageId}/notice/{noticeId}/update`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{noticeId}', encodeURIComponent(String(noticeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to create an update for a notice on a statuspage.
+         * @summary Create a statuspage notice update
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {UpdateCreateStatuspageNoticeUpdateRequest} createReq Information about new statuspage notice update
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdUpdatePost: async (statuspageId: number, noticeId: number, createReq: UpdateCreateStatuspageNoticeUpdateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdUpdatePost', 'statuspageId', statuspageId)
+            // verify required parameter 'noticeId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdUpdatePost', 'noticeId', noticeId)
+            // verify required parameter 'createReq' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdUpdatePost', 'createReq', createReq)
+            const localVarPath = `/statuspage/{statuspageId}/notice/{noticeId}/update`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{noticeId}', encodeURIComponent(String(noticeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to get an update of a notice on their statuspage with IDs of statuspage, notice and update
+         * @summary Get a statuspage notice update by IDs
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {number} updateId ID of statuspage notice update
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdUpdateUpdateIdGet: async (statuspageId: number, noticeId: number, updateId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdUpdateUpdateIdGet', 'statuspageId', statuspageId)
+            // verify required parameter 'noticeId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdUpdateUpdateIdGet', 'noticeId', noticeId)
+            // verify required parameter 'updateId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdNoticeNoticeIdUpdateUpdateIdGet', 'updateId', updateId)
+            const localVarPath = `/statuspage/{statuspageId}/notice/{noticeId}/update/{updateId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{noticeId}', encodeURIComponent(String(noticeId)))
+                .replace('{updateId}', encodeURIComponent(String(updateId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * StatuspageNoticeUpdateApi - functional programming interface
+ */
+export const StatuspageNoticeUpdateApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = StatuspageNoticeUpdateApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Allows a user to get a list of updates for a notice on their statuspage
+         * @summary Get all updates of a statuspage notice
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of notice to list updates for
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdNoticeNoticeIdUpdateGet(statuspageId: number, noticeId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateListStatuspageNoticeUpdatesSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdNoticeNoticeIdUpdateGet(statuspageId, noticeId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageNoticeUpdateApi.statuspageStatuspageIdNoticeNoticeIdUpdateGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to create an update for a notice on a statuspage.
+         * @summary Create a statuspage notice update
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {UpdateCreateStatuspageNoticeUpdateRequest} createReq Information about new statuspage notice update
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdNoticeNoticeIdUpdatePost(statuspageId: number, noticeId: number, createReq: UpdateCreateStatuspageNoticeUpdateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateCreateStatuspageNoticeUpdateSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdNoticeNoticeIdUpdatePost(statuspageId, noticeId, createReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageNoticeUpdateApi.statuspageStatuspageIdNoticeNoticeIdUpdatePost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to get an update of a notice on their statuspage with IDs of statuspage, notice and update
+         * @summary Get a statuspage notice update by IDs
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {number} updateId ID of statuspage notice update
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdNoticeNoticeIdUpdateUpdateIdGet(statuspageId: number, noticeId: number, updateId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateGetStatuspageNoticeUpdateSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdNoticeNoticeIdUpdateUpdateIdGet(statuspageId, noticeId, updateId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageNoticeUpdateApi.statuspageStatuspageIdNoticeNoticeIdUpdateUpdateIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * StatuspageNoticeUpdateApi - factory interface
+ */
+export const StatuspageNoticeUpdateApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = StatuspageNoticeUpdateApiFp(configuration)
+    return {
+        /**
+         * Allows a user to get a list of updates for a notice on their statuspage
+         * @summary Get all updates of a statuspage notice
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of notice to list updates for
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdUpdateGet(statuspageId: number, noticeId: number, options?: RawAxiosRequestConfig): AxiosPromise<UpdateListStatuspageNoticeUpdatesSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdNoticeNoticeIdUpdateGet(statuspageId, noticeId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to create an update for a notice on a statuspage.
+         * @summary Create a statuspage notice update
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {UpdateCreateStatuspageNoticeUpdateRequest} createReq Information about new statuspage notice update
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdUpdatePost(statuspageId: number, noticeId: number, createReq: UpdateCreateStatuspageNoticeUpdateRequest, options?: RawAxiosRequestConfig): AxiosPromise<UpdateCreateStatuspageNoticeUpdateSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdNoticeNoticeIdUpdatePost(statuspageId, noticeId, createReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to get an update of a notice on their statuspage with IDs of statuspage, notice and update
+         * @summary Get a statuspage notice update by IDs
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} noticeId ID of statuspage notice
+         * @param {number} updateId ID of statuspage notice update
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdNoticeNoticeIdUpdateUpdateIdGet(statuspageId: number, noticeId: number, updateId: number, options?: RawAxiosRequestConfig): AxiosPromise<UpdateGetStatuspageNoticeUpdateSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdNoticeNoticeIdUpdateUpdateIdGet(statuspageId, noticeId, updateId, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * StatuspageNoticeUpdateApi - object-oriented interface
+ */
+export class StatuspageNoticeUpdateApi extends BaseAPI {
+    /**
+     * Allows a user to get a list of updates for a notice on their statuspage
+     * @summary Get all updates of a statuspage notice
+     * @param {number} statuspageId ID of statuspage
+     * @param {number} noticeId ID of notice to list updates for
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdNoticeNoticeIdUpdateGet(statuspageId: number, noticeId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageNoticeUpdateApiFp(this.configuration).statuspageStatuspageIdNoticeNoticeIdUpdateGet(statuspageId, noticeId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to create an update for a notice on a statuspage.
+     * @summary Create a statuspage notice update
+     * @param {number} statuspageId ID of statuspage
+     * @param {number} noticeId ID of statuspage notice
+     * @param {UpdateCreateStatuspageNoticeUpdateRequest} createReq Information about new statuspage notice update
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdNoticeNoticeIdUpdatePost(statuspageId: number, noticeId: number, createReq: UpdateCreateStatuspageNoticeUpdateRequest, options?: RawAxiosRequestConfig) {
+        return StatuspageNoticeUpdateApiFp(this.configuration).statuspageStatuspageIdNoticeNoticeIdUpdatePost(statuspageId, noticeId, createReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to get an update of a notice on their statuspage with IDs of statuspage, notice and update
+     * @summary Get a statuspage notice update by IDs
+     * @param {number} statuspageId ID of statuspage
+     * @param {number} noticeId ID of statuspage notice
+     * @param {number} updateId ID of statuspage notice update
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdNoticeNoticeIdUpdateUpdateIdGet(statuspageId: number, noticeId: number, updateId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageNoticeUpdateApiFp(this.configuration).statuspageStatuspageIdNoticeNoticeIdUpdateUpdateIdGet(statuspageId, noticeId, updateId, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * StatuspageTargetApi - axios parameter creator
+ */
+export const StatuspageTargetApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Allows a user to retrieve a list of statuspage targets.
+         * @summary Get targets linked to statuspage
+         * @param {number} statuspageId ID of statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdTargetGet: async (statuspageId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdTargetGet', 'statuspageId', statuspageId)
+            const localVarPath = `/statuspage/{statuspageId}/target`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to create a statuspage target (associate a target with a statuspage, and optionally put it into a group).
+         * @summary Create a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {StatuspageTargetCreateStatuspageTargetRequest} createReq Information about new statuspage target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdTargetPost: async (statuspageId: number, createReq: StatuspageTargetCreateStatuspageTargetRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdTargetPost', 'statuspageId', statuspageId)
+            // verify required parameter 'createReq' is not null or undefined
+            assertParamExists('statuspageStatuspageIdTargetPost', 'createReq', createReq)
+            const localVarPath = `/statuspage/{statuspageId}/target`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to remove a target from a statuspage
+         * @summary Delete a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} targetId ID of target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdTargetTargetIdDelete: async (statuspageId: number, targetId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdTargetTargetIdDelete', 'statuspageId', statuspageId)
+            // verify required parameter 'targetId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdTargetTargetIdDelete', 'targetId', targetId)
+            const localVarPath = `/statuspage/{statuspageId}/target/{targetId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{targetId}', encodeURIComponent(String(targetId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows a user to retrieve a statuspage target with the statuspage and target ID.
+         * @summary Get a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} targetId ID of target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdTargetTargetIdGet: async (statuspageId: number, targetId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'statuspageId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdTargetTargetIdGet', 'statuspageId', statuspageId)
+            // verify required parameter 'targetId' is not null or undefined
+            assertParamExists('statuspageStatuspageIdTargetTargetIdGet', 'targetId', targetId)
+            const localVarPath = `/statuspage/{statuspageId}/target/{targetId}`
+                .replace('{statuspageId}', encodeURIComponent(String(statuspageId)))
+                .replace('{targetId}', encodeURIComponent(String(targetId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * StatuspageTargetApi - functional programming interface
+ */
+export const StatuspageTargetApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = StatuspageTargetApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Allows a user to retrieve a list of statuspage targets.
+         * @summary Get targets linked to statuspage
+         * @param {number} statuspageId ID of statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdTargetGet(statuspageId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StatuspageTargetListStatuspageTargetsSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdTargetGet(statuspageId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageTargetApi.statuspageStatuspageIdTargetGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to create a statuspage target (associate a target with a statuspage, and optionally put it into a group).
+         * @summary Create a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {StatuspageTargetCreateStatuspageTargetRequest} createReq Information about new statuspage target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdTargetPost(statuspageId: number, createReq: StatuspageTargetCreateStatuspageTargetRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StatuspageTargetCreateStatuspageTargetSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdTargetPost(statuspageId, createReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageTargetApi.statuspageStatuspageIdTargetPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to remove a target from a statuspage
+         * @summary Delete a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} targetId ID of target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdTargetTargetIdDelete(statuspageId: number, targetId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HelpersGenericDeleteSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdTargetTargetIdDelete(statuspageId, targetId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageTargetApi.statuspageStatuspageIdTargetTargetIdDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows a user to retrieve a statuspage target with the statuspage and target ID.
+         * @summary Get a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} targetId ID of target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async statuspageStatuspageIdTargetTargetIdGet(statuspageId: number, targetId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StatuspageTargetGetStatuspageTargetSuccessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statuspageStatuspageIdTargetTargetIdGet(statuspageId, targetId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StatuspageTargetApi.statuspageStatuspageIdTargetTargetIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * StatuspageTargetApi - factory interface
+ */
+export const StatuspageTargetApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = StatuspageTargetApiFp(configuration)
+    return {
+        /**
+         * Allows a user to retrieve a list of statuspage targets.
+         * @summary Get targets linked to statuspage
+         * @param {number} statuspageId ID of statuspage
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdTargetGet(statuspageId: number, options?: RawAxiosRequestConfig): AxiosPromise<StatuspageTargetListStatuspageTargetsSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdTargetGet(statuspageId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to create a statuspage target (associate a target with a statuspage, and optionally put it into a group).
+         * @summary Create a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {StatuspageTargetCreateStatuspageTargetRequest} createReq Information about new statuspage target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdTargetPost(statuspageId: number, createReq: StatuspageTargetCreateStatuspageTargetRequest, options?: RawAxiosRequestConfig): AxiosPromise<StatuspageTargetCreateStatuspageTargetSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdTargetPost(statuspageId, createReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to remove a target from a statuspage
+         * @summary Delete a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} targetId ID of target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdTargetTargetIdDelete(statuspageId: number, targetId: number, options?: RawAxiosRequestConfig): AxiosPromise<HelpersGenericDeleteSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdTargetTargetIdDelete(statuspageId, targetId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows a user to retrieve a statuspage target with the statuspage and target ID.
+         * @summary Get a statuspage target
+         * @param {number} statuspageId ID of statuspage
+         * @param {number} targetId ID of target
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        statuspageStatuspageIdTargetTargetIdGet(statuspageId: number, targetId: number, options?: RawAxiosRequestConfig): AxiosPromise<StatuspageTargetGetStatuspageTargetSuccessResponse> {
+            return localVarFp.statuspageStatuspageIdTargetTargetIdGet(statuspageId, targetId, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * StatuspageTargetApi - object-oriented interface
+ */
+export class StatuspageTargetApi extends BaseAPI {
+    /**
+     * Allows a user to retrieve a list of statuspage targets.
+     * @summary Get targets linked to statuspage
+     * @param {number} statuspageId ID of statuspage
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdTargetGet(statuspageId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageTargetApiFp(this.configuration).statuspageStatuspageIdTargetGet(statuspageId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to create a statuspage target (associate a target with a statuspage, and optionally put it into a group).
+     * @summary Create a statuspage target
+     * @param {number} statuspageId ID of statuspage
+     * @param {StatuspageTargetCreateStatuspageTargetRequest} createReq Information about new statuspage target
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdTargetPost(statuspageId: number, createReq: StatuspageTargetCreateStatuspageTargetRequest, options?: RawAxiosRequestConfig) {
+        return StatuspageTargetApiFp(this.configuration).statuspageStatuspageIdTargetPost(statuspageId, createReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to remove a target from a statuspage
+     * @summary Delete a statuspage target
+     * @param {number} statuspageId ID of statuspage
+     * @param {number} targetId ID of target
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdTargetTargetIdDelete(statuspageId: number, targetId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageTargetApiFp(this.configuration).statuspageStatuspageIdTargetTargetIdDelete(statuspageId, targetId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows a user to retrieve a statuspage target with the statuspage and target ID.
+     * @summary Get a statuspage target
+     * @param {number} statuspageId ID of statuspage
+     * @param {number} targetId ID of target
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public statuspageStatuspageIdTargetTargetIdGet(statuspageId: number, targetId: number, options?: RawAxiosRequestConfig) {
+        return StatuspageTargetApiFp(this.configuration).statuspageStatuspageIdTargetTargetIdGet(statuspageId, targetId, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
  * TargetApi - axios parameter creator
- * @export
  */
 export const TargetApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -6028,8 +7136,8 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6064,9 +7172,8 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -6089,7 +7196,7 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // verify required parameter 'targetID' is not null or undefined
             assertParamExists('targetTargetIDAgentKeyPatch', 'targetID', targetID)
             const localVarPath = `/target/{targetID}/agent/key`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6104,8 +7211,8 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6126,7 +7233,7 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // verify required parameter 'targetID' is not null or undefined
             assertParamExists('targetTargetIDDelete', 'targetID', targetID)
             const localVarPath = `/target/{targetID}`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6141,8 +7248,8 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6163,7 +7270,7 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // verify required parameter 'targetID' is not null or undefined
             assertParamExists('targetTargetIDGet', 'targetID', targetID)
             const localVarPath = `/target/{targetID}`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6175,8 +7282,8 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6200,7 +7307,7 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // verify required parameter 'updateReq' is not null or undefined
             assertParamExists('targetTargetIDPatch', 'updateReq', updateReq)
             const localVarPath = `/target/{targetID}`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6215,9 +7322,8 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -6241,7 +7347,7 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // verify required parameter 'targetID' is not null or undefined
             assertParamExists('targetTargetIDPausePatch', 'targetID', targetID)
             const localVarPath = `/target/{targetID}/pause`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6260,8 +7366,8 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
                 localVarQueryParameter['pause'] = pause;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6283,7 +7389,7 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // verify required parameter 'targetID' is not null or undefined
             assertParamExists('targetTargetIDPublicPatch', 'targetID', targetID)
             const localVarPath = `/target/{targetID}/public`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6302,8 +7408,8 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
                 localVarQueryParameter['public'] = _public;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6324,7 +7430,7 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             // verify required parameter 'targetID' is not null or undefined
             assertParamExists('targetTargetIDReportGet', 'targetID', targetID)
             const localVarPath = `/target/{targetID}/report`
-                .replace(`{${"targetID"}}`, encodeURIComponent(String(targetID)));
+                .replace('{targetID}', encodeURIComponent(String(targetID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6336,8 +7442,8 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6352,7 +7458,6 @@ export const TargetApiAxiosParamCreator = function (configuration?: Configuratio
 
 /**
  * TargetApi - functional programming interface
- * @export
  */
 export const TargetApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = TargetApiAxiosParamCreator(configuration)
@@ -6481,7 +7586,6 @@ export const TargetApiFp = function(configuration?: Configuration) {
 
 /**
  * TargetApi - factory interface
- * @export
  */
 export const TargetApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = TargetApiFp(configuration)
@@ -6583,9 +7687,6 @@ export const TargetApiFactory = function (configuration?: Configuration, basePat
 
 /**
  * TargetApi - object-oriented interface
- * @export
- * @class TargetApi
- * @extends {BaseAPI}
  */
 export class TargetApi extends BaseAPI {
     /**
@@ -6593,7 +7694,6 @@ export class TargetApi extends BaseAPI {
      * @summary Get all targets
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetGet(options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetGet(options).then((request) => request(this.axios, this.basePath));
@@ -6605,7 +7705,6 @@ export class TargetApi extends BaseAPI {
      * @param {TargetCreateTargetRequest} createReq Information about new target
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetPost(createReq: TargetCreateTargetRequest, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetPost(createReq, options).then((request) => request(this.axios, this.basePath));
@@ -6617,7 +7716,6 @@ export class TargetApi extends BaseAPI {
      * @param {number} targetID ID of target to regenerate agent\&#39;s key
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDAgentKeyPatch(targetID: number, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDAgentKeyPatch(targetID, options).then((request) => request(this.axios, this.basePath));
@@ -6629,7 +7727,6 @@ export class TargetApi extends BaseAPI {
      * @param {number} targetID ID of target to delete
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDDelete(targetID: number, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDDelete(targetID, options).then((request) => request(this.axios, this.basePath));
@@ -6641,7 +7738,6 @@ export class TargetApi extends BaseAPI {
      * @param {number} targetID ID of target to get
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDGet(targetID: number, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDGet(targetID, options).then((request) => request(this.axios, this.basePath));
@@ -6654,7 +7750,6 @@ export class TargetApi extends BaseAPI {
      * @param {TargetUpdateTargetRequest} updateReq New information about target
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDPatch(targetID: number, updateReq: TargetUpdateTargetRequest, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDPatch(targetID, updateReq, options).then((request) => request(this.axios, this.basePath));
@@ -6667,7 +7762,6 @@ export class TargetApi extends BaseAPI {
      * @param {boolean} [pause] Pause status, can be true for paused, false for unpaused. If not supplied, target\&#39;s pause status will change to the opposite of current status.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDPausePatch(targetID: number, pause?: boolean, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDPausePatch(targetID, pause, options).then((request) => request(this.axios, this.basePath));
@@ -6680,7 +7774,6 @@ export class TargetApi extends BaseAPI {
      * @param {boolean} [_public] Public status, can be true for public, false for private. If not supplied, target\&#39;s public status will change to the opposite of current status.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDPublicPatch(targetID: number, _public?: boolean, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDPublicPatch(targetID, _public, options).then((request) => request(this.axios, this.basePath));
@@ -6692,7 +7785,6 @@ export class TargetApi extends BaseAPI {
      * @param {number} targetID ID of target to get the data for
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TargetApi
      */
     public targetTargetIDReportGet(targetID: number, options?: RawAxiosRequestConfig) {
         return TargetApiFp(this.configuration).targetTargetIDReportGet(targetID, options).then((request) => request(this.axios, this.basePath));
@@ -6703,7 +7795,6 @@ export class TargetApi extends BaseAPI {
 
 /**
  * UserApi - axios parameter creator
- * @export
  */
 export const UserApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -6729,8 +7820,8 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6762,8 +7853,8 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6798,9 +7889,8 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -6837,9 +7927,8 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             // authentication BearerAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -6856,7 +7945,6 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
 /**
  * UserApi - functional programming interface
- * @export
  */
 export const UserApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UserApiAxiosParamCreator(configuration)
@@ -6916,7 +8004,6 @@ export const UserApiFp = function(configuration?: Configuration) {
 
 /**
  * UserApi - factory interface
- * @export
  */
 export const UserApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = UserApiFp(configuration)
@@ -6964,9 +8051,6 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
 
 /**
  * UserApi - object-oriented interface
- * @export
- * @class UserApi
- * @extends {BaseAPI}
  */
 export class UserApi extends BaseAPI {
     /**
@@ -6974,7 +8058,6 @@ export class UserApi extends BaseAPI {
      * @summary Delete current user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof UserApi
      */
     public userDelete(options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).userDelete(options).then((request) => request(this.axios, this.basePath));
@@ -6985,7 +8068,6 @@ export class UserApi extends BaseAPI {
      * @summary Get current user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof UserApi
      */
     public userGet(options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).userGet(options).then((request) => request(this.axios, this.basePath));
@@ -6997,7 +8079,6 @@ export class UserApi extends BaseAPI {
      * @param {UserChangePasswordRequest} changePasswordReq Old and new password
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof UserApi
      */
     public userPasswordPatch(changePasswordReq: UserChangePasswordRequest, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).userPasswordPatch(changePasswordReq, options).then((request) => request(this.axios, this.basePath));
@@ -7009,7 +8090,6 @@ export class UserApi extends BaseAPI {
      * @param {UserChangeUsernameRequest} changeUsernameReq New username
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof UserApi
      */
     public userUsernamePatch(changeUsernameReq: UserChangeUsernameRequest, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).userUsernamePatch(changeUsernameReq, options).then((request) => request(this.axios, this.basePath));

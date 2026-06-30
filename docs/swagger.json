@@ -2181,6 +2181,2103 @@
                 }
             }
         },
+        "/statuspage/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to get a list of their statuspages",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspage"
+                ],
+                "summary": "Get all statuspages",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/statuspage.listStatuspagesSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to create a statuspage.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspage"
+                ],
+                "summary": "Create a statuspage",
+                "parameters": [
+                    {
+                        "description": "Information about new statuspage",
+                        "name": "createReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/statuspage.CreateStatuspageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/statuspage.createStatuspageSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/slug/{slug}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user retrieve information about statuspage with specified slug.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspage"
+                ],
+                "summary": "Get statuspage by slug",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Slug of statuspage to get",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/statuspage.getStatuspageSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given slug is blank.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage with given slug couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageID}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user retrieve information about statuspage with specified ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspage"
+                ],
+                "summary": "Get statuspage by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage to get",
+                        "name": "statuspageID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/statuspage.getStatuspageSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageId}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to delete a statuspage with specified ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspage"
+                ],
+                "summary": "Delete statuspage by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage to delete",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to update a statuspage.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspage"
+                ],
+                "summary": "Update a statuspage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage to update",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New information about statuspage",
+                        "name": "updateReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/statuspage.UpdateStatuspageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/statuspage.getStatuspageSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements or statuspage ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageId}/domain": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to get a list of their statuspages domains",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageDomain"
+                ],
+                "summary": "Get all domains of a statuspage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage to list domains of",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.listStatuspageDomainsSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to create a domain for a statuspage.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageDomain"
+                ],
+                "summary": "Create a statuspage domain",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage to assign the new domain to",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Information about new statuspage domain",
+                        "name": "createReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.CreateStatuspageDomainRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.createStatuspageDomainSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements or statuspage ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageId}/domain/{domainId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve information about a domain with specified ID that belongs to a statuspage with given ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageDomain"
+                ],
+                "summary": "Get a statuspage domain by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage that owns the domain",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage domain",
+                        "name": "domainId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.getStatuspageDomainSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage or domain ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage domain with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to delete a statuspage domain with specified ID that belongs to a statuspage with given ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageDomain"
+                ],
+                "summary": "Delete statuspage domain by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage that owns the domain",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage domain",
+                        "name": "domainId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given IDs couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage domain with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to update information about a statuspage domain with specified ID owned by a statuspage with given ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageDomain"
+                ],
+                "summary": "Update a statuspage domain",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage that owns the domain",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage domain to update",
+                        "name": "domainId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New information about statuspage domain",
+                        "name": "updateReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.UpdateStatuspageDomainRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.getStatuspageDomainSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements or statuspage or domain ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage domain with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageId}/group": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to get a list of groups in a statuspage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageGroup"
+                ],
+                "summary": "Get all groups of a statuspage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/group.listStatuspageGroupsSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given statuspage ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to create a group for targets in a statuspage.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageGroup"
+                ],
+                "summary": "Create a statuspage group",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Information about new statuspage group",
+                        "name": "createReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/group.CreateStatuspageGroupRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/group.createStatuspageGroupSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements or statuspage ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageId}/group/{groupId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve information about a group belonging to a statuspage with given IDs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageGroup"
+                ],
+                "summary": "Get a group of a statuspage by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage the group belongs to",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage group",
+                        "name": "groupId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/group.getStatuspageGroupSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage or group ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage or group with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to delete a group belonging to a statuspage with given IDs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageGroup"
+                ],
+                "summary": "Delete a statuspage group",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage the group belongs to",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage group",
+                        "name": "groupId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage or group ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage or group with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to update information about a group belonging to a statuspage with given IDs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageGroup"
+                ],
+                "summary": "Update a statuspage group",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage the group belongs to",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage group",
+                        "name": "groupId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New information about statuspage group",
+                        "name": "updateReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/group.UpdateStatuspageGroupRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/group.getStatuspageGroupSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage or group ID couldn't be parsed or when request body doesn't match requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage or group with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageId}/notice": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to get a list of notices on their statuspage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageNotice"
+                ],
+                "summary": "Get all notices for a statuspage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage to list notices for",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/notice.listStatuspageNoticesSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to create a notice on a statuspage.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageNotice"
+                ],
+                "summary": "Create a statuspage notice",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage to create the notice in",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Information about new statuspage notice",
+                        "name": "createReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/notice.CreateStatuspageNoticeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/notice.createStatuspageNoticeSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements or statuspage ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageId}/notice/{noticeId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve a notice with specified ID that belongs to a statuspage with given ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageNotice"
+                ],
+                "summary": "Get a statuspage notice by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage notice",
+                        "name": "noticeId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/notice.getStatuspageNoticeSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage or notice ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage or notice with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to delete a notice with specified ID that belongs to a statuspage with given ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageNotice"
+                ],
+                "summary": "Delete statuspage notice by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage notice",
+                        "name": "noticeId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when given IDs couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage notice with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to update information about a notice with specified ID that belong to a statuspage with given ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageNotice"
+                ],
+                "summary": "Update a statuspage notice",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage notice update",
+                        "name": "noticeId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New information about statuspage notice",
+                        "name": "updateReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/notice.UpdateStatuspageNoticeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/notice.getStatuspageNoticeSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements or statuspage or notice ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage notice with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageId}/notice/{noticeId}/update": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to get a list of updates for a notice on their statuspage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageNoticeUpdate"
+                ],
+                "summary": "Get all updates of a statuspage notice",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of notice to list updates for",
+                        "name": "noticeId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/update.listStatuspageNoticeUpdatesSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage or notice ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage notice with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to create an update for a notice on a statuspage.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageNoticeUpdate"
+                ],
+                "summary": "Create a statuspage notice update",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage notice",
+                        "name": "noticeId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Information about new statuspage notice update",
+                        "name": "createReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/update.CreateStatuspageNoticeUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/update.createStatuspageNoticeUpdateSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements or statuspage ID or notice ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage notice with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageId}/notice/{noticeId}/update/{updateId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to get an update of a notice on their statuspage with IDs of statuspage, notice and update",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageNoticeUpdate"
+                ],
+                "summary": "Get a statuspage notice update by IDs",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage notice",
+                        "name": "noticeId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage notice update",
+                        "name": "updateId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/update.getStatuspageNoticeUpdateSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage or notice or update ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a notice update with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageId}/target": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve a list of statuspage targets.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageTarget"
+                ],
+                "summary": "Get targets linked to statuspage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/statuspage_target.listStatuspageTargetsSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to create a statuspage target (associate a target with a statuspage, and optionally put it into a group).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageTarget"
+                ],
+                "summary": "Create a statuspage target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Information about new statuspage target",
+                        "name": "createReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/statuspage_target.CreateStatuspageTargetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/statuspage_target.createStatuspageTargetSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when request body doesn't match requirements or statuspage ID couldn't be parsed or such association between given entities already exists.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage, target or statuspage group (if provided) with given ID couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statuspage/{statuspageId}/target/{targetId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to retrieve a statuspage target with the statuspage and target ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageTarget"
+                ],
+                "summary": "Get a statuspage target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of target",
+                        "name": "targetId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/statuspage_target.getStatuspageTargetSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage or target ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage or statuspage target with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to remove a target from a statuspage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageTarget"
+                ],
+                "summary": "Delete a statuspage target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of target",
+                        "name": "targetId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericDeleteSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage or target ID couldn't be parsed.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage or statuspage target with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows a user to update information about the placement of a target on a statuspage.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statuspageGroup"
+                ],
+                "summary": "Update a statuspage target",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage",
+                        "name": "statuspageId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of target",
+                        "name": "targetId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID of statuspage group",
+                        "name": "groupId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New information about statuspage target",
+                        "name": "updateReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/statuspage_target.CreateStatuspageTargetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/statuspage_target.getStatuspageTargetSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Returned when statuspage or target ID couldn't be parsed or when request body doesn't match requirements.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Returned when user sending the request supplies an invalid auth token.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Returned when account of user sending the request is disabled.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Returned when a statuspage or statuspage target with given IDs couldn't be found.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Returned when a DB interaction fails.",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GenericErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/target/": {
             "get": {
                 "security": [
@@ -3738,6 +5835,66 @@
                 }
             }
         },
+        "domain.CreateStatuspageDomainRequest": {
+            "type": "object",
+            "required": [
+                "domain"
+            ],
+            "properties": {
+                "domain": {
+                    "description": "Domain must not be blank and must not be already taken across the instance",
+                    "type": "string"
+                }
+            }
+        },
+        "domain.UpdateStatuspageDomainRequest": {
+            "type": "object",
+            "properties": {
+                "domain": {
+                    "description": "Domain cannot be blank or taken across the instance if supplied",
+                    "type": "string"
+                }
+            }
+        },
+        "domain.createStatuspageDomainSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.StatuspageDomain"
+                }
+            }
+        },
+        "domain.getStatuspageDomainSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.StatuspageDomain"
+                }
+            }
+        },
+        "domain.listStatuspageDomainsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageDomain"
+                    }
+                }
+            }
+        },
         "gorm.DeletedAt": {
             "type": "object",
             "properties": {
@@ -3747,6 +5904,82 @@
                 "valid": {
                     "description": "Valid is true if Time is not NULL",
                     "type": "boolean"
+                }
+            }
+        },
+        "group.CreateStatuspageGroupRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "description": "Description is optional",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name cannot be empty",
+                    "type": "string"
+                },
+                "position": {
+                    "description": "Position is optional, must be a non-negative value if provided. Value of 0 is persisted if not provided.",
+                    "type": "number"
+                }
+            }
+        },
+        "group.UpdateStatuspageGroupRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "description": "Description is optional, empty string can be specified to reset",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name must not be empty if specified",
+                    "type": "string"
+                },
+                "position": {
+                    "description": "Position is optional, must be a non-negative number if provided",
+                    "type": "number"
+                }
+            }
+        },
+        "group.createStatuspageGroupSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.StatuspageGroup"
+                }
+            }
+        },
+        "group.getStatuspageGroupSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.StatuspageGroup"
+                }
+            }
+        },
+        "group.listStatuspageGroupsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageGroup"
+                    }
                 }
             }
         },
@@ -4305,6 +6538,322 @@
                 }
             }
         },
+        "model.Statuspage": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "displayCheckmateFooter": {
+                    "type": "boolean"
+                },
+                "domains": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageDomain"
+                    }
+                },
+                "footerContent": {
+                    "type": "string"
+                },
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageGroup"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "logoURL": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "notices": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageNotice"
+                    }
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageTarget"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "titleSectionOnClickURL": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.StatuspageDomain": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "domain": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "statuspage": {
+                    "$ref": "#/definitions/model.Statuspage"
+                },
+                "statuspageId": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.StatuspageGroup": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "number"
+                },
+                "statuspage": {
+                    "$ref": "#/definitions/model.Statuspage"
+                },
+                "statuspageId": {
+                    "type": "integer"
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageTarget"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.StatuspageNotice": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "resolvedAt": {
+                    "type": "string"
+                },
+                "scheduledEndAt": {
+                    "type": "string"
+                },
+                "scheduledStartAt": {
+                    "type": "string"
+                },
+                "severity": {
+                    "$ref": "#/definitions/model.StatuspageNoticeSeverity"
+                },
+                "startedAt": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/model.StatuspageNoticeStatus"
+                },
+                "statuspage": {
+                    "$ref": "#/definitions/model.Statuspage"
+                },
+                "statuspageId": {
+                    "type": "integer"
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Target"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/model.StatuspageNoticeType"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "updates": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageNoticeUpdate"
+                    }
+                }
+            }
+        },
+        "model.StatuspageNoticeSeverity": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "x-enum-varnames": [
+                "None",
+                "Degraded",
+                "PartialOutage",
+                "MajorOutage",
+                "statuspageNoticeSeverityMax"
+            ]
+        },
+        "model.StatuspageNoticeStatus": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            "x-enum-varnames": [
+                "Scheduled",
+                "Started",
+                "Investigating",
+                "Identified",
+                "Monitoring",
+                "Resolved",
+                "Completed",
+                "statuspageNoticeStatusMax"
+            ]
+        },
+        "model.StatuspageNoticeType": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "x-enum-varnames": [
+                "Issue",
+                "Maintenance",
+                "Announcement",
+                "statuspageNoticeTypeMax"
+            ]
+        },
+        "model.StatuspageNoticeUpdate": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "notice": {
+                    "$ref": "#/definitions/model.StatuspageNotice"
+                },
+                "noticeId": {
+                    "type": "integer"
+                },
+                "status": {
+                    "$ref": "#/definitions/model.StatuspageNoticeStatus"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.StatuspageTarget": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "position": {
+                    "type": "number"
+                },
+                "statuspage": {
+                    "$ref": "#/definitions/model.Statuspage"
+                },
+                "statuspageGroup": {
+                    "$ref": "#/definitions/model.StatuspageGroup"
+                },
+                "statuspageGroupId": {
+                    "type": "integer"
+                },
+                "statuspageId": {
+                    "type": "integer"
+                },
+                "target": {
+                    "$ref": "#/definitions/model.Target"
+                },
+                "targetId": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Target": {
             "type": "object",
             "properties": {
@@ -4371,6 +6920,12 @@
                 },
                 "public": {
                     "type": "boolean"
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageNotice"
+                    }
                 },
                 "timeout": {
                     "type": "integer"
@@ -4508,6 +7063,12 @@
                         "$ref": "#/definitions/model.Session"
                     }
                 },
+                "statuspages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Statuspage"
+                    }
+                },
                 "targets": {
                     "type": "array",
                     "items": {
@@ -4519,6 +7080,141 @@
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "notice.CreateStatuspageNoticeRequest": {
+            "type": "object",
+            "required": [
+                "firstUpdate",
+                "title"
+            ],
+            "properties": {
+                "firstUpdate": {
+                    "description": "FirstUpdate is required",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/update.CreateStatuspageNoticeUpdateRequest"
+                        }
+                    ]
+                },
+                "scheduledEndAt": {
+                    "description": "ScheduledEndAt is optional, if supplied ScheduledStartAt must be also supplied and must be before ScheduledStartAt",
+                    "type": "string"
+                },
+                "scheduledStartAt": {
+                    "description": "ScheduledStartAt is optional, if supplied ScheduledEndAt must be also supplied and must be after ScheduledStartAt",
+                    "type": "string"
+                },
+                "severity": {
+                    "description": "Severity is required, must be set to none (0) for notices of type announcement (2)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.StatuspageNoticeSeverity"
+                        }
+                    ]
+                },
+                "startedAt": {
+                    "description": "StartedAt is optional",
+                    "type": "string"
+                },
+                "targets": {
+                    "description": "TargetIDs are optional, although if supplied, the targets must all belong to the same statuspage",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "title": {
+                    "description": "Title is required and must not be empty",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Type is required and cannot be edited afterwards",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.StatuspageNoticeType"
+                        }
+                    ]
+                }
+            }
+        },
+        "notice.UpdateStatuspageNoticeRequest": {
+            "type": "object",
+            "properties": {
+                "resolvedAt": {
+                    "description": "ResolvedAt is optional, must be after StartedAt if its value isn't empty in the request or in the notice",
+                    "type": "string"
+                },
+                "scheduledEndAt": {
+                    "description": "ScheduledEndAt is optional, if supplied ScheduledStartAt must be also supplied or must be already set for the notice. ScheduledEndAt must a timestamp after ScheduledStartAt.",
+                    "type": "string"
+                },
+                "scheduledStartAt": {
+                    "description": "ScheduledStartAt is optional, if supplied ScheduledEndAt must be also supplied or must be already set for the notice. ScheduledStartAt must a timestamp before ScheduledEndAt.",
+                    "type": "string"
+                },
+                "severity": {
+                    "description": "Severity is optional. Notices of type announcement (2) must use severity \"none\" (0)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.StatuspageNoticeSeverity"
+                        }
+                    ]
+                },
+                "startedAt": {
+                    "description": "StartedAt is optional, must be before ResolvedAt if its value isn't empty in the request or in the notice",
+                    "type": "string"
+                },
+                "targets": {
+                    "description": "TargetIDs are optional. If provided, they replace the current target list. All specified targets must belong to the same statuspage as the notice.",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "title": {
+                    "description": "Title is optional, must not be empty if provided",
+                    "type": "string"
+                }
+            }
+        },
+        "notice.createStatuspageNoticeSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.StatuspageNotice"
+                }
+            }
+        },
+        "notice.getStatuspageNoticeSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.StatuspageNotice"
+                }
+            }
+        },
+        "notice.listStatuspageNoticesSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageNotice"
+                    }
                 }
             }
         },
@@ -4729,6 +7425,180 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/model.Setting"
+                    }
+                }
+            }
+        },
+        "statuspage.CreateStatuspageRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "slug",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "description": "Description is displayed below the title, it's optional",
+                    "type": "string"
+                },
+                "displayCheckmateFooter": {
+                    "description": "DisplayCheckmateFooter specifies whether a \"Powered by checkmate\" footer is displayed at the bottom of the page.",
+                    "type": "boolean"
+                },
+                "footerContent": {
+                    "description": "FooterContent is the text displayed in the footer area, it's optional",
+                    "type": "string"
+                },
+                "logoURL": {
+                    "description": "LogoURL's value is used to display a logo left of the title, it's optional",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name is only displayed in the dashboard, must not be blank",
+                    "type": "string"
+                },
+                "slug": {
+                    "description": "Slug is used to route viewers to statuspages. Given slug must not be used across this instance already.\nA slug is deemed invalid if it is empty, starts or ends with a hyphen, contains characters other than lowercase letters, digits, or hyphens, or includes consecutive hyphens.",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "Title is displayed on top of the statuspage, must not be blank",
+                    "type": "string"
+                },
+                "titleSectionOnClickURL": {
+                    "description": "TitleSectionOnClickURL's value is where the title section (title and logo) will redirect when the user clicks on it. If not supplied, clicking will do nothing",
+                    "type": "string"
+                }
+            }
+        },
+        "statuspage.UpdateStatuspageRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "description": "Description is displayed below the title, can be blank to reset",
+                    "type": "string"
+                },
+                "displayCheckmateFooter": {
+                    "description": "DisplayCheckmateFooter specifies whether a \"Powered by checkmate\" footer is displayed at the bottom of the page.",
+                    "type": "boolean"
+                },
+                "footerContent": {
+                    "description": "FooterContent is the text displayed in the footer area, can be blank to reset",
+                    "type": "string"
+                },
+                "logoURL": {
+                    "description": "LogoURL's value is used to display a logo left of the title, can be blank to reset",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name is only displayed in the dashboard, must not be blank if provided",
+                    "type": "string"
+                },
+                "slug": {
+                    "description": "Slug is used to route viewers to statuspages. Given slug must not be used across this instance already. Must not be blank if provided\nA slug is deemed invalid if it is empty, starts or ends with a hyphen, contains characters other than lowercase letters, digits, or hyphens, or includes consecutive hyphens.",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "Title is displayed on top of the statuspage, must not be blank if provided",
+                    "type": "string"
+                },
+                "titleSectionOnClickURL": {
+                    "description": "TitleSectionOnClickURL's value is where the title section (title and logo) will redirect when the user clicks on it. Clicking will do nothing if this value is empty. Can be set to an empty string to reset.",
+                    "type": "string"
+                }
+            }
+        },
+        "statuspage.createStatuspageSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Statuspage"
+                }
+            }
+        },
+        "statuspage.getStatuspageSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.Statuspage"
+                }
+            }
+        },
+        "statuspage.listStatuspagesSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Statuspage"
+                    }
+                }
+            }
+        },
+        "statuspage_target.CreateStatuspageTargetRequest": {
+            "type": "object",
+            "properties": {
+                "groupId": {
+                    "description": "GroupID is optional, but the group must exist and belong to the statuspage if provided",
+                    "type": "integer"
+                },
+                "position": {
+                    "description": "Position is optional, must be a non-negative number if supplied. Value of 0 is persisted if not provided.",
+                    "type": "number"
+                },
+                "targetId": {
+                    "description": "TargetID is required and the target with given ID must exist and belong to the same user as the statuspage",
+                    "type": "integer"
+                }
+            }
+        },
+        "statuspage_target.createStatuspageTargetSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.StatuspageTarget"
+                }
+            }
+        },
+        "statuspage_target.getStatuspageTargetSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.StatuspageTarget"
+                }
+            }
+        },
+        "statuspage_target.listStatuspageTargetsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageTarget"
                     }
                 }
             }
@@ -5013,24 +7883,6 @@
             "type": "integer",
             "format": "int64",
             "enum": [
-                -9223372036854775808,
-                9223372036854775807,
-                1,
-                1000,
-                1000000,
-                1000000000,
-                60000000000,
-                3600000000000,
-                -9223372036854775808,
-                9223372036854775807,
-                1,
-                1000,
-                1000000,
-                1000000000,
-                60000000000,
-                3600000000000,
-                -9223372036854775808,
-                9223372036854775807,
                 1,
                 1000,
                 1000000,
@@ -5039,24 +7891,6 @@
                 3600000000000
             ],
             "x-enum-varnames": [
-                "minDuration",
-                "maxDuration",
-                "Nanosecond",
-                "Microsecond",
-                "Millisecond",
-                "Second",
-                "Minute",
-                "Hour",
-                "minDuration",
-                "maxDuration",
-                "Nanosecond",
-                "Microsecond",
-                "Millisecond",
-                "Second",
-                "Minute",
-                "Hour",
-                "minDuration",
-                "maxDuration",
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",
@@ -5064,6 +7898,65 @@
                 "Minute",
                 "Hour"
             ]
+        },
+        "update.CreateStatuspageNoticeUpdateRequest": {
+            "type": "object",
+            "required": [
+                "message"
+            ],
+            "properties": {
+                "message": {
+                    "description": "Message must not be empty",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Status is required, the notice's status will be changed to this value",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.StatuspageNoticeStatus"
+                        }
+                    ]
+                }
+            }
+        },
+        "update.createStatuspageNoticeUpdateSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/model.StatuspageNoticeUpdate"
+                }
+            }
+        },
+        "update.getStatuspageNoticeUpdateSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "$ref": "#/definitions/model.StatuspageNoticeUpdate"
+                }
+            }
+        },
+        "update.listStatuspageNoticeUpdatesSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StatuspageNoticeUpdate"
+                    }
+                }
+            }
         },
         "user.ChangePasswordRequest": {
             "type": "object",
