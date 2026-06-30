@@ -7,7 +7,7 @@ type Statuspage struct {
 	Title                  string             `gorm:"not null" json:"title"`
 	Description            string             `json:"description"`
 	LogoURL                string             `json:"logoURL"`
-	LogoOnClickURL         string             `json:"logoOnClickURL"`
+	TitleSectionOnClickURL string             `json:"titleSectionOnClickURL"`
 	FooterContent          string             `json:"footerContent"`
 	DisplayCheckmateFooter bool               `gorm:"not null;default:true" json:"displayCheckmateFooter"`
 	UserID                 uint               `gorm:"not null" json:"userId"`

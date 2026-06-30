@@ -15,6 +15,12 @@ import (
 	"github.com/bartosz11/checkmate/api/handlers/orchestrator"
 	"github.com/bartosz11/checkmate/api/handlers/session"
 	"github.com/bartosz11/checkmate/api/handlers/settings"
+	"github.com/bartosz11/checkmate/api/handlers/statuspage"
+	"github.com/bartosz11/checkmate/api/handlers/statuspage/domain"
+	"github.com/bartosz11/checkmate/api/handlers/statuspage/group"
+	"github.com/bartosz11/checkmate/api/handlers/statuspage/notice"
+	"github.com/bartosz11/checkmate/api/handlers/statuspage/notice/update"
+	statuspageTarget "github.com/bartosz11/checkmate/api/handlers/statuspage/statuspage_target"
 	"github.com/bartosz11/checkmate/api/handlers/target"
 	"github.com/bartosz11/checkmate/api/handlers/target/alarm"
 	"github.com/bartosz11/checkmate/api/handlers/user"
@@ -184,6 +190,68 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 				restrictedCheckerGrp.PATCH("/:id/key", checker.HandleRegenCheckerKey(db))
 			}
 		}
+		statuspageGrp := restrictedGrp.Group("/statuspage")
+		{
+			statuspageGrp.POST("/", statuspage.HandleStatuspageCreate(db))
+			statuspageGrp.GET("/", statuspage.HandleGetAllStatuspages(db))
+			statuspageGrp.GET("/slug/:slug", statuspage.HandleGetStatuspageBySlug(db))
+			specificStatuspageGrp := statuspageGrp.Group("/:statuspageId")
+			{
+				specificStatuspageGrp.GET("", statuspage.HandleGetStatuspageByID(db))
+				specificStatuspageGrp.PATCH("", statuspage.HandleUpdateStatuspageById(db))
+				specificStatuspageGrp.DELETE("", statuspage.HandleDeleteStatuspageById(db))
+				domainGrp := specificStatuspageGrp.Group("/domain")
+				{
+					domainGrp.POST("", domain.HandleCreateStatuspageDomain(db))
+					domainGrp.GET("", domain.HandleGetAllStatuspageDomains(db))
+					specificStatuspageGrp := domainGrp.Group("/:domainId")
+					{
+						specificStatuspageGrp.GET("", domain.HandleGetStatuspageDomainById(db))
+						specificStatuspageGrp.DELETE("", domain.HandleDeleteStatuspageDomainById(db))
+						specificStatuspageGrp.PATCH("", domain.HandleUpdateStatuspageDomainById(db))
+					}
+				}
+				groupGrp := specificStatuspageGrp.Group("/group")
+				{
+					groupGrp.POST("", group.HandleCreateStatuspageGroup(db))
+					groupGrp.GET("", group.HandleGetAllStatuspageGroups(db))
+					specificStatuspageGrp := groupGrp.Group("/:groupId")
+					{
+						specificStatuspageGrp.GET("", group.HandleGetStatuspageGroupById(db))
+						specificStatuspageGrp.PATCH("", group.HandleUpdateStatuspageGroupById(db))
+						specificStatuspageGrp.DELETE("", group.HandleDeleteStatuspageGroupById(db))
+					}
+				}
+				statuspageTargetGrp := specificStatuspageGrp.Group("/target")
+				{
+					statuspageTargetGrp.POST("", statuspageTarget.HandleCreateStatuspageTarget(db))
+					statuspageTargetGrp.GET("", statuspageTarget.HandleGetAllStatuspageTargets(db))
+					specificStatuspageTargetGrp := statuspageTargetGrp.Group("/:targetId")
+					{
+						specificStatuspageTargetGrp.GET("", statuspageTarget.HandleGetStatuspageTargetByIds(db))
+						specificStatuspageTargetGrp.PATCH("", statuspageTarget.HandleUpdateStatuspageTargetByIds(db))
+						specificStatuspageTargetGrp.DELETE("", statuspageTarget.HandleDeleteStatuspageTargetByIds(db))
+					}
+				}
+				noticeGrp := specificStatuspageGrp.Group("/notice")
+				{
+					noticeGrp.POST("", notice.HandleCreateStatuspageNotice(db))
+					noticeGrp.GET("", notice.HandleGetAllStatuspageNotices(db))
+					specificNoticeGrp := noticeGrp.Group("/:noticeId")
+					{
+						specificNoticeGrp.GET("", notice.HandleGetStatuspageNoticeById(db))
+						specificNoticeGrp.DELETE("", notice.HandleDeleteStatuspageNoticeById(db))
+						specificNoticeGrp.PATCH("", notice.HandleUpdateStatuspageNoticeById(db))
+						updateGrp := specificNoticeGrp.Group("/update")
+						{
+							updateGrp.POST("", update.HandleCreateStatuspageNoticeUpdate(db))
+							updateGrp.GET("", update.HandleGetAllStatuspageNoticeUpdates(db))
+							updateGrp.GET("/:updateId", update.HandleGetStatuspageNoticeUpdateById(db))
+						}
+					}
+				}
+			}
+		}
 	}
 
 	adminGrp := restrictedGrp.Group("/admin", middleware.AdminMiddleware())
@@ -213,5 +281,4 @@ func StartAPI(db *gorm.DB, router *gin.Engine, production bool, apiConfig *confi
 			handlers.StaticFileHandler(c, frontend.FS)
 		})
 	}
-
 }

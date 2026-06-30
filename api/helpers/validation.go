@@ -52,3 +52,43 @@ func ValidateRequiredUint(fl validator.FieldLevel) bool {
 		return false
 	}
 }
+
+// IsValidStatuspageSlug tests a string against the criteria that must be met in order for such string to be a statuspage slug. Returns true if all criteria are met, false otherwise. Criteria:
+// 1. String must not be empty
+// 2. String must not start or end with a hyphen (-)
+// 3. Only a-z and 0-9 characters are allowed in the string. Hyphens are allowed in the middle.
+// 4. Hyphens cannot be consecutive
+func IsValidStatuspageSlug(slug string) bool {
+	if len(slug) == 0 {
+		return false
+	}
+
+	// must not start or end with '-'
+	if slug[0] == '-' || slug[len(slug)-1] == '-' {
+		return false
+	}
+
+	prevHyphen := false
+
+	for i := 0; i < len(slug); i++ {
+		c := slug[i]
+
+		if c >= 'a' && c <= 'z' || c >= '0' && c <= '9' {
+			prevHyphen = false
+			continue
+		}
+
+		if c == '-' {
+			if prevHyphen {
+				return false // disallow consecutive hyphens
+			}
+			prevHyphen = true
+			continue
+		}
+
+		// invalid character - only a-z, 0-9 and non-consecutive hyphens are allowed in the middle of the string
+		return false
+	}
+
+	return true
+}
